@@ -6,6 +6,7 @@ import me.pick.metrodata.exceptions.reference.ReferenceDoesNotExistException;
 import me.pick.metrodata.exceptions.mitra.MitraDoesNotExistException;
 import me.pick.metrodata.exceptions.role.RoleDoesNotExistException;
 import me.pick.metrodata.exceptions.talent.IncompleteTalentRequestException;
+import me.pick.metrodata.exceptions.talent.InvalidTalentNikException;
 import me.pick.metrodata.exceptions.talent.TalentAlreadyExistException;
 import me.pick.metrodata.exceptions.talent.TalentDoesNotExistException;
 import me.pick.metrodata.models.dto.requests.*;
@@ -13,7 +14,6 @@ import me.pick.metrodata.models.entity.*;
 import me.pick.metrodata.repositories.*;
 import me.pick.metrodata.services.applicant.ApplicantService;
 import me.pick.metrodata.services.email.EmailService;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -79,6 +79,10 @@ public class TalentServiceImpl implements  TalentService{
         Talent existing = talentRepository.findByNik(request.getTalentNik()).orElse(null);
         if (existing != null) {
             throw new TalentAlreadyExistException(request.getTalentName());
+        }
+
+        if (request.getTalentNik().length() != 16) {
+            throw new InvalidTalentNikException(request.getTalentNik());
         }
 
         Account newTalentAccount = new Account();

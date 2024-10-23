@@ -3,6 +3,7 @@ package me.pick.metrodata.exceptions.advice;
 import me.pick.metrodata.exceptions.institute.InstituteDoesNotExistException;
 import me.pick.metrodata.exceptions.mitra.MitraDoesNotExistException;
 import me.pick.metrodata.exceptions.role.RoleDoesNotExistException;
+import me.pick.metrodata.exceptions.talent.InvalidTalentNikException;
 import me.pick.metrodata.exceptions.talent.TalentAlreadyExistException;
 import me.pick.metrodata.exceptions.talent.TalentDoesNotExistException;
 import me.pick.metrodata.exceptions.vacancy.VacancyNotExistException;
@@ -35,5 +36,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> resourceAlreadyExistHandler(Exception e) {
         return ResponseHandler.generateResponse(new Response(
                 e.getMessage(), HttpStatus.CONFLICT, FAILED, null));
+    }
+
+    @ExceptionHandler(value = {
+            InvalidTalentNikException.class
+    })
+    public ResponseEntity<Object> badRequestHandler(Exception e) {
+        return ResponseHandler.generateResponse(new Response(
+                e.getMessage(), HttpStatus.BAD_REQUEST, FAILED, null));
     }
 }

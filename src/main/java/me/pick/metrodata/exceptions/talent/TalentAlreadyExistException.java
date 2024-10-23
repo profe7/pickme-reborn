@@ -4,6 +4,6 @@ import me.pick.metrodata.models.entity.Talent;
 
 public class TalentAlreadyExistException extends RuntimeException {
     public TalentAlreadyExistException(String name) {
-        super("Talent with email " + name + " already exist");
+        super("Talent by the name of " + name + " with requested NIK already exists. Please use a different NIK");
     }
 }
