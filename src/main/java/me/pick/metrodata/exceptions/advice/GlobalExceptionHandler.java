@@ -1,6 +1,7 @@
 package me.pick.metrodata.exceptions.advice;
 
 import me.pick.metrodata.exceptions.account.AccountDoesNotExistException;
+import me.pick.metrodata.exceptions.account.AccountInvalidPasswordException;
 import me.pick.metrodata.exceptions.institute.InstituteDoesNotExistException;
 import me.pick.metrodata.exceptions.mitra.MitraDoesNotExistException;
 import me.pick.metrodata.exceptions.role.RoleDoesNotExistException;
@@ -41,7 +42,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = {
-            InvalidTalentNikException.class
+            InvalidTalentNikException.class,
+            AccountInvalidPasswordException.class
     })
     public ResponseEntity<Object> badRequestHandler(Exception e) {
         return ResponseHandler.generateResponse(new Response(
