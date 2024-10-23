@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/main}"
+>
+  <head>
+    <title>Perbarui Profil</title>
+  </head>
+  <body>
+    <div class="content-wrapper" layout:fragment="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <div class="card mt-3">
+              <div class="card-body">
+                <h2>Perbarui Profil</h2>
+                <div class="mb-3 col-12">
+                  <label for="username" class="required">Username</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="username"
+                    th:value="${account.username}"
+                  />
+                  <div class="invalid-feedback">Kolom ini harus diisi</div>
+                </div>
+                <div class="mb-3 col-12">
+                  <label for="firstName" class="required">Nama Depan</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="firstName"
+                    th:value="${account.user.firstName}"
+                  />
+                  <div class="invalid-feedback">Kolom ini harus diisi</div>
+                </div>
+                <div class="mb-3 col-12">
+                  <label for="lastName">Nama Belakang</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="lastName"
+                    th:value="${account.user.lastName}"
+                  />
+                </div>
+                <div class="mb-3 col-12">
+                  <label for="email" class="required">Email</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    th:value="${account.user.email}"
+                  />
+                  <div class="invalid-feedback">Kolom ini harus diisi</div>
+                </div>
+                <div class="mb-3 col-12">
+                  <label for="phone">No. Telp</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="phone"
+                    th:value="${account.user.phone}"
+                  />
+                </div>
+                <div class="float-end">
+                  <a
+                    th:href="@{/mitra}"
+                    class="btn btn-dark me-2"
+                    >Kembali</a
+                  >
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    onclick="submit()"
+                  >
+                    Perbarui
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div layout:fragment="script">
+      <script th:src="@{/js/account/update-profile.js}"></script>
+    </div>
+  </body>
+</html>

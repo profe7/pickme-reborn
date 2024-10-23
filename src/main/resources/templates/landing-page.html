@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Basic -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- Mobile Metas -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <!-- Site Metas -->
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <link rel="icon" th:href="@{/img/favicon.ico}" type="image/x-icon" />
+    <link
+      rel="shortcut icon"
+      th:href="@{/img/favicon.ico}"
+      type="image/x-icon"
+    />
+
+    <title>Pick-Me</title>
+
+    <div th:replace="components/plugin :: css"></div>
+  </head>
+
+  <body>
+    <!-- header section strats -->
+    <header class="header_section">
+      <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg user_nav-container">
+          <a class="navbar-brand fw-bold" th:href="@{/}">
+            <img
+              th:src="@{img/metrodata-logo.webp}"
+              alt="pickme-logo"
+              class="brand-image border-0"
+            />
+            <span>Pick-Me</span>
+          </a>
+
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarText"
+            aria-controls="navbarText"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"> </span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav nav ml-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="#"
+                  >Home <span class="sr-only">(current)</span></a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#services">Services</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#clients">Clients</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#about"> About</a>
+              </li>
+              <li class="nav-item">
+                <a
+                  type="button"
+                  class="btn btn-outline-primary ml-auto"
+                  th:href="@{/login}"
+                >
+                  <i class="fa fa-user" aria-hidden="true"></i>
+                  <span>LOGIN</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </header>
+    <!-- end header section -->
+
+    <div class="hero_area">
+      <div class="hero_bg_box">
+        <div class="bg_img_box">
+          <img th:src="@{img/landing-bg.png}" alt="hero-bg" />
+        </div>
+      </div>
+
+      <!-- slider section -->
+      <section class="slider_section">
+        <div class="container">
+          <div class="row">
+            <div
+              th:if="${accessDeniedMessage}"
+              class="alert alert-danger alert-dismissible fade show"
+            >
+              <p th:text="${accessDeniedMessage}"></p>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="alert"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="col-md-6">
+              <div class="detail-box">
+                <h1>
+                  Pick-Me <br />
+                  Pick your talent
+                </h1>
+                <p>
+                  Selamat datang di Pick-Me, platform revolusioner untuk
+                  pencarian dan perekrutan talenta IT. Kami menyediakan
+                  pengalaman rekrutmen yang efisien dengan fitur penjadwalan
+                  wawancara yang memungkinkan anda langsung terhubung dengan
+                  talenta berkualitas. Dengan Pick-Me, temukan, jadwalkan, dan
+                  kolaborasi dengan mudah. Berdayakan bisnis Anda dengan
+                  bakat-bakat unggul untuk mendorong inovasi. Selamat datang di
+                  masa depan rekrutmen IT bersama Pick-Me!
+                </p>
+                <div class="btn-box">
+                  <a href="#services" class="btn1"> Read More </a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="img-box">
+                <img th:src="@{img/animate-bg.png}" alt="animate-bg" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- end slider section -->
+    </div>
+
+    <!-- service section -->
+
+    <section class="service_section layout_padding">
+      <div class="service_container" id="services">
+        <div class="container">
+          <div class="heading_container heading_center">
+            <h2>Our <span>Services</span></h2>
+            <p>
+              Kami berkomitmen untuk menyajikan talenta-talenta terbaik dengan
+              kualifikasi unggul, yang dapat Anda temukan dengan mudah melalui
+              platform Pick-Me kami. Teruslah berkembang dan kembangkan lebih
+              baik bersama kami!
+            </p>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="box">
+                <div class="img-box">
+                  <img th:src="@{img/service3-img.png}" alt="find-icon" />
+                </div>
+                <div class="detail-box">
+                  <h5>Jelajahi Talent</h5>
+                  <p>
+                    Dengan keunggulan fitur yang dimiliki, aplikasi kami mampu
+                    menyajikan banyak talenta. Anda dapat menjelajahi seluruh
+                    talenta IT yang tersedia. Dengan keberagaman tersebut, anda
+                    berkesempatan untuk menelusuri portofolio yang luas dan
+                    menemukan talenta yang sesuai dengan kebutuhan perusahaan
+                    Anda, memastikan bahwa setiap pilihan adalah langkah yang
+                    mendukung pertumbuhan dan inovasi.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="box">
+                <div class="img-box">
+                  <img th:src="@{img/service1-img.png}" alt="explore-icon" />
+                </div>
+                <div class="detail-box">
+                  <h5>Eksplorasi Kualifikasi</h5>
+                  <p>
+                    Telusuri dan temukan ragam bakat yang saat ini tersedia
+                    untuk peluang pekerjaan, disertai dengan kualifikasi dan CV
+                    individu setiap talenta. Dengan fitur tampilan yang
+                    interaktif dan intuitif, Anda dapat menjelajahi potensi
+                    karyawan dengan mudah, membuka peluang kolaborasi yang
+                    sesuai dengan kebutuhan perusahaan Anda. Dengan Pick-Me,
+                    pengalaman eksplorasi bakat menjadi lebih mendalam dan
+                    efektif.
+                  </p>
+                  <!-- <a href=""> Read More </a> -->
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="box">
+                <div class="img-box">
+                  <img th:src="@{img/service2-img.png}" alt="schedule-icon" />
+                </div>
+                <div class="detail-box">
+                  <h5>Jadwal Interaktif</h5>
+                  <p>
+                    Temukan talenta yang cocok dan segera lakukan penjadwalan
+                    wawancara secara instan. Aplikasi akan memastikan akses anda
+                    ke talenta yang sesuai dengan kebutuhan perusahaan Anda,
+                    meminimalkan waktu antara identifikasi bakat dan langkah
+                    selanjutnya dalam merekrut para profesional terbaik. Segera
+                    manfaatkan kesempatan ini untuk memperoleh tim yang optimal
+                    dan terdepan di bidangnya.
+                  </p>
+                  <!-- <a href=""> Read More </a> -->
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- <div class="btn-box">
+            <a href=""> View All </a>
+          </div> -->
+        </div>
+      </div>
+    </section>
+
+    <!-- end service section -->
+
+    <!-- client section -->
+    <section class="team_section layout_padding">
+      <div class="container-fluid" id="clients">
+        <div class="heading_container heading_center">
+          <h2 class="">Our <span>Clients </span></h2>
+        </div>
+
+        <div class="team_container">
+          <div class="row">
+            <div class="col-lg-2 col-sm-6">
+              <div class="box">
+                <div class="img-box">
+                  <img th:src="@{/img/1.png}" class="img1" alt="" />
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-2 col-sm-6">
+              <div class="box">
+                <div class="img-box">
+                  <img th:src="@{/img/2.png}" class="img1" alt="" />
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-2 col-sm-6">
+              <div class="box">
+                <div class="img-box">
+                  <img th:src="@{/img/3.png}" class="img1" alt="" />
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-2 col-sm-6">
+              <div class="box">
+                <div class="img-box">
+                  <img th:src="@{/img/4.png}" class="img1" alt="" />
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-2 col-sm-6">
+              <div class="box">
+                <div class="img-box">
+                  <img th:src="@{/img/5.png}" class="img1" alt="" />
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-2 col-sm-6">
+              <div class="box">
+                <div class="img-box">
+                  <img th:src="@{/img/6.png}" class="img1" alt="" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- end team section -->
+
+    <!-- about section -->
+
+    <section class="about_section layout_padding">
+      <div class="container">
+        <div class="heading_container heading_center" id="about">
+          <h2>About <span>Us</span></h2>
+          <p>
+            Kami berkomitmen untuk merevolusi cara Anda menemukan dan merekrut
+            talenta IT yang unggul. Dengan menyediakan akses langsung ke
+            jaringan mitra penyedia kami, kami memastikan pengalaman rekrutmen
+            yang efisien dan tanpa hambatan. Dukung kami untuk mengoptimalkan
+            potensi sumber daya manusia di dunia IT melalui Pick-Me!
+          </p>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="img-box">
+              <img
+                th:src="@{img/mockup-img.png}"
+                alt="logo-img"
+                title="Mockup Pick-Me"
+              />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="detail-box">
+              <h3>Pick-Me by Metrodata</h3>
+              <p>
+                Pick-Me hadir sebagai platform terbaik untuk memilih
+                talenta-talenta terbaik yang sesuai dengan kebutuhan perusahaan.
+                Dukung kami untuk terus berkembang sebagai platform rekrutmen
+                talenta terbaik di masa mendatang.
+              </p>
+              <p>
+                Telusuri talenta dengan mudah, lakukan penjadwalan wawancara
+                bagi kandidat berkualitas, dan terhubung langsung dengan
+                perantara kami yang akan mengoptimalkan proses kolaborasi antara
+                mitra dan kandidat pilihan Anda. Kami membuka pintu untuk
+                pengalaman rekrutmen yang lebih dinamis dan efisien di Pick-Me.
+              </p>
+              <!-- <a href=""> Read More </a> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- end about section -->
+
+    <!-- info section -->
+
+    <section class="info_section layout_padding2">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6 col-lg-4 info_col">
+            <div class="info_contact">
+              <h4>Address</h4>
+              <div class="contact_link_box">
+                <a
+                  href="https://maps.app.goo.gl/LHsDitdhn3JxjTk38"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <i class="fa fa-map-marker" aria-hidden="true"></i>
+                  <span>
+                    APL Tower, Jl. Letjen S. Parman No.28, Tj. Duren Sel., Kec.
+                    Grogol petamburan, Kota Jakarta Barat, Daerah Khusus Ibukota
+                    Jakarta 11470
+                  </span>
+                </a>
+                <a href="tel:622129345777">
+                  <i class="fa fa-phone" aria-hidden="true"></i>
+                  <span> +62 21 29345777 </span>
+                </a>
+                <a href="mailto:contact@mii.co.id">
+                  <i class="fa fa-envelope" aria-hidden="true"></i>
+                  <span> contact@mii.co.id </span>
+                </a>
+              </div>
+            </div>
+            <div class="info_social">
+              <a
+                href="https://www.linkedin.com/company/pt.-mitra-integrasi-informatika/mycompany/"
+              >
+                <i class="fab fa-linkedin" aria-hidden="true"></i>
+              </a>
+              <a href="https://www.instagram.com/mii_metrodata/?hl=en">
+                <i class="fab fa-instagram" aria-hidden="true"></i>
+              </a>
+              <a
+                href="https://www.youtube.com/channel/UCSS5z57cgnAMEJdPlkpH8TA"
+              >
+                <i class="fab fa-youtube" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-2 mx-auto info_col">
+            <div class="info_link_box">
+              <h4>Links</h4>
+              <div class="info_links">
+                <a class="active" href="#"> Home </a>
+                <a class="" href="#services"> Services </a>
+                <a class="" href="#clients"> Clients </a>
+                <a class="" href="#about"> About </a>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-6 info_col">
+            <div class="info_detail">
+              <h4>Info</h4>
+              <p>
+                PT. Mitra Integrasi Informatika (MII) was founded on March 1,
+                1996 as a subsidiary of the publicly listed PT Metrodata
+                Electronics, Tbk.
+              </p>
+              <p>
+                Operating independently from its holding company, MII has teams
+                of young and dynamic professionals with regular refreshed
+                necessary knowledge and skill sets. It has also build strategic
+                alliances with a number of national, regional, and global
+                technology partners that have Digital Transformation vision, to
+                strengthen its offerings.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- end info section -->
+
+    <!-- footer section -->
+    <section class="footer_section">
+      <div class="container">
+        <p>&copy; <span id="displayYear"></span> Pick-Me</p>
+      </div>
+    </section>
+
+    <button id="back-to-top-btn" title="Back to Top">
+      <i class="fas fa-angle-up"></i>
+    </button>
+
+    <!-- footer section -->
+
+    <div th:replace="components/plugin :: js"></div>
+    <div layout:fragment="script">
+      <script type="text/javascript" th:src="@{/js/custom.js}"></script>
+    </div>
+  </body>
+</html>

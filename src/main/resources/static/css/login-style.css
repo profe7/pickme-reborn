@@ -1,0 +1,57 @@
+:root {
+  --background-color: #c0dfed; /* Ganti dengan warna latar belakang yang diinginkan */
+  --color: #013c5e;
+}
+
+* {
+  font-family: "Poppins", sans-serif;
+}
+
+.login-body {
+  background: radial-gradient(circle, #c0dfed, #013c5e);
+}
+
+.login-card {
+  border-radius: 30px;
+}
+
+.gradient-custom-2 {
+  background: var(--background-color);
+}
+
+.gradient-form {
+  height: fit-content !important;
+  /* background-color: #bdbdbd; */
+  /* background: radial-gradient(circle, #c0dfed, #013c5e); */
+}
+
+.gradient-custom-2 {
+  /* background-image: url('/img/wp-img.jpg'); */
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
+  border-bottom-left-radius: 30px;
+  border-top-left-radius: 30px;
+}
+
+.shadow {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+}
+
+/* .box-info-login {
+  text-align: center;
+} */
+
+.text-white .box-img {
+  padding: 40px 15px;
+  text-align: center;
+}
+
+.text-white h1,
+h4 {
+  color: var(--color);
+}
+
+.btn {
+  min-width: 120px; /* Atur lebar minimum button */
+  min-height: 40px; /* Atur tinggi minimum button */
+}

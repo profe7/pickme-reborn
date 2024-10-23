@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no"
+      name="viewport"
+    />
+    <title>[[${showFullName}]] - CV-ME</title>
+    <!-- Favicons -->
+    <link th:href="@{(${baseUrl}+'/assets/img/favicon.png')}" rel="icon" />
+
+    <!-- General CSS Files -->
+    <link
+      rel="stylesheet"
+      th:href="@{(${baseUrl}+'/assets/css/template-cv.css')}"
+    />
+  </head>
+
+  <body>
+    <div th:replace="user/component/template-cv :: template"></div>
+  </body>
+</html>

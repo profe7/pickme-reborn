@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/main}">
+
+<head>
+  <title>Lamar Lowongan</title>
+</head>
+
+<body>
+  <div class="content-wrapper" layout:fragment="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="card mt-3">
+            <div class="card-body">
+              <h2>Formulir Lowongan</h2>
+              <div class="mb-3 col-12">
+                <input type="hidden" id="jobId" th:value="${job.id}" />
+                <label for="title">Judul:</label>
+                <input type="text" class="form-control" id="title" th:value="${job.title}" disabled />
+              </div>
+              <div class="mb-3 col-12">
+                <label for="position">Posisi:</label>
+                <input type="text" class="form-control" id="position" th:value="${job.position}" disabled />
+              </div>
+              <div class="mb-3 col-12">
+                <label for="expiredDate">Tanggal Berakhir:</label>
+                <input type="text" class="form-control" id="expiredDate" th:value="${job.expiredDate}" disabled />
+              </div>
+              <div class="mb-3 col-12">
+                <label for="description">Deskripsi:</label>
+                <textarea class="form-control" id="description" rows="4" th:text="${job.description}"
+                  disabled></textarea>
+              </div>
+              <div class="mb-3 col-6">
+                <label for="talent">Talent:</label>
+                <select class="form-select select2" id="talent" required th:onchange="talentHandler(this.value)">
+                  <option value="">Pilih Talent</option>
+                  <option th:each="talent : ${talents}" th:value="${talent.name}" th:text="${talent.name}"></option>
+                </select>
+                <input type="hidden" name="oldTalent" id="oldTalent" value="{talent}" />
+              </div>
+              <div class="float-end">
+                <a th:href="@{/job}" class="btn btn-dark me-2">Kembali</a>
+                <button type="button" class="btn btn-primary" onclick="submit()">
+                  Kirim
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div layout:fragment="script">
+    <script th:src="@{/js/applicant/create.js}"></script>
+  </div>
+</body>
+
+</html>

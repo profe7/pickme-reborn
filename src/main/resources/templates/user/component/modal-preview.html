@@ -1,0 +1,42 @@
+<div
+  th:fragment="modal-preview"
+  class="modal fade"
+  id="modalPreview"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-lg"
+    role="document"
+    style="
+      height: 100% !important;
+      margin-top: 0;
+      margin-bottom: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+    "
+  >
+    <div
+      class="modal-content"
+      style="min-height: 100% !important; border-radius: 5px"
+    >
+      <div class="modal-body">
+        <button
+          type="button"
+          class="mb-2 close"
+          data-dismiss="modal"
+          style="float: right"
+        >
+          &times;
+        </button>
+        <div class="card border">
+          <div class="card-body">
+            <div th:replace="user/component/template-cv :: template"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,151 @@
+<div th:fragment="navbar">
+  <!-- Client -->
+  <div class="header_section">
+    <div class="container-fluid shadow-sm">
+      <nav
+        class="navbar navbar-expand-lg user_nav-container"
+        sec:authorize="hasAuthority('CREATE_INTERVIEW')"
+      >
+        <a class="navbar-brand fw-bold" th:href="@{/}">
+          <img
+            th:src="@{/img/metrodata-logo.webp}"
+            alt="pickme-logo"
+            class="brand-image border-0"
+          />
+          <span>Pick-Me</span>
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarText"
+          aria-controls="navbarText"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+          <ul class="navbar-nav nav ml-auto">
+            <li
+              class="nav-item"
+              th:classappend="${isActive} == home ? 'active fw-bold': ''"
+            >
+              <a class="nav-link" th:href="@{/}">Beranda</a>
+            </li>
+            <li
+              class="nav-item"
+              th:classappend="${isActive} == talents ? 'active fw-bold': ''"
+            >
+              <a class="nav-link" th:href="@{/talent}">Talent</a>
+            </li>
+            <li
+              class="nav-item"
+              th:classappend="${isActive} == recommendation ? 'active fw-bold': ''"
+            >
+              <a class="nav-link" th:href="@{/recommendation}">Rekomendasi</a>
+            </li>
+            <li
+              class="nav-item"
+              th:classappend="${isActive} == schedule ? 'active fw-bold': ''"
+            >
+              <a class="nav-link" th:href="@{/interview-schedule}">Wawancara</a>
+            </li>
+            <li
+              class="nav-item"
+              th:classappend="${isActive} == employees ? 'active fw-bold': ''"
+            >
+              <a class="nav-link" th:href="@{/employee}">Pegawai</a>
+            </li>
+            <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+              <a
+                class="nav-item nav-link dropdown-toggle cursor-pointer"
+                data-toggle="dropdown"
+                sec:authentication="name"
+              ></a>
+              <div
+                class="dropdown-menu dropdown-menu-lg"
+                style="left: inherit; right: 0px"
+              >
+                <a th:href="@{/account/update-profile}" class="dropdown-item">
+                  <i class="fas fa-user mr-2"></i> Perbarui Profil
+                </a>
+                <div class="dropdown-divider"></div>
+                <a th:href="@{/logout}" class="dropdown-item dropdown-footer"
+                  >Logout</a
+                >
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      <!-- Mitra -->
+      <nav
+        class="navbar navbar-expand-lg user_nav-container"
+        sec:authorize="hasAuthority('CREATE_APPLICANT_NOMINEE')"
+      >
+        <a class="navbar-brand fw-bold" th:href="@{/mitra}">
+          <img
+            th:src="@{/img/metrodata-logo.webp}"
+            alt="pickme-logo"
+            class="brand-image border-0"
+          />
+          <span>Pick-Me</span>
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarText"
+          aria-controls="navbarText"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+          <ul class="navbar-nav nav ml-auto">
+            <li
+              class="nav-item"
+              th:classappend="${isActive} == mitra ? 'active fw-bold': ''"
+            >
+              <a class="nav-link" th:href="@{/mitra}">Beranda</a>
+            </li>
+            <li
+              class="nav-item"
+              th:classappend="${isActive} == talent ? 'active fw-bold': ''"
+            >
+              <a class="nav-link" th:href="@{/talent-mitra}">Talent</a>
+            </li>
+            <li
+              class="nav-item"
+              th:classappend="${isActive} == job ? 'active fw-bold': ''"
+            >
+              <a class="nav-link" th:href="@{/job}">Lowongan</a>
+            </li>
+            <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+              <a
+                class="nav-item nav-link dropdown-toggle cursor-pointer"
+                data-toggle="dropdown"
+                sec:authentication="name"
+              ></a>
+              <div
+                class="dropdown-menu dropdown-menu-lg"
+                style="left: inherit; right: 0px"
+              >
+                <a th:href="@{/account/update-profile}" class="dropdown-item">
+                  <i class="fas fa-user mr-2"></i> Perbarui Profil
+                </a>
+                <div class="dropdown-divider"></div>
+                <a th:href="@{/logout}" class="dropdown-item dropdown-footer"
+                  >Logout</a
+                >
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </div>
+</div>

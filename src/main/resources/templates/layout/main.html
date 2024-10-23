@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    
+    <link rel="icon" th:href="@{/img/favicon.ico}" type="image/x-icon" />
+    <link
+      rel="shortcut icon"
+      th:href="@{/img/favicon.ico}"
+      type="image/x-icon"
+    />
+
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+
+    <div th:replace="components/plugin :: css"></div>
+
+    <title>Main</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="mb-3">
+        <div th:replace="components/navbar :: navbar"></div>
+
+        <section layout:fragment="content"></section>
+      </div>
+
+      <div th:replace="components/footer :: footer"></div>
+
+      <button id="back-to-top-btn" title="Back to Top">
+        <i class="fas fa-angle-up"></i>
+      </button>
+
+      <!-- Tambahkan link JavaScript Bootstrap 5 (untuk fitur yang memerlukannya) -->
+      <div th:replace="components/plugin :: js"></div>
+      <div layout:fragment="script"></div>
+    </div>
+  </body>
+</html>

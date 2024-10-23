@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/main}">
+
+<head>
+  <title>Riwayat</title>
+  <link rel="stylesheet" href="path-to-your-css-file.css" />
+</head>
+
+<body>
+  <div class="content-wrapper" layout:fragment="content">
+    <div class="container-fluid mt-3">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="col-md-12 mb-3">
+            <h3>Nama : <span th:text="${histories.talent.name}"></span></h3>
+          </div>
+          <div class="table-responsive mt-3 flex-fill text-center">
+            <table id="table-schedule" class="table table-hover">
+              <thead class="table-primary">
+                <tr>
+                  <th>Status</th>
+                  <th>Tanggal Dibuat</th>
+                  <th>Keterangan</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                <tr th:each="history : ${histories.interviewScheduleHistories}">
+                  <td>
+                    <span th:text="${history.status.name}" class="badge"
+                      th:style="'background-color: ' + ${history.status.color}"></span>
+                  </td>
+                  <td th:text="${#temporals.format(history.created_at, 'dd-MM-yyyy')}"></td>
+                  <td>
+                    <span th:text="${history.feedback}" class="feedback"></span>
+                  </td>
+                </tr>
+                <tr th:if="${histories.onBoardDate != null}" style="text-align: center">
+                  <td>
+                    <span class="badge badge-primary px-1">
+                      ON BOARD
+                    </span>
+                  </td>
+                  <td>
+                    <span th:text="${#temporals.format(histories.onBoardDate, 'dd-MM-yyyy')}" class="feedback"></span>
+                  </td>
+                  <td>
+                    <span
+                      th:text="${histories.interviewScheduleHistories[histories.interviewScheduleHistories.size() -1].feedback}"
+                      class="feedback"></span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h1 th:if="${histories.interviewScheduleHistories.size() <= 0}">
+            Tidak ada data
+          </h1>
+
+          <div class="float-end">
+            <a th:href="${#httpServletRequest.getHeader('referer')}" class="btn btn-dark me-2">Kembali</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div layout:fragment="script">
+    <script th:src="@{/js/interview-schedule/history.js}"></script>
+  </div>
+</body>
+
+</html>
