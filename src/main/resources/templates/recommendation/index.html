@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/main}">
+
+<head>
+  <title>Rekomendasi</title>
+  <style>
+    .talent-card {
+      display: inline-block;
+      margin: 10px 20px;
+    }
+
+    .talent-container {
+      white-space: nowrap;
+      overflow-x: auto;
+    }
+
+    .talent-card {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+
+    .form-group input {
+      width: 100%;
+      max-width: 1224px;
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+
+
+<body class="hold-transition sidebar-mini">
+  <div class="content-wrapper" layout:fragment="content">
+    <div id="container" class="container-fluid custom-container px-4">
+
+      <div class="d-flex">
+        <div class="form-group me-2" style="width: 50%;">
+          <input type="text" class="form-control" placeholder="Cari Berdasarkan Nama" id="searchTalentName"
+            oninput="filterTalentsName()">
+        </div>
+        <div class="form-group me-2" style="width: 50%;">
+          <input type="text" class="form-control" placeholder="Cari Berdasarkan Posisi" id="searchTalentPosition"
+            oninput="filterTalentsPosition()">
+        </div>
+      </div>
+
+
+      <div id="talent-recommendations" class="row"></div>
+      <div th:if="${#lists.isEmpty(recommendations) or recommendations.?[talents.size() > 0].isEmpty()}">
+        Tidak terdapat rekomendasi talent.
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <div layout:fragment="script">
+      <script th:src="@{/js/recommendation/index.js}"></script>
+    </div>
+  </div>
+</body>
+
+</html>

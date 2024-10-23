@@ -1,0 +1,345 @@
+.profile-picture {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+
+  object-fit: cover;
+  object-position: center right;
+}
+
+[data-toggle="collapse"] .fa:before {
+  content: "\f139";
+}
+
+[data-toggle="collapse"].collapsed .fa:before {
+  content: "\f13a";
+}
+
+#frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.fixed {
+  position: fixed;
+}
+
+.scrollit {
+  float: left;
+}
+
+.delete:hover {
+  color: #fc544b !important;
+}
+
+.social-button:hover {
+  opacity: 70% !important;
+}
+
+body {
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+.mycircle {
+  display: inline-block;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #08d9d6;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+}
+
+/* ----- LEFT CIRCLE ----- */
+.left-circle {
+  animation-name: left-circle;
+  animation-timing-function: ease-in;
+}
+
+@keyframes left-circle {
+  0% {
+    top: 0;
+  }
+  50% {
+    top: 50px;
+  }
+  60% {
+    transform: scale(1.15);
+    background-color: #09e8e4;
+    opacity: 0.1;
+  }
+  100% {
+    top: 0px;
+  }
+}
+
+/* ----- MIDDLE CIRCLE ----- */
+.middle-circle {
+  animation-name: middle-circle;
+  animation-timing-function: linear;
+}
+
+@keyframes middle-circle {
+  0% {
+    top: 0;
+  }
+  50% {
+    top: 50px;
+    transform: scale(1.2);
+    opacity: 0.1;
+  }
+  70% {
+    background-color: #09e8e4;
+  }
+  100% {
+    top: 0;
+  }
+}
+
+/* ----- RIGHT CIRCLE ----- */
+.right-circle {
+  animation-name: right-circle;
+  animation-timing-function: ease-out;
+}
+
+@keyframes right-circle {
+  0% {
+    top: 0;
+  }
+  50% {
+    top: 50px;
+    transform: scale(1.2);
+    background-color: #09e8e4;
+    opacity: 0.1;
+  }
+  100% {
+    top: 0;
+  }
+}
+
+p {
+  margin: 0;
+  padding: 0;
+}
+
+.modal-title {
+  font-weight: 900;
+}
+
+.modal-content {
+  border-radius: 13px;
+}
+
+.modal-body {
+  color: #3b3b3b;
+}
+
+.modal-footer {
+  display: block;
+}
+
+.ur {
+  border: none;
+  background-color: #e6e2e2;
+  border-bottom-left-radius: 4px;
+  border-top-left-radius: 4px;
+}
+
+.cpy {
+  border: none;
+  background-color: #e6e2e2;
+  border-bottom-right-radius: 4px;
+  border-top-right-radius: 4px;
+  cursor: pointer;
+}
+
+button.focus,
+button:focus {
+  outline: 0;
+  box-shadow: none !important;
+}
+
+.ur.focus,
+.ur:focus {
+  outline: 0;
+  box-shadow: none !important;
+}
+
+.message {
+  font-size: 11px;
+  color: #ee5535;
+}
+
+.section-list:hover {
+  cursor: pointer;
+  border-color: #1c54bb !important;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+}
+
+.br {
+  border-radius: 8px;
+}
+
+.w80 {
+  width: 80%;
+}
+
+.card {
+  border: 2px solid #fff;
+  box-shadow: 0px 0px 10px 0 #a9a9a9;
+  padding: 30px 40px;
+  width: 80%;
+  margin: 50px auto;
+}
+
+.wrapper {
+  width: 0px;
+  animation: fullView 0.5s forwards cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.profilePic {
+  height: 65px;
+  width: 65px;
+  border-radius: 50%;
+}
+
+.comment {
+  height: 10px;
+  background: #777;
+  margin-top: 20px;
+}
+
+.br {
+  border-radius: 8px;
+}
+
+.loading-card {
+  width: 100%;
+}
+
+.shimmer {
+  width: 0px;
+  animation: fullView 0.5s forwards cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.comment {
+  height: 10px;
+  background: #777;
+  margin-top: 20px;
+}
+
+@keyframes fullView {
+  100% {
+    width: 100%;
+  }
+}
+
+.animate {
+  animation: shimmer 2s infinite linear;
+  background: linear-gradient(to right, #eff1f3 4%, #e2e2e2 25%, #eff1f3 36%);
+  background-size: 1000px 100%;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #fff;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #7e7e7e6e;
+  box-shadow: inset 0 0 6px rgb(255 255 255/30%);
+  border-radius: 10px;
+}
+
+.btn-primary:active,
+.btn-primary:hover,
+.btn-primary.disabled:active,
+.btn-primary.disabled:hover {
+  background-color: #007bff !important;
+}
+
+.user-flow-image {
+  width: auto;
+  height: 180px;
+}
+
+.card {
+  box-shadow: 0px 0px 1px 0 #a9a9a9;
+  width: 100%;
+  padding: 10px;
+  margin: 0 0 30px;
+}
+
+@media only screen and (max-width: 800px) {
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .section-header #layoutUser {
+    flex: none;
+  }
+
+  .section-header #userName {
+    display: none;
+  }
+
+  .section-list {
+    width: 80%;
+  }
+
+  .section-list > div > .col-md-11.col-xs-11 {
+    width: 80%;
+  }
+  .section-list > div > .col-md-1.col-xs-1 {
+    width: 20%;
+  }
+
+  #sectionEducation,
+  #sectionAward,
+  #sectionProject,
+  #sectionExperience,
+  #sectionLanguage,
+  #sectionOrganization,
+  #sectionSkill,
+  #sectionTraining,
+  #sectionCertification,
+  #sectionWork {
+    display: flex;
+  }
+  #sectionEducation > .row,
+  #sectionAward > .row,
+  #sectionProject > .row,
+  #sectionExperience > .row,
+  #sectionLanguage > .row,
+  #sectionOrganization > .row,
+  #sectionSkill > .row,
+  #sectionTraining > .row,
+  #sectionCertification > .row,
+  #sectionWork > .row {
+    width: 20%;
+  }
+}
+
+.form-control.is-invalid::-webkit-inner-spin-button,
+.form-control.is-invalid::-webkit-outer-spin-button {
+  margin-right: 1rem; /* Atur jarak antara ikon "x" dan input */
+}

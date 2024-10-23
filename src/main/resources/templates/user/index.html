@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="id">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
+        <title>Beranda / CV-ME</title>
+        <meta name="description" content="Berhentilah mengkhawatirkan format dan desain CV Anda - CV-ME siap membantu Anda.">
+
+        <!-- Google / Search Engine Tags -->
+        <meta itemprop="name" content="Beranda / CV-ME">
+        <meta itemprop="description" content="Berhentilah mengkhawatirkan format dan desain CV Anda - CV-ME siap membantu Anda.">
+        <meta itemprop="image" th:content="${baseUrl} + '/assets/img/cv.png'">
+
+        <!-- Facebook Meta Tags -->
+        <meta property="og:url" th:content="${baseUrl}">
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="Beranda / CV-ME">
+        <meta property="og:description" content="Berhentilah mengkhawatirkan format dan desain CV Anda - CV-ME siap membantu Anda.">
+        <meta property="og:image" th:content="${baseUrl} + '/assets/img/cv.png'">
+
+        <!-- Twitter Meta Tags -->
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="Beranda / CV-ME">
+        <meta name="twitter:description" content="Berhentilah mengkhawatirkan format dan desain CV Anda - CV-ME siap membantu Anda.">
+        <meta name="twitter:image" th:content="${baseUrl} + '/assets/img/cv.png'">
+        <!-- Favicons -->
+        <link th:href="${baseUrl} + '/assets/img/favicon.png'" rel="icon">
+
+        <!-- General CSS Files -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+              integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.css" 
+              integrity="sha512-DIW4FkYTOxjCqRt7oS9BFO+nVOwDL4bzukDyDtMO7crjUZhwpyrWBFroq+IqRe6VnJkTpRAS6nhDvf0w+wHmxg==" 
+              crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+        <!-- Template CSS -->
+        <link rel="stylesheet" th:href="${baseUrl} + '/assets/css/style.css'">
+        <link rel="stylesheet" th:href="${baseUrl} + '/assets/css/components.css'">
+        <link rel="stylesheet" th:href="${baseUrl} + '/assets/css/custom.css'">
+    </head>
+    <div id="preloader">
+        <div class="loader">
+            <div class="loader--dot"></div>
+            <div class="loader--dot"></div>
+            <div class="loader--dot"></div>
+            <div class="loader--dot"></div>
+            <div class="loader--dot"></div>
+            <div class="loader--dot"></div>
+            <div class="loader--text"></div>
+        </div>
+    </div>
+
+    <body>
+        <div class="container">
+            <section class="section">
+                <div class="section-header mt-3">
+                    <div class="mx-1"></div>
+                    <h1><img th:src="${baseUrl} + '/assets/img/logo_landscape.png'" alt="Logo" width="150px"></h1>
+                    <div id="layoutLogin" class="section-header-breadcrumb">
+                        <a href="javascript:void(0)" onclick="modalLoginShow(false)" class="btn btn-primary"><i
+                                class="fa fa-sign-in-alt"></i>&nbsp; Login</a>
+                        <div class="mx-2"></div>
+                        <a href="javascript:void(0)" onclick="register()" class="btn btn-primary"><i class="fa fa-user-alt"></i>&nbsp; Daftar</a>
+                    </div>
+                    <div id="layoutUser" class="section-header-breadcrumb">
+                        <div class="dropdown"><a href="javascript:void(0)" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user" aria-expanded="false">
+                                <img alt="image" id="profilePicture" th:src="${baseUrl} + '/assets/img/user.png'" class="profile-picture mr-1" >
+                                <div id="userName" class="d-sm-none d-lg-inline-block">User</div></a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <!--<div class="dropdown-title">Logged in 5 min ago</div>-->
+                                <!--</a>-->
+                                <a th:href="${baseUrl} + '/app/main'" class="dropdown-item has-icon">
+                                    <i class="fas fa-user"></i> Profil
+                                </a>
+                                <a th:href="${baseUrl} + '/logout'" class="dropdown-item has-icon text-danger">
+                                    <i class="fas fa-sign-out-alt"></i> Logout
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="section-body">
+                    <h2 class="section-title">CV-ME</h2>
+                     <p class="section-lead">
+                      Berhentilah mengkhawatirkan format dan desain CV Anda - CV-ME siap membantu Anda.</i>
+                    </p> 
+
+                    <div class="row mt-sm-4">
+                        <div class="col-12 mb-4">
+                            <div class="hero" style="background-color:white;">
+                                <div class="hero-inner">
+                                    <div class="row flex-column-reverse flex-lg-row">
+                                        <div class="col-md-12 col-lg-6">
+                                            <h2>Bikin CV Online Cepat dan Mudah!</h2>
+                                            <p class="lead">Dengan CV-ME, siapa saja bisa membuat CV profesional dengan mudah dan cepat. Masukkan detail pribadi Anda dan mulailah mengisi konten CV. Ayo buat CV profesional Anda sendiri dan unduh dalam 15 menit.</p>
+                                            <div class="mt-4">
+                                                <a href="javascript:void(0)" onclick="createCv() " class="btn btn-primary btn-lg btn-icon icon-left"><i class="far fa-file"></i>
+                                                    Buat CV Sekarang!</a>
+                                            </div>
+                                        </div>
+                                            <!-- <div class="mt-4">
+                                                <a href="javascript:void(0)" onclick="tesMitra()" class="btn btn-primary btn-lg btn-icon icon-left"><i class="far fa-file"></i>
+                                                   Test Mitra</a>
+                                                 </div>
+                                                  <div class="mt-4">
+                                                      <a href="javascript:void(0)" onclick="tesMitraEdit()" class="btn btn-primary btn-lg btn-icon icon-left"><i class="far fa-file"></i>
+                                                          Test Mitra Edit</a>
+                                                  </div> 
+                                                </div>  -->
+                                        <div class="col-md-12 col-lg-6">
+                                            <img src="/assets/img/banner.png" alt="" width="100%">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-sm-4">
+                        <div class="col-12 mb-4">
+                            <div class="hero" style="background-color:white;">
+                                <div class="hero-inner">
+                                    <div class="row">
+                                        <div class="col-md-12 col-lg-4">
+                                            <div class="card h-100 align-items-center">
+                                                <img src="/assets/img/flow1.png" class="user-flow-image">
+                                                <div class="card-body">
+                                                    <h5 class="text-center">
+                                                        Masuk ke website
+                                                    </h5>
+                                                    <p class="text-center text-muted">
+                                                        Buat akun baru atau masuk menggunakan akun anda
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 col-lg-4">
+                                            <div class="card h-100 align-items-center">
+                                                <img src="/assets/img/flow2.png" class="user-flow-image">
+                                                <div class="card-body">
+                                                    <h5 class="text-center">
+                                                        Lengkapi data
+                                                    </h5>
+                                                    <p class="text-center text-muted">
+                                                        Isi bagian data - data yang dibutuhkan
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 col-lg-4">
+                                            <div class="card h-100 align-items-center">
+                                                <img src="/assets/img/flow3.png" class="user-flow-image">
+                                                <div class="card-body">
+                                                    <h5 class="text-center">
+                                                        Export CV Anda
+                                                    </h5>
+                                                    <p class="text-center text-muted">
+                                                        CV anda telah berhasil dibuat dan anda dapat mengunduhnya dalam bentuk PDF
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <footer class="main-footer container">
+                <div class="footer-left">
+                    Copyright &copy; 2023 <div class="bullet"></div> Desain oleh <b>Tim CV-ME</b>
+                </div>
+                <div class="footer-right mr-3">
+                    [[${appVersion}]]
+                </div>
+            </footer>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade bd-example-modal-md" id="modalLogin" tabindex="-1" role="dialog"
+             aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="auth-form-light pb-5 text px-4 px-sm-5">
+                            <div class="brand-logo">
+                                <img class="mb-2" th:src="${baseUrl} + '/assets/img/logo_landscape.png'" width="150px" alt="logo">
+                            </div>
+                            <h4 class="my-3">Selamat Datang!</h4>
+                            <h6 class="font-weight-light mb-4">Masuk ke akun Anda</h6>
+                            <div id="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <span id="message">Akun tidak ditemukan!</span>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div id="warning" class="alert alert-warning alert-dismissible fade show" role="alert">
+                                <span id="messageWarning"></span>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form id="loginForm" class="mt-3" method="POST">
+                                <div class="form-group">
+                                    <input type="text" class="form-control form-control" name="email" id="email"
+                                           placeholder="Email">
+                                    <small id="emailText" class="text-danger help-block"></small>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group" id="show_hide_password">
+                                        <input type="password" class="form-control form-control" name="password" id="password"
+                                               placeholder="Password">
+                                        <div class="input-group-append">
+                                            <a class="input-group-text" href=""><i class="text-dark fas fa-eye-slash"></i></a>
+                                        </div>
+                                    </div>
+                                    <small id="passwordText" class="text-danger help-block"></small>
+                                </div>
+                                <div class="mt-3">
+                                    <button type="submit" id="btnLogin"
+                                            class="btn btn-primary btn-block btn-lg font-weight-medium auth-form-btn"
+                                            style="height: 60px;">MASUK</button>
+                                </div>
+                                <div class="mt-3">
+                                    <a class="text-primary h6" style="cursor: pointer;" onclick="forgotPassword()">
+                                        Lupa Password?
+                                    </a>
+                                </div>
+                                <div id="login-loading" class="text-center loading-container" style="z-index: 9999999;">
+                                    <div class="shapes-container">
+                                        <div class="mycircle left-circle"></div>
+                                        <div class="mycircle middle-circle"></div>
+                                        <div class="mycircle right-circle"></div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- General JS Scripts -->
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+                integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+                integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js" 
+                integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA==" 
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+        <!-- Template JS File -->
+        <script th:src="${baseUrl} + '/assets/js/custom.js'"></script>
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            let baseUrl = /*[[${baseUrl}]]*/ 'baseUrl';
+            let baseUrlMa = /*[[${baseUrlMa}]]*/ 'baseUrlMa';
+            let isLogin = /*[[${isLogin}]]*/ 'isLogin';
+            let isRedirectApp = false;
+            let baseUrlRecruitme = /*[[${baseUrlRecruitme}]]*/ 'baseUrlRecruitme';
+            /*]]>*/
+        </script>        
+        <script th:inline="javascript" th:src="@{(${baseUrl} + '/assets/js/index/index.js')}"></script>
+        <script th:inline="javascript" th:src="@{(${baseUrl} + '/assets/js/index/login.js')}"></script>
+
+    </body>
+
+</html>

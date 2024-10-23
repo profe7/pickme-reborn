@@ -1,0 +1,22 @@
+<!-- Download CV PDF or Word Modal -->
+<div th:fragment="modal-download" class="modal fade" id="modalDownload" tabindex="-1" role="dialog" aria-labelledby="modalDownloadLabel" aria-hidden="true">
+     <div class="modal-dialog" role="document">
+          <div class="modal-content">
+               <div class="modal-header">
+                    <h5 class="modal-title" id="modalDownloadLabel">Pilihan Unduh CV</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                         <span aria-hidden="true">&times;</span>
+                    </button>
+               </div>
+               <div class="modal-body">
+                    Pilih format unduhan CV:
+                    <a id="btnDownloadCvPdf" th:href="${hhUserId != null} ? ${baseUrl} + '/mitra/app/download?mitraUserId=' + ${hhUserId} : ${baseUrl} + '/app/download'" class="btn btn-danger" data-toggle="tooltip" data-placement="top" onclick="downloadCv('pdf')"
+                         ><i class="fa fa-file-pdf"></i>&nbsp;&nbsp;PDF</a
+                    >
+                    <a id="btnDownloadCvWord" th:href="${hhUserId != null} ? ${baseUrl} + '/mitra/app/download/docx?mitraUserId=' + ${hhUserId} : ${baseUrl} + '/app/download/docx'" class="btn btn-primary" data-toggle="tooltip" data-placement="top" onclick="downloadCv('word')"
+                         ><i class="fa fa-file-word"></i>&nbsp;&nbsp;Word</a
+                    >
+               </div>
+          </div>
+     </div>
+</div>

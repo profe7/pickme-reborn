@@ -1,0 +1,36 @@
+<!-- Profile Picture Modal -->
+<div th:fragment="modal-profile-picture" class="modal" id="profilePictureModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title text-center">Crop Foto</h4>
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <img
+          id="profilePictureModalPreview"
+          src="#"
+          alt="Profile Picture"
+          style="max-height: 100%; max-width: 100%"
+        />
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer text-right">
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-dismiss="modal"
+          onclick="saveCrop()"
+        >
+          <i class="fa fa-save"></i> Simpan
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

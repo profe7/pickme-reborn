@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/main}"
+>
+  <head>
+    <title>Lowongan</title>
+  </head>
+
+  <head>
+    <title>Lowongan</title>
+  </head>
+
+  <body>
+    <div class="content-wrapper" layout:fragment="content">
+      <!-- job card -->
+      <div class="container-fluid custom-container m-3">
+        <div class="row justify-content-center">
+          <div class="col-10 my-2">
+            <div class="row">
+              <!-- search bar tengah -->
+              <input
+                id="searchTitle"
+                class="form-control shadow-sm"
+                type="search"
+                placeholder="Cari Judul Lowongan"
+                aria-label="Search"
+              />
+            </div>
+          </div>
+
+            <div class="row mt-3" style="height: fit-content">
+              <!-- Filters -->
+              <div class="col-md-3 mb-3">
+                <div class="card p-2" style="width: 18rem">
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item pb-3">
+                      <b>Cari berdasarkan posisi</b>
+                      <div class="filters mt-3">
+                        <select
+                          id="searchPosition"
+                          class="form-control select2"
+                          data-placeholder="Cari berdasarkan posisi"
+                          data-allow-clear="true"
+                        >
+                          <option value=""></option>
+                          <option
+                            th:each="position : ${positions}"
+                            th:value="${position.name}"
+                            th:text="${position.name}"
+                          ></option>
+                        </select>
+                      </div>
+                    </li>
+  
+                    <li class="list-group-item pb-3">
+                      <b>Tanggal berakhir</b>
+                      <div class="filters mt-3">
+                        <input
+                          id="searchDateExpired"
+                          class="form-control"
+                          type="date"
+                          placeholder="Cari Tanggal Berakhir"
+                          aria-label="Date"
+                        />
+                      </div>
+                    </li>
+                    <li class="list-group-item pb-3">
+                      <b>Terakhir diupdate</b>
+                      <div class="filters mt-3">
+                        <label for="filter24h">
+                          <input
+                            type="radio"
+                            id="filter24h"
+                            name="timeInterval"
+                            value="hari"
+                          />
+                          24 Jam Terakhir
+                        </label>
+                        <br />
+                        <label for="filter1w">
+                          <input
+                            type="radio"
+                            id="filter1w"
+                            name="timeInterval"
+                            value="minggu"
+                          />
+                          1 Minggu Terakhir
+                        </label>
+                        <br />
+                        <label for="filter1m">
+                          <input
+                            type="radio"
+                            id="filter1m"
+                            name="timeInterval"
+                            value="bulan"
+                          />
+                          1 Bulan Terakhir
+                        </label>
+                        <br />
+                        <label for="filterAnytime">
+                          <input
+                            type="radio"
+                            id="filterAnytime"
+                            name="timeInterval"
+                            value=""
+                          />
+                          Kapanpun
+                        </label>
+                      </div>
+                    </li>
+                  </ul>
+                  <!-- <button id="applyFilterButton" class="btn btn-primary shadow-sm" type="button">
+                  Terapkan
+                </button> -->
+                </div>
+              </div>
+  
+              <!-- list card -->
+              <div class="col-md-9 iframe-talent-card">
+                <div class="card talent-card border-0">
+                  <div id="jobDetailNoData" class="mx-auto w-50" style="display: none">
+                    <div
+                      class="alert alert-warning alert-sm text-center w-50"
+                      role="alert"
+                    >
+                      Data Tidak Ditemukan
+                    </div>
+                  </div>
+                  <div class="card-body" id="detailCard">
+                    <!-- <div class="col-md-12 text-justify scrollable-content"> -->
+                    <div
+                      class="col-md-12 text-justify"
+                      style="height: 80vh; overflow-y: auto"
+                    >
+                      <div id="jobDetail"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <!-- pagination -->
+          <div class="row">
+            <div class="col-md-4"></div>
+            <div
+              class="mt-2 col-md-8 pagination-container justify-content-center"
+            >
+              <p id="paginationInfo">Halaman 1 dari 1, Total Data: 0</p>
+              <nav aria-label="Page navigation" class="mt-2">
+                <ul class="pagination mr-2" id="pagination">
+                  <li class="page-item" id="firstPageBtn">
+                    <a class="page-link" href="#" onclick="displayData(0)">
+                      <<
+                    </a>
+                  </li>
+                  <li class="page-item" id="lastPageBtn">
+                    <a
+                      class="page-link"
+                      href="#"
+                      onclick="displayData(totalPage - 1)"
+                      >>></a
+                    >
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+
+          <!-- list job -->
+          <!-- <div class="col-md-4 list-talent-card">
+            <div class="card talent-card border-0 border" id="listJob">
+              <div class="scrollable-content">
+                <div class="col-md-12">
+                  <div id="jobTbl"></div>
+                </div>
+                <table class="col-md-12">
+                  <tbody id="jobTbl"></tbody>
+                </table>
+              </div>
+            </div>
+          </div> -->
+        </div>
+      </div>
+    </div>
+    <div layout:fragment="script">
+      <script th:src="@{/js/job/index.js}"></script>
+    </div>
+  </body>
+</html>

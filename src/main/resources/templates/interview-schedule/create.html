@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/main}"
+>
+  <head>
+    <title>Buat Jadwal Wawancara</title>
+  </head>
+  <body>
+    <div class="content-wrapper" layout:fragment="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <div class="card mt-3">
+              <div class="card-body">
+                <h2>Formulir Email</h2>
+                <input type="hidden" id="jobId" th:value="${jobId}" />
+                <div class="mb-3 col-12">
+                  <label for="to">To:</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="to"
+                    th:value="${talent.email}"
+                    disabled
+                  />
+                </div>
+                <div class="mb-3 col-12">
+                  <label for="cc">CC:</label>
+                  <select
+                    class="form-select select2"
+                    id="ccSelect"
+                    multiple="multiple"
+                  >
+                    <!-- Opsional: Isi dengan email CC default jika ada -->
+                  </select>
+                </div>
+
+                <div class="mb-3 col-12">
+                  <label for="talent">Talent:</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="name"
+                    th:value="${talent.name}"
+                    disabled
+                  />
+                  <input type="hidden" id="talentId" th:value="${talent.id}" />
+                </div>
+                <div class="mb-3 col-6">
+                  <label for="position" class="required">Posisi:</label>
+                  <select
+                    class="form-select select2"
+                    id="position"
+                    th:onchange="positionHandler(this.value)"
+                  >
+                  <option value="">Pilih Posisi</option>
+                  <option
+                    th:each="position : ${positions}"
+                    th:value="${position.name}"
+                    th:text="${position.name}"
+                    th:selected="${position.name == recommendationposition}"
+                  ></option>
+                  </select>
+
+                  </select>
+                  <div class="invalid-feedback">Kolom ini harus diisi</div>
+                  <!-- <input
+                    type="hidden"
+                    name="oldPosition"
+                    id="oldPosition"
+                    value="{position}"
+                  /> -->
+                </div>
+                <div class="mb-3 col-6">
+                  <label for="offline" class="form-label required"
+                    >Tipe Wawancara</label
+                  >
+                  <select
+                    class="form-select"
+                    id="offline"
+                    th:onchange="interviewTypeHandler(this.value)"
+                  >
+                    <option th:value="true" th:text="Online"></option>
+                    <option th:value="false" th:text="Offline"></option>
+                  </select>
+
+                  <!-- <input
+                    type="hidden"
+                    name="oldType"
+                    id="oldType"
+                    value="Online"
+                  /> -->
+                </div>
+                <div class="mb-3 col-12">
+                  <label
+                    for="locationAddress"
+                    id="locationAddressLabel"
+                    class="required"
+                    >Lokasi:</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="locationAddress"
+                    th:onkeyup="detailHandler(this.value)"
+                  />
+                  <div class="invalid-feedback">Kolom ini harus diisi</div>
+                </div>
+                <div class="mb-3 col-12">
+                  <label
+                    for="interviewLink"
+                    id="interviewLinkLabel"
+                    class="required"
+                    >Link Wawancara:</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="interviewLink"
+                    th:onkeyup="detailHandler(this.value)"
+                  />
+                  <div class="invalid-feedback">Kolom ini harus diisi</div>
+                  <!-- <input
+                    type="hidden"
+                    id="oldDetail"
+                    name="oldDetail"
+                    value="{place}"
+                  /> -->
+                </div>
+                <div class="row mx-1">
+                  <div class="col-md-4">
+                    <div class="mb-3">
+                      <label for="date" class="required">Tanggal:</label>
+                      <input
+                        type="date"
+                        class="form-control"
+                        id="date"
+                        th:onchange="dateHandler(this.value)"
+                        th:min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
+                      />
+                      <div class="invalid-feedback">Kolom ini harus diisi</div>
+
+                      <!-- <input
+                        type="hidden"
+                        name="oldDate"
+                        id="oldDate"
+                        value="{date}"
+                      /> -->
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="mb-3">
+                      <label for="startTime" class="required"
+                        >Waktu Mulai:</label
+                      >
+                      <input
+                        type="time"
+                        class="form-control"
+                        id="startTime"
+                        th:onchange="timeHandler()"
+                      />
+                      <div class="invalid-feedback">Kolom ini harus diisi</div>
+                      <!-- <input
+                        type="hidden"
+                        name="oldStart"
+                        id="oldStart"
+                        value="{start}"
+                      /> -->
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="mb-3">
+                      <label for="endTime" class="required"
+                        >Waktu Selesai:</label
+                      >
+                      <input
+                        type="time"
+                        class="form-control"
+                        id="endTime"
+                        th:onchange="timeHandler()"
+                      />
+                      <div class="invalid-feedback">Kolom ini harus diisi</div>
+                      <!-- <input
+                        type="hidden"
+                        name="oldEnd"
+                        id="oldEnd"
+                        value="{end}"
+                      /> -->
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3 col-12">
+                  <label for="message" class="required">Pesan:</label>
+                  <textarea
+                    class="form-control"
+                    id="message"
+                    rows="4"
+                  ></textarea>
+                  <!-- <textarea
+                    class="form-control"
+                    id="message"
+                    rows="4"
+                    th:text="${message}"
+                  ></textarea> -->
+                  <div class="invalid-feedback">Kolom ini harus diisi</div>
+                </div>
+                <div class="float-end">
+                  <a id="btnBack" class="btn btn-dark me-2" onclick="buttonBack()">Kembali</a>
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    onclick="submit()"
+                  >
+                    Kirim
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div layout:fragment="script">
+      <script th:src="@{/js/interview-schedule/create.js}"></script>
+    </div>
+  </body>
+</html>

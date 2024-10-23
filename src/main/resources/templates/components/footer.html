@@ -1,0 +1,161 @@
+Tentu, berikut adalah codingan lengkap dengan konten yang diminta untuk bagian client dan mitra:
+
+```html
+<div th:fragment="footer">
+  <!-- Client -->
+  <section class="info_section layout_padding2" sec:authorize="hasAuthority('CREATE_INTERVIEW')">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 col-lg-4 info_col">
+          <div class="info_contact">
+            <h4>Address</h4>
+            <div class="contact_link_box">
+              <a href="https://maps.app.goo.gl/LHsDitdhn3JxjTk38" target="_blank" rel="noopener noreferrer">
+                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                <span>
+                  APL Tower, Jl. Letjen S. Parman No.28, Tj. Duren Sel.,
+                  Kec. Grogol petamburan, Kota Jakarta Barat, Daerah Khusus
+                  Ibukota Jakarta 11470
+                </span>
+              </a>
+              <a href="tel:622129345777">
+                <i class="fa fa-phone" aria-hidden="true"></i>
+                <span> +62 21 29345777 </span>
+              </a>
+              <a href="mailto:contact@mii.co.id">
+                <i class="fa fa-envelope" aria-hidden="true"></i>
+                <span> contact@mii.co.id </span>
+              </a>
+            </div>
+          </div>
+          <div class="info_social">
+            <a href="https://www.linkedin.com/company/pt.-mitra-integrasi-informatika/mycompany/">
+              <i class="fab fa-linkedin" aria-hidden="true"></i>
+            </a>
+            <a href="https://www.instagram.com/mii_metrodata/?hl=en">
+              <i class="fab fa-instagram" aria-hidden="true"></i>
+            </a>
+            <a href="https://www.youtube.com/channel/UCSS5z57cgnAMEJdPlkpH8TA">
+              <i class="fab fa-youtube" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-2 mx-auto info_col">
+          <div class="info_link_box">
+            <h4>Links</h4>
+            <div class="info_links">
+              <a class="active" th:href="@{/}"> Beranda </a>
+              <a class="" th:href="@{/talent}"> Talent</a>
+              <a class="" th:href="@{/recommendation}"> Rekomendasi </a>
+              <a class="" th:href="@{/interview-schedule}"> Wawancara </a>
+              <a class="" th:href="@{/employee}"> Pegawai </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-6 info_col">
+          <div class="info_detail">
+            <h4>Info</h4>
+            <p>
+              PT. Mitra Integrasi Informatika (MII) was founded on March 1,
+              1996 as a subsidiary of the publicly listed PT Metrodata
+              Electronics, Tbk.
+            </p>
+            <p>
+              Operating independently from its holding company, MII has
+              teams of young and dynamic professionals with regular
+              refreshed necessary knowledge and skill sets. It has also
+              build strategic alliances with a number of national, regional,
+              and global technology partners that have Digital
+              Transformation vision, to strengthen its offerings.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- end client info section -->
+
+  <!-- Mitra -->
+  <section class="info_section layout_padding2" sec:authorize="hasAuthority('CREATE_APPLICANT_NOMINEE')">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 col-lg-4 info_col">
+          <div class="info_contact">
+            <h4>Address</h4>
+            <div class="contact_link_box">
+              <a href="https://maps.app.goo.gl/LHsDitdhn3JxjTk38" target="_blank" rel="noopener noreferrer">
+                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                <span>
+                  APL Tower, Jl. Letjen S. Parman No.28, Tj. Duren Sel.,
+                  Kec. Grogol petamburan, Kota Jakarta Barat, Daerah Khusus
+                  Ibukota Jakarta 11470
+                </span>
+              </a>
+              <a href="tel:622129345777">
+                <i class="fa fa-phone" aria-hidden="true"></i>
+                <span> +62 21 29345777 </span>
+              </a>
+              <a href="mailto:contact@mii.co.id">
+                <i class="fa fa-envelope" aria-hidden="true"></i>
+                <span> contact@mii.co.id </span>
+              </a>
+            </div>
+          </div>
+          <div class="info_social">
+            <a href="https://www.linkedin.com/company/pt.-mitra-integrasi-informatika/mycompany/">
+              <i class="fab fa-linkedin" aria-hidden="true"></i>
+            </a>
+            <a href="https://www.instagram.com/mii_metrodata/?hl=en">
+              <i class="fab fa-instagram" aria-hidden="true"></i>
+            </a>
+            <a href="https://www.youtube.com/channel/UCSS5z57cgnAMEJdPlkpH8TA">
+              <i class="fab fa-youtube" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-2 mx-auto info_col">
+          <div class="info_link_box">
+            <h4>Links</h4>
+            <div class="info_links">
+              <a class="active" th:href="@{/mitra}"> Beranda </a>
+              <a class="" th:href="@{/talent-mitra}"> Talent</a>
+              <a class="" th:href="@{/job}"> Lowongan </a>
+              <a class="" th:href="@{/account/update-profile}"> Profile </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-6 info_col">
+          <div class="info_detail">
+            <h4>Info</h4>
+            <p>
+              PT. Mitra Integrasi Informatika (MII) was founded on March 1,
+              1996 as a subsidiary of the publicly listed PT Metrodata
+              Electronics, Tbk.
+            </p>
+            <p>
+              Operating independently from its holding company, MII has
+              teams of young and dynamic professionals with regular
+              refreshed necessary knowledge and skill sets. It has also
+              build strategic alliances with a number of national, regional,
+              and global technology partners that have Digital
+              Transformation vision, to strengthen its offerings.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+              
+                  <!-- end mitra info section -->
+                
+                  <!-- footer section -->
+                  <section class="footer_section">
+                    <div class="container">
+                      <p>&copy; <span id="displayYear"></span> Pick-Me</p>
+                    </div>
+                  </section>
+                  <!-- footer section -->
+                </div>
+                ```
+                
+                Pastikan untuk mengganti komentar dengan konten yang sesuai untuk masing-masing bagian, seperti alamat, kontak, media sosial, dan informasi mitra.

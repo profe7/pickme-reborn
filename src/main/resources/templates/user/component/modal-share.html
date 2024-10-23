@@ -1,0 +1,54 @@
+<!-- Modal -->
+<div th:fragment="modal-share" class="modal fade" id="modalShare" tabindex="-1" role="dialog"
+     aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content col-12">
+            <div class="modal-header">
+                <h5 class="modal-title">Bagikan CV Anda :</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex justify-content-between mb-3">
+                    <p><a class="shadow social-button" th:href="'wa.me/send?text=' + ${baseUrl} + '/share/' + ${idUser}" target="_blank"
+                          data-toggle="tooltip" data-placement="top" title="Whatsapp" id="linkWa">
+                        <img th:src="${baseUrl} + '/assets/img/social-media/whatsapp.png'"
+                             alt=""
+                             width="50px"></a></p>
+                    <p>
+                        <a class="shadow social-button" th:href="'https://www.linkedin.com/shareArticle?mini=true&amp;url=' + ${baseUrl} + '/share/' + ${idUser}"
+                           target="_blank" data-toggle="tooltip" data-placement="top" title="Linkedin" id="linkLinked">
+                            <img th:src="${baseUrl} + '/assets/img/social-media/linkedin.png'"
+                                 alt="" width="50px"></i></a></p>
+                    <p><a class="shadow social-button" th:href="'https://www.facebook.com/sharer/sharer.php?u=' + ${baseUrl} + '/share/' + ${idUser}"
+                          target="_blank" data-toggle="tooltip" data-placement="top" title="Facebook" id="linkFacebook">
+                        <img th:src="${baseUrl} + '/assets/img/social-media/facebook.png'"
+                             alt="" width="50px"></a></p>
+                    <p>
+                        <a class="shadow social-button" th:href="'mailto:?subject=CV-ME - ' + ${fullname} + '&amp;body=Buka tautan berikut untuk melihat CV  ' + ${baseUrl} + '/share/' + ${idUser}"
+                           target="_blank"
+                           data-toggle="tooltip" data-placement="top" title="Email" id="mailto">
+                            <img th:src="${baseUrl} + '/assets/img/social-media/email.png'" alt=""
+                                 width="50px"></a></p>
+                </div>
+                <div class='d-flex justify-content-between'>
+                    <label style="font-weight: 600">Link Halaman <span class="message"></span></label><br/>
+                </div>
+                <div class="row">
+                    <input class="col-12 ur" type="url" th:value="${baseUrl} + '/share/' + ${idUser}" disabled
+                           id="inputUrl"
+                           aria-describedby="inputGroup-sizing-default" style="height: 40px;">
+                </div>
+                <div class="row float-right my-3">
+                    <a th:href="${baseUrl} + '/share/' + ${idUser}" class="btn btn-sm btn-outline-primary mr-3"
+                       target="_blank" id="openLink">
+                        <span class="fa fa-sm fa-external-link-alt"></span> Buka Link
+                    </a>
+                    <button class="btn btn-sm btn-primary mr-3" onclick="copy()">
+                        <span class="fa fa-sm fa-clone"></span> Salin Link
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

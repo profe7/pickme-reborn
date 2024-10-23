@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/dashboard-main}"
+>
+  <head>
+    <title>Dashboard</title>
+  </head>
+  <body>
+    <div
+      class="content-wrapper main-custom-container"
+      layout:fragment="content"
+    >
+      <div class="container-fluid">
+        <div class="col-md-12">
+          <div class="row d-flex justify-content-around">
+            <div class="col-lg-3 col-md-12 card my-1">
+              <div class="card-header bg-white">
+                <div class="text-center my-4">
+                  <h3 class="card-title" th:text="${logged}"></h3>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <h4 class="card-text d-flex justify-content-between">
+                    Total Talent <span th:text="${totalTalents}"></span>
+                  </h4>
+                  <h5
+                    th:each="category : ${totalTalentsByCategory}"
+                    class="card-text d-flex justify-content-between"
+                  >
+                    <span th:text="${category.key}"></span>
+                    <span th:text="${category.value}"></span>
+                  </h5>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-5-custom col-md-12 card my-1">
+              <div class="card-body">
+                <div class="scrollable-content">
+                  <div
+                    class="card mx-3 my-1 rounded-card"
+                    th:each="interview : ${interviews}"
+                    th:if="${interviews.size > 0}"
+                  >
+                    <div class="card-body">
+                      <div class="row align-items-center">
+                        <div class="col-2">
+                          <div class="profile-image-box">
+                            <img
+                              th:if="${interview.talent.photo != null}"
+                              th:src="${interview.talent.photo}"
+                              alt="Profile Image"
+                              class="profile-image rounded-1"
+                              width="75"
+                              height="100"
+                            />
+                            <img
+                              th:if="${interview.talent.photo == null}"
+                              src="https://cdn-icons-png.flaticon.com/512/3106/3106773.png"
+                              alt="Profile Image"
+                              class="profile-image"
+                              width="75"
+                              height="75"
+                            />
+                          </div>
+                        </div>
+                        <div class="col-7">
+                          <h6
+                            class="card-title"
+                            th:text="${interview.talent.name}"
+                          ></h6>
+                          <h6
+                            class="card-text text-md work-assignment"
+                            th:text="${interview.position}"
+                          ></h6>
+                          <h6
+                            class="card-text text-sm-start skill-list"
+                            th:text="${interview.date}"
+                          ></h6>
+                          <h6
+                            class="card-text skill-list"
+                            th:text="${interview.status.name}"
+                          ></h6>
+                        </div>
+                        <div class="col-3">
+                          <button
+                            class="btn btn-sm btn-success my-1"
+                            th:onclick="process([[${interview.id}]])"
+                          >
+                            Proses
+                          </button>
+                          <a
+                            th:href="@{'/interview-schedule/update/' + ${interview.id}}"
+                            class="btn btn-sm btn-primary my-1"
+                            th:if="${interview.onprocess == false && interview.editable == true}"
+                            >Jadwal Ulang</a
+                          >
+                          <button
+                            class="btn btn-sm btn-danger my-1"
+                            th:onclick="cancel([[${interview.id}]])"
+                            th:if="${interview.onprocess == false && interview.editable == true}"
+                          >
+                            Batalkan
+                          </button>
+                          <button
+                            class="btn btn-sm btn-danger my-1"
+                            th:onclick="reject([[${interview.id}]])"
+                            th:if="${interview.onprocess == true }"
+                          >
+                            Tolak
+                          </button>
+                          <button
+                            class="btn btn-sm btn-primary my-1"
+                            th:onclick="accept([[${interview.id}]])"
+                            th:if="${interview.onprocess == true }"
+                          >
+                            Terima
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <h1 th:if="${interviews.size <= 0}">
+                    <div class="user-card card rounded-card mx-1 my-1">
+                      <div class="card-body">
+                        <div class="card-title text-center">Tidak ada data</div>
+                      </div>
+                    </div>
+                  </h1>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-12 card my-1">
+              <div class="card-body"></div>
+            </div>
+            <div class="col-lg-12 col-md-12 card my-1">
+              <div class="card-body col-md-6 offset-md-3">
+                <div id="calendar" class="calendar-home"></div>
+                <!-- Modal -->
+                <div
+                  class="modal fade edit-form"
+                  id="detailSchedule"
+                  aria-labelledby="exampleModalLabel"
+                  aria-hidden="true"
+                >
+                  <div class="modal-dialog modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header border-bottom-0">
+                        <h5 class="modal-title" id="modal-title">
+                          Detail Jadwal
+                        </h5>
+                        <button
+                          type="button"
+                          class="btn-close"
+                          data-bs-dismiss="modal"
+                          aria-label="Close"
+                        ></button>
+                      </div>
+                      <div class="modal-body">
+                        <span id="id" hidden></span>
+                        <p>
+                          <span class="fw-bold">Talent :</span>
+                          <span id="name"></span>
+                        </p>
+                        <p>
+                          <span class="fw-bold">Posisi :</span>
+                          <span id="position"></span>
+                        </p>
+                        <p>
+                          <span class="fw-bold">Tanggal :</span>
+                          <span id="date"></span>
+                        </p>
+                        <p>
+                          <span class="fw-bold">Waktu Mulai :</span>
+                          <span id="startTime"></span>
+                        </p>
+                        <p>
+                          <span class="fw-bold">Waktu Selesai :</span>
+                          <span id="endTime"></span>
+                        </p>
+                        <p>
+                          <span class="fw-bold">Online :</span>
+                          <span id="offline"></span>
+                        </p>
+                        <p id="location">
+                          <span></span>
+                        </p>
+                        <p id="link">
+                          <span></span>
+                        </p>
+                      </div>
+                      <div
+                        class="modal-footer border-top-0 d-flex justify-content-center"
+                      >
+                        <button class="btn btn-danger" data-bs-dismiss="modal">
+                          Tutup
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div layout:fragment="script">
+      <script th:src="@{/js/index.js}"></script>
+    </div>
+  </body>
+</html>
