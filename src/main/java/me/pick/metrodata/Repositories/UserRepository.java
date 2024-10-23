@@ -1,7 +1,7 @@
 package me.pick.metrodata.Repositories;
 
 import lombok.NonNull;
-//import me.pick.backend.enums.InstituteType;
+import me.pick.metrodata.enums.InstituteType;
 import me.pick.metrodata.models.entity.Institute;
 import me.pick.metrodata.models.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;

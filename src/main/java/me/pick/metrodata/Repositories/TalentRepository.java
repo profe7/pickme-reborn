@@ -2,7 +2,7 @@ package me.pick.metrodata.Repositories;
 
 import me.pick.metrodata.models.entity.Talent;
 import me.pick.metrodata.models.entity.User;
-//import me.pick.metrodata.models.entity.dto.responses.TalentDataDTO;
+import me.pick.metrodata.models.dto.responses.TalentDataDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

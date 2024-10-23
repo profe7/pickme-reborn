@@ -1,6 +1,6 @@
 package me.pick.metrodata.Repositories;
 
-import me.pick.backend.enums.InterviewStatus;
+import me.pick.metrodata.enums.InterviewStatus;
 import me.pick.metrodata.models.entity.models.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

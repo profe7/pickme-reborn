@@ -1,6 +1,6 @@
 package me.pick.metrodata.Repositories;
 
-//import me.pick.backend.enums.MessageTemplateEnum;
+import me.pick.metrodata.enums.MessageTemplateEnum;
 import me.pick.metrodata.models.entity.MessageTemplate;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
