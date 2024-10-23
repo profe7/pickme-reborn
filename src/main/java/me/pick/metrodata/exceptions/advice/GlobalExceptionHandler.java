@@ -1,5 +1,6 @@
 package me.pick.metrodata.exceptions.advice;
 
+import me.pick.metrodata.exceptions.account.AccountDoesNotExistException;
 import me.pick.metrodata.exceptions.institute.InstituteDoesNotExistException;
 import me.pick.metrodata.exceptions.mitra.MitraDoesNotExistException;
 import me.pick.metrodata.exceptions.role.RoleDoesNotExistException;
@@ -23,7 +24,8 @@ public class GlobalExceptionHandler {
             TalentDoesNotExistException.class,
             MitraDoesNotExistException.class,
             RoleDoesNotExistException.class,
-            VacancyNotExistException.class
+            VacancyNotExistException.class,
+            AccountDoesNotExistException.class
     })
     public ResponseEntity<Object> resourceNotAvailableHandler(Exception e) {
         return ResponseHandler.generateResponse(new Response(

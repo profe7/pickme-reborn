@@ -1,6 +1,7 @@
 package me.pick.metrodata.services.auth;
 
 import lombok.RequiredArgsConstructor;
+import me.pick.metrodata.exceptions.account.AccountDoesNotExistException;
 import me.pick.metrodata.models.dto.requests.ChangePasswordRequest;
 import me.pick.metrodata.models.dto.requests.LoginRequest;
 import me.pick.metrodata.models.dto.responses.ForgotPasswordResponse;
@@ -38,7 +39,7 @@ public class AuthServiceImpl implements AuthService {
 	public LoginResponse login (LoginRequest loginRequest) {
 		UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken (loginRequest.getUsername (), loginRequest.getPassword ());
 
-		Account account = accountRepository.findByUsernameOrUserEmail (loginRequest.getUsername (), loginRequest.getUsername ()).get ();
+		Account account = accountRepository.findByUsernameOrUserEmail (loginRequest.getUsername (), loginRequest.getUsername ()).orElseThrow (() -> new AccountDoesNotExistException(loginRequest.getUsername()));
 
 		Authentication auth = authenticationManager.authenticate (authReq);
 
