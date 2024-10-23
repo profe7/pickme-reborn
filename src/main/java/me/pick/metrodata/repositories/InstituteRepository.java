@@ -7,8 +7,11 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface InstituteRepository extends JpaRepository<Institute, Long>, JpaSpecificationExecutor<Institute> {
         List<Institute> findInstitutesByInstituteType(InstituteType instituteType);
+
+        Optional<Institute> findInstituteById(Long id);
 }
