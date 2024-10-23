@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ApplicantRepository extends JpaRepository<Applicant, Long>, JpaSpecificationExecutor<Applicant> {
@@ -15,5 +16,7 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long>, Jpa
     List<Applicant> findByVacancyId(Long vacancyId);
 
     List<Applicant> findByTalentId(String talentId);
+
+    Applicant findByTalentId(Long talentId);
 
 }

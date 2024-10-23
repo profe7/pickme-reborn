@@ -49,7 +49,7 @@ public class TalentServiceImpl implements  TalentService{
         Talent newTalent = new Talent();
 
         newTalentAccount.setUsername(request.getTalentEmail().split("@")[0].replace(".", ""));
-        newTalentAccount.setPassword(passwordEncoder.encode(request.getTalentNik()Nik()));
+        newTalentAccount.setPassword(passwordEncoder.encode(request.getTalentNik()));
         newTalentAccount.setRole(roleRepository.findById(6L).orElseThrow(() -> new RoleDoesNotExistException(6L)));
 
         String[] nameParts = request.getTalentName().split(" ");
