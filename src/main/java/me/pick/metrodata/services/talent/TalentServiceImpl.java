@@ -75,7 +75,6 @@ public class TalentServiceImpl implements  TalentService{
     }
 
     @Override
-    @Async
     public Talent createViaVacancy(TalentFromVacancyRequest request) {
         Talent existing = talentRepository.findByNik(request.getTalentNik()).orElse(null);
         if (existing != null) {
@@ -102,6 +101,7 @@ public class TalentServiceImpl implements  TalentService{
 
         newTalentUser.setLastName(lastName);
         newTalentUser.setMitra(mitraRepository.findById(request.getTalentMitraId()).orElseThrow(() -> new MitraDoesNotExistException(request.getTalentMitraId())));
+        newTalentUser.setEmail(request.getTalentEmail());
         userRepository.save(newTalentUser);
 
         newTalentAccount.setUser(newTalentUser);
