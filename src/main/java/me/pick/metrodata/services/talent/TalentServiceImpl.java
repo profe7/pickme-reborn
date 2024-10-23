@@ -146,9 +146,7 @@ public class TalentServiceImpl implements  TalentService{
 
         talentEducationsHelper(request.getEducations(), talent);
 
-        if (!talent.getSkills().isEmpty()) {
-            talentSkillsHelper(request.getSkills(), talent);
-        }
+        talentSkillsHelper(request.getSkills(), talent);
 
         if (!talent.getJobHistories().isEmpty()) {
             talentJobHistoryHelper(request.getJobHistory(), talent);
