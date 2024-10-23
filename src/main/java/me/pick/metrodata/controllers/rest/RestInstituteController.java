@@ -6,6 +6,7 @@ import me.pick.metrodata.utils.Response;
 import me.pick.metrodata.utils.ResponseHandler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +23,7 @@ public class RestInstituteController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('READ_INSTITUTE')")
     public ResponseEntity<Object> getInstituteById(@PathVariable Long id) {
         Institute institute = instituteService.getInstituteById(id);
         return ResponseHandler.generateResponse(new Response(

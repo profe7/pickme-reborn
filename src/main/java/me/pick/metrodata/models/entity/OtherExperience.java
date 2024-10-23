@@ -54,4 +54,13 @@ public class OtherExperience {
     @ManyToOne
     @JoinColumn(name = "talent_id")
     private Talent talent;
+
+    public OtherExperience(String experienceName, String instituteName, String positionName, String positionName1, LocalDate experienceDate, Talent talent) {
+        this.experienceName = experienceName;
+        this.instituteName = instituteName;
+        this.positionName = positionName;
+        this.description = positionName1;
+        this.experienceDate = experienceDate;
+        this.talent = talent;
+    }
 }

@@ -45,4 +45,11 @@ public class Skill {
     @ManyToOne
     @JoinColumn(name = "talent_id")
     private Talent talent;
+
+    public Skill(String name, SkillCategory category, SkillLevel level, Talent talent) {
+        this.name = name;
+        this.category = category;
+        this.level = level;
+        this.talent = talent;
+    }
 }

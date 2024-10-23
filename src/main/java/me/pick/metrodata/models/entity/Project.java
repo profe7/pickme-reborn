@@ -56,5 +56,15 @@ public class Project {
     @ManyToOne
     @JoinColumn(name = "skill_id")
     private References skill;
+
+    public Project(String projectName, String institution, String description, LocalDate startDate, LocalDate endDate, Talent talent, References references) {
+        this.projectName = projectName;
+        this.institution = institution;
+        this.description = description;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.talent = talent;
+        this.skill = references;
+    }
 }
 
