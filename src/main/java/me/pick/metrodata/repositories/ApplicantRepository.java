@@ -16,4 +16,5 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long>, Jpa
 
     List<Applicant> findByTalentId(String talentId);
 
+
 }

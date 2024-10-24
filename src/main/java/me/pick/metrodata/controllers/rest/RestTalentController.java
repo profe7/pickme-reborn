@@ -28,7 +28,7 @@ public class RestTalentController {
     public ResponseEntity<Object> createTalentViaVacancy(@RequestBody TalentFromVacancyRequest request){
         Talent talent = talentService.createViaVacancy(request);
         return ResponseHandler.generateResponse(new Response(
-                "Talent created", HttpStatus.OK, "SUCCESS", talent));
+                "Talent created", HttpStatus.CREATED, "SUCCESS", talent));
     }
 
     @PostMapping("/complete-new-talent-data")
