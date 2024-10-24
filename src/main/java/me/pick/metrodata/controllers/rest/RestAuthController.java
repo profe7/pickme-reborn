@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping
+@RequestMapping("/api/v1/auth")
 public class RestAuthController {
 	private final AuthService authService;
 
