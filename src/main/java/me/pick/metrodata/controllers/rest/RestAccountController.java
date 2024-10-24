@@ -55,4 +55,12 @@ public class RestAccountController {
                 "Available accounts", HttpStatus.OK, "SUCCESS", accountService.getAvailableAccountsOfRm(page, size, search, institute, baseBudget, limitBudget)
         ));
     }
+
+    @PostMapping("/edit-account/{id}")
+    @PreAuthorize("hasAnyAuthority('MANAGEMENT_UPDATE_ACCOUNT', 'EXTERNAL_UPDATE_ACCOUNT')")
+    public ResponseEntity<Object> editAccount(@PathVariable Long id, @RequestBody AccountRequest request) {
+        return ResponseHandler.generateResponse(new Response(
+                "Account updated", HttpStatus.OK, "SUCCESS", accountService.editAccount(id, request)
+        ));
+    }
 }

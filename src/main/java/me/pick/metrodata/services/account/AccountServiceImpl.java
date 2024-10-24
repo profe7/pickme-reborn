@@ -45,22 +45,15 @@ public class AccountServiceImpl implements AccountService {
         if (existing != null) {
             throw new AccountAlreadyExistException(request.getAccountUsername());
         }
-
         Account account = new Account();
         User user  = new User();
+        return accountDataHelper(account, request, user);
+    }
 
-        account.setUsername(request.getAccountUsername());
-        account.setPassword(passwordEncoder.encode(request.getAccountPassword()));
-        account.setRole(roleRepository.findById(request.getRoleId()).orElseThrow(() -> new RoleDoesNotExistException(request.getRoleId())));
-
-        user.setFirstName(request.getAccountFirstName());
-        user.setLastName(request.getAccountLastName());
-        user.setEmail(request.getAccountEmail());
-        user.setInstitute(instituteRepository.findInstituteById(request.getInstituteId()).orElseThrow(() -> new RoleDoesNotExistException(request.getInstituteId())));
-
-        userRepository.save(user);
-        account.setUser(user);
-        return accountRepository.save(account);
+    public Account editAccount(Long id, AccountRequest request) {
+        Account account = accountRepository.findById(id).orElseThrow(() -> new AccountDoesNotExistException(id.toString()));
+        User user = userRepository.findById(account.getUser().getId()).orElseThrow(() -> new AccountDoesNotExistException(account.getUser().getId().toString()));
+        return accountDataHelper(account, request, user);
     }
 
     public Page<Account> getAllAvailableAccounts(Integer page, Integer size, String search, Long institute, Long baseBudget, Long limitBudget) {
@@ -87,5 +80,20 @@ public class AccountServiceImpl implements AccountService {
         int end = Math.min((start + pageable.getPageSize()), accounts.size());
 
         return new PageImpl<>(accounts.subList(start, end), pageable, accounts.size());
+    }
+
+    private Account accountDataHelper (Account account, AccountRequest request, User user) {
+        account.setUsername(request.getAccountUsername());
+        account.setPassword(passwordEncoder.encode(request.getAccountPassword()));
+        account.setRole(roleRepository.findById(request.getRoleId()).orElseThrow(() -> new RoleDoesNotExistException(request.getRoleId())));
+
+        user.setFirstName(request.getAccountFirstName());
+        user.setLastName(request.getAccountLastName());
+        user.setEmail(request.getAccountEmail());
+        user.setInstitute(instituteRepository.findInstituteById(request.getInstituteId()).orElseThrow(() -> new RoleDoesNotExistException(request.getInstituteId())));
+
+        userRepository.save(user);
+        account.setUser(user);
+        return accountRepository.save(account);
     }
 }
