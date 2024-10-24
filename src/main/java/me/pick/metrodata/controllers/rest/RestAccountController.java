@@ -29,10 +29,30 @@ public class RestAccountController {
     @GetMapping("/available-accounts")
     @PreAuthorize("hasAnyAuthority('MANAGEMENT_READ_ACCOUNT','EXTERNAL_READ_ACCOUNT')")
     public ResponseEntity<Object> getAllAvailableAccounts(
-            @RequestParam(defaultValue = "0") Integer page
-            ,@RequestParam(defaultValue = "10") Integer size) {
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(required = false, defaultValue = "") String search,
+            @RequestParam(required = false) Long institute,
+            @RequestParam(required = false) Long baseBudget,
+            @RequestParam(required = false) Long limitBudget
+    ) {
         return ResponseHandler.generateResponse(new Response(
-                "Available accounts", HttpStatus.OK, "SUCCESS", accountService.getAllAvailableAccounts(page, size)
+                "Available accounts", HttpStatus.OK, "SUCCESS", accountService.getAllAvailableAccounts(page, size, search, institute, baseBudget, limitBudget)
+        ));
+    }
+
+    @GetMapping("/available-accounts-rm")
+    @PreAuthorize("hasAnyAuthority('EXTERNAL_READ_ACCOUNT')")
+    public ResponseEntity<Object> getAllAvailableAccountsByRM(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(required = false, defaultValue = "") String search,
+            @RequestParam(required = false) Long institute,
+            @RequestParam(required = false) Long baseBudget,
+            @RequestParam(required = false) Long limitBudget
+    ) {
+        return ResponseHandler.generateResponse(new Response(
+                "Available accounts", HttpStatus.OK, "SUCCESS", accountService.getAvailableAccountsOfRm(page, size, search, institute, baseBudget, limitBudget)
         ));
     }
 }

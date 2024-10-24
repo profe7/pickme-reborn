@@ -7,5 +7,7 @@ import org.springframework.data.domain.Page;
 public interface AccountService {
     Account createAccount(AccountRequest accountRequest);
 
-    Page<Account> getAllAvailableAccounts(Integer page, Integer size);
+    Page<Account> getAllAvailableAccounts(Integer page, Integer size, String search, Long institute, Long baseBudget, Long limitBudget);
+
+    Page<Account> getAvailableAccountsOfRm(Integer page, Integer size, String search, Long institute, Long baseBudget, Long limitBudget);
 }
