@@ -18,4 +18,7 @@ public interface VacancyRepository extends JpaRepository<Vacancy, Long>, JpaSpec
 
         List<Vacancy> findByClientId(Long clientId);
 
+        @Query("SELECT v FROM Vacancy v WHERE v.status != 'CLOSED'")
+        List<Vacancy> findOpenVacancies();
+
 }

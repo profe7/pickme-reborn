@@ -1,6 +1,8 @@
 package me.pick.metrodata.services.auth;
 
 import lombok.RequiredArgsConstructor;
+import me.pick.metrodata.exceptions.account.AccountDoesNotExistException;
+import me.pick.metrodata.exceptions.account.AccountInvalidPasswordException;
 import me.pick.metrodata.models.dto.requests.ChangePasswordRequest;
 import me.pick.metrodata.models.dto.requests.LoginRequest;
 import me.pick.metrodata.models.dto.responses.ForgotPasswordResponse;
@@ -14,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,11 +40,14 @@ public class AuthServiceImpl implements AuthService {
 	public LoginResponse login (LoginRequest loginRequest) {
 		UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken (loginRequest.getUsername (), loginRequest.getPassword ());
 
-		Account account = accountRepository.findByUsernameOrUserEmail (loginRequest.getUsername (), loginRequest.getUsername ()).get ();
+		Account account = accountRepository.findByUsernameOrUserEmail (loginRequest.getUsername (), loginRequest.getUsername ()).orElseThrow (() -> new AccountDoesNotExistException(loginRequest.getUsername()));
 
-		Authentication auth = authenticationManager.authenticate (authReq);
-
-		SecurityContextHolder.getContext ().setAuthentication (auth);
+		try {
+			Authentication auth = authenticationManager.authenticate (authReq);
+			SecurityContextHolder.getContext ().setAuthentication (auth);
+		} catch (AuthenticationException e) {
+			throw new AccountInvalidPasswordException();
+		}
 
 		UserDetails userDetails = accountDetailService.loadUserByUsername (loginRequest.getUsername ());
 

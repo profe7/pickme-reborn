@@ -46,5 +46,12 @@ public class Achievements {
     @ManyToOne
     @JoinColumn(name = "talent_id")
     private Talent talent;
+
+    public Achievements(String achievementName, String institution, LocalDate achievementDate, Talent talent) {
+        this.achievementName = achievementName;
+        this.institution = institution;
+        this.achievementDate = achievementDate;
+        this.talent = talent;
+    }
 }
 

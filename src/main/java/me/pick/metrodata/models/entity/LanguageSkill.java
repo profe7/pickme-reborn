@@ -48,4 +48,12 @@ public class LanguageSkill {
     @ManyToOne
     @JoinColumn(name = "talent_id")
     private Talent talent;
+
+    public LanguageSkill(AbilityLevel readingAbilityLevel, AbilityLevel writingAbilityLevel, AbilityLevel speakingAbilityLevel, References references, Talent talent) {
+        this.readingAbilityLevel = readingAbilityLevel;
+        this.writingAbilityLevel = writingAbilityLevel;
+        this.speakingAbilityLevel = speakingAbilityLevel;
+        this.language = references;
+        this.talent = talent;
+    }
 }

@@ -1,7 +1,6 @@
 package me.pick.metrodata.models.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +12,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -54,4 +52,11 @@ public class Organization {
     @JoinColumn(name = "talent_id")
     private Talent talent;
 
+    public Organization(String organizationName, OrganizationPosition organizationPosition, LocalDate startDate, LocalDate endDate, Talent talent) {
+        this.organizationName = organizationName;
+        this.organizationPosition = organizationPosition;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.talent = talent;
+    }
 }

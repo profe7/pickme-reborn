@@ -61,4 +61,14 @@ public class Education {
     @ManyToOne
     @JoinColumn(name = "talent_id")
     private Talent talent;
+
+    public Education(EducationalLevel educationalLevel, LocalDate startDate, LocalDate endDate, Float academicGrade, String institution, References references, Talent talent) {
+        this.educationalLevel = educationalLevel;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.academicGrade = academicGrade;
+        this.institution = institution;
+        this.major = references;
+        this.talent = talent;
+    }
 }

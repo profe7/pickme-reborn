@@ -59,4 +59,14 @@ public class JobHistory {
     @JoinColumn(name = "position_id")
     private References position;
 
+    public JobHistory(String companyName, ContractStatus contractStatus, LocalDate startDate, LocalDate endDate, String description, String projectSpecification, Talent talent, References references) {
+        this.companyName = companyName;
+        this.contractStatus = contractStatus;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.description = description;
+        this.projectSpecification = projectSpecification;
+        this.talent = talent;
+        this.position = references;
+    }
 }

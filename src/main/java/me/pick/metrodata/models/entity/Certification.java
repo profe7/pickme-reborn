@@ -53,4 +53,11 @@ public class Certification {
     @JoinColumn(name = "talent_id")
     private Talent talent;
 
+    public Certification(String certificateName, String institutionName, LocalDate certificateIssueDate, LocalDate validUntil, Talent talent) {
+        this.certificateName = certificateName;
+        this.institutionName = institutionName;
+        this.certificateIssueDate = certificateIssueDate;
+        this.validUntil = validUntil;
+        this.talent = talent;
+    }
 }

@@ -46,4 +46,11 @@ public class Training {
     @ManyToOne
     @JoinColumn(name = "talent_id")
     private Talent talent;
+
+    public Training(String trainingName, LocalDate trainingDate, String syllabus, Talent talent) {
+        this.trainingName = trainingName;
+        this.trainingDate = trainingDate;
+        this.syllabus = syllabus;
+        this.talent = talent;
+    }
 }
