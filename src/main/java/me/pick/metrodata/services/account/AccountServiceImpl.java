@@ -9,8 +9,14 @@ import me.pick.metrodata.repositories.AccountRepository;
 import me.pick.metrodata.repositories.InstituteRepository;
 import me.pick.metrodata.repositories.RoleRepository;
 import me.pick.metrodata.repositories.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -49,5 +55,15 @@ public class AccountServiceImpl implements AccountService {
         userRepository.save(user);
         account.setUser(user);
         return accountRepository.save(account);
+    }
+
+    public Page<Account> getAllAvailableAccounts(Integer page, Integer size) {
+        List<Account> accounts = accountRepository.findAll();
+        Pageable pageable = PageRequest.of(page, size);
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), accounts.size());
+
+        return new PageImpl<>(accounts.subList(start, end), pageable, accounts.size());
     }
 }

@@ -7,10 +7,7 @@ import me.pick.metrodata.utils.ResponseHandler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/account")
@@ -26,6 +23,16 @@ public class RestAccountController {
     public ResponseEntity<Object> createAccount(@RequestBody AccountRequest request) {
         return ResponseHandler.generateResponse(new Response(
                 "Account created", HttpStatus.CREATED, "SUCCESS", accountService.createAccount(request)
+        ));
+    }
+
+    @GetMapping("/available-accounts")
+    @PreAuthorize("hasAnyAuthority('MANAGEMENT_READ_ACCOUNT','EXTERNAL_READ_ACCOUNT')")
+    public ResponseEntity<Object> getAllAvailableAccounts(
+            @RequestParam(defaultValue = "0") Integer page
+            ,@RequestParam(defaultValue = "10") Integer size) {
+        return ResponseHandler.generateResponse(new Response(
+                "Available accounts", HttpStatus.OK, "SUCCESS", accountService.getAllAvailableAccounts(page, size)
         ));
     }
 }
