@@ -49,4 +49,29 @@ public class EmailServiceImpl implements EmailService {
             throw new IllegalStateException ("Email failed to send!!!");
         }
     }
+
+    public Boolean sendResetPasswordMessage (Account account, String url, String token) {
+        try {
+            //			String resetPasswordUrl = url + "/reset-password/" + token;
+            String resetPasswordUrl = "http://localhost:9002/change-password/" + token;
+            MimeMessage message = mailSender.createMimeMessage ();
+            MimeMessageHelper helper = new MimeMessageHelper (message, true);
+
+            helper.setTo (account.getUser ().getEmail ());
+            helper.setSubject ("Reset Password By PICKME");
+
+            Context context = new Context ();
+            context.setVariable ("name", account.getUser ().getFirstName ());
+            context.setVariable ("resetPasswordUrl", resetPasswordUrl);
+
+            String htmlContent = templateEngine.process ("email/reset-password", context);
+            helper.setText (htmlContent, true);
+
+            mailSender.send (message);
+        } catch (Exception e) {
+            e.printStackTrace ();
+            throw new IllegalStateException ("Email failed to send!!!");
+        }
+        return true;
+    }
 }

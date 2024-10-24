@@ -15,4 +15,6 @@ public interface AuthService {
 	ForgotPasswordResponse validateResetPasswordToken (String token);
 
 	Boolean changePassword (String token, ChangePasswordRequest changePasswordRequest);
+
+	public Boolean requestForget (String emailOrUsername, String url);
 }
