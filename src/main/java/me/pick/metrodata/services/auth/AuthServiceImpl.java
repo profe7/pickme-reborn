@@ -11,6 +11,7 @@ import me.pick.metrodata.models.entity.*;
 import me.pick.metrodata.repositories.AccountRepository;
 import me.pick.metrodata.repositories.ResetPasswordTokenRepository;
 import me.pick.metrodata.services.accountdetail.AccountDetailService;
+import me.pick.metrodata.services.email.EmailService;
 import me.pick.metrodata.utils.AuthUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,6 +26,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,6 +37,7 @@ public class AuthServiceImpl implements AuthService {
 	private final AuthenticationManager authenticationManager;
 	private final AccountDetailService accountDetailService;
 	private final PasswordEncoder passwordEncoder;
+	private final EmailService emailService;
 
 
 	public LoginResponse login (LoginRequest loginRequest) {
@@ -108,6 +111,21 @@ public class AuthServiceImpl implements AuthService {
 		account.setPassword (passwordEncoder.encode (changePasswordRequest.getConfirmNewPassword ()));
 		accountRepository.save (account);
 		resetPasswordTokenRepository.delete (resetPasswordToken);
+
+		return true;
+	}
+
+	public Boolean requestForget (String emailOrUsername, String url) {
+		Account account = accountRepository.findByUsernameOrUserEmail (emailOrUsername, emailOrUsername).orElseThrow (() -> new ResponseStatusException (HttpStatus.NOT_FOUND, "Account is not found"));
+		String token = UUID.randomUUID ().toString ();
+
+		ResetPasswordToken resetPasswordToken = new ResetPasswordToken ();
+		resetPasswordToken.setToken (token);
+		resetPasswordToken.setAccount (account);
+		resetPasswordToken.setExpiryDateTime (LocalDateTime.now ().plusDays (1));
+		resetPasswordTokenRepository.save (resetPasswordToken);
+
+		emailService.sendResetPasswordMessage (account, url, token);
 
 		return true;
 	}
