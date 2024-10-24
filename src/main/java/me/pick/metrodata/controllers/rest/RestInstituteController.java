@@ -7,10 +7,7 @@ import me.pick.metrodata.utils.ResponseHandler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/institute")
@@ -30,4 +27,20 @@ public class RestInstituteController {
                 "Institute found", HttpStatus.OK, "SUCCESS", institute
         ));
     }
+
+    @GetMapping("/all-institutes")
+    @PreAuthorize("hasAnyAuthority('READ_INSTITUTE')")
+    public ResponseEntity<Object> getAllInstitutes(
+            @RequestParam(required = false, defaultValue = "") String name,
+            @RequestParam(required = false) Long instituteTypeId,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size
+    ) {
+        return ResponseHandler.generateResponse(new Response(
+                "Institutes found", HttpStatus.OK, "SUCCESS", instituteService.getAllInstitutes(
+                        name, instituteTypeId, page, size
+        )
+        ));
+    }
+
 }

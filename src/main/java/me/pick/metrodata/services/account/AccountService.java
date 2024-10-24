@@ -9,6 +9,8 @@ public interface AccountService {
 
     Account editAccount(Long id, AccountRequest accountRequest);
 
+    Account getAccountById(Long id);
+
     Page<Account> getAllAvailableAccounts(Integer page, Integer size, String search, Long institute, Long baseBudget, Long limitBudget);
 
     Page<Account> getAvailableAccountsOfRm(Integer page, Integer size, String search, Long institute, Long baseBudget, Long limitBudget);
