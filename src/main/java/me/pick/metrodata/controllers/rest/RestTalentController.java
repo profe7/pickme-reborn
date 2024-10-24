@@ -9,10 +9,9 @@ import me.pick.metrodata.utils.ResponseHandler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/talent")
@@ -38,5 +37,13 @@ public class RestTalentController {
         Talent talent = talentService.completeNewTalentData(request);
         return ResponseHandler.generateResponse(new Response(
                 "Talent data completed", HttpStatus.OK, "SUCCESS", talent));
+    }
+
+    @PostMapping("/available-for-vacancy/{vacancyId}/{mitraId}")
+    @PreAuthorize("hasAnyAuthority('READ_TALENT', 'READ_JOB', 'CREATE_APPLICANT')")
+    public ResponseEntity<Object> availableForVacancy(@PathVariable Long vacancyId, @PathVariable Long mitraId){
+        List<Talent> talents = talentService.availableForVacancy(vacancyId, mitraId);
+        return ResponseHandler.generateResponse(new Response(
+                "Talents available for vacancy", HttpStatus.OK, "SUCCESS", talents));
     }
 }

@@ -1,6 +1,7 @@
 package me.pick.metrodata.services.talent;
 
 import lombok.extern.slf4j.Slf4j;
+import me.pick.metrodata.enums.ApplicantStatus;
 import me.pick.metrodata.enums.StatusCV;
 import me.pick.metrodata.exceptions.reference.ReferenceDoesNotExistException;
 import me.pick.metrodata.exceptions.mitra.MitraDoesNotExistException;
@@ -9,6 +10,7 @@ import me.pick.metrodata.exceptions.talent.IncompleteTalentRequestException;
 import me.pick.metrodata.exceptions.talent.InvalidTalentNikException;
 import me.pick.metrodata.exceptions.talent.TalentAlreadyExistException;
 import me.pick.metrodata.exceptions.talent.TalentDoesNotExistException;
+import me.pick.metrodata.exceptions.vacancy.VacancyNotExistException;
 import me.pick.metrodata.models.dto.requests.*;
 import me.pick.metrodata.models.entity.*;
 import me.pick.metrodata.repositories.*;
@@ -17,8 +19,10 @@ import me.pick.metrodata.services.email.EmailService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -41,6 +45,7 @@ public class TalentServiceImpl implements  TalentService{
     private final OrganizationRepository organizationRepository;
     private final OtherExperienceRepository otherExperienceRepository;
     private final AchievementsRepository achievementsRepository;
+    private final VacancyRepository vacancyRepository;
     private final EmailService emailService;
 
     public TalentServiceImpl(TalentRepository talentRepository, MitraRepository mitraRepository,
@@ -52,7 +57,7 @@ public class TalentServiceImpl implements  TalentService{
                              ProjectRepository projectRepository, TrainingRepository trainingRepository,
                              CertificationRepository certificationRepository, OrganizationRepository organizationRepository,
                              OtherExperienceRepository otherExperienceRepository, AchievementsRepository achievementsRepository,
-                             EmailService emailService) {
+                             EmailService emailService, VacancyRepository vacancyRepository) {
         this.talentRepository = talentRepository;
         this.mitraRepository = mitraRepository;
         this.roleRepository = roleRepository;
@@ -71,6 +76,7 @@ public class TalentServiceImpl implements  TalentService{
         this.organizationRepository = organizationRepository;
         this.otherExperienceRepository = otherExperienceRepository;
         this.achievementsRepository = achievementsRepository;
+        this.vacancyRepository = vacancyRepository;
         this.emailService = emailService;
     }
 
@@ -128,6 +134,18 @@ public class TalentServiceImpl implements  TalentService{
         emailService.sendNewTalentCredentials(newTalentAccount, request.getTalentNik());
 
         return newTalent;
+    }
+
+    public List<Talent> availableForVacancy(Long vacancyId, Long mitraId) {
+        Vacancy vacancy = vacancyRepository.findVacancyById(vacancyId).orElseThrow(() ->new VacancyNotExistException(vacancyId));
+        Mitra mitra = mitraRepository.findById(mitraId).orElseThrow(() -> new MitraDoesNotExistException(mitraId));
+
+        List<Talent> available = talentRepository.findTalentsWithCompleteCVByMitra(mitra.getId());
+
+        available = available.stream()
+                .filter(talent -> talent.getApplicants().stream()
+                        .noneMatch(applicant -> applicant.getVacancy().getId().equals(vacancy.getId()) || applicant.getStatus() == ApplicantStatus.ACCEPTED)).toList();
+        return available;
     }
 
     @Override
