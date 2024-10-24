@@ -31,6 +31,14 @@ public class RestTalentController {
                 "Talent created", HttpStatus.CREATED, "SUCCESS", talent));
     }
 
+    @PostMapping("/create-new-talent")
+    @PreAuthorize("hasAnyAuthority('CREATE_TALENT')")
+    public ResponseEntity<Object> createTalent(@RequestBody TalentDataCompletionRequest request){
+        Talent talent = talentService.createNewTalent(request);
+        return ResponseHandler.generateResponse(new Response(
+                "Talent created", HttpStatus.CREATED, "SUCCESS", talent));
+    }
+
     @PostMapping("/complete-new-talent-data")
     @PreAuthorize("hasAnyAuthority('READ_TALENT', 'UPDATE_TALENT')")
     public ResponseEntity<Object> completeNewTalentData(@RequestBody TalentDataCompletionRequest request){

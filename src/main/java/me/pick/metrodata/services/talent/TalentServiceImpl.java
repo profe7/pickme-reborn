@@ -19,10 +19,8 @@ import me.pick.metrodata.services.email.EmailService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -126,7 +124,7 @@ public class TalentServiceImpl implements  TalentService{
         newTalent.setStatusCV(StatusCV.DRAFT);
         talentRepository.save(newTalent);
 
-        ApplicantCreationRequest applicantCreationRequest = new ApplicantCreationRequest();
+        ApplicantCreationRequest applicantCreationRequest = new ApplicantCreationRequest(request.getVacancyId(), newTalent.getId());
         applicantCreationRequest.setTalentId(newTalent.getId());
         applicantCreationRequest.setVacancyId(request.getVacancyId());
         applicantService.createApplicant(applicantCreationRequest);
@@ -136,6 +134,7 @@ public class TalentServiceImpl implements  TalentService{
         return newTalent;
     }
 
+    @Override
     public List<Talent> availableForVacancy(Long vacancyId, Long mitraId) {
         Vacancy vacancy = vacancyRepository.findVacancyById(vacancyId).orElseThrow(() ->new VacancyNotExistException(vacancyId));
         Mitra mitra = mitraRepository.findById(mitraId).orElseThrow(() -> new MitraDoesNotExistException(mitraId));
@@ -151,6 +150,21 @@ public class TalentServiceImpl implements  TalentService{
     @Override
     public Talent completeNewTalentData(TalentDataCompletionRequest request) {
         Talent talent = talentRepository.findById(request.getTalentId()).orElseThrow(() -> new TalentDoesNotExistException(request.getTalentId()));
+        return talentFullDataHelper(request, talent);
+    }
+
+    @Override
+    public Talent createNewTalent(TalentDataCompletionRequest request) {
+        Talent existing = talentRepository.findByNik(request.getTalentNik()).orElse(null);
+        if (existing != null) {
+            throw new TalentAlreadyExistException(request.getTalentFullName());
+        }
+        Talent newTalent = new Talent();
+        newTalent.setMitra(mitraRepository.findById(request.getMitraId()).orElseThrow(() -> new MitraDoesNotExistException(request.getMitraId())));
+        return talentFullDataHelper(request, newTalent);
+    }
+
+    private Talent talentFullDataHelper(TalentDataCompletionRequest request, Talent talent) {
         talent.setName(request.getTalentFullName());
         talent.setNik(request.getTalentNik());
         talent.setBirthOfDate(request.getDateOfBirth());

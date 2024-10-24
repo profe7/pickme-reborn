@@ -12,4 +12,6 @@ public interface TalentService {
     Talent completeNewTalentData(TalentDataCompletionRequest request);
 
     List<Talent> availableForVacancy(Long vacancyId, Long mitraId);
+
+    Talent createNewTalent(TalentDataCompletionRequest request);
 }

@@ -20,6 +20,8 @@ public class TalentDataCompletionRequest {
 
     private String talentId;
 
+    private Long mitraId;
+
     private String talentFullName;
 
     private String talentNik;
