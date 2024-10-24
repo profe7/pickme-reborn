@@ -8,6 +8,7 @@ public class MetrodataApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(MetrodataApplication.class, args);
+		System.out.println ("\n <================ Application started ================> \n");
 	}
 
 }
