@@ -1,4 +1,4 @@
-package me.pick.metrodata.exceptions.Applicant;
+package me.pick.metrodata.exceptions.applicant;
 
 public class ApplicantAlreadyExistsException extends RuntimeException{
     public ApplicantAlreadyExistsException(String applicantName) {

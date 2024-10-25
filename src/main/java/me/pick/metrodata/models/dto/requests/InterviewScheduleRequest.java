@@ -30,8 +30,6 @@ public class InterviewScheduleRequest {
 
     private String feedback;
 
-    private List<String> cc;
-
     private Long clientId;
 
     private Long applicantId;

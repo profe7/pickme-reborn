@@ -1,8 +1,8 @@
 package me.pick.metrodata.services.applicant;
 
 import me.pick.metrodata.enums.ApplicantStatus;
-import me.pick.metrodata.exceptions.Applicant.ApplicantAlreadyExistsException;
-import me.pick.metrodata.exceptions.Applicant.ApplicantDoesNotExistException;
+import me.pick.metrodata.exceptions.applicant.ApplicantAlreadyExistsException;
+import me.pick.metrodata.exceptions.applicant.ApplicantDoesNotExistException;
 import me.pick.metrodata.exceptions.talent.TalentDoesNotExistException;
 import me.pick.metrodata.exceptions.user.UserDoesNotExistException;
 import me.pick.metrodata.exceptions.vacancy.VacancyNotExistException;
@@ -21,7 +21,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service

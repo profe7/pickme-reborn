@@ -1,11 +1,14 @@
 package me.pick.metrodata.exceptions.advice;
 
-import me.pick.metrodata.exceptions.Applicant.ApplicantAlreadyExistsException;
-import me.pick.metrodata.exceptions.Applicant.ApplicantDoesNotExistException;
+import me.pick.metrodata.exceptions.applicant.ApplicantAlreadyExistsException;
+import me.pick.metrodata.exceptions.applicant.ApplicantDoesNotExistException;
 import me.pick.metrodata.exceptions.account.AccountAlreadyExistException;
 import me.pick.metrodata.exceptions.account.AccountDoesNotExistException;
 import me.pick.metrodata.exceptions.account.AccountInvalidPasswordException;
+import me.pick.metrodata.exceptions.client.ClientDoesNotExistException;
 import me.pick.metrodata.exceptions.institute.InstituteDoesNotExistException;
+import me.pick.metrodata.exceptions.interviewschedule.ApplicantNotRecommendedException;
+import me.pick.metrodata.exceptions.interviewschedule.InterviewScheduleConflictException;
 import me.pick.metrodata.exceptions.mitra.MitraDoesNotExistException;
 import me.pick.metrodata.exceptions.role.RoleDoesNotExistException;
 import me.pick.metrodata.exceptions.talent.InvalidTalentNikException;
@@ -32,7 +35,8 @@ public class GlobalExceptionHandler {
             VacancyNotExistException.class,
             AccountDoesNotExistException.class,
             UserDoesNotExistException.class,
-            ApplicantDoesNotExistException.class
+            ApplicantDoesNotExistException.class,
+            ClientDoesNotExistException.class
     })
     public ResponseEntity<Object> resourceNotAvailableHandler(Exception e) {
         return ResponseHandler.generateResponse(new Response(
@@ -51,7 +55,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = {
             InvalidTalentNikException.class,
-            AccountInvalidPasswordException.class
+            AccountInvalidPasswordException.class,
+            ApplicantNotRecommendedException.class,
+            InterviewScheduleConflictException.class
     })
     public ResponseEntity<Object> badRequestHandler(Exception e) {
         return ResponseHandler.generateResponse(new Response(
