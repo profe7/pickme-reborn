@@ -63,4 +63,12 @@ public class RestAccountController {
                 "Account updated", HttpStatus.OK, "SUCCESS", accountService.editAccount(id, request)
         ));
     }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('MANAGEMENT_READ_ACCOUNT','EXTERNAL_READ_ACCOUNT')")
+    public ResponseEntity<Object> getAccountById(@PathVariable Long id) {
+        return ResponseHandler.generateResponse(new Response(
+                "Account found", HttpStatus.OK, "SUCCESS", accountService.getAccountById(id)
+        ));
+    }
 }

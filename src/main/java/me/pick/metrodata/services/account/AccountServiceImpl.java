@@ -71,6 +71,10 @@ public class AccountServiceImpl implements AccountService {
         return accountRetrievalHelper(search, institute, baseBudget, limitBudget, institutes, page, size);
     }
 
+    public Account getAccountById(Long id) {
+        return accountRepository.findById(id).orElseThrow(() -> new AccountDoesNotExistException(id.toString()));
+    }
+
     private Page<Account> accountRetrievalHelper(String search, Long institute, Long baseBudget, Long limitBudget, List<Institute> institutes, Integer page, Integer size) {
         Specification<Account> spec = AccountSpecification.searchSpecification(search, institute, baseBudget, limitBudget, institutes);
         List<Account> accounts = accountRepository.findAll(spec);
