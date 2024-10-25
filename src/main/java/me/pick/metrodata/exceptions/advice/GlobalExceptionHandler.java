@@ -1,6 +1,7 @@
 package me.pick.metrodata.exceptions.advice;
 
 import me.pick.metrodata.exceptions.Applicant.ApplicantAlreadyExistsException;
+import me.pick.metrodata.exceptions.Applicant.ApplicantDoesNotExistException;
 import me.pick.metrodata.exceptions.account.AccountAlreadyExistException;
 import me.pick.metrodata.exceptions.account.AccountDoesNotExistException;
 import me.pick.metrodata.exceptions.account.AccountInvalidPasswordException;
@@ -30,7 +31,8 @@ public class GlobalExceptionHandler {
             RoleDoesNotExistException.class,
             VacancyNotExistException.class,
             AccountDoesNotExistException.class,
-            UserDoesNotExistException.class
+            UserDoesNotExistException.class,
+            ApplicantDoesNotExistException.class
     })
     public ResponseEntity<Object> resourceNotAvailableHandler(Exception e) {
         return ResponseHandler.generateResponse(new Response(

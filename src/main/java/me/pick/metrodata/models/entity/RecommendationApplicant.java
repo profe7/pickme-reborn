@@ -1,5 +1,6 @@
 package me.pick.metrodata.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,7 @@ public class RecommendationApplicant {
 
     @ManyToOne
     @JoinColumn(name = "recommendation_id", nullable = false)
+    @JsonIgnore
     private Recommendation recommendation;
 
     @ManyToOne
