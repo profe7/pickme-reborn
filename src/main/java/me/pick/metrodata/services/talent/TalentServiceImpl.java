@@ -12,17 +12,29 @@ import me.pick.metrodata.exceptions.talent.TalentAlreadyExistException;
 import me.pick.metrodata.exceptions.talent.TalentDoesNotExistException;
 import me.pick.metrodata.exceptions.vacancy.VacancyNotExistException;
 import me.pick.metrodata.models.dto.requests.*;
+import me.pick.metrodata.models.dto.responses.TalentPaginationResponse;
 import me.pick.metrodata.models.dto.responses.TalentResponse;
+import me.pick.metrodata.models.dto.responses.TotalMitraTalentResponse;
 import me.pick.metrodata.models.entity.*;
 import me.pick.metrodata.repositories.*;
+import me.pick.metrodata.repositories.specifications.TalentSpecification;
 import me.pick.metrodata.services.applicant.ApplicantService;
+import me.pick.metrodata.services.auth.AuthService;
 import me.pick.metrodata.services.email.EmailService;
+import me.pick.metrodata.services.user.UserService;
+import me.pick.metrodata.utils.AnyUtil;
+import me.pick.metrodata.utils.PageData;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -50,6 +62,8 @@ public class TalentServiceImpl implements  TalentService{
     private final VacancyRepository vacancyRepository;
     private final EmailService emailService;
     private final ModelMapper modelMapper;
+    private final AuthService authService;
+    private final UserService userService;
 
     public TalentServiceImpl(TalentRepository talentRepository, MitraRepository mitraRepository,
                              RoleRepository roleRepository, PasswordEncoder passwordEncoder,
@@ -60,7 +74,7 @@ public class TalentServiceImpl implements  TalentService{
                              ProjectRepository projectRepository, TrainingRepository trainingRepository,
                              CertificationRepository certificationRepository, OrganizationRepository organizationRepository,
                              OtherExperienceRepository otherExperienceRepository, AchievementsRepository achievementsRepository,
-                             EmailService emailService, VacancyRepository vacancyRepository, ModelMapper modelMapper) {
+                             EmailService emailService, VacancyRepository vacancyRepository, ModelMapper modelMapper, AuthService authService, UserService userService) {
         this.talentRepository = talentRepository;
         this.mitraRepository = mitraRepository;
         this.roleRepository = roleRepository;
@@ -82,6 +96,8 @@ public class TalentServiceImpl implements  TalentService{
         this.vacancyRepository = vacancyRepository;
         this.emailService = emailService;
         this.modelMapper = modelMapper;
+        this.authService = authService;
+        this.userService = userService;
     }
 
     private Talent findByIdFromRepo(String id){
@@ -91,6 +107,32 @@ public class TalentServiceImpl implements  TalentService{
     public TalentResponse getById(String id){
         Talent talent = findByIdFromRepo (id);
         return modelMapper.map (talent, TalentResponse.class);
+    }
+
+    public List<TotalMitraTalentResponse> getTotalByMitra() {
+        User currentUser = userService.getLoggedUserData ();
+        Mitra currentMitra = currentUser.getMitra();
+        List<Talent> instituteTalents = talentRepository.findTalentByMitraId (currentMitra.getId ());
+
+        List<Talent> totalAppliedTalents = instituteTalents.stream()
+                .filter(talent -> talent.getApplicants().stream()
+                        .anyMatch(applicant -> applicant.getStatus() == ApplicantStatus.ASSIGNED))
+                .toList();
+        List<Talent> totalAcceptedTalents = instituteTalents.stream()
+                .filter(talent -> talent.getApplicants().stream()
+                        .anyMatch(applicant -> applicant.getStatus() == ApplicantStatus.ACCEPTED))
+                .toList();
+        List<Talent> totalRejectedTalents = instituteTalents.stream()
+                .filter(talent -> talent.getApplicants().stream()
+                        .anyMatch(applicant -> applicant.getStatus() == ApplicantStatus.REJECTED))
+                .toList();
+
+        List<TotalMitraTalentResponse> totals = new ArrayList<>();
+        totals.add(new TotalMitraTalentResponse("Shortlisted", (long) totalAppliedTalents.size(), "rgb(48, 60, 108)"));
+        totals.add(new TotalMitraTalentResponse("Hired", (long) totalAcceptedTalents.size(), "rgb(250, 151, 108)"));
+        totals.add(new TotalMitraTalentResponse("Rejected", (long) totalRejectedTalents.size(), "rgb(180, 223, 229)"));
+
+        return totals;
     }
 
     @Override
