@@ -1,10 +1,12 @@
 package me.pick.metrodata.services.interviewSchedule;
 
 import lombok.RequiredArgsConstructor;
+import me.pick.metrodata.models.dto.responses.AcceptedTalentsByRecruiterCountPerPositionResponse;
 import me.pick.metrodata.models.dto.responses.InterviewSchedulePaginationResponse;
 import me.pick.metrodata.models.entity.InterviewSchedule;
 import me.pick.metrodata.repositories.InterviewScheduleRepository;
 import me.pick.metrodata.repositories.specifications.InterviewScheduleSpecification;
+import me.pick.metrodata.utils.AuthUtil;
 import me.pick.metrodata.utils.PageData;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +15,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -47,5 +50,27 @@ public class interviewScheduleImpl implements InterviewScheduleService{
 				uriBuilder.replaceQueryParam("currentPage", currentPage + 1).toUriString());
 
 		return new InterviewSchedulePaginationResponse (pageData, interviews);
+	}
+
+	public AcceptedTalentsByRecruiterCountPerPositionResponse getAllAcceptedTalentsByRecruiterCountPerPosition() {
+		Long userId = AuthUtil.getLoginUserId();
+
+		List<Long> excludedStatusIds = List.of(new Long[] { 1L, 2L, 3L, 4L, 5L });
+
+		Specification<InterviewSchedule> spec = InterviewScheduleSpecification
+				.searchForClientSpecification(excludedStatusIds, userId, null);
+		var acceptedTalentsInterviewSchedules = interviewScheduleRepository.findAll(spec);
+		int total = (int) interviewScheduleRepository.count(spec);
+
+		HashMap<String, Integer> totalByCategory = new HashMap<String, Integer>();
+		for (InterviewSchedule interviewSchedule : acceptedTalentsInterviewSchedules) {
+			if (!totalByCategory.containsKey(interviewSchedule.getPosition())) {
+				totalByCategory.put(interviewSchedule.getPosition(), 1);
+			} else {
+				totalByCategory.put(interviewSchedule.getPosition(),
+						totalByCategory.get(interviewSchedule.getPosition()) + 1);
+			}
+		}
+		return new AcceptedTalentsByRecruiterCountPerPositionResponse(total, totalByCategory);
 	}
 }
