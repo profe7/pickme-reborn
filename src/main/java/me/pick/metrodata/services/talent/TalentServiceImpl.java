@@ -12,12 +12,16 @@ import me.pick.metrodata.exceptions.talent.TalentAlreadyExistException;
 import me.pick.metrodata.exceptions.talent.TalentDoesNotExistException;
 import me.pick.metrodata.exceptions.vacancy.VacancyNotExistException;
 import me.pick.metrodata.models.dto.requests.*;
+import me.pick.metrodata.models.dto.responses.TalentResponse;
 import me.pick.metrodata.models.entity.*;
 import me.pick.metrodata.repositories.*;
 import me.pick.metrodata.services.applicant.ApplicantService;
 import me.pick.metrodata.services.email.EmailService;
+import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -45,6 +49,7 @@ public class TalentServiceImpl implements  TalentService{
     private final AchievementsRepository achievementsRepository;
     private final VacancyRepository vacancyRepository;
     private final EmailService emailService;
+    private final ModelMapper modelMapper;
 
     public TalentServiceImpl(TalentRepository talentRepository, MitraRepository mitraRepository,
                              RoleRepository roleRepository, PasswordEncoder passwordEncoder,
@@ -55,7 +60,7 @@ public class TalentServiceImpl implements  TalentService{
                              ProjectRepository projectRepository, TrainingRepository trainingRepository,
                              CertificationRepository certificationRepository, OrganizationRepository organizationRepository,
                              OtherExperienceRepository otherExperienceRepository, AchievementsRepository achievementsRepository,
-                             EmailService emailService, VacancyRepository vacancyRepository) {
+                             EmailService emailService, VacancyRepository vacancyRepository, ModelMapper modelMapper) {
         this.talentRepository = talentRepository;
         this.mitraRepository = mitraRepository;
         this.roleRepository = roleRepository;
@@ -76,6 +81,16 @@ public class TalentServiceImpl implements  TalentService{
         this.achievementsRepository = achievementsRepository;
         this.vacancyRepository = vacancyRepository;
         this.emailService = emailService;
+        this.modelMapper = modelMapper;
+    }
+
+    private Talent findByIdFromRepo(String id){
+        return talentRepository.findById(id).orElseThrow (() -> new ResponseStatusException (HttpStatus.NOT_FOUND, "Talent not found"));
+    }
+
+    public TalentResponse getById(String id){
+        Talent talent = findByIdFromRepo (id);
+        return modelMapper.map (talent, TalentResponse.class);
     }
 
     @Override
