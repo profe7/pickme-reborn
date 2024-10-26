@@ -2,13 +2,17 @@ package me.pick.metrodata.services.talent;
 
 import me.pick.metrodata.models.dto.requests.TalentDataCompletionRequest;
 import me.pick.metrodata.models.dto.requests.TalentFromVacancyRequest;
+import me.pick.metrodata.models.dto.responses.TalentPaginationResponse;
 import me.pick.metrodata.models.dto.responses.TalentResponse;
+import me.pick.metrodata.models.dto.responses.TotalMitraTalentResponse;
 import me.pick.metrodata.models.entity.Talent;
 
 import java.util.List;
 
 public interface TalentService {
-    public TalentResponse getById(String id);
+    TalentResponse getById(String id);
+
+    List<TotalMitraTalentResponse> getTotalByMitra();
 
     Talent createViaVacancy(TalentFromVacancyRequest request);
 

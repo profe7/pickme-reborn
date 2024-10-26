@@ -1,8 +1,11 @@
 package me.pick.metrodata.repositories;
 
 import me.pick.metrodata.models.entity.Applicant;
+import me.pick.metrodata.models.entity.Mitra;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,9 +15,6 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long>, Jpa
 
     Applicant findByVacancyIdAndTalent_Id(Long vacancyId, String talentId);
 
-    List<Applicant> findByVacancyId(Long vacancyId);
-
-    List<Applicant> findByTalentId(String talentId);
-
-
+    @Query ("SELECT COUNT(a.id) FROM Applicant a WHERE a.talent.mitra = :mitra")
+    Long countByMitra(@Param  ("mitra") Mitra mitra);
 }

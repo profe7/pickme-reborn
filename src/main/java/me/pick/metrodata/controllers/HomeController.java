@@ -25,11 +25,7 @@ public class HomeController {
 
 	@GetMapping
 	public String home(Model model) {
-
-		System.out.println ("Masuk sini");
 		String institute = userService.getLoggedUserData().getInstitute().getInstituteName ();
-		System.out.println ("terus jalan sini");
-		System.out.println (institute);
 		String fName = userService.getLoggedUserData().getFirstName();
 		String lName = userService.getLoggedUserData().getLastName();
 
