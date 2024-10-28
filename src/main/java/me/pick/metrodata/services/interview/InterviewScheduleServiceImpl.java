@@ -1,6 +1,7 @@
 package me.pick.metrodata.services.interview;
 
 import me.pick.metrodata.enums.InterviewStatus;
+import me.pick.metrodata.enums.InterviewType;
 import me.pick.metrodata.exceptions.client.ClientDoesNotExistException;
 import me.pick.metrodata.exceptions.interviewschedule.ApplicantNotRecommendedException;
 import me.pick.metrodata.exceptions.interviewschedule.InterviewScheduleConflictException;
@@ -10,13 +11,20 @@ import me.pick.metrodata.repositories.ClientRepository;
 import me.pick.metrodata.repositories.InterviewScheduleHistoryRepository;
 import me.pick.metrodata.repositories.InterviewScheduleRepository;
 import me.pick.metrodata.repositories.RecommendationApplicantRepository;
+import me.pick.metrodata.repositories.specifications.InterviewScheduleSpecification;
 import me.pick.metrodata.services.email.EmailService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class InterviewScheduleServiceImpl implements InterviewScheduleService {
@@ -104,5 +112,28 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
             return true;
         }
         return false;
+    }
+
+    public Page<InterviewSchedule> getAll(String search, Long clientId, InterviewType type, String startDate, String endDate, InterviewStatus status, int page, int size) {
+        return interviewRetrievalHelper(search, null, type, startDate, endDate, status, page, size);
+    }
+
+    public Page<InterviewSchedule> getByRm(String search, Long clientId, InterviewType type, String startDate, String endDate, InterviewStatus status, int page, int size) {
+        if (clientId == null) {
+            throw new ClientDoesNotExistException(clientId);
+        }
+
+        return interviewRetrievalHelper(search, clientId, type, startDate, endDate, status, page, size);
+    }
+
+    private Page<InterviewSchedule> interviewRetrievalHelper(String search, Long clientId, InterviewType type, String startDate, String endDate, InterviewStatus status, int page, int size) {
+        Specification<InterviewSchedule> spec = InterviewScheduleSpecification.searchSpecification(search, clientId, type, startDate, endDate, status);
+        List<InterviewSchedule> schedules = interviewScheduleRepository.findAll(spec);
+        Pageable pageable = PageRequest.of(page, size);
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), schedules.size());
+
+        return new PageImpl<>(schedules.subList(start, end), pageable, schedules.size());
     }
 }

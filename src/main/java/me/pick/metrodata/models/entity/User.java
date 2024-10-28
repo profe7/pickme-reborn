@@ -1,5 +1,6 @@
 package me.pick.metrodata.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -50,10 +51,12 @@ public class User {
 
     @OneToMany(mappedBy = "rmUser")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonIgnore
     private List<Institute> institutes;
 
     @ManyToOne
     @JoinColumn(name = "institute_id")
+    @JsonIgnore
     private Institute institute;
 
     @OneToMany(mappedBy = "user")

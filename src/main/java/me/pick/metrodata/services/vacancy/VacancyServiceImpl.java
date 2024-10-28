@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class VacancyServiceImpl implements VacancyService{
+public class    VacancyServiceImpl implements VacancyService{
     private final VacancyRepository vacancyRepository;
 
     public VacancyServiceImpl(VacancyRepository vacancyRepository) {

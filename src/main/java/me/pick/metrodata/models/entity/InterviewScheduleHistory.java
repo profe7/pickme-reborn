@@ -33,7 +33,7 @@ public class InterviewScheduleHistory {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime updated_at;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "interview_id")
     private InterviewSchedule interviewSchedule;
 
