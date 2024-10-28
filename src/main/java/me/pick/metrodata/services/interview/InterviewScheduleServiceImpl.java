@@ -6,7 +6,6 @@ import me.pick.metrodata.exceptions.client.ClientDoesNotExistException;
 import me.pick.metrodata.exceptions.interviewschedule.ApplicantNotRecommendedException;
 import me.pick.metrodata.exceptions.interviewschedule.InterviewScheduleConflictException;
 import me.pick.metrodata.models.dto.requests.InterviewScheduleRequest;
-import me.pick.metrodata.models.dto.responses.InterviewScheduleSimpleResponse;
 import me.pick.metrodata.models.entity.*;
 import me.pick.metrodata.repositories.ClientRepository;
 import me.pick.metrodata.repositories.InterviewScheduleHistoryRepository;
@@ -115,11 +114,11 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
         return false;
     }
 
-    public Page<InterviewScheduleSimpleResponse> getAll(String search, Long clientId, InterviewType type, String startDate, String endDate, InterviewStatus status, int page, int size) {
+    public Page<InterviewSchedule> getAll(String search, Long clientId, InterviewType type, String startDate, String endDate, InterviewStatus status, int page, int size) {
         return interviewRetrievalHelper(search, null, type, startDate, endDate, status, page, size);
     }
 
-    public Page<InterviewScheduleSimpleResponse> getByRm(String search, Long clientId, InterviewType type, String startDate, String endDate, InterviewStatus status, int page, int size) {
+    public Page<InterviewSchedule> getByRm(String search, Long clientId, InterviewType type, String startDate, String endDate, InterviewStatus status, int page, int size) {
         if (clientId == null) {
             throw new ClientDoesNotExistException(clientId);
         }
@@ -127,7 +126,7 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
         return interviewRetrievalHelper(search, clientId, type, startDate, endDate, status, page, size);
     }
 
-    private Page<InterviewScheduleSimpleResponse> interviewRetrievalHelper(String search, Long clientId, InterviewType type, String startDate, String endDate, InterviewStatus status, int page, int size) {
+    private Page<InterviewSchedule> interviewRetrievalHelper(String search, Long clientId, InterviewType type, String startDate, String endDate, InterviewStatus status, int page, int size) {
         Specification<InterviewSchedule> spec = InterviewScheduleSpecification.searchSpecification(search, clientId, type, startDate, endDate, status);
         List<InterviewSchedule> schedules = interviewScheduleRepository.findAll(spec);
         Pageable pageable = PageRequest.of(page, size);
@@ -135,23 +134,6 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), schedules.size());
 
-        List<InterviewScheduleSimpleResponse> responseList = schedules.subList(start, end).stream()
-                .map(this::mapToSimpleResponse)
-                .collect(Collectors.toList());
-
-        return new PageImpl<>(responseList, pageable, schedules.size());
-    }
-
-    private InterviewScheduleSimpleResponse mapToSimpleResponse(InterviewSchedule schedule) {
-        InterviewScheduleSimpleResponse response = new InterviewScheduleSimpleResponse();
-        response.setClient(schedule.getClient().getUser().getInstitute().getInstituteName());
-        response.setTalent(schedule.getApplicant().getTalent().getName());
-        response.setPosition(schedule.getPosition());
-        response.setType(schedule.getInterviewType().name());
-        response.setDate(schedule.getDate().toString());
-        response.setStartTime(schedule.getStartTime().toString());
-        response.setEndTime(schedule.getEndTime().toString());
-        response.setStatus(schedule.getStatus().name());
-        return response;
+        return new PageImpl<>(schedules.subList(start, end), pageable, schedules.size());
     }
 }

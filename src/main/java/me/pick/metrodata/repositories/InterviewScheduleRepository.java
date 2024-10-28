@@ -40,13 +40,6 @@ public interface InterviewScheduleRepository
                 "WHERE i.id = :instituteId")
         public List<InterviewSchedule> findScheduleByMitra(@Param("instituteId") Long instituteId);
 
-        @Query("SELECT t FROM Talent t " +
-                "JOIN t.applicants a " +
-                "JOIN a.interviewSchedules is " +
-                "JOIN is.interviewScheduleHistory ish " +
-                "WHERE t.id = :talentIds AND ish.status = 'ACCEPTED'")
-        List<String> findTalentsByIdsWhereInterviewScheduleIsAccepted(@Param("talentIds") List<String> talentIds);
-
         List<InterviewSchedule> findInterviewScheduleByClientAndApplicantAndStatus(Client client, Applicant applicant, InterviewStatus status);
 
 }
