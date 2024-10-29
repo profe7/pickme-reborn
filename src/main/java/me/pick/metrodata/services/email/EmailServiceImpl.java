@@ -1,6 +1,7 @@
 package me.pick.metrodata.services.email;
 
 import jakarta.mail.internet.MimeMessage;
+import lombok.RequiredArgsConstructor;
 import me.pick.metrodata.exceptions.email.EmailFailedToSendException;
 import me.pick.metrodata.models.entity.Account;
 import me.pick.metrodata.models.entity.InterviewSchedule;
@@ -15,15 +16,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
 
     private final JavaMailSender mailSender;
     private final SpringTemplateEngine templateEngine;
-
-    public EmailServiceImpl(JavaMailSender mailSender, SpringTemplateEngine templateEngine) {
-        this.mailSender = mailSender;
-        this.templateEngine = templateEngine;
-    }
 
     @Override
     @Async

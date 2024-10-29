@@ -1,5 +1,6 @@
 package me.pick.metrodata.services.talent;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.pick.metrodata.enums.ApplicantStatus;
 import me.pick.metrodata.enums.StatusCV;
@@ -40,6 +41,7 @@ import java.util.List;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class TalentServiceImpl implements  TalentService{
     private final TalentRepository talentRepository;
     private final MitraRepository mitraRepository;
@@ -65,40 +67,6 @@ public class TalentServiceImpl implements  TalentService{
     private final AuthService authService;
     private final UserService userService;
 
-    public TalentServiceImpl(TalentRepository talentRepository, MitraRepository mitraRepository,
-                             RoleRepository roleRepository, PasswordEncoder passwordEncoder,
-                             UserRepository userRepository, AccountRepository accountRepository,
-                             ApplicantService applicantService, ReferenceRepository referenceRepository,
-                             LanguageSkillRepository languageSkillRepository, EducationRepository educationRepository,
-                             SkillRepository skillRepository, JobHistoryRepository jobHistoryRepository,
-                             ProjectRepository projectRepository, TrainingRepository trainingRepository,
-                             CertificationRepository certificationRepository, OrganizationRepository organizationRepository,
-                             OtherExperienceRepository otherExperienceRepository, AchievementsRepository achievementsRepository,
-                             EmailService emailService, VacancyRepository vacancyRepository, ModelMapper modelMapper, AuthService authService, UserService userService) {
-        this.talentRepository = talentRepository;
-        this.mitraRepository = mitraRepository;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.userRepository = userRepository;
-        this.accountRepository = accountRepository;
-        this.applicantService = applicantService;
-        this.referenceRepository = referenceRepository;
-        this.languageSkillRepository = languageSkillRepository;
-        this.educationRepository = educationRepository;
-        this.skillRepository = skillRepository;
-        this.jobHistoryRepository = jobHistoryRepository;
-        this.projectRepository = projectRepository;
-        this.trainingRepository = trainingRepository;
-        this.certificationRepository = certificationRepository;
-        this.organizationRepository = organizationRepository;
-        this.otherExperienceRepository = otherExperienceRepository;
-        this.achievementsRepository = achievementsRepository;
-        this.vacancyRepository = vacancyRepository;
-        this.emailService = emailService;
-        this.modelMapper = modelMapper;
-        this.authService = authService;
-        this.userService = userService;
-    }
 
     private Talent findByIdFromRepo(String id){
         return talentRepository.findById(id).orElseThrow (() -> new ResponseStatusException (HttpStatus.NOT_FOUND, "Talent not found"));

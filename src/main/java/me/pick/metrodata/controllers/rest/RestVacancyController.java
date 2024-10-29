@@ -1,5 +1,6 @@
 package me.pick.metrodata.controllers.rest;
 
+import lombok.AllArgsConstructor;
 import me.pick.metrodata.models.dto.requests.VacancyCreationRequest;
 import me.pick.metrodata.services.vacancy.VacancyService;
 import me.pick.metrodata.utils.Response;
@@ -11,13 +12,10 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/vacancy")
+@AllArgsConstructor
 public class RestVacancyController {
 
     private final VacancyService vacancyService;
-
-    public RestVacancyController(VacancyService vacancyService) {
-        this.vacancyService = vacancyService;
-    }
 
     @GetMapping("/available-vacancies")
     @PreAuthorize("hasAnyAuthority('READ_JOB', 'CREATE_APPLICANT')")

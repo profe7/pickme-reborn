@@ -1,5 +1,6 @@
 package me.pick.metrodata.services.interview;
 
+import lombok.RequiredArgsConstructor;
 import me.pick.metrodata.enums.InterviewStatus;
 import me.pick.metrodata.enums.InterviewType;
 import me.pick.metrodata.exceptions.client.ClientDoesNotExistException;
@@ -26,22 +27,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class InterviewScheduleServiceImpl implements InterviewScheduleService {
     private final InterviewScheduleRepository interviewScheduleRepository;
     private final RecommendationApplicantRepository recommendationApplicantRepository;
     private final ClientRepository clientRepository;
     private final InterviewScheduleHistoryRepository interviewScheduleHistoryRepository;
     private final EmailService emailService;
-
-    public InterviewScheduleServiceImpl(InterviewScheduleRepository interviewScheduleRepository, RecommendationApplicantRepository recommendationApplicantRepository,
-                                        ClientRepository clientRepository, InterviewScheduleHistoryRepository interviewScheduleHistoryRepository,
-                                        EmailService emailService) {
-        this.interviewScheduleRepository = interviewScheduleRepository;
-        this.recommendationApplicantRepository = recommendationApplicantRepository;
-        this.clientRepository = clientRepository;
-        this.interviewScheduleHistoryRepository = interviewScheduleHistoryRepository;
-        this.emailService = emailService;
-    }
 
     @Override
     public void inviteToInterview(InterviewScheduleRequest request) {

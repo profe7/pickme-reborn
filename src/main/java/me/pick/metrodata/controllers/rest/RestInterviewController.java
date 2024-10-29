@@ -1,5 +1,6 @@
 package me.pick.metrodata.controllers.rest;
 
+import lombok.AllArgsConstructor;
 import me.pick.metrodata.enums.InterviewStatus;
 import me.pick.metrodata.enums.InterviewType;
 import me.pick.metrodata.models.dto.requests.InterviewScheduleRequest;
@@ -13,12 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/interview")
+@AllArgsConstructor
 public class RestInterviewController {
     private final InterviewScheduleService interviewScheduleService;
-
-    public RestInterviewController(InterviewScheduleService interviewScheduleService) {
-        this.interviewScheduleService = interviewScheduleService;
-    }
 
     @PostMapping("/invite")
     @PreAuthorize("hasAnyAuthority('CREATE_INTERVIEW', 'UPDATE_INTERVIEW', 'READ_INTERVIEW')")

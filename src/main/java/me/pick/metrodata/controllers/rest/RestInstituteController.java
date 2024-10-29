@@ -1,5 +1,6 @@
 package me.pick.metrodata.controllers.rest;
 
+import lombok.AllArgsConstructor;
 import me.pick.metrodata.models.entity.Institute;
 import me.pick.metrodata.services.institute.InstituteService;
 import me.pick.metrodata.utils.Response;
@@ -11,13 +12,10 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/institute")
+@AllArgsConstructor
 public class RestInstituteController {
 
     private final InstituteService instituteService;
-
-    public RestInstituteController(InstituteService instituteService) {
-        this.instituteService = instituteService;
-    }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('READ_INSTITUTE')")

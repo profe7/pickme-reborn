@@ -1,5 +1,6 @@
 package me.pick.metrodata.controllers.rest;
 
+import lombok.AllArgsConstructor;
 import me.pick.metrodata.models.dto.requests.AccountRequest;
 import me.pick.metrodata.services.account.AccountService;
 import me.pick.metrodata.utils.Response;
@@ -11,12 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/account")
+@AllArgsConstructor
 public class RestAccountController {
     private final AccountService accountService;
-
-    public RestAccountController(AccountService accountService) {
-        this.accountService = accountService;
-    }
 
     @PostMapping("/create-account")
     @PreAuthorize("hasAnyAuthority('MANAGEMENT_CREATE_ACCOUNT', 'EXTERNAL_CREATE_ACCOUNT')")

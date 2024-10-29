@@ -1,5 +1,6 @@
 package me.pick.metrodata.services.vacancy;
 
+import lombok.RequiredArgsConstructor;
 import me.pick.metrodata.enums.VacancyStatus;
 import me.pick.metrodata.exceptions.user.UserDoesNotExistException;
 import me.pick.metrodata.exceptions.vacancy.VacancyStatusDoesNotExistException;
@@ -24,14 +25,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class    VacancyServiceImpl implements VacancyService{
     private final VacancyRepository vacancyRepository;
     private final UserRepository userRepository;
-
-    public VacancyServiceImpl(VacancyRepository vacancyRepository, UserRepository userRepository) {
-        this.vacancyRepository = vacancyRepository;
-        this.userRepository = userRepository;
-    }
 
     private Pair<UriComponentsBuilder, Pageable> pageableAndUriBuilder(String title, String position, String expiredDate, String updatedAt, Integer currentPage, Integer perPage) {
         currentPage = currentPage == null ? 0 : currentPage;

@@ -1,5 +1,6 @@
 package me.pick.metrodata.controllers.rest;
 
+import lombok.AllArgsConstructor;
 import me.pick.metrodata.services.client.ClientService;
 import me.pick.metrodata.utils.Response;
 import me.pick.metrodata.utils.ResponseHandler;
@@ -10,12 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/client")
+@AllArgsConstructor
 public class RestClientController {
     private final ClientService clientService;
-
-    public RestClientController(ClientService clientService) {
-        this.clientService = clientService;
-    }
 
     @GetMapping("/employees/{clientId}")
     @PreAuthorize("hasAnyAuthority('READ_APPLICANT')")

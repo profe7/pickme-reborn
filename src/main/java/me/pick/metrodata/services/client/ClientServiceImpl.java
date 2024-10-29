@@ -1,5 +1,6 @@
 package me.pick.metrodata.services.client;
 
+import lombok.RequiredArgsConstructor;
 import me.pick.metrodata.enums.ApplicantStatus;
 import me.pick.metrodata.enums.InterviewStatus;
 import me.pick.metrodata.exceptions.applicant.ApplicantDoesNotExistException;
@@ -18,18 +19,12 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ClientServiceImpl implements ClientService {
     private final InterviewScheduleRepository interviewScheduleRepository;
     private final ClientRepository clientRepository;
     private final ApplicantRepository applicantRepository;
     private final InterviewScheduleHistoryRepository interviewScheduleHistoryRepository;
-
-    public ClientServiceImpl(InterviewScheduleRepository interviewScheduleRepository, ClientRepository clientRepository, ApplicantRepository applicantRepository, InterviewScheduleHistoryRepository interviewScheduleHistoryRepository) {
-        this.interviewScheduleRepository = interviewScheduleRepository;
-        this.clientRepository = clientRepository;
-        this.applicantRepository = applicantRepository;
-        this.interviewScheduleHistoryRepository = interviewScheduleHistoryRepository;
-    }
 
     @Override
     public List<Talent> getClientEmployees(Long clientId) {
