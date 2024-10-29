@@ -47,43 +47,7 @@ public class    VacancyServiceImpl implements VacancyService{
         return new PageImpl<>(vacancies.subList(start, end), pageable, vacancies.size());
     }
 
-    public List<Vacancy> getAllVacancies() {
-        return vacancyRepository.findAll();
+    public Vacancy getVacancyById(Long id) {
+        return vacancyRepository.findById(id).orElse(null);
     }
-
-    public CountVacancyApplicantPaginationResponse getVacanciesWithTotalNominee(
-            String timeInterval,
-            Integer currentPage,
-            Integer perPage
-    ) {
-
-        currentPage = currentPage == null ? 0 : currentPage;
-        perPage = perPage == null ? 5 : perPage;
-        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromPath("")
-                .queryParam("timeInterval", timeInterval);
-        Pageable pageable = PageRequest.of(currentPage, perPage, Sort.by("createdAt").descending());
-
-        List<CountVacancyApplicationResponse> countJobApplicant = findVacanciesWithTotalNominee(pageable);
-        List<CountVacancyApplicationResponse> jobApplicant = findVacanciesWithTotalNominee(null);
-
-        int totalJob = jobApplicant.size();
-
-        PageData pageData = AnyUtil.pagination(totalJob, currentPage, perPage, uriBuilder);
-
-        return new CountVacancyApplicantPaginationResponse (pageData, countJobApplicant);
-    }
-
-    private List<CountVacancyApplicationResponse> findVacanciesWithTotalNominee(Pageable pageable) {
-        return vacancyRepository.findVacancyWithTotalNominee(pageable)
-                .stream()
-                .map(this::mapToCountVacancyApplicantResponse)
-                .collect(Collectors.toList());
-    }
-
-    private CountVacancyApplicationResponse mapToCountVacancyApplicantResponse(Object[] result) {
-        Vacancy vacancy = (Vacancy) result[0];
-        Long totalNominee = (Long) result[1];
-        return new CountVacancyApplicationResponse (vacancy, totalNominee);
-    }
-    
 }
