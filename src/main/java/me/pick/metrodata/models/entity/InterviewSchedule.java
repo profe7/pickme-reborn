@@ -30,20 +30,12 @@ public class InterviewSchedule {
 
     private String position;
 
-    @DateTimeFormat (pattern = "dd-MM-YYYY")
-    @JsonFormat (pattern = "dd-MM-yyyy")
     private LocalDate date;
 
-    @DateTimeFormat(pattern = "HH:mm")
-    @JsonFormat(pattern = "HH:mm")
     private LocalTime startTime;
 
-    @DateTimeFormat(pattern = "HH:mm")
-    @JsonFormat(pattern = "HH:mm")
     private LocalTime endTime;
 
-    @DateTimeFormat(pattern = "HH:mm")
-    @JsonFormat(pattern = "HH:mm")
     private LocalDate onBoardDate;
 
     private String locationAddress;

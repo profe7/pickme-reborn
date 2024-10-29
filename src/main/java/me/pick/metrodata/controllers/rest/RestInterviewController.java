@@ -63,4 +63,12 @@ public class RestInterviewController {
                 "Interviews", HttpStatus.OK, "SUCCESS", interviewScheduleService.getByRm(search, clientId, type, startDate, endDate, status, page, size)
         ));
     }
+
+    @GetMapping("/talent-interview-history/{interviewId}")
+    @PreAuthorize("hasAnyAuthority('READ_INTERVIEW')")
+    public ResponseEntity<Object> getTalentInterviewHistory(@PathVariable Long interviewId) {
+        return ResponseHandler.generateResponse(new Response(
+                "Interviews", HttpStatus.OK, "SUCCESS", interviewScheduleService.getTalentInterviewHistory(interviewId)
+        ));
+    }
 }

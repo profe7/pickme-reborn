@@ -5,6 +5,7 @@ import me.pick.metrodata.enums.InterviewType;
 import me.pick.metrodata.exceptions.client.ClientDoesNotExistException;
 import me.pick.metrodata.exceptions.interviewschedule.ApplicantNotRecommendedException;
 import me.pick.metrodata.exceptions.interviewschedule.InterviewScheduleConflictException;
+import me.pick.metrodata.exceptions.interviewschedule.InterviewScheduleDoesNotExistException;
 import me.pick.metrodata.models.dto.requests.InterviewScheduleRequest;
 import me.pick.metrodata.models.entity.*;
 import me.pick.metrodata.repositories.ClientRepository;
@@ -123,6 +124,11 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
         }
 
         return interviewRetrievalHelper(search, clientId, type, startDate, endDate, status, page, size);
+    }
+
+    public List<InterviewScheduleHistory> getTalentInterviewHistory(Long interviewId) {
+        InterviewSchedule interviewSchedule = interviewScheduleRepository.findInterviewScheduleById(interviewId).orElseThrow(() -> new InterviewScheduleDoesNotExistException(interviewId));
+        return interviewScheduleHistoryRepository.findInterviewScheduleHistoriesByInterviewSchedule(interviewSchedule);
     }
 
     private Page<InterviewSchedule> interviewRetrievalHelper(String search, Long clientId, InterviewType type, String startDate, String endDate, InterviewStatus status, int page, int size) {

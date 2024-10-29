@@ -17,8 +17,6 @@ public class UserServiceImpl implements UserService {
 
     public User getLoggedUserData() {
         Long userId = AuthUtil.getLoginUserId();
-        System.out.println ("Jalan le user");
-        System.out.println (userId);
         return userRepository.findUserById(userId).orElseThrow(() -> {
             assert userId != null;
             return new UserDoesNotExistException(userId.toString());

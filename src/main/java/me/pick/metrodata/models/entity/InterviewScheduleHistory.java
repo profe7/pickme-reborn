@@ -9,7 +9,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,12 +28,10 @@ public class InterviewScheduleHistory {
     private InterviewStatus status;
 
     @CreationTimestamp
-    @JsonFormat (pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime created_at;
+    private LocalDate created_at;
 
     @UpdateTimestamp
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime updated_at;
+    private LocalDate updated_at;
 
     @ManyToOne
     @JoinColumn(name = "interview_id")
