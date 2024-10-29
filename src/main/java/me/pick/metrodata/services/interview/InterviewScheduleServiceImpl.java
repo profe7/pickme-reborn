@@ -7,6 +7,7 @@ import me.pick.metrodata.exceptions.client.ClientDoesNotExistException;
 import me.pick.metrodata.exceptions.interviewschedule.ApplicantNotRecommendedException;
 import me.pick.metrodata.exceptions.interviewschedule.InterviewScheduleConflictException;
 import me.pick.metrodata.exceptions.interviewschedule.InterviewScheduleDoesNotExistException;
+import me.pick.metrodata.exceptions.interviewschedule.InterviewScheduleUpdateBadRequestException;
 import me.pick.metrodata.models.dto.requests.InterviewScheduleRequest;
 import me.pick.metrodata.models.dto.requests.InterviewUpdateRequest;
 import me.pick.metrodata.models.entity.*;
@@ -57,35 +58,60 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
 
     @Override
     public void updateInterviewStatus(InterviewUpdateRequest request) {
-        Long interviewId = request.getInterviewId();
-        InterviewStatus status = request.getStatus();
-        String feedback = request.getFeedback();
+        InterviewSchedule interviewSchedule = interviewScheduleRepository.findInterviewScheduleById(request.getInterviewId()).orElseThrow(() -> new InterviewScheduleDoesNotExistException(request.getInterviewId()));
 
-        InterviewSchedule interviewSchedule = interviewScheduleRepository.findInterviewScheduleById(interviewId).orElseThrow(() -> new InterviewScheduleDoesNotExistException(interviewId));
-        if (status == InterviewStatus.RESCHEDULED) {
-            interviewSaveHelper(interviewSchedule, status, feedback);
-            emailService.sendInterviewReschedule(interviewSchedule);
-        } else if (status == InterviewStatus.CANCELLED) {
-            interviewSaveHelper(interviewSchedule, status, feedback);
-            emailService.sendInterviewCancel(interviewSchedule, feedback);
-        } else if (status == InterviewStatus.ACCEPTED) {
-            interviewSaveHelper(interviewSchedule, status, feedback);
-            emailService.sendInterviewAccept(interviewSchedule, feedback);
-        } else  if (status == InterviewStatus.REJECTED) {
-            interviewSaveHelper(interviewSchedule, status, feedback);
-            emailService.sendInterviewReject(interviewSchedule, feedback);
+        if (request.getStatus() == InterviewStatus.RESCHEDULED) {
+            if (request.getDate() == null || request.getStartTime() == null || request.getEndTime() == null) {
+                throw new InterviewScheduleUpdateBadRequestException("Date, start time, and end time must be provided");
+            }
+            InterviewScheduleRequest check = new InterviewScheduleRequest();
+            check.setDate(request.getDate());
+            check.setStartTime(request.getStartTime());
+            check.setEndTime(request.getEndTime());
+            check.setClientId(interviewSchedule.getClient().getId());
+            RecommendationApplicant recommendedApplicant = recommendationApplicantRepository.findByApplicantIdAndPosition(interviewSchedule.getApplicant().getId(), interviewSchedule.getPosition())
+                    .orElseThrow(() -> new ApplicantNotRecommendedException(interviewSchedule.getApplicant().getId(), interviewSchedule.getPosition()));
+            if (!interviewConflictHelper(recommendedApplicant, check)) {
+                interviewSaveHelper(interviewSchedule, request);
+                emailService.sendInterviewReschedule(interviewSchedule);
+            } else {
+                throw new InterviewScheduleConflictException(request.getStartTime().toString(), request.getEndTime().toString(), request.getDate().toString());
+            }
+        } else if (request.getStatus() == InterviewStatus.CANCELLED) {
+            interviewSaveHelper(interviewSchedule,request);
+            emailService.sendInterviewCancel(interviewSchedule, request.getFeedback());
+        } else if (request.getStatus() == InterviewStatus.ACCEPTED) {
+            interviewSaveHelper(interviewSchedule,request);
+            emailService.sendInterviewAccept(interviewSchedule, request.getFeedback());
+        } else  if (request.getStatus() == InterviewStatus.REJECTED) {
+            interviewSaveHelper(interviewSchedule,request);
+            emailService.sendInterviewReject(interviewSchedule, request.getFeedback());
         }
     }
 
-    private void interviewSaveHelper(InterviewSchedule interviewSchedule, InterviewStatus status, String feedback) {
-        interviewSchedule.setStatus(status);
+    private void interviewSaveHelper(InterviewSchedule interviewSchedule, InterviewUpdateRequest request) {
+        interviewSchedule.setStatus(request.getStatus());
+        if (request.getDate() != null && request.getStartTime() != null && request.getEndTime() != null) {
+            interviewSchedule.setDate(request.getDate());
+            interviewSchedule.setStartTime(request.getStartTime());
+            interviewSchedule.setEndTime(request.getEndTime());
+        }
+        if (request.getInterviewType() != null) {
+            interviewSchedule.setInterviewType(request.getInterviewType());
+        }
+        if (request.getInterviewLink() != null) {
+            interviewSchedule.setInterviewLink(request.getInterviewLink());
+        }
         interviewScheduleRepository.save(interviewSchedule);
-        interviewHistorySaveHelper(interviewSchedule, feedback);
+        interviewHistorySaveHelper(interviewSchedule, request.getFeedback());
     }
 
     private void interviewHistorySaveHelper(InterviewSchedule interviewSchedule, String feedback) {
         InterviewScheduleHistory history = new InterviewScheduleHistory();
         history.setStatus(interviewSchedule.getStatus());
+        if (feedback == null) {
+            feedback = "No feedback provided";
+        }
         history.setFeedback(feedback);
         history.setInterviewSchedule(interviewSchedule);
         interviewScheduleHistoryRepository.save(history);
