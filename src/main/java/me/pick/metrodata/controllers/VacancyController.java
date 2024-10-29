@@ -1,21 +1,22 @@
 package me.pick.metrodata.controllers;
 
+import me.pick.metrodata.models.dto.responses.ReadVacancyDetailResponse;
 import me.pick.metrodata.models.entity.Vacancy;
 import me.pick.metrodata.services.vacancy.VacancyService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class VacancyController {
 
-    private final VacancyService vacancyService;
-
-    public VacancyController(VacancyService vacancyService) {
-        this.vacancyService = vacancyService;
-    }
+    @Autowired
+    VacancyService vacancyService;
 
     @GetMapping("/vacancies")
     public String getVacanciesPage(Model model,
@@ -42,9 +43,19 @@ public class VacancyController {
         model.addAttribute("title", title);
         model.addAttribute("position", position);
 
-    return "vacancies"; 
+    return "vacancy/vacancies"; 
 
+    }
 
+    @GetMapping("vacancies/{vacancyId}")
+    public String detailVacanciesPage(Model model, @PathVariable("vacancyId") Long vacancyId){
+        ReadVacancyDetailResponse vacancyDetail = vacancyService.getVacancyDetailWithApplicants(vacancyId);
+
+        if (vacancyDetail != null){
+            model.addAttribute("detailVacancy", vacancyDetail);
+        }
+
+        return "vacancy/vacancy-detail";
     }
 }
     

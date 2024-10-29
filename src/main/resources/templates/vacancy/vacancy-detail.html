@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Vacancy Detail</title>
+    <link rel="stylesheet" href="/css/styles.css"> <!-- Tambahkan path CSS sesuai kebutuhan -->
+</head>
+<body>
+
+    <div class="container">
+        <h1>Vacancy Detail</h1>
+
+        <!-- Menampilkan Detail Vacancy -->
+        <div class="vacancy-detail">
+            <p><strong>Title:</strong> <span th:text="${detailVacancy.title}"></span></p>
+            <p><strong>Description:</strong> <span th:text="${detailVacancy.description}"></span></p>
+            <p><strong>Expired Date:</strong> <span th:text="${detailVacancy.expiredDate}"></span></p>
+        </div>
+
+        <!-- Menampilkan Daftar Applicant -->
+        <h2>Applicants</h2>
+        <div class="applicant-list">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="applicant : ${detailVacancy.applicants}">
+                        <td th:text="${applicant.name}">Name</td>
+                        <td th:text="${applicant.status}">status</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>

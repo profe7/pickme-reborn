@@ -7,12 +7,15 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.springframework.data.domain.Page;
 
+import jakarta.transaction.Transactional;
+
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Optional;
 
+@Transactional
 @Repository
 public interface VacancyRepository extends JpaRepository<Vacancy, Long>, JpaSpecificationExecutor<Vacancy> {
 
@@ -34,5 +37,6 @@ public interface VacancyRepository extends JpaRepository<Vacancy, Long>, JpaSpec
                 "GROUP BY v")
         List<Object[]> findVacancyWithTotalNominee(
                 Pageable pageable);
+
 
 }

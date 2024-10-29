@@ -2,25 +2,34 @@ package me.pick.metrodata.services.vacancy;
 
 import me.pick.metrodata.models.dto.responses.CountVacancyApplicantPaginationResponse;
 import me.pick.metrodata.models.dto.responses.CountVacancyApplicationResponse;
+import me.pick.metrodata.models.dto.responses.ReadApplicantResponse;
+import me.pick.metrodata.models.dto.responses.ReadVacancyDetailResponse;
+import me.pick.metrodata.models.entity.Applicant;
+import me.pick.metrodata.models.entity.Talent;
 import me.pick.metrodata.models.entity.Vacancy;
+import me.pick.metrodata.repositories.ApplicantRepository;
 import me.pick.metrodata.repositories.VacancyRepository;
 import me.pick.metrodata.utils.AnyUtil;
 import me.pick.metrodata.utils.PageData;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
+import java.util.Optional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class VacancyServiceImpl implements VacancyService {
-    private final VacancyRepository vacancyRepository;
+    
+    @Autowired
+    VacancyRepository vacancyRepository;
 
-    public VacancyServiceImpl(VacancyRepository vacancyRepository) {
-        this.vacancyRepository = vacancyRepository;
-    }
+    @Autowired
+    ApplicantRepository applicantRepository;
 
     private Pair<UriComponentsBuilder, Pageable> pageableAndUriBuilder(String title, String position, String expiredDate, String updatedAt, Integer currentPage, Integer perPage) {
         currentPage = (currentPage == null) ? 0 : currentPage;
@@ -59,8 +68,8 @@ public class VacancyServiceImpl implements VacancyService {
     }
 
     @Override
-    public Vacancy getVacancyById(Long id) {
-        return vacancyRepository.findById(id).orElse(null);
+    public Optional<Vacancy> getVacancyById(Long id) {
+        return vacancyRepository.findById(id);
     }
 
     public CountVacancyApplicantPaginationResponse getVacanciesWithTotalNominee(String timeInterval, Integer currentPage, Integer perPage) {
@@ -89,5 +98,37 @@ public class VacancyServiceImpl implements VacancyService {
         Long totalNominee = (Long) result[1];
         
         return new CountVacancyApplicationResponse(vacancy, totalNominee);
+    }
+
+    @Override
+    public ReadVacancyDetailResponse getVacancyDetailWithApplicants(Long vacancyId){
+        Optional<Vacancy> vacancyOptional = getVacancyById(vacancyId);
+
+        if (vacancyOptional.isPresent()){
+            Vacancy vacancy = vacancyOptional.get();
+            List<Applicant> applicants = applicantRepository.findApplicantByVacancyId(vacancyId);
+
+            List<ReadApplicantResponse> applicantResponses = applicants.stream()
+                .map(applicant -> {
+                    Talent talent = applicant.getTalent();
+                    return new ReadApplicantResponse(
+                        talent != null ? talent.getName() : null,
+                        applicant.getStatus().toString()
+                    );
+                }).collect(Collectors.toList());
+
+            ReadVacancyDetailResponse vacancyResponse = new ReadVacancyDetailResponse();
+            vacancyResponse.setTitle(vacancy.getTitle());
+            vacancyResponse.setExpiredDate(vacancy.getExpiredDate());
+            vacancyResponse.setDescription(vacancy.getDescription());
+            vacancyResponse.setPosition(vacancy.getPosition());
+            vacancyResponse.setApplicants(applicantResponses);
+
+            return vacancyResponse;
+
+        }
+
+        return null;
+
     }
 }

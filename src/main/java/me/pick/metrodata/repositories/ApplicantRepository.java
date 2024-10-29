@@ -17,4 +17,7 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long>, Jpa
 
     @Query ("SELECT COUNT(a.id) FROM Applicant a WHERE a.talent.mitra = :mitra")
     Long countByMitra(@Param  ("mitra") Mitra mitra);
+
+    @Query("SELECT a FROM Applicant a WHERE a.vacancy.id = :vacancyId")
+    List<Applicant> findApplicantByVacancyId(@Param("vacancyId") Long vacancyId);
 }
