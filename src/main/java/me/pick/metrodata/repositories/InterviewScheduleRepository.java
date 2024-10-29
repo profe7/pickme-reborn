@@ -47,4 +47,6 @@ public interface InterviewScheduleRepository
 
         List<InterviewSchedule> findInterviewScheduleByClientIdAndStatus(Long clientId, InterviewStatus status);
 
+        Optional<InterviewSchedule> findByApplicantAndClientIdAndStatus(Applicant applicant, Long clientId, InterviewStatus status);
+
 }

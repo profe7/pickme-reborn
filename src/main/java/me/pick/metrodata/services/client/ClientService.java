@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface ClientService {
     List<Talent> getClientEmployees(Long clientId);
+
+    void deleteClientEmployee(Long clientId, String talentId);
 }

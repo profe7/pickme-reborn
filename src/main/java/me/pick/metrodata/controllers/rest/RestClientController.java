@@ -6,10 +6,7 @@ import me.pick.metrodata.utils.ResponseHandler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/client")
@@ -25,6 +22,15 @@ public class RestClientController {
     public ResponseEntity<Object> getClientEmployees(@PathVariable Long clientId) {
         return ResponseHandler.generateResponse(new Response(
                 "Employees found", HttpStatus.OK, "SUCCESS", clientService.getClientEmployees(clientId)
+        ));
+    }
+
+    @DeleteMapping("/employees/{clientId}/delete/{talentId}")
+    @PreAuthorize("hasAnyAuthority('DELETE_APPLICANT')")
+    public ResponseEntity<Object> deleteClientEmployee(@PathVariable Long clientId, @PathVariable String talentId) {
+        clientService.deleteClientEmployee(clientId, talentId);
+        return ResponseHandler.generateResponse(new Response(
+                "Employee deleted", HttpStatus.OK, "SUCCESS", null
         ));
     }
 }
