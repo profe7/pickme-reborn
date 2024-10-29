@@ -1340,7 +1340,7 @@ a:focus {
 /* footer section*/
 .footer_section {
   position: relative;
-  background-color: var(--color);
+  background-color: #00212D;
   text-align: center;
 }
 
