@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import me.pick.metrodata.enums.InterviewStatus;
 import me.pick.metrodata.enums.InterviewType;
 import me.pick.metrodata.models.dto.requests.InterviewScheduleRequest;
+import me.pick.metrodata.models.dto.requests.InterviewUpdateRequest;
 import me.pick.metrodata.services.interview.InterviewScheduleService;
 import me.pick.metrodata.utils.Response;
 import me.pick.metrodata.utils.ResponseHandler;
@@ -68,5 +69,15 @@ public class RestInterviewController {
         return ResponseHandler.generateResponse(new Response(
                 "Interviews", HttpStatus.OK, "SUCCESS", interviewScheduleService.getTalentInterviewHistory(interviewId)
         ));
+    }
+
+    @PostMapping("/update-interview-status")
+    @PreAuthorize("hasAnyAuthority('CREATE_INTERVIEW', 'UPDATE_INTERVIEW', 'READ_INTERVIEW')")
+    public ResponseEntity<Object> updateInterviewStatus(@RequestBody InterviewUpdateRequest request) {
+        interviewScheduleService.updateInterviewStatus(request);
+        return ResponseHandler.generateResponse(
+                new Response(
+                        "Interview status updated", HttpStatus.CREATED, "SUCCESS", null)
+        );
     }
 }

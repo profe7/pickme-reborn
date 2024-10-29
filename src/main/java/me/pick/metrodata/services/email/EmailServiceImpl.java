@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import me.pick.metrodata.exceptions.email.EmailFailedToSendException;
 import me.pick.metrodata.models.entity.Account;
 import me.pick.metrodata.models.entity.InterviewSchedule;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -85,26 +86,144 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
+    public void sendInterviewReschedule(InterviewSchedule interviewSchedule) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            Map<String, Object> template = templateHelperTalent(interviewSchedule);
+
+            Context context = new Context();
+            context.setVariables(template);
+            String html = templateEngine.process("email/reschedule", context);
+            helper.setTo(interviewSchedule.getApplicant().getTalent().getEmail());
+            helper.setText(html, true);
+            helper.setSubject("Reschedule Interview Anda Untuk Posisi " + interviewSchedule.getPosition() + " di " + interviewSchedule.getClient().getUser().getInstitute().getInstituteName());
+
+            mailSender.send(message);
+        } catch (Exception e) {
+            throw new EmailFailedToSendException(interviewSchedule.getApplicant().getTalent().getEmail());
+        }
+    }
+
+    @Override
+    @Async
+    public void sendInterviewCancel(InterviewSchedule interviewSchedule, String feedback) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            Map<String, Object> template = new HashMap<>();
+            template.put("talent", interviewSchedule.getApplicant().getTalent().getName());
+            template.put("site", interviewSchedule.getClient().getUser().getInstitute().getInstituteName());
+            template.put("feedback", feedback);
+
+            Context context = new Context();
+            context.setVariables(template);
+            String html = templateEngine.process("email/cancelled", context);
+
+            helper.setTo(interviewSchedule.getApplicant().getTalent().getEmail());
+            helper.setText(html, true);
+            helper.setSubject("Interview Anda Untuk Posisi " + interviewSchedule.getPosition() + " di " + interviewSchedule.getClient().getUser().getInstitute().getInstituteName() + " Dibatalkan");
+
+            mailSender.send(message);
+        } catch (Exception e) {
+            throw new EmailFailedToSendException(interviewSchedule.getApplicant().getTalent().getEmail());
+        }
+    }
+
+    @Override
+    @Async
+    public void sendInterviewAccept(InterviewSchedule interviewSchedule, String feedback) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            Map<String, Object> template = new HashMap<>();
+            template.put("talent", interviewSchedule.getApplicant().getTalent().getName());
+            template.put("site", interviewSchedule.getClient().getUser().getInstitute().getInstituteName());
+            template.put("feedback", feedback);
+            template.put("onBoardDate", interviewSchedule.getOnBoardDate());
+
+            Context context = new Context();
+            context.setVariables(template);
+            String html = templateEngine.process("email/accepted", context);
+
+            helper.setTo(interviewSchedule.getApplicant().getTalent().getEmail());
+            helper.setText(html, true);
+            helper.setSubject("Interview Anda Untuk Posisi " + interviewSchedule.getPosition() + " di " + interviewSchedule.getClient().getUser().getInstitute().getInstituteName() + " Diterima");
+
+            mailSender.send(message);
+        } catch (Exception e) {
+            throw new EmailFailedToSendException(interviewSchedule.getApplicant().getTalent().getEmail());
+        }
+    }
+
+    @Override
+    @Async
+    public void sendInterviewReject(InterviewSchedule interviewSchedule, String feedback) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            Map<String, Object> template = new HashMap<>();
+            template.put("talent", interviewSchedule.getApplicant().getTalent().getName());
+            template.put("site", interviewSchedule.getClient().getUser().getInstitute().getInstituteName());
+            template.put("feedback", feedback);
+
+            Context context = new Context();
+            context.setVariables(template);
+            String html = templateEngine.process("email/rejected", context);
+
+            helper.setTo(interviewSchedule.getApplicant().getTalent().getEmail());
+            helper.setText(html, true);
+            helper.setSubject("Interview Anda Untuk Posisi " + interviewSchedule.getPosition() + " di " + interviewSchedule.getClient().getUser().getInstitute().getInstituteName() + " Ditolak");
+
+            mailSender.send(message);
+        } catch (Exception e) {
+            throw new EmailFailedToSendException(interviewSchedule.getApplicant().getTalent().getEmail());
+        }
+    }
+
+    @Override
+    @Async
     public void sendResetPasswordMessage (Account account, String url, String token) {
         try {
             //			String resetPasswordUrl = url + "/reset-password/" + token;
             String resetPasswordUrl = "http://localhost:9002/change-password/" + token;
-            MimeMessage message = mailSender.createMimeMessage ();
-            MimeMessageHelper helper = new MimeMessageHelper (message, true);
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-            helper.setTo (account.getUser ().getEmail ());
-            helper.setSubject ("Reset Password By PICKME");
+            helper.setTo(account.getUser().getEmail());
+            helper.setSubject("Reset Password By PICKME");
 
-            Context context = new Context ();
-            context.setVariable ("name", account.getUser ().getFirstName ());
-            context.setVariable ("resetPasswordUrl", resetPasswordUrl);
+            Context context = new Context();
+            context.setVariable("name", account.getUser().getFirstName());
+            context.setVariable("resetPasswordUrl", resetPasswordUrl);
 
-            String htmlContent = templateEngine.process ("email/reset-password", context);
-            helper.setText (htmlContent, true);
+            String htmlContent = templateEngine.process("email/reset-password", context);
+            helper.setText(htmlContent, true);
 
-            mailSender.send (message);
+            mailSender.send(message);
         } catch (Exception e) {
             throw new EmailFailedToSendException(account.getUser().getEmail());
         }
+    }
+
+    private Map<String, Object> templateHelperTalent(InterviewSchedule schedule) {
+        InterviewSchedule detail = schedule;
+        Map<String, Object> template = new HashMap<>();
+        template.put("talent", detail.getApplicant ().getTalent ().getName());
+        template.put("date", detail.getDate());
+        template.put("start", detail.getStartTime());
+        template.put("end", detail.getEndTime());
+        template.put("site", detail.getClient ().getUser ().getInstitute ().getCompanyName ());
+        template.put("position", detail.getPosition());
+        template.put("type", detail.getInterviewType ());
+        template.put("link", detail.getInterviewLink());
+        template.put("location", detail.getLocationAddress());
+        template.put("message", detail.getMessage());
+
+        return template;
     }
 }

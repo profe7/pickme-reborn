@@ -9,4 +9,13 @@ public interface EmailService {
     void sendResetPasswordMessage (Account account, String url, String token);
 
     void sendInterviewInvitation(InterviewSchedule schedule);
+
+    void sendInterviewReschedule(InterviewSchedule schedule);
+
+    void sendInterviewCancel(InterviewSchedule schedule, String feedback);
+
+    void sendInterviewAccept(InterviewSchedule schedule, String feedback);
+
+    void sendInterviewReject(InterviewSchedule schedule, String feedback);
+
 }

@@ -8,6 +8,7 @@ import me.pick.metrodata.exceptions.interviewschedule.ApplicantNotRecommendedExc
 import me.pick.metrodata.exceptions.interviewschedule.InterviewScheduleConflictException;
 import me.pick.metrodata.exceptions.interviewschedule.InterviewScheduleDoesNotExistException;
 import me.pick.metrodata.models.dto.requests.InterviewScheduleRequest;
+import me.pick.metrodata.models.dto.requests.InterviewUpdateRequest;
 import me.pick.metrodata.models.entity.*;
 import me.pick.metrodata.repositories.ClientRepository;
 import me.pick.metrodata.repositories.InterviewScheduleHistoryRepository;
@@ -47,11 +48,47 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
         interviewScheduleRepository.save(interviewSchedule);
 
         InterviewScheduleHistory history = new InterviewScheduleHistory();
-        history.setFeedback(null);
+        history.setFeedback("Interview invitation sent");
         history.setInterviewSchedule(interviewSchedule);
         interviewScheduleHistoryRepository.save(history);
 
         emailService.sendInterviewInvitation(interviewSchedule);
+    }
+
+    @Override
+    public void updateInterviewStatus(InterviewUpdateRequest request) {
+        Long interviewId = request.getInterviewId();
+        InterviewStatus status = request.getStatus();
+        String feedback = request.getFeedback();
+
+        InterviewSchedule interviewSchedule = interviewScheduleRepository.findInterviewScheduleById(interviewId).orElseThrow(() -> new InterviewScheduleDoesNotExistException(interviewId));
+        if (status == InterviewStatus.RESCHEDULED) {
+            interviewSaveHelper(interviewSchedule, status, feedback);
+            emailService.sendInterviewReschedule(interviewSchedule);
+        } else if (status == InterviewStatus.CANCELLED) {
+            interviewSaveHelper(interviewSchedule, status, feedback);
+            emailService.sendInterviewCancel(interviewSchedule, feedback);
+        } else if (status == InterviewStatus.ACCEPTED) {
+            interviewSaveHelper(interviewSchedule, status, feedback);
+            emailService.sendInterviewAccept(interviewSchedule, feedback);
+        } else  if (status == InterviewStatus.REJECTED) {
+            interviewSaveHelper(interviewSchedule, status, feedback);
+            emailService.sendInterviewReject(interviewSchedule, feedback);
+        }
+    }
+
+    private void interviewSaveHelper(InterviewSchedule interviewSchedule, InterviewStatus status, String feedback) {
+        interviewSchedule.setStatus(status);
+        interviewScheduleRepository.save(interviewSchedule);
+        interviewHistorySaveHelper(interviewSchedule, feedback);
+    }
+
+    private void interviewHistorySaveHelper(InterviewSchedule interviewSchedule, String feedback) {
+        InterviewScheduleHistory history = new InterviewScheduleHistory();
+        history.setStatus(interviewSchedule.getStatus());
+        history.setFeedback(feedback);
+        history.setInterviewSchedule(interviewSchedule);
+        interviewScheduleHistoryRepository.save(history);
     }
 
     private InterviewSchedule getInterviewSchedule(InterviewScheduleRequest request, RecommendationApplicant recommendedApplicant, Client client) {
