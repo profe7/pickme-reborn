@@ -11,13 +11,14 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class VacancyServiceImpl implements VacancyService{
+public class VacancyServiceImpl implements VacancyService {
     private final VacancyRepository vacancyRepository;
 
     public VacancyServiceImpl(VacancyRepository vacancyRepository) {
         this.vacancyRepository = vacancyRepository;
     }
 
+    @Override
     public Page<Vacancy> getAllAvailableVacancies(Integer page, Integer size) {
         List<Vacancy> vacancies = vacancyRepository.findOpenVacancies();
         Pageable pageable = PageRequest.of(page, size);
@@ -28,4 +29,18 @@ public class VacancyServiceImpl implements VacancyService{
         return new PageImpl<>(vacancies.subList(start, end), pageable, vacancies.size());
     }
 
+    @Override
+    public List<String> getAllPositions() {
+        return vacancyRepository.findDistinctPositions(); 
+    }
+
+    @Override
+    public Page<Vacancy> searchVacanciesByTitle(String title, Integer page, Integer size) {
+        return vacancyRepository.findByTitleContainingIgnoreCase(title, PageRequest.of(page, size));
+    }
+
+    @Override
+    public Page<Vacancy> searchVacanciesByPosition(String position, Integer page, Integer size) {
+        return vacancyRepository.findByPositionContainingIgnoreCase(position, PageRequest.of(page, size));
+    }
 }

@@ -22,7 +22,7 @@
 
     <title>Pick-Me</title>
 
-    <div th:replace="components/plugin :: css"></div>
+    <div th:replace="~{components/plugin :: css}"></div>
   </head>
 
   <body>
@@ -427,7 +427,7 @@
 
     <!-- footer section -->
 
-    <div th:replace="components/plugin :: js"></div>
+    <div th:replace="~{components/plugin :: js}"></div>
     <div layout:fragment="script">
       <script type="text/javascript" th:src="@{/js/custom.js}"></script>
     </div>

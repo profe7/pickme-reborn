@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.domain.Page;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -21,4 +23,11 @@ public interface VacancyRepository extends JpaRepository<Vacancy, Long>, JpaSpec
         @Query("SELECT v FROM Vacancy v WHERE v.status != 'CLOSED'")
         List<Vacancy> findOpenVacancies();
 
+        @Query("SELECT DISTINCT v.position FROM Vacancy v WHERE v.status != 'CLOSED'")
+        List<String> findDistinctPositions();
+
+        Page<Vacancy> findByTitleContainingIgnoreCase(String title, Pageable pageable);
+        Page<Vacancy> findByPositionContainingIgnoreCase(String position, Pageable pageable);
 }
+
+
