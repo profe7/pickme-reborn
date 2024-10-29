@@ -69,20 +69,26 @@
                             <div class="card shadow-sm">
                                 <div class="card-body p-4">
                                     <h5 class="card-title" th:text="${vacancy.title}">Judul Lowongan</h5>
-                                    <h6 class="card-subtitle mb-2 text-muted" th:text="${vacancy.position}">Posisi</h6>
+                                    <br>
+                                    <h6 class="card-subtitle mb-2" style="color: #006683;" th:text="${vacancy.position}">Posisi</h6>
                                     <p class="card-text" th:text="${vacancy.description}">Deskripsi lowongan kerja.</p>
+                          
                                     <p class="card-text">
-                                        <small class="text-muted">Batas Pendaftaran: <span
-                                                th:text="${vacancy.expiredDate}">Tanggal Expired</span></small>
+                                        <small class="text-muted" style="font-weight: bold;">Batas Pendaftaran: <span style="font-weight: bold; "
+                                                th:text="${vacancy.expiredDate}">Tanggal Expired</span>
+                                        </small>
                                         <br />
-                                        <small class="text-muted">Status: <span
-                                                th:text="${vacancy.status}">Status</span></small>
+                                        <small class="text-muted" style="font-weight: bold;" >Status: <span style="font-weight: bold;" th:text="${vacancy.status}">Status</span></small>
                                     </p>
-                                    <a href="#" class="btn" style="background-color: #006683; color:antiquewhite; ">Detail</a>
+                                    <hr>
+                                    
+                                    <a href="#" class="btn" style="background-color: #006683; color:antiquewhite;">Detail</a>
+                                    <small class="text-muted" style="margin-left: 10px;">Dibuat <span th:text="${vacancy.daysSinceCreated}"></span> hari yang lalu</small>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    
                 </div>
             </div>
 
