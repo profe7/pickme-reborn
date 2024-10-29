@@ -1,0 +1,15 @@
+package me.pick.metrodata.models.dto.responses;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.Map;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+public class AcceptedTalentsByRecruiterCountPerPositionResponse {
+	private Integer total;
+	private Map<String, Integer> totalByCategory;
+}

@@ -56,9 +56,7 @@ public class AuthController {
 			return "redirect:/login?error=true";
 		}
 	}
-
-
-
+	
 	private boolean hasAuthority(String authority) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		return authentication.getAuthorities().stream()
