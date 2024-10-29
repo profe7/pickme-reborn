@@ -1,19 +1,18 @@
 package me.pick.metrodata.services.applicant;
 
 import me.pick.metrodata.enums.ApplicantStatus;
-import me.pick.metrodata.exceptions.Applicant.ApplicantAlreadyExistsException;
-import me.pick.metrodata.exceptions.Applicant.ApplicantDoesNotExistException;
+import me.pick.metrodata.exceptions.applicant.ApplicantAlreadyExistsException;
+import me.pick.metrodata.exceptions.applicant.ApplicantDoesNotExistException;
 import me.pick.metrodata.exceptions.talent.TalentDoesNotExistException;
 import me.pick.metrodata.exceptions.user.UserDoesNotExistException;
 import me.pick.metrodata.exceptions.vacancy.VacancyNotExistException;
 import me.pick.metrodata.models.dto.requests.ApplicantCreationRequest;
 import me.pick.metrodata.models.dto.requests.MultiTalentApplicantRequest;
 import me.pick.metrodata.models.dto.requests.RecommendApplicantRequest;
-import me.pick.metrodata.models.entity.Applicant;
-import me.pick.metrodata.models.entity.Recommendation;
-import me.pick.metrodata.models.entity.RecommendationApplicant;
-import me.pick.metrodata.models.entity.Vacancy;
+import me.pick.metrodata.models.dto.responses.ApplicantPaginationResponse;
+import me.pick.metrodata.models.entity.*;
 import me.pick.metrodata.repositories.*;
+import me.pick.metrodata.utils.PageData;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -21,7 +20,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -106,4 +104,5 @@ public class ApplicantServiceImpl implements ApplicantService{
         int end = Math.min((start + pageable.getPageSize()), applicants.size());
         return new PageImpl<>(applicants.subList(start, end), pageable, applicants.size());
     }
+    
 }

@@ -1,105 +1,60 @@
 package me.pick.metrodata.repositories.specifications;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Set;
-
-import jakarta.persistence.criteria.*;
-
-import me.pick.metrodata.models.entity.Applicant;
+import me.pick.metrodata.enums.InterviewStatus;
+import me.pick.metrodata.enums.InterviewType;
 import me.pick.metrodata.models.entity.InterviewSchedule;
 import me.pick.metrodata.utils.DateTimeUtil;
 import org.springframework.data.jpa.domain.Specification;
 
+import jakarta.persistence.criteria.*;
+import java.time.LocalDate;
+
 public class InterviewScheduleSpecification {
-	public static Specification<InterviewSchedule> searchSpecification(String search, Long recruiter, Boolean online, String startDate, String endDate,
-																	   String status, Set<Long> userIds) {
-		return (root, query, criteriaBuilder) -> {
-			Predicate predicate = criteriaBuilder.conjunction();
+    public static Specification<InterviewSchedule> searchSpecification(String search, Long clientId, InterviewType type, String startDate, String endDate, InterviewStatus status) {
+        return (root, query, criteriaBuilder) -> {
+            Predicate predicate = criteriaBuilder.conjunction();
 
-			if (search != null) {
-				Join<InterviewSchedule, Applicant> applicantJoin = root.join("applicant");
-				predicate = criteriaBuilder.and(
-						predicate,
-						criteriaBuilder.or(
-								criteriaBuilder.like(root.get("position"), "%" + search + "%"),
-								criteriaBuilder.like(applicantJoin.get("talent").get("name"), "%" + search + "%")));
-			}
-			if (recruiter != null) {
-				predicate = criteriaBuilder.and(
-						predicate,
-						criteriaBuilder.equal(root.get("client").get("id"), recruiter)
-				);
-			}
-			if (online != null) {
-				predicate = criteriaBuilder.and(
-						predicate,
-						criteriaBuilder.equal(root.get("offline"), online));
-			}
+            if (search != null && !search.isEmpty()) {
+                Join<Object, Object> applicantJoin = root.join("applicant");
+                Join<Object, Object> talentJoin = applicantJoin.join("talent");
+                Join<Object, Object> clientJoin = root.join("client");
+                Join<Object, Object> userJoin = clientJoin.join("user");
+                Join<Object, Object> instituteJoin = userJoin.join("institute");
 
-			if (startDate != null && endDate != null && !startDate.isEmpty() && !endDate.isEmpty()) {
-				LocalDate localStartDate = DateTimeUtil.stringToLocalDate(startDate);
-				LocalDate localEndDate = DateTimeUtil.stringToLocalDate(endDate);
-				predicate = criteriaBuilder.and(
-						predicate,
-						criteriaBuilder.between(root.get("date"), localStartDate, localEndDate));
-			}
-			if (userIds != null && !userIds.isEmpty()) {
-				predicate = criteriaBuilder.and(
-						predicate,
-						root.get("recruiter").get("id").in(userIds));
-			}
+                predicate = criteriaBuilder.and(
+                        predicate,
+                        criteriaBuilder.or(
+                                criteriaBuilder.like(root.get("position"), "%" + search + "%"),
+                                criteriaBuilder.like(talentJoin.get("name"), "%" + search + "%"),
+                                criteriaBuilder.like(instituteJoin.get("instituteName"), "%" + search + "%")));
+            }
+            if (clientId != null) {
+                predicate = criteriaBuilder.and(
+                        predicate,
+                        criteriaBuilder.equal(root.get("client").get("id"), clientId));
+            }
 
-			if (status != null) {
-				predicate = criteriaBuilder.and(
-						predicate,
-						criteriaBuilder.equal(root.get("status"), status));
-			}
+            if (type != null) {
+                predicate = criteriaBuilder.and(
+                        predicate,
+                        criteriaBuilder.equal(root.get("interviewType"), type));
+            }
 
-			return predicate;
-		};
-	}
+            if (startDate != null && endDate != null && !startDate.isEmpty() && !endDate.isEmpty()) {
+                LocalDate localStartDate = DateTimeUtil.stringToLocalDate(startDate);
+                LocalDate localEndDate = DateTimeUtil.stringToLocalDate(endDate);
+                predicate = criteriaBuilder.and(
+                        predicate,
+                        criteriaBuilder.between(root.get("date"), localStartDate, localEndDate));
+            }
 
-	public static Specification<InterviewSchedule> searchForClientSpecification(
-			List<Long> excludedStatusIds, Long recruiterId, String onBoardDate) { // Removed talentName
-		return (root, query, criteriaBuilder) -> {
-			Predicate predicate = criteriaBuilder.conjunction();
+            if (status != null) {
+                predicate = criteriaBuilder.and(
+                        predicate,
+                        criteriaBuilder.equal(root.get("status"), status));
+            }
 
-			predicate = criteriaBuilder.and(
-					predicate,
-					criteriaBuilder.equal(root.get("recruiter"), recruiterId),
-					criteriaBuilder.not(root.get("status").in(excludedStatusIds)));
-
-			if (onBoardDate != null && !onBoardDate.isEmpty()) {
-				LocalDate localDate = DateTimeUtil.stringToLocalDate(onBoardDate);
-				predicate = criteriaBuilder.and(
-						predicate,
-						criteriaBuilder.equal(root.get("onBoardDate"), localDate));
-			}
-
-			return predicate;
-		};
-	}
-
-	public static Specification<InterviewSchedule> searchForProcessedInterviewsSpecification(
-			Long recruiterId, String date) { // Removed talentName
-		return (root, query, criteriaBuilder) -> {
-			Predicate predicate = criteriaBuilder.conjunction();
-
-			if (recruiterId != null) {
-				predicate = criteriaBuilder.and(
-						predicate,
-						criteriaBuilder.equal(root.get("recruiter"), recruiterId));
-			}
-
-			if (date != null && !date.isEmpty()) {
-				LocalDate localDate = LocalDate.parse(date);
-				predicate = criteriaBuilder.and(
-						predicate,
-						criteriaBuilder.equal(root.get("date"), localDate));
-			}
-
-			return predicate;
-		};
-	}
+            return predicate;
+        };
+    }
 }

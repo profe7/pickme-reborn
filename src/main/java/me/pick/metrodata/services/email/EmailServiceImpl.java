@@ -1,7 +1,9 @@
 package me.pick.metrodata.services.email;
 
 import jakarta.mail.internet.MimeMessage;
+import me.pick.metrodata.exceptions.email.EmailFailedToSendException;
 import me.pick.metrodata.models.entity.Account;
+import me.pick.metrodata.models.entity.InterviewSchedule;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -30,7 +32,7 @@ public class EmailServiceImpl implements EmailService {
             MimeMessage message = mailSender.createMimeMessage ();
             MimeMessageHelper helper = new MimeMessageHelper (message, true, "UTF-8");
 
-            helper.setTo (account.getUser ().getEmail ());
+            helper.setTo (account.getUser().getEmail());
             helper.setSubject ("Credential Akun Metrodata PICK-ME Anda");
 
             Map<String, Object> templateModel = new HashMap<>();
@@ -46,11 +48,47 @@ public class EmailServiceImpl implements EmailService {
 
             mailSender.send (message);
         } catch (Exception e) {
-            throw new IllegalStateException ("Email failed to send!!!");
+            throw new EmailFailedToSendException(account.getUser().getEmail());
         }
     }
 
-    public Boolean sendResetPasswordMessage (Account account, String url, String token) {
+    @Override
+    @Async
+    public void sendInterviewInvitation(InterviewSchedule schedule) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            helper.setTo(schedule.getApplicant().getTalent().getEmail());
+            helper.setCc(schedule.getApplicant().getTalent().getMitra().getUser().getEmail());
+            helper.setSubject("Undangan Interview Untuk Posisi " + schedule.getPosition() + " di " + schedule.getClient().getUser().getInstitute().getInstituteName());
+
+            Map<String, Object> templateModel = new HashMap<>();
+            templateModel.put("talent", schedule.getApplicant().getTalent().getName());
+            templateModel.put("date", schedule.getDate());
+            templateModel.put("start", schedule.getStartTime());
+            templateModel.put("end", schedule.getEndTime());
+            templateModel.put("site", schedule.getClient().getUser().getInstitute().getInstituteName());
+            templateModel.put("position", schedule.getPosition());
+            templateModel.put("type", schedule.getInterviewType());
+            templateModel.put("link", schedule.getInterviewLink());
+            templateModel.put("message", schedule.getMessage());
+
+            Context context = new Context();
+            context.setVariables(templateModel);
+
+            String htmlContent = templateEngine.process("email/invitation", context);
+            helper.setText(htmlContent, true);
+
+            mailSender.send(message);
+        } catch (Exception e) {
+            throw new EmailFailedToSendException(schedule.getApplicant().getTalent().getEmail());
+        }
+    }
+
+    @Override
+    @Async
+    public void sendResetPasswordMessage (Account account, String url, String token) {
         try {
             //			String resetPasswordUrl = url + "/reset-password/" + token;
             String resetPasswordUrl = "http://localhost:9002/change-password/" + token;
@@ -69,9 +107,7 @@ public class EmailServiceImpl implements EmailService {
 
             mailSender.send (message);
         } catch (Exception e) {
-            e.printStackTrace ();
-            throw new IllegalStateException ("Email failed to send!!!");
+            throw new EmailFailedToSendException(account.getUser().getEmail());
         }
-        return true;
     }
 }

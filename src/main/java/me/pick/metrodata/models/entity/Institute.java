@@ -3,6 +3,7 @@ package me.pick.metrodata.models.entity;
 import java.util.List;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -38,6 +39,7 @@ public class Institute {
 
     @OneToMany(mappedBy = "institute")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonIgnore
     private List<User> users;
 
     @OneToMany(mappedBy = "institute")

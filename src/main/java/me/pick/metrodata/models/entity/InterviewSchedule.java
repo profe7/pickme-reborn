@@ -3,6 +3,7 @@ package me.pick.metrodata.models.entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 import jakarta.persistence.*;
 
@@ -71,7 +72,7 @@ public class InterviewSchedule {
     @JoinColumn(name = "applicant_id")
     private Applicant applicant;
 
-    @OneToOne(mappedBy = "interviewSchedule", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private InterviewScheduleHistory interviewScheduleHistory;
+    private List<InterviewScheduleHistory> interviewScheduleHistories;
 }
