@@ -13,7 +13,6 @@ import me.pick.metrodata.repositories.InterviewScheduleRepository;
 import me.pick.metrodata.repositories.RecommendationApplicantRepository;
 import me.pick.metrodata.repositories.specifications.InterviewScheduleSpecification;
 import me.pick.metrodata.services.email.EmailService;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class InterviewScheduleServiceImpl implements InterviewScheduleService {
@@ -33,7 +31,6 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
     private final ClientRepository clientRepository;
     private final InterviewScheduleHistoryRepository interviewScheduleHistoryRepository;
     private final EmailService emailService;
-    private final ModelMapper modelMapper = new ModelMapper();
 
     public InterviewScheduleServiceImpl(InterviewScheduleRepository interviewScheduleRepository, RecommendationApplicantRepository recommendationApplicantRepository,
                                         ClientRepository clientRepository, InterviewScheduleHistoryRepository interviewScheduleHistoryRepository,
@@ -53,6 +50,18 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
         }
 
         Client client = clientRepository.findClientById(request.getClientId()).orElseThrow(() -> new ClientDoesNotExistException(request.getClientId()));
+        InterviewSchedule interviewSchedule = getInterviewSchedule(request, recommendedApplicant, client);
+        interviewScheduleRepository.save(interviewSchedule);
+
+        InterviewScheduleHistory history = new InterviewScheduleHistory();
+        history.setFeedback(null);
+        history.setInterviewSchedule(interviewSchedule);
+        interviewScheduleHistoryRepository.save(history);
+
+        emailService.sendInterviewInvitation(interviewSchedule);
+    }
+
+    private InterviewSchedule getInterviewSchedule(InterviewScheduleRequest request, RecommendationApplicant recommendedApplicant, Client client) {
         Applicant applicant = recommendedApplicant.getApplicant();
 
         InterviewSchedule interviewSchedule = new InterviewSchedule();
@@ -67,14 +76,7 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
         interviewSchedule.setStatus(request.getStatus());
         interviewSchedule.setClient(client);
         interviewSchedule.setApplicant(applicant);
-        interviewScheduleRepository.save(interviewSchedule);
-
-        InterviewScheduleHistory history = new InterviewScheduleHistory();
-        history.setFeedback(null);
-        history.setInterviewSchedule(interviewSchedule);
-        interviewScheduleHistoryRepository.save(history);
-
-        emailService.sendInterviewInvitation(interviewSchedule);
+        return interviewSchedule;
     }
 
     private boolean interviewConflictHelper(RecommendationApplicant recommendedApplicant, InterviewScheduleRequest request) {
@@ -108,10 +110,7 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
             }
         }
 
-        if (found != null) {
-            return true;
-        }
-        return false;
+        return found != null;
     }
 
     public Page<InterviewSchedule> getAll(String search, Long clientId, InterviewType type, String startDate, String endDate, InterviewStatus status, int page, int size) {
