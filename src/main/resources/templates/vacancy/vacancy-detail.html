@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Vacancy Detail</title>
     <link rel="stylesheet" href="/css/styles.css"> <!-- Tambahkan path CSS sesuai kebutuhan -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> <!-- Library jQuery -->
 </head>
 <body>
 
@@ -30,14 +31,74 @@
                 <tbody>
                     <tr th:each="applicant : ${detailVacancy.applicants}">
                         <td th:text="${applicant.namaTalent}">Name</td>
-                        <td th:text="${applicant.status}">status</td>
+                        <td th:text="${applicant.status}">Status</td>
                     </tr>
-                    <p th:text="${totalApplicant}"></p>
                 </tbody>
-                <h2>Total Pelamar: <span th:text="${detailVacancy.applicants.size()}"></span></h2>
             </table>
+            <h2>Total Pelamar: <span th:text="${detailVacancy.applicants.size()}"></span></h2>
+        </div>
+
+        <!-- Button untuk Membuka Modal Talent dengan data-mitra-id dan data-vacancy-id -->
+        <button onclick="openTalentModal()" 
+                th:attr="data-mitra-id=${mitraId}, data-vacancy-id=${vacancyId}">
+            View Available Talent
+        </button>
+
+        <!-- Modal -->
+        <div id="talentModal" style="display:none;">
+            <div class="modal-content">
+                <span onclick="closeTalentModal()" class="close">&times;</span>
+                <h2>Available Talent</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>CV Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="talentList">
+                        <!-- Data Talent akan dimuat di sini dengan AJAX -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
+    <!-- Modal Styles -->
+    <style>
+        /* Basic styling for modal */
+        .modal-content { background-color: #fefefe; margin: auto; padding: 20px; border: 1px solid #888; width: 80%; }
+        .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+    </style>
+
+    <!-- Script untuk Modal dan AJAX -->
+    <script>
+        function openTalentModal() {
+            // Mengambil mitraId dan vacancyId dari atribut button
+            const mitraId = $("button").data("mitra-id");
+            const vacancyId = $("button").data("vacancy-id");
+            
+            // Fetch data dari endpoint
+            $.ajax({
+                url: `/vacancies/${mitraId}/${vacancyId}/talent`,
+                method: "GET",
+                success: function(data) {
+                    let talentRows = "";
+                    data.forEach(talent => {
+                        talentRows += `<tr><td>${talent.name}</td><td>${talent.cvStatus}</td></tr>`;
+                    });
+                    $("#talentList").html(talentRows);
+                    $("#talentModal").css("display", "block");
+                },
+                error: function(err) {
+                    console.error("Failed to load talent data", err);
+                }
+            });
+        }
+
+        function closeTalentModal() {
+            $("#talentModal").css("display", "none");
+        }
+    </script>
 </body>
 </html>

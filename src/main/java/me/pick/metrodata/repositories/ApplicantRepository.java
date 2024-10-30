@@ -37,8 +37,8 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long>, Jpa
       "WHERE t.mitra.id = :mitraId AND v.expiredDate > CURRENT_DATE AND a.status = :status")
    Long countApplicantByStatusAndMitra(@Param("mitraId") Long mitraId, @Param("status") String status);
 
-   @Query("SELECT COUNT(a) FROM applicant a" +
-      "JOIN a.vacancy v" +
+   @Query("SELECT COUNT(a) FROM Applicant a " +
+      "JOIN a.vacancy v " +
       "WHERE v.id = :vacancyId")
    Long countTotalApplicantByVacancy(@Param("vacancyId") Long vacancyId);
 }

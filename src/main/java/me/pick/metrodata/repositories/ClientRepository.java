@@ -17,8 +17,8 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 
 	Optional<Client> findClientById(Long id);
 
-	@Query("SELECT is FROM InterviewSchedule is" +
-		"JOIN is.client c" +
-		"WHERE is.status = 'ACCEPTED' AND c.id = :clientId")
+	@Query("SELECT i FROM InterviewSchedule i " +
+       "JOIN i.client c " +
+       "WHERE i.status = 'ACCEPTED' AND c.id = :clientId")
 	List<InterviewSchedule> findEmployeeByInterviewAccepted(@Param("clientId") Long clientId);
 }
