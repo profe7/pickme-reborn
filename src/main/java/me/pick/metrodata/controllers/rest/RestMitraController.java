@@ -30,4 +30,13 @@ public class RestMitraController {
                 "Talents found", HttpStatus.OK, "SUCCESS", mitraService.getMitraTalents(mitraId, page, size)
         ));
     }
+
+    @GetMapping("/dashboard-telemetry/{mitraId}")
+    @PreAuthorize("hasAnyAuthority('CREATE_TALENT')")
+    public ResponseEntity<Object> getDashboardTelemetry(@PathVariable Long mitraId) {
+        return ResponseHandler.generateResponse(new Response(
+                "Dashboard telemetry", HttpStatus.OK, "SUCCESS", mitraService.getMitraDashboardTelemetry(mitraId)
+        ));
+    }
+
 }

@@ -3,26 +3,19 @@ package me.pick.metrodata.services.vacancy;
 import lombok.RequiredArgsConstructor;
 import me.pick.metrodata.enums.VacancyStatus;
 import me.pick.metrodata.exceptions.user.UserDoesNotExistException;
+import me.pick.metrodata.exceptions.vacancy.IncompleteVacancyRequestException;
 import me.pick.metrodata.exceptions.vacancy.VacancyStatusDoesNotExistException;
 import me.pick.metrodata.models.dto.requests.VacancyCreationRequest;
-import me.pick.metrodata.models.dto.responses.CountVacancyApplicantPaginationResponse;
-import me.pick.metrodata.models.dto.responses.CountVacancyApplicationResponse;
-import me.pick.metrodata.models.dto.responses.VacancyPaginationResponse;
 import me.pick.metrodata.models.entity.User;
 import me.pick.metrodata.models.entity.Vacancy;
 import me.pick.metrodata.repositories.UserRepository;
 import me.pick.metrodata.repositories.VacancyRepository;
-import me.pick.metrodata.repositories.specifications.VacancySpecification;
-import me.pick.metrodata.utils.AnyUtil;
-import me.pick.metrodata.utils.PageData;
 import org.springframework.data.domain.*;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -62,6 +55,16 @@ public class    VacancyServiceImpl implements VacancyService{
             VacancyStatus.valueOf(request.getVacancyStatus());
         } catch (IllegalArgumentException e) {
             throw new VacancyStatusDoesNotExistException(request.getVacancyStatus());
+        }
+
+        if (request.getClientUserId() == null ||
+                request.getVacancyTitle() == null ||
+                request.getVacancyPosition() == null ||
+                request.getVacancyStatus() == null ||
+                request.getVacancyEndDate() == null ||
+                request.getApplicantQuantity() == null ||
+                request.getVacancyDescription() == null) {
+            throw new IncompleteVacancyRequestException();
         }
 
         Vacancy vacancy = Vacancy.builder()
