@@ -46,7 +46,7 @@ public class RestTalentController {
                 "Talent data completed", HttpStatus.OK, "SUCCESS", talent));
     }
 
-    @PostMapping("/available-for-vacancy/{vacancyId}/{mitraId}")
+    @GetMapping("/available-for-vacancy/{vacancyId}/{mitraId}")
     @PreAuthorize("hasAnyAuthority('READ_TALENT', 'READ_JOB', 'CREATE_APPLICANT')")
     public ResponseEntity<Object> availableForVacancy(@PathVariable Long vacancyId, @PathVariable Long mitraId){
         TalentAvailableForVacancyResponse talents = talentService.availableForVacancy(vacancyId, mitraId);
