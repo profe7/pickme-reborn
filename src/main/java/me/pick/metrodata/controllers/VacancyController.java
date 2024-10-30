@@ -4,6 +4,9 @@ import me.pick.metrodata.models.dto.responses.ReadVacancyDetailResponse;
 import me.pick.metrodata.models.entity.Vacancy;
 import me.pick.metrodata.services.vacancy.VacancyService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -47,9 +50,9 @@ public class VacancyController {
 
     }
 
-    @GetMapping("vacancies/{vacancyId}")
-    public String detailVacanciesPage(Model model, @PathVariable("vacancyId") Long vacancyId){
-        ReadVacancyDetailResponse vacancyDetail = vacancyService.getVacancyDetailWithApplicants(vacancyId);
+    @GetMapping("vacancies/{mitraId}/{vacancyId}")
+    public String detailVacanciesPage(Model model, @PathVariable("mitraId") Long mitraId, @PathVariable("vacancyId") Long vacancyId){
+        ReadVacancyDetailResponse vacancyDetail = vacancyService.getVacancyDetailWithApplicants(vacancyId, mitraId);
 
         if (vacancyDetail != null){
             model.addAttribute("detailVacancy", vacancyDetail);

@@ -38,5 +38,9 @@ public interface VacancyRepository extends JpaRepository<Vacancy, Long>, JpaSpec
         List<Object[]> findVacancyWithTotalNominee(
                 Pageable pageable);
 
+        @Query("SELECT COUNT(v) FROM Vacancy v WHERE v.expiredDate > CURRENT_DATE")
+        Long countActiveVacancy();
+
+
 
 }

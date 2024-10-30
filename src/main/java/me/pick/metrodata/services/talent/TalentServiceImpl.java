@@ -99,6 +99,7 @@ public class TalentServiceImpl implements  TalentService{
         this.authService = authService;
         this.userService = userService;
     }
+    
 
     private Talent findByIdFromRepo(String id){
         return talentRepository.findById(id).orElseThrow (() -> new ResponseStatusException (HttpStatus.NOT_FOUND, "Talent not found"));

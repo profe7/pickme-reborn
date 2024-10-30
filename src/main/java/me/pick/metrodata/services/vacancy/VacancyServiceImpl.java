@@ -101,19 +101,19 @@ public class VacancyServiceImpl implements VacancyService {
     }
 
     @Override
-    public ReadVacancyDetailResponse getVacancyDetailWithApplicants(Long vacancyId){
+    public ReadVacancyDetailResponse getVacancyDetailWithApplicants(Long vacancyId, Long mitraId){
         Optional<Vacancy> vacancyOptional = getVacancyById(vacancyId);
 
         if (vacancyOptional.isPresent()){
             Vacancy vacancy = vacancyOptional.get();
-            List<Applicant> applicants = applicantRepository.findApplicantByVacancyId(vacancyId);
+            List<Applicant> applicants = applicantRepository.findApplicantsByVacancyIdAndMitraId(vacancyId, mitraId);
 
             List<ReadApplicantResponse> applicantResponses = applicants.stream()
                 .map(applicant -> {
                     Talent talent = applicant.getTalent();
                     return new ReadApplicantResponse(
                         talent != null ? talent.getName() : null,
-                        applicant.getStatus().toString()
+                        talent != null ? talent.getStatusCV().toString() : null
                     );
                 }).collect(Collectors.toList());
 

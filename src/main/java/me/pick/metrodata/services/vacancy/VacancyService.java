@@ -16,6 +16,6 @@ public interface VacancyService {
 
     Optional<Vacancy> getVacancyById(Long id);
 
-    ReadVacancyDetailResponse getVacancyDetailWithApplicants(Long vacancyId);
+    ReadVacancyDetailResponse getVacancyDetailWithApplicants(Long vacancyId, Long mitraId);
 }
    
