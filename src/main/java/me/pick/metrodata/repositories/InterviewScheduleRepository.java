@@ -2,6 +2,7 @@ package me.pick.metrodata.repositories;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import me.pick.metrodata.enums.InterviewStatus;
 import me.pick.metrodata.models.entity.*;
@@ -38,8 +39,14 @@ public interface InterviewScheduleRepository
                 "JOIN m.user u " +
                 "JOIN u.institute i " +
                 "WHERE i.id = :instituteId")
-        public List<InterviewSchedule> findScheduleByMitra(@Param("instituteId") Long instituteId);
+        List<InterviewSchedule> findScheduleByMitra(@Param("instituteId") Long instituteId);
 
         List<InterviewSchedule> findInterviewScheduleByClientAndApplicantAndStatus(Client client, Applicant applicant, InterviewStatus status);
+
+        Optional<InterviewSchedule> findInterviewScheduleById(Long id);
+
+        List<InterviewSchedule> findInterviewScheduleByClientIdAndStatus(Long clientId, InterviewStatus status);
+
+        Optional<InterviewSchedule> findByApplicantAndClientIdAndStatus(Applicant applicant, Long clientId, InterviewStatus status);
 
 }

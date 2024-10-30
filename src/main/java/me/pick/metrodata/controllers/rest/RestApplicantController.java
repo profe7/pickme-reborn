@@ -1,5 +1,6 @@
 package me.pick.metrodata.controllers.rest;
 
+import lombok.AllArgsConstructor;
 import me.pick.metrodata.models.dto.requests.MultiTalentApplicantRequest;
 import me.pick.metrodata.models.dto.requests.RecommendApplicantRequest;
 import me.pick.metrodata.models.entity.Applicant;
@@ -15,12 +16,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/applicant")
+@AllArgsConstructor
 public class RestApplicantController {
     private final ApplicantService applicantService;
-
-    public RestApplicantController(ApplicantService applicantService) {
-        this.applicantService = applicantService;
-    }
 
     @PostMapping("/apply-multiple-talents")
     @PreAuthorize("hasAnyAuthority('CREATE_APPLICANT', 'READ_JOB')")

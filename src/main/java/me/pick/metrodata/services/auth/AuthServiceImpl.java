@@ -27,7 +27,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -54,7 +53,7 @@ public class AuthServiceImpl implements AuthService {
 
 		UserDetails userDetails = accountDetailService.loadUserByUsername (loginRequest.getUsername ());
 
-		List<String> authorities = userDetails.getAuthorities ().stream ().map (authority -> authority.getAuthority ()).collect (Collectors.toList ());
+		List<String> authorities = userDetails.getAuthorities ().stream ().map (authority -> authority.getAuthority ()).toList();
 
 		return new LoginResponse (account.getUsername (), authorities);
 	}

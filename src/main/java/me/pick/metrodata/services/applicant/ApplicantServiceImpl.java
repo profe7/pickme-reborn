@@ -1,5 +1,6 @@
 package me.pick.metrodata.services.applicant;
 
+import lombok.RequiredArgsConstructor;
 import me.pick.metrodata.enums.ApplicantStatus;
 import me.pick.metrodata.exceptions.applicant.ApplicantAlreadyExistsException;
 import me.pick.metrodata.exceptions.applicant.ApplicantDoesNotExistException;
@@ -9,10 +10,8 @@ import me.pick.metrodata.exceptions.vacancy.VacancyNotExistException;
 import me.pick.metrodata.models.dto.requests.ApplicantCreationRequest;
 import me.pick.metrodata.models.dto.requests.MultiTalentApplicantRequest;
 import me.pick.metrodata.models.dto.requests.RecommendApplicantRequest;
-import me.pick.metrodata.models.dto.responses.ApplicantPaginationResponse;
 import me.pick.metrodata.models.entity.*;
 import me.pick.metrodata.repositories.*;
-import me.pick.metrodata.utils.PageData;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ApplicantServiceImpl implements ApplicantService{
 
     private final ApplicantRepository applicantRepository;
@@ -31,17 +31,6 @@ public class ApplicantServiceImpl implements ApplicantService{
     private final UserRepository userRepository;
     private final RecommendationRepository recommendationRepository;
     private final RecommendationApplicantRepository recommendationApplicantRepository;
-
-    public ApplicantServiceImpl(ApplicantRepository applicantRepository, VacancyRepository vacancyRepository,
-                                TalentRepository talentRepository, UserRepository userRepository,
-                                RecommendationRepository recommendationRepository, RecommendationApplicantRepository recommendationApplicantRepository){
-        this.applicantRepository = applicantRepository;
-        this.vacancyRepository = vacancyRepository;
-        this.talentRepository = talentRepository;
-        this.userRepository = userRepository;
-        this.recommendationRepository = recommendationRepository;
-        this.recommendationApplicantRepository = recommendationApplicantRepository;
-    }
 
     @Override
     public Applicant createApplicant(ApplicantCreationRequest request){

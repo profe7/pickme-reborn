@@ -1,11 +1,11 @@
 package me.pick.metrodata.controllers.rest;
 
+import lombok.AllArgsConstructor;
 import me.pick.metrodata.models.dto.requests.ChangePasswordRequest;
 import me.pick.metrodata.models.dto.requests.ForgetPasswordRequest;
 import me.pick.metrodata.models.dto.requests.LoginRequest;
 import me.pick.metrodata.models.dto.responses.ForgotPasswordResponse;
 import me.pick.metrodata.models.dto.responses.LoginResponse;
-import me.pick.metrodata.models.entity.ResetPasswordToken;
 import me.pick.metrodata.services.auth.AuthService;
 import me.pick.metrodata.utils.Response;
 import me.pick.metrodata.utils.ResponseHandler;
@@ -17,12 +17,9 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/v1/auth")
+@AllArgsConstructor
 public class RestAuthController {
 	private final AuthService authService;
-
-	public RestAuthController(AuthService authService) {
-		this.authService = authService;
-	}
 
 	@PostMapping("/login")
 	public LoginResponse login(@RequestBody LoginRequest loginRequest) {

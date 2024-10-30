@@ -1,5 +1,6 @@
 package me.pick.metrodata.controllers.rest;
 
+import lombok.AllArgsConstructor;
 import me.pick.metrodata.models.dto.requests.TalentDataCompletionRequest;
 import me.pick.metrodata.models.dto.requests.TalentFromVacancyRequest;
 import me.pick.metrodata.models.entity.Talent;
@@ -15,13 +16,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/talent")
+@AllArgsConstructor
 public class RestTalentController {
 
     private final TalentService talentService;
-
-    public RestTalentController(TalentService talentService){
-        this.talentService = talentService;
-    }
 
     @PostMapping("/create-via-vacancy")
     @PreAuthorize("hasAnyAuthority('CREATE_TALENT', 'CREATE_APPLICANT')")

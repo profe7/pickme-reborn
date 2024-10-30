@@ -1,6 +1,6 @@
 package me.pick.metrodata.services.accountdetail;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import me.pick.metrodata.models.entity.Account;
 import me.pick.metrodata.models.entity.AccountDetail;
 import me.pick.metrodata.repositories.AccountRepository;
@@ -9,9 +9,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AccountDetailServiceImpl implements AccountDetailService {
-  private AccountRepository accountRepository;
+  private final AccountRepository accountRepository;
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

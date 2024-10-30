@@ -2,7 +2,6 @@ package me.pick.metrodata.repositories;
 
 import me.pick.metrodata.models.entity.Client;
 import me.pick.metrodata.models.entity.InterviewSchedule;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,8 +16,14 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 
 	Optional<Client> findClientById(Long id);
 
-	@Query("SELECT i FROM InterviewSchedule i " +
-       "JOIN i.client c " +
-       "WHERE i.status = 'ACCEPTED' AND c.id = :clientId")
+	@Query("SELECT is FROM InterviewSchedule is " +
+			"JOIN is.client c " +
+			"WHERE is.status = 'ACCEPTED' AND c.id = :clientId")
 	List<InterviewSchedule> findEmployeeByInterviewAccepted(@Param("clientId") Long clientId);
+
+	@Query("SELECT is.position, COUNT(is.position) FROM InterviewSchedule is " +
+			"JOIN is.client c " +
+			"WHERE is.status = 'ACCEPTED' AND c.id = :clientId " +
+			"GROUP BY is.position")
+	List<Object[]> findUniquePositionsAndCountByClientId(@Param("clientId") Long clientId);
 }
