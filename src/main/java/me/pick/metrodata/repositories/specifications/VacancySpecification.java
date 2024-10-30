@@ -43,29 +43,6 @@ public class VacancySpecification {
 		};
 	}
 
-	// public static Specification<Vacancy> timeIntervalSpecification(String timeInterval) {
-	//   return (root, query, criteriaBuilder) -> {
-	//       LocalDate startDate;
-
-	//       switch (timeInterval.toLowerCase()) {
-	//           case "hari":
-	//               startDate = LocalDate.now().minusDays(1);
-	//               break;
-	//           case "minggu":
-	//               startDate = LocalDate.now().minusWeeks(1);
-	//               break;
-	//           case "bulan":
-	//               startDate = LocalDate.now().minusMonths(1);
-	//               break;
-	//           default:
-	//               throw new IllegalArgumentException("Interval waktu tidak valid");
-	//       }
-
-	//       return criteriaBuilder.and(
-	//               criteriaBuilder.greaterThanOrEqualTo(root.get("updatedAt"), startDate.atStartOfDay()));
-	//   };
-	// }
-
 	public static Specification<Vacancy> timeIntervalSpecification(String timeInterval) {
 		return (root, query, criteriaBuilder) -> {
 			LocalDate startDate;

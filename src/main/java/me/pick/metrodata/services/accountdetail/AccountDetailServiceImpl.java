@@ -1,6 +1,5 @@
 package me.pick.metrodata.services.accountdetail;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import me.pick.metrodata.models.entity.Account;
 import me.pick.metrodata.models.entity.AccountDetail;

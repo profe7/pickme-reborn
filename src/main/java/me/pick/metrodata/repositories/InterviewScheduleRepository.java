@@ -39,7 +39,7 @@ public interface InterviewScheduleRepository
                 "JOIN m.user u " +
                 "JOIN u.institute i " +
                 "WHERE i.id = :instituteId")
-        public List<InterviewSchedule> findScheduleByMitra(@Param("instituteId") Long instituteId);
+        List<InterviewSchedule> findScheduleByMitra(@Param("instituteId") Long instituteId);
 
         List<InterviewSchedule> findInterviewScheduleByClientAndApplicantAndStatus(Client client, Applicant applicant, InterviewStatus status);
 

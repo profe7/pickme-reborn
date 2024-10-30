@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import me.pick.metrodata.enums.VacancyStatus;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;

@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping ("/login")
@@ -42,7 +41,7 @@ public class AuthController {
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 			List<String> authorities = authentication.getAuthorities().stream()
 					.map(auth -> auth.getAuthority())
-					.collect(Collectors.toList());
+					.toList();
 
 			if (authorities.contains("UPDATE_APPLICANT_NOMINEE") && authorities.contains("READ_PARAMETER")) {
 				return "redirect:/talent-mitra/add";

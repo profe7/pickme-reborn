@@ -10,7 +10,6 @@ import me.pick.metrodata.enums.InterviewStatus;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 
 @Data
 @NoArgsConstructor

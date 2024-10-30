@@ -31,7 +31,7 @@ public class MitraServiceImpl implements MitraService{
 
     public Page<Talent> getMitraTalents(Long mitraId, Integer page, Integer size) {
         Mitra mitra = mitraRepository.findById(mitraId).orElseThrow(() -> new MitraDoesNotExistException(mitraId));
-        List<Talent> talents = talentRepository.findTalentByMitraId(mitraId);
+        List<Talent> talents = talentRepository.findTalentByMitraId(mitra.getId());
         Pageable pageable =  PageRequest.of(page, size);
 
         int start = (int) pageable.getOffset();

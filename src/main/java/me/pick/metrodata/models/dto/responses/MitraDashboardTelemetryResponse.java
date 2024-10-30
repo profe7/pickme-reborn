@@ -1,7 +1,6 @@
 package me.pick.metrodata.models.dto.responses;
 
 import lombok.Data;
-import me.pick.metrodata.models.entity.Vacancy;
 
 import java.util.List;
 

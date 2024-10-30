@@ -6,7 +6,6 @@ import me.pick.metrodata.models.dto.requests.ForgetPasswordRequest;
 import me.pick.metrodata.models.dto.requests.LoginRequest;
 import me.pick.metrodata.models.dto.responses.ForgotPasswordResponse;
 import me.pick.metrodata.models.dto.responses.LoginResponse;
-import me.pick.metrodata.models.entity.ResetPasswordToken;
 import me.pick.metrodata.services.auth.AuthService;
 import me.pick.metrodata.utils.Response;
 import me.pick.metrodata.utils.ResponseHandler;
