@@ -167,7 +167,9 @@
                         <td th:text="${applicant.namaTalent}">Name</td>
                         <td th:text="${applicant.status}">status</td>
                     </tr>
+                    <p th:text="${totalApplicant}"></p>
                 </tbody>
+                <h2>Total Pelamar: <span th:text="${detailVacancy.applicants.size()}"></span></h2>
             </table>
         </div>
     </div>
