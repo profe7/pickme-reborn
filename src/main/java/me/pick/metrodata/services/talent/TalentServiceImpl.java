@@ -1,5 +1,6 @@
 package me.pick.metrodata.services.talent;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.pick.metrodata.enums.ApplicantStatus;
 import me.pick.metrodata.enums.StatusCV;
@@ -12,27 +13,21 @@ import me.pick.metrodata.exceptions.talent.TalentAlreadyExistException;
 import me.pick.metrodata.exceptions.talent.TalentDoesNotExistException;
 import me.pick.metrodata.exceptions.vacancy.VacancyNotExistException;
 import me.pick.metrodata.models.dto.requests.*;
-import me.pick.metrodata.models.dto.responses.TalentPaginationResponse;
+import me.pick.metrodata.models.dto.responses.TalentAvailableForVacancyResponse;
 import me.pick.metrodata.models.dto.responses.TalentResponse;
+import me.pick.metrodata.models.dto.responses.TalentSimpleResponse;
 import me.pick.metrodata.models.dto.responses.TotalMitraTalentResponse;
 import me.pick.metrodata.models.entity.*;
 import me.pick.metrodata.repositories.*;
-import me.pick.metrodata.repositories.specifications.TalentSpecification;
 import me.pick.metrodata.services.applicant.ApplicantService;
 import me.pick.metrodata.services.auth.AuthService;
 import me.pick.metrodata.services.email.EmailService;
 import me.pick.metrodata.services.user.UserService;
-import me.pick.metrodata.utils.AnyUtil;
-import me.pick.metrodata.utils.PageData;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,6 +35,7 @@ import java.util.List;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class TalentServiceImpl implements  TalentService{
     private final TalentRepository talentRepository;
     private final MitraRepository mitraRepository;
@@ -64,42 +60,6 @@ public class TalentServiceImpl implements  TalentService{
     private final ModelMapper modelMapper;
     private final AuthService authService;
     private final UserService userService;
-
-    public TalentServiceImpl(TalentRepository talentRepository, MitraRepository mitraRepository,
-                             RoleRepository roleRepository, PasswordEncoder passwordEncoder,
-                             UserRepository userRepository, AccountRepository accountRepository,
-                             ApplicantService applicantService, ReferenceRepository referenceRepository,
-                             LanguageSkillRepository languageSkillRepository, EducationRepository educationRepository,
-                             SkillRepository skillRepository, JobHistoryRepository jobHistoryRepository,
-                             ProjectRepository projectRepository, TrainingRepository trainingRepository,
-                             CertificationRepository certificationRepository, OrganizationRepository organizationRepository,
-                             OtherExperienceRepository otherExperienceRepository, AchievementsRepository achievementsRepository,
-                             EmailService emailService, VacancyRepository vacancyRepository, ModelMapper modelMapper, AuthService authService, UserService userService) {
-        this.talentRepository = talentRepository;
-        this.mitraRepository = mitraRepository;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.userRepository = userRepository;
-        this.accountRepository = accountRepository;
-        this.applicantService = applicantService;
-        this.referenceRepository = referenceRepository;
-        this.languageSkillRepository = languageSkillRepository;
-        this.educationRepository = educationRepository;
-        this.skillRepository = skillRepository;
-        this.jobHistoryRepository = jobHistoryRepository;
-        this.projectRepository = projectRepository;
-        this.trainingRepository = trainingRepository;
-        this.certificationRepository = certificationRepository;
-        this.organizationRepository = organizationRepository;
-        this.otherExperienceRepository = otherExperienceRepository;
-        this.achievementsRepository = achievementsRepository;
-        this.vacancyRepository = vacancyRepository;
-        this.emailService = emailService;
-        this.modelMapper = modelMapper;
-        this.authService = authService;
-        this.userService = userService;
-    }
-    
 
     private Talent findByIdFromRepo(String id){
         return talentRepository.findById(id).orElseThrow (() -> new ResponseStatusException (HttpStatus.NOT_FOUND, "Talent not found"));
@@ -193,16 +153,20 @@ public class TalentServiceImpl implements  TalentService{
     }
 
     @Override
-    public List<Talent> availableForVacancy(Long vacancyId, Long mitraId) {
+    public TalentAvailableForVacancyResponse availableForVacancy(Long vacancyId, Long mitraId) {
         Vacancy vacancy = vacancyRepository.findVacancyById(vacancyId).orElseThrow(() ->new VacancyNotExistException(vacancyId));
         Mitra mitra = mitraRepository.findById(mitraId).orElseThrow(() -> new MitraDoesNotExistException(mitraId));
 
         List<Talent> available = talentRepository.findTalentsWithCompleteCVByMitra(mitra.getId());
+        TalentAvailableForVacancyResponse responses = new TalentAvailableForVacancyResponse();
 
         available = available.stream()
                 .filter(talent -> talent.getApplicants().stream()
                         .noneMatch(applicant -> applicant.getVacancy().getId().equals(vacancy.getId()) || applicant.getStatus() == ApplicantStatus.ACCEPTED)).toList();
-        return available;
+
+        responses.setTalents(availableForVacancyHelper(available));
+
+        return responses;
     }
 
     @Override
@@ -416,5 +380,19 @@ public class TalentServiceImpl implements  TalentService{
                             talent
                     ));
         }
+    }
+
+    private List<TalentSimpleResponse> availableForVacancyHelper(List<Talent> talents) {
+        return talents.stream().map(
+                talent -> {
+                    TalentSimpleResponse response = new TalentSimpleResponse();
+                    response.setTalentId(talent.getId());
+                    response.setTalentName(talent.getName());
+                    response.setTalentPosition(talent.getJobHistories().getLast().getPosition().getReference_name());
+                    response.setTalentSkill(talent.getSkills().getLast().getName());
+                    response.setStatusCV(talent.getStatusCV().toString());
+                    return response;
+                }).toList();
+
     }
 }

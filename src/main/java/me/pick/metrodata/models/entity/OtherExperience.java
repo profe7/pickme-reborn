@@ -1,5 +1,6 @@
 package me.pick.metrodata.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -53,6 +54,7 @@ public class OtherExperience {
 
     @ManyToOne
     @JoinColumn(name = "talent_id")
+    @JsonBackReference
     private Talent talent;
 
     public OtherExperience(String experienceName, String instituteName, String positionName, String positionName1, LocalDate experienceDate, Talent talent) {

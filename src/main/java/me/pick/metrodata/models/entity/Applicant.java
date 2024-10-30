@@ -1,5 +1,6 @@
 package me.pick.metrodata.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
@@ -38,6 +39,7 @@ public class Applicant {
 
     @ManyToOne
     @JoinColumn(name = "talent_id", nullable = false)
+    @JsonBackReference
     private Talent talent;
 
     @OneToMany(mappedBy = "applicant")

@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 import java.util.Optional;
+import me.pick.metrodata.models.dto.requests.VacancyCreationRequest;
 
 public interface VacancyService {
     Page<Vacancy> getAllAvailableVacancies(Integer page, Integer size);
@@ -17,5 +18,7 @@ public interface VacancyService {
     Optional<Vacancy> getVacancyById(Long id);
 
     ReadVacancyDetailResponse getVacancyDetailWithApplicants(Long vacancyId, Long mitraId);
+
+    void createVacancy(VacancyCreationRequest request);
 }
    

@@ -1,5 +1,6 @@
 package me.pick.metrodata.services.account;
 
+import lombok.RequiredArgsConstructor;
 import me.pick.metrodata.exceptions.account.AccountAlreadyExistException;
 import me.pick.metrodata.exceptions.account.AccountDoesNotExistException;
 import me.pick.metrodata.exceptions.role.RoleDoesNotExistException;
@@ -25,20 +26,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final InstituteRepository instituteRepository;
     private final UserRepository userRepository;
-
-    public AccountServiceImpl(AccountRepository accountRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, InstituteRepository instituteRepository, UserRepository userRepository) {
-        this.accountRepository = accountRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.roleRepository = roleRepository;
-        this.instituteRepository = instituteRepository;
-        this.userRepository = userRepository;
-    }
 
     public Account createAccount(AccountRequest request) {
         Account existing = accountRepository.findByUsername(request.getAccountUsername()).orElse(null);

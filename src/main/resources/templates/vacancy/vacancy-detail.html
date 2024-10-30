@@ -15,6 +15,8 @@
 
 
 
+    <link rel="stylesheet" href="/css/styles.css"> <!-- Tambahkan path CSS sesuai kebutuhan -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> <!-- Library jQuery -->
 </head>
 
 <body>
@@ -165,6 +167,116 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 
+
+    <div class="container">
+        <h1>Vacancy Detail</h1>
+
+        <!-- Menampilkan Detail Vacancy -->
+        <div class="vacancy-detail">
+            <p><strong>Title:</strong> <span th:text="${detailVacancy.title}"></span></p>
+            <p><strong>Description:</strong> <span th:text="${detailVacancy.description}"></span></p>
+            <p><strong>Expired Date:</strong> <span th:text="${detailVacancy.expiredDate}"></span></p>
+        </div>
+
+        <!-- Menampilkan Daftar Applicant -->
+        <h2>Applicants</h2>
+        <div class="applicant-list">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="applicant : ${detailVacancy.applicants}">
+                        <td th:text="${applicant.namaTalent}">Name</td>
+                        <td th:text="${applicant.status}">Status</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h2>Total Pelamar: <span th:text="${detailVacancy.applicants.size()}"></span></h2>
+        </div>
+
+        <!-- Button untuk Membuka Modal Talent dengan data-mitra-id dan data-vacancy-id -->
+        <button onclick="openTalentModal()" 
+                th:attr="data-mitra-id=${mitraId}, data-vacancy-id=${vacancyId}">
+            View Available Talent
+        </button>
+
+        <!-- Modal -->
+        <div id="talentModal" style="display:none;">
+            <div class="modal-content">
+                <span onclick="closeTalentModal()" class="close">&times;</span>
+                <h2>Available Talent</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nama</th>
+                            <th>Posisi</th>
+                            <th>Skill</th>
+                            <th>CV Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="talentList">
+                        <!-- Data Talent akan dimuat di sini dengan AJAX -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Styles -->
+    <style>
+        /* Basic styling for modal */
+        .modal-content { background-color: #fefefe; margin: auto; padding: 20px; border: 1px solid #888; width: 80%; }
+        .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+    </style>
+
+    <!-- Script untuk Modal dan AJAX -->
+    <script>
+        function openTalentModal() {
+            // Mengambil mitraId dan vacancyId dari atribut button
+            const mitraId = $("button").data("mitra-id");
+            const vacancyId = $("button").data("vacancy-id");
+
+            console.log("mitraId:", mitraId, "vacancyId:", vacancyId); // Verifikasi nilai
+
+            // Pastikan mitraId dan vacancyId ada sebelum membuat request
+            if (!mitraId || !vacancyId) {
+                console.error("mitraId atau vacancyId tidak ditemukan");
+                return;
+            }
+            
+            // Fetch data dari endpoint
+            $.ajax({
+                url: `/vacancies/${mitraId}/${vacancyId}/talent`,
+                method: "GET",
+                success: function(data) {
+                    let talentRows = "";
+                    // Loop melalui `data.talents` untuk membuat baris tabel
+                    data.talents.forEach(talent => {
+                        talentRows += `<tr>
+                            <td>${talent.talentName}</td>
+                            <td>${talent.talentPosition}</td>
+                            <td>${talent.talentSkill}</td>
+                            <td>${talent.statusCV}</td>
+                        </tr>`;
+                    });
+                    $("#talentList").html(talentRows);
+                    $("#talentModal").css("display", "block");
+                    console.log("Data talent berhasil dimuat");
+                },
+                error: function(err) {
+                    console.error("Failed to load talent data", err);
+                }
+            });
+        }
+
+        function closeTalentModal() {
+            $("#talentModal").css("display", "none");
+        }
+    </script>
 </body>
 
 </html>

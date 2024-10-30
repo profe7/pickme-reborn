@@ -1,7 +1,5 @@
 package me.pick.metrodata.services.vacancy;
 
-import me.pick.metrodata.models.dto.responses.CountVacancyApplicantPaginationResponse;
-import me.pick.metrodata.models.dto.responses.CountVacancyApplicationResponse;
 import me.pick.metrodata.models.dto.responses.ReadApplicantResponse;
 import me.pick.metrodata.models.dto.responses.ReadVacancyDetailResponse;
 import me.pick.metrodata.models.entity.Applicant;
@@ -9,27 +7,28 @@ import me.pick.metrodata.models.entity.Talent;
 import me.pick.metrodata.models.entity.Vacancy;
 import me.pick.metrodata.repositories.ApplicantRepository;
 import me.pick.metrodata.repositories.VacancyRepository;
-import me.pick.metrodata.utils.AnyUtil;
-import me.pick.metrodata.utils.PageData;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import me.pick.metrodata.enums.VacancyStatus;
+import me.pick.metrodata.exceptions.user.UserDoesNotExistException;
+import me.pick.metrodata.exceptions.vacancy.IncompleteVacancyRequestException;
+import me.pick.metrodata.exceptions.vacancy.VacancyStatusDoesNotExistException;
+import me.pick.metrodata.models.dto.requests.VacancyCreationRequest;
+import me.pick.metrodata.models.entity.User;
+import me.pick.metrodata.repositories.UserRepository;
 import org.springframework.data.domain.*;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 import java.util.Optional;
-
-import java.util.List;
 import java.util.stream.Collectors;
+import java.util.List;
 
 @Service
-public class VacancyServiceImpl implements VacancyService {
-    
-    @Autowired
-    VacancyRepository vacancyRepository;
-
-    @Autowired
-    ApplicantRepository applicantRepository;
+@RequiredArgsConstructor
+public class  VacancyServiceImpl implements VacancyService{
+    private final VacancyRepository vacancyRepository;
+    private final UserRepository userRepository;
+    private final ApplicantRepository applicantRepository;
 
     private Pair<UriComponentsBuilder, Pageable> pageableAndUriBuilder(String title, String position, String expiredDate, String updatedAt, Integer currentPage, Integer perPage) {
         currentPage = (currentPage == null) ? 0 : currentPage;
@@ -72,34 +71,6 @@ public class VacancyServiceImpl implements VacancyService {
         return vacancyRepository.findById(id);
     }
 
-    public CountVacancyApplicantPaginationResponse getVacanciesWithTotalNominee(String timeInterval, Integer currentPage, Integer perPage) {
-        currentPage = (currentPage == null) ? 0 : currentPage;
-        perPage = (perPage == null) ? 5 : perPage;
-        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromPath("")
-                .queryParam("timeInterval", timeInterval);
-        Pageable pageable = PageRequest.of(currentPage, perPage, Sort.by("createdAt").descending());
-        List<CountVacancyApplicationResponse> countJobApplicant = findVacanciesWithTotalNominee(pageable);
-        List<CountVacancyApplicationResponse> jobApplicant = findVacanciesWithTotalNominee(null);
-        int totalJob = jobApplicant.size();
-        PageData pageData = AnyUtil.pagination(totalJob, currentPage, perPage, uriBuilder);
-        
-        return new CountVacancyApplicantPaginationResponse(pageData, countJobApplicant);
-    }
-
-    private List<CountVacancyApplicationResponse> findVacanciesWithTotalNominee(Pageable pageable) {
-        return vacancyRepository.findVacancyWithTotalNominee(pageable)
-                .stream()
-                .map(this::mapToCountVacancyApplicantResponse)
-                .collect(Collectors.toList());
-    }
-
-    private CountVacancyApplicationResponse mapToCountVacancyApplicantResponse(Object[] result) {
-        Vacancy vacancy = (Vacancy) result[0];
-        Long totalNominee = (Long) result[1];
-        
-        return new CountVacancyApplicationResponse(vacancy, totalNominee);
-    }
-
     @Override
     public ReadVacancyDetailResponse getVacancyDetailWithApplicants(Long vacancyId, Long mitraId){
         Optional<Vacancy> vacancyOptional = getVacancyById(vacancyId);
@@ -130,5 +101,36 @@ public class VacancyServiceImpl implements VacancyService {
 
         return null;
 
+    }
+
+    public void createVacancy(VacancyCreationRequest request) {
+        User user = userRepository.findUserById(request.getClientUserId()).orElseThrow(() -> new UserDoesNotExistException(request.getClientUserId().toString()));
+        try {
+            VacancyStatus.valueOf(request.getVacancyStatus());
+        } catch (IllegalArgumentException e) {
+            throw new VacancyStatusDoesNotExistException(request.getVacancyStatus());
+        }
+
+        if (request.getClientUserId() == null ||
+                request.getVacancyTitle() == null ||
+                request.getVacancyPosition() == null ||
+                request.getVacancyStatus() == null ||
+                request.getVacancyEndDate() == null ||
+                request.getApplicantQuantity() == null ||
+                request.getVacancyDescription() == null) {
+            throw new IncompleteVacancyRequestException();
+        }
+
+        Vacancy vacancy = Vacancy.builder()
+                .client(user.getClient())
+                .title(request.getVacancyTitle())
+                .position(request.getVacancyPosition())
+                .status(VacancyStatus.valueOf(request.getVacancyStatus()))
+                .expiredDate(request.getVacancyEndDate())
+                .requiredPositions(request.getApplicantQuantity())
+                .description(request.getVacancyDescription())
+                .build();
+
+        vacancyRepository.save(vacancy);
     }
 }

@@ -1,8 +1,10 @@
 package me.pick.metrodata.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.pick.metrodata.enums.ContractStatus;
 import org.hibernate.annotations.CreationTimestamp;
@@ -53,10 +55,12 @@ public class JobHistory {
 
     @ManyToOne
     @JoinColumn(name = "talent_id")
+    @JsonBackReference
     private Talent talent;
 
     @ManyToOne
     @JoinColumn(name = "position_id")
+    @Getter
     private References position;
 
     public JobHistory(String companyName, ContractStatus contractStatus, LocalDate startDate, LocalDate endDate, String description, String projectSpecification, Talent talent, References references) {

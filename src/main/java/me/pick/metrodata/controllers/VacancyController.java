@@ -1,7 +1,10 @@
 package me.pick.metrodata.controllers;
 
 import me.pick.metrodata.models.dto.responses.ReadVacancyDetailResponse;
+import me.pick.metrodata.models.dto.responses.TalentAvailableForVacancyResponse;
+import me.pick.metrodata.models.entity.Talent;
 import me.pick.metrodata.models.entity.Vacancy;
+import me.pick.metrodata.services.talent.TalentService;
 import me.pick.metrodata.services.vacancy.VacancyService;
 
 import java.util.ArrayList;
@@ -9,6 +12,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +24,9 @@ public class VacancyController {
 
     @Autowired
     VacancyService vacancyService;
+
+    @Autowired
+    TalentService talentService;
 
     @GetMapping("/vacancies")
     public String getVacanciesPage(Model model,
@@ -60,5 +67,13 @@ public class VacancyController {
 
         return "vacancy/vacancy-detail";
     }
+
+    @GetMapping("vacancies/{mitraId}/{vacancyId}/talent")
+    public ResponseEntity<TalentAvailableForVacancyResponse> getCompleteTalentListByMitra(@PathVariable("mitraId") Long mitraId, @PathVariable("vacancyId") Long vacancyId){
+        TalentAvailableForVacancyResponse listTalentComplete = talentService.availableForVacancy(vacancyId, mitraId);
+
+        return ResponseEntity.ok(listTalentComplete);
+    }
+
 }
     

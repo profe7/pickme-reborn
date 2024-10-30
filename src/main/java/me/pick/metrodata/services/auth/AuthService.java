@@ -16,5 +16,5 @@ public interface AuthService {
 
 	Boolean changePassword (String token, ChangePasswordRequest changePasswordRequest);
 
-	public Boolean requestForget (String emailOrUsername, String url);
+	Boolean requestForget (String emailOrUsername, String url);
 }

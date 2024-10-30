@@ -1,8 +1,10 @@
 package me.pick.metrodata.controllers.rest;
 
+import lombok.AllArgsConstructor;
 import me.pick.metrodata.enums.InterviewStatus;
 import me.pick.metrodata.enums.InterviewType;
 import me.pick.metrodata.models.dto.requests.InterviewScheduleRequest;
+import me.pick.metrodata.models.dto.requests.InterviewUpdateRequest;
 import me.pick.metrodata.services.interview.InterviewScheduleService;
 import me.pick.metrodata.utils.Response;
 import me.pick.metrodata.utils.ResponseHandler;
@@ -13,12 +15,9 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/interview")
+@AllArgsConstructor
 public class RestInterviewController {
     private final InterviewScheduleService interviewScheduleService;
-
-    public RestInterviewController(InterviewScheduleService interviewScheduleService) {
-        this.interviewScheduleService = interviewScheduleService;
-    }
 
     @PostMapping("/invite")
     @PreAuthorize("hasAnyAuthority('CREATE_INTERVIEW', 'UPDATE_INTERVIEW', 'READ_INTERVIEW')")
@@ -62,5 +61,23 @@ public class RestInterviewController {
         return ResponseHandler.generateResponse(new Response(
                 "Interviews", HttpStatus.OK, "SUCCESS", interviewScheduleService.getByRm(search, clientId, type, startDate, endDate, status, page, size)
         ));
+    }
+
+    @GetMapping("/talent-interview-history/{interviewId}")
+    @PreAuthorize("hasAnyAuthority('READ_INTERVIEW')")
+    public ResponseEntity<Object> getTalentInterviewHistory(@PathVariable Long interviewId) {
+        return ResponseHandler.generateResponse(new Response(
+                "Interviews", HttpStatus.OK, "SUCCESS", interviewScheduleService.getTalentInterviewHistory(interviewId)
+        ));
+    }
+
+    @PostMapping("/update-interview-status")
+    @PreAuthorize("hasAnyAuthority('CREATE_INTERVIEW', 'UPDATE_INTERVIEW', 'READ_INTERVIEW')")
+    public ResponseEntity<Object> updateInterviewStatus(@RequestBody InterviewUpdateRequest request) {
+        interviewScheduleService.updateInterviewStatus(request);
+        return ResponseHandler.generateResponse(
+                new Response(
+                        "Interview status updated", HttpStatus.CREATED, "SUCCESS", null)
+        );
     }
 }

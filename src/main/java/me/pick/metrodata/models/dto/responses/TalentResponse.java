@@ -36,4 +36,5 @@ public class TalentResponse {
 	private Boolean invited;
 
 	private Institute institute;
+
 }

@@ -1,7 +1,9 @@
 package me.pick.metrodata.controllers.rest;
 
+import lombok.AllArgsConstructor;
 import me.pick.metrodata.models.dto.requests.TalentDataCompletionRequest;
 import me.pick.metrodata.models.dto.requests.TalentFromVacancyRequest;
+import me.pick.metrodata.models.dto.responses.TalentAvailableForVacancyResponse;
 import me.pick.metrodata.models.entity.Talent;
 import me.pick.metrodata.services.talent.TalentService;
 import me.pick.metrodata.utils.Response;
@@ -15,13 +17,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/talent")
+@AllArgsConstructor
 public class RestTalentController {
 
     private final TalentService talentService;
-
-    public RestTalentController(TalentService talentService){
-        this.talentService = talentService;
-    }
 
     @PostMapping("/create-via-vacancy")
     @PreAuthorize("hasAnyAuthority('CREATE_TALENT', 'CREATE_APPLICANT')")
@@ -50,7 +49,7 @@ public class RestTalentController {
     @PostMapping("/available-for-vacancy/{vacancyId}/{mitraId}")
     @PreAuthorize("hasAnyAuthority('READ_TALENT', 'READ_JOB', 'CREATE_APPLICANT')")
     public ResponseEntity<Object> availableForVacancy(@PathVariable Long vacancyId, @PathVariable Long mitraId){
-        List<Talent> talents = talentService.availableForVacancy(vacancyId, mitraId);
+        TalentAvailableForVacancyResponse talents = talentService.availableForVacancy(vacancyId, mitraId);
         return ResponseHandler.generateResponse(new Response(
                 "Talents available for vacancy", HttpStatus.OK, "SUCCESS", talents));
     }
