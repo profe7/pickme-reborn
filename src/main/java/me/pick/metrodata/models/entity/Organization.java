@@ -1,5 +1,6 @@
 package me.pick.metrodata.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -50,6 +51,7 @@ public class Organization {
 
     @ManyToOne
     @JoinColumn(name = "talent_id")
+    @JsonBackReference
     private Talent talent;
 
     public Organization(String organizationName, OrganizationPosition organizationPosition, LocalDate startDate, LocalDate endDate, Talent talent) {

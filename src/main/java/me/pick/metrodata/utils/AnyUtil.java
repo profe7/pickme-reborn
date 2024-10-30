@@ -7,6 +7,10 @@ import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
 public class AnyUtil {
+  private AnyUtil() {
+    throw new IllegalStateException("Utility class");
+  }
+
   public static boolean isNumberInArray(Integer[] array, Integer number) {
     for (int element : array) {
       if (element == number) {
@@ -30,8 +34,7 @@ public class AnyUtil {
     DecimalFormatSymbols symbols = new DecimalFormatSymbols(indonesiaLocale);
     symbols.setCurrencySymbol("Rp");
 
-    DecimalFormat df = new DecimalFormat("###,###,###.##", symbols);
-    return df;
+    return new DecimalFormat("###,###,###.##", symbols);
   }
 
   public static PageData pagination(Integer count, Integer page, Integer perPage, UriComponentsBuilder uriBuilder) {
