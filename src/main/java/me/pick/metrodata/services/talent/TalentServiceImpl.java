@@ -162,7 +162,7 @@ public class TalentServiceImpl implements  TalentService{
         TalentAvailableForVacancyResponse responses = new TalentAvailableForVacancyResponse();
 
         available = available.stream()
-                .filter(talent -> talent.getApplicants().stream()
+                .filter(talent -> talent.getApplicants().parallelStream()
                         .noneMatch(applicant -> applicant.getVacancy().getId().equals(vacancy.getId()) || applicant.getStatus() == ApplicantStatus.ACCEPTED)).toList();
 
         responses.setTalents(availableForVacancyHelper(available));
