@@ -13,7 +13,9 @@ import me.pick.metrodata.exceptions.talent.TalentAlreadyExistException;
 import me.pick.metrodata.exceptions.talent.TalentDoesNotExistException;
 import me.pick.metrodata.exceptions.vacancy.VacancyNotExistException;
 import me.pick.metrodata.models.dto.requests.*;
+import me.pick.metrodata.models.dto.responses.TalentAvailableForVacancyResponse;
 import me.pick.metrodata.models.dto.responses.TalentResponse;
+import me.pick.metrodata.models.dto.responses.TalentSimpleResponse;
 import me.pick.metrodata.models.dto.responses.TotalMitraTalentResponse;
 import me.pick.metrodata.models.entity.*;
 import me.pick.metrodata.repositories.*;
@@ -151,16 +153,20 @@ public class TalentServiceImpl implements  TalentService{
     }
 
     @Override
-    public List<Talent> availableForVacancy(Long vacancyId, Long mitraId) {
+    public TalentAvailableForVacancyResponse availableForVacancy(Long vacancyId, Long mitraId) {
         Vacancy vacancy = vacancyRepository.findVacancyById(vacancyId).orElseThrow(() ->new VacancyNotExistException(vacancyId));
         Mitra mitra = mitraRepository.findById(mitraId).orElseThrow(() -> new MitraDoesNotExistException(mitraId));
 
         List<Talent> available = talentRepository.findTalentsWithCompleteCVByMitra(mitra.getId());
+        TalentAvailableForVacancyResponse responses = new TalentAvailableForVacancyResponse();
 
         available = available.stream()
                 .filter(talent -> talent.getApplicants().stream()
                         .noneMatch(applicant -> applicant.getVacancy().getId().equals(vacancy.getId()) || applicant.getStatus() == ApplicantStatus.ACCEPTED)).toList();
-        return available;
+
+        responses.setTalents(availableForVacancyHelper(available));
+
+        return responses;
     }
 
     @Override
@@ -374,5 +380,18 @@ public class TalentServiceImpl implements  TalentService{
                             talent
                     ));
         }
+    }
+
+    private List<TalentSimpleResponse> availableForVacancyHelper(List<Talent> talents) {
+        return talents.stream().map(
+                talent -> {
+                    TalentSimpleResponse response = new TalentSimpleResponse();
+                    response.setTalentId(talent.getId());
+                    response.setTalentName(talent.getName());
+                    response.setTalentPosition(talent.getJobHistories().getLast().getPosition().getReference_name());
+                    response.setTalentSkill(talent.getSkills().getLast().getName());
+                    return response;
+                }).toList();
+
     }
 }
