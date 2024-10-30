@@ -59,6 +59,7 @@ public class MitraServiceImpl implements MitraService{
     private List<VacancyDashboardTelemetryResponse> vacancyResponseHelper(List<Vacancy> vacancies) {
         return vacancies.stream().map(vacancy -> {
             VacancyDashboardTelemetryResponse response = new VacancyDashboardTelemetryResponse();
+            response.setVacancyId(vacancy.getId());
             response.setVacancyTitle(vacancy.getTitle());
             response.setVacancyApplicants(applicantRepository.countTotalApplicantByVacancy(vacancy.getId()));
             response.setExpiredDate(vacancy.getExpiredDate());

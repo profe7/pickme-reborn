@@ -31,4 +31,12 @@ public class RestClientController {
                 "Employee deleted", HttpStatus.OK, "SUCCESS", null
         ));
     }
+
+    @GetMapping("/dashboard-telemetry/{clientId}")
+    @PreAuthorize("hasAnyAuthority('READ_APPLICANT')")
+    public ResponseEntity<Object> getClientDashboardTelemetry(@PathVariable Long clientId) {
+        return ResponseHandler.generateResponse(new Response(
+                "Dashboard telemetry", HttpStatus.OK, "SUCCESS", clientService.getClientDashboardTelemetry(clientId)
+        ));
+    }
 }

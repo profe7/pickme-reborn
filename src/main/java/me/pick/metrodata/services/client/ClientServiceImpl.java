@@ -6,6 +6,8 @@ import me.pick.metrodata.enums.InterviewStatus;
 import me.pick.metrodata.exceptions.applicant.ApplicantDoesNotExistException;
 import me.pick.metrodata.exceptions.client.ClientDoesNotExistException;
 import me.pick.metrodata.exceptions.interviewschedule.InterviewScheduleDoesNotExistException;
+import me.pick.metrodata.models.dto.responses.ClientDashboardTelemetryResponse;
+import me.pick.metrodata.models.dto.responses.PositionTelemetryResponse;
 import me.pick.metrodata.models.entity.Applicant;
 import me.pick.metrodata.models.entity.InterviewSchedule;
 import me.pick.metrodata.models.entity.InterviewScheduleHistory;
@@ -16,6 +18,7 @@ import me.pick.metrodata.repositories.InterviewScheduleRepository;
 import me.pick.metrodata.models.entity.Talent;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -48,5 +51,27 @@ public class ClientServiceImpl implements ClientService {
         history.setInterviewSchedule(schedule);
         history.setStatus(InterviewStatus.INACTIVE);
         interviewScheduleHistoryRepository.save(history);
+    }
+
+    @Override
+    public ClientDashboardTelemetryResponse getClientDashboardTelemetry(Long clientId) {
+        clientRepository.findById(clientId).orElseThrow(() -> new ClientDoesNotExistException(clientId));
+        ClientDashboardTelemetryResponse response = new ClientDashboardTelemetryResponse();
+        response.setClientId(clientId);
+        response.setTotalEmployees(((long) clientRepository.findEmployeeByInterviewAccepted(clientId).size()));
+        response.setTotalEmployeesByPosition(positionTelemetryHelper(clientId));
+        return response;
+    }
+
+    private List<PositionTelemetryResponse> positionTelemetryHelper(Long clientId) {
+        List<Object[]> telemetry = clientRepository.findUniquePositionsAndCountByClientId(clientId);
+        List<PositionTelemetryResponse> responses = new ArrayList<>();
+        telemetry.forEach(objects -> {
+            PositionTelemetryResponse response = new PositionTelemetryResponse();
+            response.setPositionName((String) objects[0]);
+            response.setTotalEmployees((Long) objects[1]);
+            responses.add(response);
+        });
+        return responses;
     }
 }

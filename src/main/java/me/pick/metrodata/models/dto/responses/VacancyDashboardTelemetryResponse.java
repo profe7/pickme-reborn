@@ -6,6 +6,8 @@ import java.time.LocalDate;
 
 @Data
 public class VacancyDashboardTelemetryResponse {
+    private Long vacancyId;
+
     private String vacancyTitle;
 
     private String vacancyPosition;
