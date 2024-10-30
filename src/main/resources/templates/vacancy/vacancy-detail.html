@@ -52,7 +52,9 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Name</th>
+                            <th>Nama</th>
+                            <th>Posisi</th>
+                            <th>Skill</th>
                             <th>CV Status</th>
                         </tr>
                     </thead>
@@ -77,6 +79,14 @@
             // Mengambil mitraId dan vacancyId dari atribut button
             const mitraId = $("button").data("mitra-id");
             const vacancyId = $("button").data("vacancy-id");
+
+            console.log("mitraId:", mitraId, "vacancyId:", vacancyId); // Verifikasi nilai
+
+            // Pastikan mitraId dan vacancyId ada sebelum membuat request
+            if (!mitraId || !vacancyId) {
+                console.error("mitraId atau vacancyId tidak ditemukan");
+                return;
+            }
             
             // Fetch data dari endpoint
             $.ajax({
@@ -84,11 +94,18 @@
                 method: "GET",
                 success: function(data) {
                     let talentRows = "";
-                    data.forEach(talent => {
-                        talentRows += `<tr><td>${talent.name}</td><td>${talent.cvStatus}</td></tr>`;
+                    // Loop melalui `data.talents` untuk membuat baris tabel
+                    data.talents.forEach(talent => {
+                        talentRows += `<tr>
+                            <td>${talent.talentName}</td>
+                            <td>${talent.talentPosition}</td>
+                            <td>${talent.talentSkill}</td>
+                            <td>${talent.statusCV}</td>
+                        </tr>`;
                     });
                     $("#talentList").html(talentRows);
                     $("#talentModal").css("display", "block");
+                    console.log("Data talent berhasil dimuat");
                 },
                 error: function(err) {
                     console.error("Failed to load talent data", err);

@@ -1,6 +1,7 @@
 package me.pick.metrodata.controllers;
 
 import me.pick.metrodata.models.dto.responses.ReadVacancyDetailResponse;
+import me.pick.metrodata.models.dto.responses.TalentAvailableForVacancyResponse;
 import me.pick.metrodata.models.entity.Talent;
 import me.pick.metrodata.models.entity.Vacancy;
 import me.pick.metrodata.services.talent.TalentService;
@@ -68,8 +69,8 @@ public class VacancyController {
     }
 
     @GetMapping("vacancies/{mitraId}/{vacancyId}/talent")
-    public ResponseEntity<List<Talent>> getCompleteTalentListByMitra(@PathVariable("mitraId") Long mitraId, @PathVariable("vacancyId") Long vacancyId){
-        List<Talent> listTalentComplete = talentService.availableForVacancy(vacancyId, mitraId);
+    public ResponseEntity<TalentAvailableForVacancyResponse> getCompleteTalentListByMitra(@PathVariable("mitraId") Long mitraId, @PathVariable("vacancyId") Long vacancyId){
+        TalentAvailableForVacancyResponse listTalentComplete = talentService.availableForVacancy(vacancyId, mitraId);
 
         return ResponseEntity.ok(listTalentComplete);
     }

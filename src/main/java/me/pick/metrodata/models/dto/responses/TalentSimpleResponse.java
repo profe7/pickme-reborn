@@ -11,4 +11,6 @@ public class TalentSimpleResponse {
     private String talentPosition;
 
     private String talentSkill;
+
+    private String statusCV;
 }
