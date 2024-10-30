@@ -9,6 +9,9 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/responsive.css}">
     <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
 
 
 
@@ -21,7 +24,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row justify-content-center">
         <div class="col-md-5">
             <div class="p-5 mb-5 border border-muted rounded detail-job">
                 <div class="job-info">
@@ -65,7 +68,8 @@
                         <span class="me-2">+</span> Tambahkan Talent
                     </button>
                     <br>
-                    <button type="button" class="btn w-100" style="background-color: #006683; color: antiquewhite;">Daftar</button>
+                    <button type="button" class="btn w-100"
+                        style="background-color: #006683; color: antiquewhite;">Daftar</button>
                 </div>
 
 
@@ -116,63 +120,42 @@
                     }
                 </style>
 
-                <table>
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Nama Talent</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody">
+                <div style="max-height: 300px; overflow-y: auto;">
+                    <table>
+                        <thead style="background-color: #CFE2FF; color: black; text-align: center;">
+                            <tr>
+                                <th>No</th>
+                                <th>Nama Talent</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
 
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="3" class="total-footer">
-                                Total Pelamar: <span id="totalPelamar">0</span>
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
+                            </tr>
+                        </thead>
+                        
+                        <tbody>
+
+                            <tr th:each="applicant, iterStat : ${detailVacancy.applicants}">
+                                
+                                <td th:text="${iterStat.index + 1}"></td>
+                                <td th:text="${applicant.namaTalent}"></td>
+                                <td th:text="${applicant.status}"></td>
+                                <td class="btn btn-secondary btn-sm">CV</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="4" class="total-footer">
+                                    Total Pelamar: <span th:text="${detailVacancy.applicants.size()}"></span>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
         </div>
+        
     </div>
-
-
-
-
-    <div class="container">
-        <h1>Vacancy Detail</h1>
-
-        <!-- Menampilkan Detail Vacancy -->
-        <div class="vacancy-detail">
-            <p><strong>Title:</strong> <span th:text="${detailVacancy.title}"></span></p>
-            <p><strong>Description:</strong> <span th:text="${detailVacancy.description}"></span></p>
-            <p><strong>Expired Date:</strong> <span th:text="${detailVacancy.expiredDate}"></span></p>
-        </div>
-
-        <!-- Menampilkan Daftar Applicant -->
-        <h2>Applicants</h2>
-        <div class="applicant-list">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="applicant : ${detailVacancy.applicants}">
-                        <td th:text="${applicant.namaTalent}">Name</td>
-                        <td th:text="${applicant.status}">status</td>
-                    </tr>
-                    <p th:text="${totalApplicant}"></p>
-                </tbody>
-                <h2>Total Pelamar: <span th:text="${detailVacancy.applicants.size()}"></span></h2>
-            </table>
-        </div>
-    </div>
+              
     <div th:insert="~{components/footer :: footer}"></div>
 
 
