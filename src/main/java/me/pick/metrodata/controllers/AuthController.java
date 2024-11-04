@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.servlet.http.HttpSession;
-import java.util.List;
 
 @Controller
 @RequestMapping ("/login")
 @AllArgsConstructor
 public class AuthController {
-	private AuthService authService;
+
+	private final AuthService authService;
 
 	@GetMapping
 	public String loginPage(LoginRequest loginRequest, Model model, HttpSession session) {
@@ -36,17 +36,14 @@ public class AuthController {
 	@PostMapping
 	public String login(LoginRequest loginRequest, HttpSession session) {
 		try {
-			LoginResponse loginResponse = authService.login(loginRequest);
+			authService.login(loginRequest);
 
-			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-			List<String> authorities = authentication.getAuthorities().stream()
-					.map(auth -> auth.getAuthority())
-					.toList();
-
-			if (authorities.contains("UPDATE_APPLICANT_NOMINEE") && authorities.contains("READ_PARAMETER")) {
+			if (hasAuthority("UPDATE_APPLICANT_NOMINEE") && hasAuthority("READ_PARAMETER")) {
 				return "redirect:/talent-mitra/add";
-			} else if (authorities.contains("CREATE_APPLICANT_NOMINEE")) {
+			} else if (hasAuthority("CREATE_APPLICANT_NOMINEE")) {
 				return "redirect:/mitra";
+			} else if (hasAuthority("CREATE_ROLE")) {
+				return "redirect:/admin";
 			} else {
 				return "redirect:/";
 			}

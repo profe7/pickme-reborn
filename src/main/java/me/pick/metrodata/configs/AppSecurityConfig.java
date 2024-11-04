@@ -40,7 +40,14 @@ public class AppSecurityConfig {
             .cors(withDefaults())
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+            .authorizeHttpRequests(auth -> auth
+                .anyRequest().permitAll()
+                // .requestMatchers("/login", "/css/**", "/img/**", "/dist/**", "/js/**").permitAll()
+                // .anyRequest().authenticated()
+            )
+            // .formLogin(form -> form
+                // .loginPage("/login").permitAll())
+            // .logout(logout -> logout.permitAll());
             .httpBasic(withDefaults());
     return http.build();
   }

@@ -38,7 +38,7 @@ public class AuthServiceImpl implements AuthService {
 	private final PasswordEncoder passwordEncoder;
 	private final EmailService emailService;
 
-
+	@Override
 	public LoginResponse login (LoginRequest loginRequest) {
 		UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken (loginRequest.getUsername (), loginRequest.getPassword ());
 
@@ -58,11 +58,13 @@ public class AuthServiceImpl implements AuthService {
 		return new LoginResponse (account.getUsername (), authorities);
 	}
 
+    @Override
 	public Account getLoggedAccountData () {
 		Long id = AuthUtil.getLoginUserId ();
 		return accountRepository.findById (id).orElse (null);
 	}
 
+	@Override
 	public ForgotPasswordResponse validateResetPasswordToken (String token) {
 		if ( token == null ) {
 			throw new ResponseStatusException (HttpStatus.NOT_FOUND, "Token is null");
@@ -86,6 +88,7 @@ public class AuthServiceImpl implements AuthService {
 		}
 	}
 
+	@Override
 	public Boolean changePassword (String token, ChangePasswordRequest changePasswordRequest) {
 		ResetPasswordToken resetPasswordToken = resetPasswordTokenRepository.findByToken (token).orElseThrow (() -> new ResponseStatusException (HttpStatus.NOT_FOUND, "Token tidak valid"));
 
@@ -114,6 +117,7 @@ public class AuthServiceImpl implements AuthService {
 		return true;
 	}
 
+	@Override
 	public Boolean requestForget (String emailOrUsername, String url) {
 		Account account = accountRepository.findByUsernameOrUserEmail (emailOrUsername, emailOrUsername).orElseThrow (() -> new ResponseStatusException (HttpStatus.NOT_FOUND, "Account is not found"));
 		String token = UUID.randomUUID ().toString ();
