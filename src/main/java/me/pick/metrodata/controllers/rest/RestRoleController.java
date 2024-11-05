@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/role")
 public class RestRoleController {
 
-    private RoleService roleService;
+    private final RoleService roleService;
 
     @GetMapping("/all")
     @PreAuthorize("hasAnyAuthority('READ_ROLE')")
