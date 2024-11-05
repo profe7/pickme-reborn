@@ -27,6 +27,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import jakarta.servlet.http.HttpSession;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +40,7 @@ public class AuthServiceImpl implements AuthService {
 	private final EmailService emailService;
 
 	@Override
-	public LoginResponse login (LoginRequest loginRequest) {
+	public LoginResponse login (LoginRequest loginRequest, HttpSession session) {
 		UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken (loginRequest.getUsername (), loginRequest.getPassword ());
 
 		Account account = accountRepository.findByUsernameOrUserEmail (loginRequest.getUsername (), loginRequest.getUsername ()).orElseThrow (() -> new AccountDoesNotExistException(loginRequest.getUsername()));
@@ -47,6 +48,8 @@ public class AuthServiceImpl implements AuthService {
 		try {
 			Authentication auth = authenticationManager.authenticate (authReq);
 			SecurityContextHolder.getContext ().setAuthentication (auth);
+			Account loggedAccount = getLoggedAccountData();
+        	session.setAttribute("loggedAccount", loggedAccount);
 		} catch (AuthenticationException e) {
 			throw new AccountInvalidPasswordException();
 		}
@@ -61,6 +64,9 @@ public class AuthServiceImpl implements AuthService {
     @Override
 	public Account getLoggedAccountData () {
 		Long id = AuthUtil.getLoginUserId ();
+		if (id == null) {
+			throw new AccountDoesNotExistException("User is not authenticated or ID is null");
+		}
 		return accountRepository.findById (id).orElse (null);
 	}
 

@@ -39,7 +39,7 @@ public class AppSecurityConfig {
     http
             .cors(withDefaults())
             .csrf(csrf -> csrf.disable())
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
             .authorizeHttpRequests(auth -> auth
                 .anyRequest().permitAll()
                 // .requestMatchers("/login", "/css/**", "/img/**", "/dist/**", "/js/**").permitAll()

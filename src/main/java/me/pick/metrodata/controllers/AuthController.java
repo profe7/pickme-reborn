@@ -36,7 +36,7 @@ public class AuthController {
 	@PostMapping
 	public String login(LoginRequest loginRequest, HttpSession session) {
 		try {
-			authService.login(loginRequest);
+			authService.login(loginRequest, session);
 
 			if (hasAuthority("UPDATE_APPLICANT_NOMINEE") && hasAuthority("READ_PARAMETER")) {
 				return "redirect:/talent-mitra/add";

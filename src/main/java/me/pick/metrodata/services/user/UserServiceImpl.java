@@ -13,6 +13,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
+    @Override
     public User getLoggedUserData() {
         Long userId = AuthUtil.getLoginUserId();
         return userRepository.findUserById(userId).orElseThrow(() -> {
@@ -21,4 +22,8 @@ public class UserServiceImpl implements UserService {
         });
     }
 
+    @Override
+    public User getById(Long id) {
+        return userRepository.findUserById(id).orElse(null);
+    }
 }

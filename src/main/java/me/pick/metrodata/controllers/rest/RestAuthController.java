@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -22,8 +23,8 @@ public class RestAuthController {
 	private final AuthService authService;
 
 	@PostMapping("/login")
-	public LoginResponse login(@RequestBody LoginRequest loginRequest) {
-		return authService.login(loginRequest);
+	public LoginResponse login(@RequestBody LoginRequest loginRequest, HttpSession session) {
+		return authService.login(loginRequest, session);
 	}
 
 	@PostMapping("/forget-password")
