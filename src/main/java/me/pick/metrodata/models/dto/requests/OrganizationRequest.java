@@ -1,6 +1,5 @@
 package me.pick.metrodata.models.dto.requests;
 
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import groovyjarjarantlr4.v4.runtime.misc.NotNull;
 import lombok.AllArgsConstructor;
@@ -17,6 +16,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 public class OrganizationRequest {
+
     @NotNull
     private String organizationName;
 
@@ -35,5 +35,5 @@ public class OrganizationRequest {
 
     @NotNull
     private String talentId;
-}
 
+}

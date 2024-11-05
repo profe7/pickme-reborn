@@ -13,8 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/v1/talent")
 @AllArgsConstructor
@@ -24,7 +22,7 @@ public class RestTalentController {
 
     @PostMapping("/create-via-vacancy")
     @PreAuthorize("hasAnyAuthority('CREATE_TALENT', 'CREATE_APPLICANT')")
-    public ResponseEntity<Object> createTalentViaVacancy(@RequestBody TalentFromVacancyRequest request){
+    public ResponseEntity<Object> createTalentViaVacancy(@RequestBody TalentFromVacancyRequest request) {
         Talent talent = talentService.createViaVacancy(request);
         return ResponseHandler.generateResponse(new Response(
                 "Talent created", HttpStatus.CREATED, "SUCCESS", talent));
@@ -32,7 +30,7 @@ public class RestTalentController {
 
     @PostMapping("/create-new-talent")
     @PreAuthorize("hasAnyAuthority('CREATE_TALENT')")
-    public ResponseEntity<Object> createTalent(@RequestBody TalentDataCompletionRequest request){
+    public ResponseEntity<Object> createTalent(@RequestBody TalentDataCompletionRequest request) {
         Talent talent = talentService.createNewTalent(request);
         return ResponseHandler.generateResponse(new Response(
                 "Talent created", HttpStatus.CREATED, "SUCCESS", talent));
@@ -40,7 +38,7 @@ public class RestTalentController {
 
     @PostMapping("/complete-new-talent-data")
     @PreAuthorize("hasAnyAuthority('READ_TALENT', 'UPDATE_TALENT')")
-    public ResponseEntity<Object> completeNewTalentData(@RequestBody TalentDataCompletionRequest request){
+    public ResponseEntity<Object> completeNewTalentData(@RequestBody TalentDataCompletionRequest request) {
         Talent talent = talentService.completeNewTalentData(request);
         return ResponseHandler.generateResponse(new Response(
                 "Talent data completed", HttpStatus.OK, "SUCCESS", talent));
@@ -48,7 +46,7 @@ public class RestTalentController {
 
     @GetMapping("/available-for-vacancy/{vacancyId}/{mitraId}")
     @PreAuthorize("hasAnyAuthority('READ_TALENT', 'READ_JOB', 'CREATE_APPLICANT')")
-    public ResponseEntity<Object> availableForVacancy(@PathVariable Long vacancyId, @PathVariable Long mitraId){
+    public ResponseEntity<Object> availableForVacancy(@PathVariable Long vacancyId, @PathVariable Long mitraId) {
         TalentAvailableForVacancyResponse talents = talentService.availableForVacancy(vacancyId, mitraId);
         return ResponseHandler.generateResponse(new Response(
                 "Talents available for vacancy", HttpStatus.OK, "SUCCESS", talents));

@@ -16,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TalentDataCompletionRequest {
+
     private byte[] photo;
 
     private String talentId;

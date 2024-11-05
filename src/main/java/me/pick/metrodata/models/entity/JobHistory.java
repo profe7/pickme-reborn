@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 public class JobHistory {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @AllArgsConstructor
 @RequestMapping("/api/v1/mitra")
 public class RestMitraController {
+
     private final MitraService mitraService;
 
     @GetMapping("/all-talents/{mitraId}")

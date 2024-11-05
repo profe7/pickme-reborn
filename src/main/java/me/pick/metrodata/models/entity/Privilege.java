@@ -33,7 +33,7 @@ public class Privilege {
     private String type;
 
     @Column(nullable = true)
-    @Comment ("This attribute for function privilege")
+    @Comment("This attribute for function privilege")
     private String func;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

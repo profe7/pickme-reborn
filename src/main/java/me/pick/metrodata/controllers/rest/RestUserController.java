@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/user")
 @AllArgsConstructor
 public class RestUserController {
+
     private final UserService userService;
 
     @GetMapping("/user-data")

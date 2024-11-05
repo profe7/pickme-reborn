@@ -6,7 +6,6 @@ import me.pick.metrodata.models.entity.Role;
 import me.pick.metrodata.repositories.RoleRepository;
 import me.pick.metrodata.utils.AnyUtil;
 import me.pick.metrodata.utils.PageData;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,8 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class RoleServiceImpl implements  RoleService{
+public class RoleServiceImpl implements RoleService {
+
     private final RoleRepository roleRepository;
 
     @Override

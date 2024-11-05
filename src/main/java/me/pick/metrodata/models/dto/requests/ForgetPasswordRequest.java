@@ -8,5 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ForgetPasswordRequest {
-  private String emailOrUsername;
-} 
+
+    private String emailOrUsername;
+
+}

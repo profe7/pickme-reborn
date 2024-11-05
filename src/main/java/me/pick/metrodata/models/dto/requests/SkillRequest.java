@@ -1,6 +1,5 @@
 package me.pick.metrodata.models.dto.requests;
 
-
 import groovyjarjarantlr4.v4.runtime.misc.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,6 +11,7 @@ import me.pick.metrodata.enums.SkillLevel;
 @NoArgsConstructor
 @Data
 public class SkillRequest {
+
     @NotNull
     private String name;
 
@@ -23,5 +23,5 @@ public class SkillRequest {
 
     @NotNull
     private String talentId;
-}
 
+}

@@ -16,6 +16,7 @@ import java.time.LocalDate;
 @Data
 @Entity
 public class InterviewScheduleHistory {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

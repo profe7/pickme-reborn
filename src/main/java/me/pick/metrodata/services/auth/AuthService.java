@@ -6,9 +6,11 @@ import me.pick.metrodata.models.dto.requests.LoginRequest;
 import me.pick.metrodata.models.dto.responses.ForgotPasswordResponse;
 import me.pick.metrodata.models.dto.responses.LoginResponse;
 
+import jakarta.servlet.http.HttpSession;
+
 public interface AuthService {
 
-	LoginResponse login (LoginRequest loginRequest);
+	LoginResponse login (LoginRequest loginRequest, HttpSession session);
 
 	Account getLoggedAccountData ();
 

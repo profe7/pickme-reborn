@@ -20,7 +20,7 @@ public class RestVacancyController {
     @GetMapping("/available-vacancies")
     @PreAuthorize("hasAnyAuthority('READ_JOB', 'CREATE_APPLICANT')")
     public ResponseEntity<Object> getAvailableVacancies(
-            @RequestParam(defaultValue = "0")Integer page,
+            @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer size) {
         return ResponseHandler.generateResponse(new Response(
                 "Available vacancies", HttpStatus.OK, "SUCCESS", vacancyService.getAllAvailableVacancies(page, size)

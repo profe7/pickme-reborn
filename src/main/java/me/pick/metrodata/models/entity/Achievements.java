@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 public class Achievements {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -56,4 +57,3 @@ public class Achievements {
         this.talent = talent;
     }
 }
-

@@ -18,6 +18,7 @@ import java.util.List;
 @RequestMapping("/api/v1/applicant")
 @AllArgsConstructor
 public class RestApplicantController {
+
     private final ApplicantService applicantService;
 
     @PostMapping("/apply-multiple-talents")
@@ -40,8 +41,8 @@ public class RestApplicantController {
     @GetMapping("/recommended-applicants/{vacancyId}")
     @PreAuthorize("hasAnyAuthority('CREATE_INTERVIEW', 'READ_INTERVIEW', 'UPDATE_INTERVIEW')")
     public ResponseEntity<Object> getRecommendedApplicant(@PathVariable Long vacancyId,
-                                                          @RequestParam(defaultValue = "0") Integer page,
-                                                          @RequestParam(defaultValue = "10") Integer size) {
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size) {
         return ResponseHandler.generateResponse(new Response(
                 "Recommended applicants", HttpStatus.OK, "SUCCESS", applicantService.getRecommendedApplicant(vacancyId, page, size)
         ));

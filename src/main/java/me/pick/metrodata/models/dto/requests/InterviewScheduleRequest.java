@@ -15,6 +15,7 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InterviewScheduleRequest {
+
     private String position;
 
     private String locationAddress;
@@ -48,4 +49,5 @@ public class InterviewScheduleRequest {
     @DateTimeFormat(pattern = "HH:mm")
     @JsonFormat(pattern = "HH:mm")
     private LocalTime endTime;
+
 }

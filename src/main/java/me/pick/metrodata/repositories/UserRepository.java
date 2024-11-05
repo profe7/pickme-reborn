@@ -1,6 +1,5 @@
 package me.pick.metrodata.repositories;
 
-import lombok.NonNull;
 import me.pick.metrodata.enums.InstituteType;
 import me.pick.metrodata.models.entity.Institute;
 import me.pick.metrodata.models.entity.User;
@@ -12,17 +11,14 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-  @NonNull
-  List<User> findAll();
 
-  Optional<User> findUserById(Long id);
+    Optional<User> findUserById(Long id);
 
-  List<User> findByInstitute(Institute institute);
+    List<User> findByInstitute(Institute institute);
 
-  Optional<User> findByEmail(String email);
+    Optional<User> findByEmail(String email);
 
-  Optional<User> findByInstituteId(Long id);
+    Optional<User> findByInstituteId(Long id);
 
-  List<User> findByInstitute_InstituteType(InstituteType instituteType);
-
+    List<User> findByInstitute_InstituteType(InstituteType instituteType);
 }

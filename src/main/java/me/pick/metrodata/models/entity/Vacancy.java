@@ -20,15 +20,16 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class Vacancy {
+
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String title;
 
     private String position;
 
-    @Column (name = "description", columnDefinition = "TEXT")
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
     private Integer requiredPositions;
@@ -56,4 +57,3 @@ public class Vacancy {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<Recommendation> recommendations;
 }
-

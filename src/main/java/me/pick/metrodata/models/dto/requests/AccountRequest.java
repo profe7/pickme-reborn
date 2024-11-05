@@ -1,32 +1,26 @@
 package me.pick.metrodata.models.dto.requests;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class AccountRequest {
-  private String accountUsername;
 
-  private String accountPassword;
+    private String accountUsername;
 
-  private String accountFirstName;
+    private String accountPassword;
 
-  private String accountLastName;
+    private String accountFirstName;
 
-  private String accountEmail;
+    private String accountLastName;
 
-  private Long roleId;
+    private String accountEmail;
 
-  private Long instituteId;
+    private Long roleId;
 
-  public AccountRequest(String accountUsername, String accountPassword, String accountFirstName, String accountLastName, String accountEmail, Long roleId, Long instituteId) {
-    this.accountUsername = accountUsername;
-    this.accountPassword = accountPassword;
-    this.accountFirstName = accountFirstName;
-    this.accountLastName = accountLastName;
-    this.accountEmail = accountEmail;
-    this.roleId = roleId;
-    this.instituteId = instituteId;
-  }
+    private Long instituteId;
+
 }

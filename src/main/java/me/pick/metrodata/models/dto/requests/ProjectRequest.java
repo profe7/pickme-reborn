@@ -15,6 +15,7 @@ import java.time.LocalDate;
 @Data
 @Builder
 public class ProjectRequest {
+
     @NotNull
     private String projectName;
 
@@ -39,5 +40,5 @@ public class ProjectRequest {
 
     @NotNull
     private Long skillId;
-}
 
+}

@@ -17,21 +17,20 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long>, Jpa
 
     Optional<Applicant> findByTalent_IdAndStatus(String talentId, ApplicantStatus status);
 
-
-    @Query("SELECT COUNT(a) FROM Applicant a " +
-            "JOIN a.talent t " +
-            "JOIN a.vacancy v " +
-            "WHERE t.mitra.id = :mitraId AND v.expiredDate > CURRENT_DATE")
+    @Query("SELECT COUNT(a) FROM Applicant a "
+            + "JOIN a.talent t "
+            + "JOIN a.vacancy v "
+            + "WHERE t.mitra.id = :mitraId AND v.expiredDate > CURRENT_DATE")
     Long countActiveApplicantByMitra(@Param("mitraId") Long mitraId);
 
-    @Query("SELECT COUNT(a) FROM Applicant a " +
-            "JOIN a.talent t " +
-            "JOIN a.vacancy v " +
-            "WHERE t.mitra.id = :mitraId AND v.expiredDate > CURRENT_DATE AND a.status = :status")
+    @Query("SELECT COUNT(a) FROM Applicant a "
+            + "JOIN a.talent t "
+            + "JOIN a.vacancy v "
+            + "WHERE t.mitra.id = :mitraId AND v.expiredDate > CURRENT_DATE AND a.status = :status")
     Long countApplicantByStatusAndMitra(@Param("mitraId") Long mitraId, @Param("status") ApplicantStatus status);
 
-    @Query("SELECT COUNT(a) FROM Applicant a " +
-            "JOIN a.vacancy v " +
-            "WHERE v.id = :vacancyId")
+    @Query("SELECT COUNT(a) FROM Applicant a "
+            + "JOIN a.vacancy v "
+            + "WHERE v.id = :vacancyId")
     Long countTotalApplicantByVacancy(@Param("vacancyId") Long vacancyId);
 }

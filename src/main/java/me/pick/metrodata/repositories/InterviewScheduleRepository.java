@@ -17,36 +17,36 @@ import org.springframework.stereotype.Repository;
 public interface InterviewScheduleRepository
         extends JpaRepository<InterviewSchedule, Long>, JpaSpecificationExecutor<InterviewSchedule> {
 
-        List<InterviewSchedule> findAllByApplicant_Vacancy_IdAndStatus(Long vacancyId, InterviewStatus status);
+    List<InterviewSchedule> findAllByApplicant_Vacancy_IdAndStatus(Long vacancyId, InterviewStatus status);
 
-        List<InterviewSchedule> findByApplicant_TalentAndDate(Talent talent, LocalDate date);
+    List<InterviewSchedule> findByApplicant_TalentAndDate(Talent talent, LocalDate date);
 
-        List<InterviewSchedule> findByClient_User(User recruiter, Pageable pageable);
+    List<InterviewSchedule> findByClient_User(User recruiter, Pageable pageable);
 
-        List<InterviewSchedule> findByClient_User(User recruiter);
+    List<InterviewSchedule> findByClient_User(User recruiter);
 
-        List<InterviewSchedule> findByApplicantOrderByUpdatedAtDesc(Applicant applicant);
+    List<InterviewSchedule> findByApplicantOrderByUpdatedAtDesc(Applicant applicant);
 
-        InterviewSchedule findInterviewScheduleByClientAndApplicantAndDate(Client client, Applicant applicant,
-                                                                           LocalDate date);
+    InterviewSchedule findInterviewScheduleByClientAndApplicantAndDate(Client client, Applicant applicant,
+            LocalDate date);
 
-        List<InterviewSchedule> findInterviewScheduleByClientAndDate(Client client, LocalDate date);
+    List<InterviewSchedule> findInterviewScheduleByClientAndDate(Client client, LocalDate date);
 
-        @Query("SELECT is2 FROM InterviewSchedule is2 " +
-                "JOIN is2.applicant a " +
-                "JOIN a.talent t " +
-                "JOIN t.mitra m " +
-                "JOIN m.user u " +
-                "JOIN u.institute i " +
-                "WHERE i.id = :instituteId")
-        List<InterviewSchedule> findScheduleByMitra(@Param("instituteId") Long instituteId);
+    @Query("SELECT is2 FROM InterviewSchedule is2 "
+            + "JOIN is2.applicant a "
+            + "JOIN a.talent t "
+            + "JOIN t.mitra m "
+            + "JOIN m.user u "
+            + "JOIN u.institute i "
+            + "WHERE i.id = :instituteId")
+    List<InterviewSchedule> findScheduleByMitra(@Param("instituteId") Long instituteId);
 
-        List<InterviewSchedule> findInterviewScheduleByClientAndApplicantAndStatus(Client client, Applicant applicant, InterviewStatus status);
+    List<InterviewSchedule> findInterviewScheduleByClientAndApplicantAndStatus(Client client, Applicant applicant, InterviewStatus status);
 
-        Optional<InterviewSchedule> findInterviewScheduleById(Long id);
+    Optional<InterviewSchedule> findInterviewScheduleById(Long id);
 
-        List<InterviewSchedule> findInterviewScheduleByClientIdAndStatus(Long clientId, InterviewStatus status);
+    List<InterviewSchedule> findInterviewScheduleByClientIdAndStatus(Long clientId, InterviewStatus status);
 
-        Optional<InterviewSchedule> findByApplicantAndClientIdAndStatus(Applicant applicant, Long clientId, InterviewStatus status);
+    Optional<InterviewSchedule> findByApplicantAndClientIdAndStatus(Applicant applicant, Long clientId, InterviewStatus status);
 
 }
