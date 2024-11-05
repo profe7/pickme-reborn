@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/main}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Mitra</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/responsive.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+</head>
+
+<body>
+
+    <div class="content-wrapper custom-container" layout:fragment="content">
+        <div class="hero_area">
+            <div class="hero_bg_box">
+                <div class="bg_img_box">
+                </div>
+            </div>
+
+            <section class="slider_section custom-mitra-section">
+                <div class="container">
+                    <div class="row">
+                        <div th:if="${accessDeniedMessage}" class="alert alert-danger alert-dismissible fade show">
+                            <p th:text="${accessDeniedMessage}"></p>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-box2" style="color: black;">
+                                <h1>Selamat Datang di Pick Me</h1>
+                                <h1 sec:authorize="isAuthenticated()">
+                                    <span sec:authentication="name"></span>
+                                </h1>
+                            </div>
+                        </div>
+                        <div class="col-md-6" style="
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                      ">
+                            <div class="img-box-mitra">
+                                <img th:src="@{img/mitra-img.png}" alt="Ilustrasi Mitra" title="Ilustrasi" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+
+    </div>
+
+
+
+    <div th:insert="~{components/footer :: footer}"></div>
+
+
+</body>
+
+</html>
