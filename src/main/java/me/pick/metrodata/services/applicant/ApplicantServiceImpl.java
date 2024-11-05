@@ -2,8 +2,10 @@ package me.pick.metrodata.services.applicant;
 
 import lombok.RequiredArgsConstructor;
 import me.pick.metrodata.enums.ApplicantStatus;
+import me.pick.metrodata.enums.StatusCV;
 import me.pick.metrodata.exceptions.applicant.ApplicantAlreadyExistsException;
 import me.pick.metrodata.exceptions.applicant.ApplicantDoesNotExistException;
+import me.pick.metrodata.exceptions.talent.IncompleteTalentCvException;
 import me.pick.metrodata.exceptions.talent.TalentDoesNotExistException;
 import me.pick.metrodata.exceptions.user.UserDoesNotExistException;
 import me.pick.metrodata.exceptions.vacancy.VacancyNotExistException;
@@ -42,6 +44,9 @@ public class ApplicantServiceImpl implements ApplicantService{
         applicant.setStatus(ApplicantStatus.ASSIGNED);
         applicant.setVacancy(vacancyRepository.findVacancyById(request.getVacancyId()).orElseThrow(() -> new VacancyNotExistException(request.getVacancyId())));
         applicant.setTalent(talentRepository.findById(request.getTalentId()).orElseThrow(() -> new TalentDoesNotExistException(request.getTalentId())));
+        if (applicant.getTalent().getStatusCV() != StatusCV.COMPLETE){
+            throw new IncompleteTalentCvException();
+        }
         return applicantRepository.save(applicant);
     }
 
