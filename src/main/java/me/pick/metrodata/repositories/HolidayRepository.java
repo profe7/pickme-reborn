@@ -11,6 +11,6 @@ import java.util.Optional;
 @Repository
 public interface HolidayRepository extends JpaRepository<Holiday, Long>, JpaSpecificationExecutor<Holiday> {
 
-        Optional<Holiday> findByDate(LocalDate date);
+    Optional<Holiday> findByDate(LocalDate date);
 
 }

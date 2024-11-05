@@ -1,6 +1,5 @@
 package me.pick.metrodata.models.dto.requests;
 
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import groovyjarjarantlr4.v4.runtime.misc.NotNull;
 import lombok.AllArgsConstructor;
@@ -35,5 +34,5 @@ public class CertificationRequest {
 
     @NotNull
     private String talentId;
-}
 
+}

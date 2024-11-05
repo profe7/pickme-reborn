@@ -11,6 +11,9 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class TalentPaginationResponse {
-	private PageData pageData;
-	private List<TalentResponse> data;
+
+    private PageData pageData;
+
+    private List<TalentResponse> data;
+
 }

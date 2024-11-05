@@ -17,8 +17,6 @@ import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,8 +26,11 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(indexes = {@Index(name = "idx_talent_name", columnList = "name"), @Index(name = "idx_talent_nik", columnList = "nik")})
+@Table(indexes = {
+    @Index(name = "idx_talent_name", columnList = "name"),
+    @Index(name = "idx_talent_nik", columnList = "nik")})
 public class Talent {
+
     @PrePersist
     public void generateId() {
         this.id = UUID.randomUUID().toString();
@@ -167,7 +168,6 @@ public class Talent {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
-
 
     @Override
     public String toString() {

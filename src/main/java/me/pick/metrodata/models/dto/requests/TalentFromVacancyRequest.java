@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TalentFromVacancyRequest {
+
     private String talentName;
 
     private String talentEmail;
@@ -17,4 +18,5 @@ public class TalentFromVacancyRequest {
     private Long talentMitraId;
 
     private Long vacancyId;
+
 }

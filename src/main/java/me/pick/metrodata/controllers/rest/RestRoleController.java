@@ -13,13 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 @RequestMapping("/api/v1/role")
 public class RestRoleController {
+
     private RoleService roleService;
 
     @GetMapping("/all")
     @PreAuthorize("hasAnyAuthority('READ_ROLE')")
     public RolePaginationResponse getAll(@RequestParam(required = false, defaultValue = "") String name,
-                                         @RequestParam(required = false) Integer page,
-                                         @RequestParam(required = false) Integer size) {
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer size) {
         return roleService.getAll(name, page, size);
     }
 }

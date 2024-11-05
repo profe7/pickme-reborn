@@ -13,21 +13,23 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class RecommendationResponse {
-	private Long id;
 
-	private LocalDateTime assignDate;
+    private Long id;
 
-	private String position;
+    private LocalDateTime assignDate;
 
-	private Long jobId;
+    private String position;
 
-	private Institute recommendationInstitute;
+    private Long jobId;
 
-	private User recommendationMaster;
+    private Institute recommendationInstitute;
 
-	private List<TalentResponse> talents;
+    private User recommendationMaster;
 
-	private String description;
+    private List<TalentResponse> talents;
 
-	private Integer totalTalents;
+    private String description;
+
+    private Integer totalTalents;
+
 }

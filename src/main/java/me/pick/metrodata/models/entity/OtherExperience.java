@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table
 public class OtherExperience {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

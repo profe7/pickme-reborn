@@ -10,18 +10,21 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class AccountDetail implements UserDetails {
+
     private Account account;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
         Role role = account.getRole();
-        authorities.add(new SimpleGrantedAuthority("ROLE_" +
-                role.getName().toUpperCase()));
+        authorities.add(new SimpleGrantedAuthority("ROLE_"
+                + role.getName().toUpperCase()));
         role.getPrivileges().forEach(privilege -> {
             authorities.add(new SimpleGrantedAuthority(privilege.getName().toUpperCase()));
         });

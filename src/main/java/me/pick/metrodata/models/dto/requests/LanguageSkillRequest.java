@@ -27,5 +27,5 @@ public class LanguageSkillRequest {
 
     @NotNull
     private String talentId;
-}
 
+}

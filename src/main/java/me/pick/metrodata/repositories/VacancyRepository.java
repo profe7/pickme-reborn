@@ -13,21 +13,21 @@ import java.util.Optional;
 @Repository
 public interface VacancyRepository extends JpaRepository<Vacancy, Long>, JpaSpecificationExecutor<Vacancy> {
 
-        Optional<Vacancy> findVacancyById(Long id);
+    Optional<Vacancy> findVacancyById(Long id);
 
-        @Query("SELECT v FROM Vacancy v WHERE v.status != 'CLOSED'")
-        List<Vacancy> findOpenVacancies();
+    @Query("SELECT v FROM Vacancy v WHERE v.status != 'CLOSED'")
+    List<Vacancy> findOpenVacancies();
 
-        @Query("SELECT v, COUNT(a.id) AS totalNominee " +
-                "FROM Vacancy v " +
-                "LEFT JOIN v.applicants a " +
-                "GROUP BY v")
-        List<Object[]> findVacancyWithTotalNominee(
-                Pageable pageable);
+    @Query("SELECT v, COUNT(a.id) AS totalNominee "
+            + "FROM Vacancy v "
+            + "LEFT JOIN v.applicants a "
+            + "GROUP BY v")
+    List<Object[]> findVacancyWithTotalNominee(
+            Pageable pageable);
 
-        List<Vacancy> findTop5ByOrderByCreatedAtDesc();
+    List<Vacancy> findTop5ByOrderByCreatedAtDesc();
 
-        @Query("SELECT COUNT(v) FROM Vacancy v WHERE v.expiredDate > CURRENT_DATE")
-        Long countActiveVacancy();
+    @Query("SELECT COUNT(v) FROM Vacancy v WHERE v.expiredDate > CURRENT_DATE")
+    Long countActiveVacancy();
 
 }

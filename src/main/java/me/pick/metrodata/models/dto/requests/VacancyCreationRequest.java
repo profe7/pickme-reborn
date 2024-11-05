@@ -14,6 +14,7 @@ import java.time.LocalDate;
 @Data
 @Builder
 public class VacancyCreationRequest {
+
     private Long clientUserId;
 
     private String vacancyTitle;
@@ -29,4 +30,5 @@ public class VacancyCreationRequest {
     private Integer applicantQuantity;
 
     private String vacancyDescription;
+
 }

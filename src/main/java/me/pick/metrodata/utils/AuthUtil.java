@@ -12,15 +12,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 @AllArgsConstructor
 public class AuthUtil {
 
-  	private static final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.class);
 
     public static Long getLoginUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
             logger.info("Authentication is set and authenticated.");
             Object principal = authentication.getPrincipal();
-            if (principal instanceof AccountDetail) {
-                AccountDetail appUserDetail = (AccountDetail) principal;
+            if (principal instanceof AccountDetail appUserDetail) {
                 Long userId = appUserDetail.getId();
                 logger.info("Logged in user ID: " + userId);
                 return userId;

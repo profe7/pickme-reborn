@@ -19,7 +19,8 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class    VacancyServiceImpl implements VacancyService{
+public class VacancyServiceImpl implements VacancyService {
+
     private final VacancyRepository vacancyRepository;
     private final UserRepository userRepository;
 
@@ -35,6 +36,7 @@ public class    VacancyServiceImpl implements VacancyService{
         return Pair.of(uriBuilder, pageable);
     }
 
+    @Override
     public Page<Vacancy> getAllAvailableVacancies(Integer page, Integer size) {
         List<Vacancy> vacancies = vacancyRepository.findOpenVacancies();
         Pageable pageable = PageRequest.of(page, size);
@@ -45,10 +47,12 @@ public class    VacancyServiceImpl implements VacancyService{
         return new PageImpl<>(vacancies.subList(start, end), pageable, vacancies.size());
     }
 
+    @Override
     public Vacancy getVacancyById(Long id) {
         return vacancyRepository.findById(id).orElse(null);
     }
 
+    @Override
     public void createVacancy(VacancyCreationRequest request) {
         User user = userRepository.findUserById(request.getClientUserId()).orElseThrow(() -> new UserDoesNotExistException(request.getClientUserId().toString()));
         try {
@@ -57,13 +61,13 @@ public class    VacancyServiceImpl implements VacancyService{
             throw new VacancyStatusDoesNotExistException(request.getVacancyStatus());
         }
 
-        if (request.getClientUserId() == null ||
-                request.getVacancyTitle() == null ||
-                request.getVacancyPosition() == null ||
-                request.getVacancyStatus() == null ||
-                request.getVacancyEndDate() == null ||
-                request.getApplicantQuantity() == null ||
-                request.getVacancyDescription() == null) {
+        if (request.getClientUserId() == null
+                || request.getVacancyTitle() == null
+                || request.getVacancyPosition() == null
+                || request.getVacancyStatus() == null
+                || request.getVacancyEndDate() == null
+                || request.getApplicantQuantity() == null
+                || request.getVacancyDescription() == null) {
             throw new IncompleteVacancyRequestException();
         }
 

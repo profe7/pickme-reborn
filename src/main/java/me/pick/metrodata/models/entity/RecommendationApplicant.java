@@ -13,6 +13,7 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "recommendation_applicant")
 public class RecommendationApplicant {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
