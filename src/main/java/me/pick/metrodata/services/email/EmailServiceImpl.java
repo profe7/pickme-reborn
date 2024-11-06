@@ -23,12 +23,16 @@ public class EmailServiceImpl implements EmailService {
     private final JavaMailSender mailSender;
     private final SpringTemplateEngine templateEngine;
 
+    private static final String UTF = "UTF-8";
+    private static final String TALENT = "talent";
+    private static final String INTERVIEW = "Interview Anda untuk posisi ";
+
     @Override
     @Async
     public void sendNewTalentCredentials(Account account, String password) {
         try {
             MimeMessage message = mailSender.createMimeMessage ();
-            MimeMessageHelper helper = new MimeMessageHelper (message, true, "UTF-8");
+            MimeMessageHelper helper = new MimeMessageHelper (message, true, UTF);
 
             helper.setTo (account.getUser().getEmail());
             helper.setSubject ("Credential Akun Metrodata PICK-ME Anda");
@@ -55,7 +59,7 @@ public class EmailServiceImpl implements EmailService {
     public void sendInterviewInvitation(InterviewSchedule schedule) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, UTF);
 
             helper.setTo(schedule.getApplicant().getTalent().getEmail());
             helper.setCc(schedule.getApplicant().getTalent().getMitra().getUser().getEmail());
@@ -80,7 +84,7 @@ public class EmailServiceImpl implements EmailService {
     public void sendInterviewReschedule(InterviewSchedule interviewSchedule) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, UTF);
 
             Map<String, Object> template = templateHelperOne(interviewSchedule);
 
@@ -102,7 +106,7 @@ public class EmailServiceImpl implements EmailService {
     public void sendInterviewCancel(InterviewSchedule interviewSchedule, String feedback) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, UTF);
 
             Map<String, Object> template = templateHelperTwo(interviewSchedule, feedback);
 
@@ -112,7 +116,7 @@ public class EmailServiceImpl implements EmailService {
 
             helper.setTo(interviewSchedule.getApplicant().getTalent().getEmail());
             helper.setText(html, true);
-            helper.setSubject("Interview Anda Untuk Posisi " + interviewSchedule.getPosition() + " di " + interviewSchedule.getClient().getUser().getInstitute().getInstituteName() + " Dibatalkan");
+            helper.setSubject(INTERVIEW + interviewSchedule.getPosition() + " di " + interviewSchedule.getClient().getUser().getInstitute().getInstituteName() + " Dibatalkan");
 
             mailSender.send(message);
         } catch (Exception e) {
@@ -125,7 +129,7 @@ public class EmailServiceImpl implements EmailService {
     public void sendInterviewAccept(InterviewSchedule interviewSchedule, String feedback) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, UTF);
 
             Map<String, Object> template = templateHelperTwo(interviewSchedule, feedback);
 
@@ -135,7 +139,7 @@ public class EmailServiceImpl implements EmailService {
 
             helper.setTo(interviewSchedule.getApplicant().getTalent().getEmail());
             helper.setText(html, true);
-            helper.setSubject("Interview Anda Untuk Posisi " + interviewSchedule.getPosition() + " di " + interviewSchedule.getClient().getUser().getInstitute().getInstituteName() + " Diterima");
+            helper.setSubject(INTERVIEW + interviewSchedule.getPosition() + " di " + interviewSchedule.getClient().getUser().getInstitute().getInstituteName() + " Diterima");
 
             mailSender.send(message);
         } catch (Exception e) {
@@ -148,7 +152,7 @@ public class EmailServiceImpl implements EmailService {
     public void sendInterviewReject(InterviewSchedule interviewSchedule, String feedback) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, UTF);
 
             Map<String, Object> template = templateHelperTwo(interviewSchedule, feedback);
 
@@ -193,7 +197,7 @@ public class EmailServiceImpl implements EmailService {
 
     private Map<String, Object> templateHelperOne(InterviewSchedule detail) {
         Map<String, Object> template = new HashMap<>();
-        template.put("talent", detail.getApplicant ().getTalent ().getName());
+        template.put(TALENT, detail.getApplicant ().getTalent ().getName());
         template.put("date", detail.getDate());
         template.put("start", detail.getStartTime());
         template.put("end", detail.getEndTime());
@@ -210,11 +214,11 @@ public class EmailServiceImpl implements EmailService {
     private Map<String, Object> templateHelperTwo(InterviewSchedule interviewSchedule, String feedback) {
         Map<String, Object> template = new HashMap<>();
         if (interviewSchedule.getStatus().equals(InterviewStatus.REJECTED) || interviewSchedule.getStatus().equals(InterviewStatus.CANCELLED)) {
-            template.put("talent", interviewSchedule.getApplicant().getTalent().getName());
+            template.put(TALENT, interviewSchedule.getApplicant().getTalent().getName());
             template.put("site", interviewSchedule.getClient().getUser().getInstitute().getInstituteName());
             template.put("feedback", feedback);
         } else if (interviewSchedule.getStatus().equals(InterviewStatus.ACCEPTED)) {
-            template.put("talent", interviewSchedule.getApplicant().getTalent().getName());
+            template.put(TALENT, interviewSchedule.getApplicant().getTalent().getName());
             template.put("site", interviewSchedule.getClient().getUser().getInstitute().getInstituteName());
             template.put("feedback", feedback);
             template.put("onBoardDate", interviewSchedule.getOnBoardDate());

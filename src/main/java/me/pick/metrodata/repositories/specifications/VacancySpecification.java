@@ -10,6 +10,10 @@ import java.time.LocalDate;
 
 public class VacancySpecification {
 
+    private VacancySpecification() {}
+
+    private static final String UPDATED = "updatedAt";
+
     public static Specification<Vacancy> searchSpecification(String title, String position, String expiredDate, String updatedAt, Client client) {
         return (root, query, criteriaBuilder) -> {
             Predicate predicate = criteriaBuilder.conjunction();
@@ -37,7 +41,7 @@ public class VacancySpecification {
                 LocalDate localDate = DateTimeUtil.stringToLocalDate(updatedAt);
                 predicate = criteriaBuilder.and(
                         predicate,
-                        criteriaBuilder.greaterThanOrEqualTo(root.get("updatedAt"), localDate.atStartOfDay())
+                        criteriaBuilder.greaterThanOrEqualTo(root.get(UPDATED), localDate.atStartOfDay())
                 );
             }
 
@@ -74,8 +78,8 @@ public class VacancySpecification {
                     throw new IllegalArgumentException("End date cannot be null");
                 }
                 return criteriaBuilder.and(
-                        criteriaBuilder.greaterThanOrEqualTo(root.get("updatedAt"), startDate.atStartOfDay()),
-                        criteriaBuilder.lessThanOrEqualTo(root.get("updatedAt"), endDate.atTime(23, 59, 59))
+                        criteriaBuilder.greaterThanOrEqualTo(root.get(UPDATED), startDate.atStartOfDay()),
+                        criteriaBuilder.lessThanOrEqualTo(root.get(UPDATED), endDate.atTime(23, 59, 59))
                 );
             } else {
                 return criteriaBuilder.and(

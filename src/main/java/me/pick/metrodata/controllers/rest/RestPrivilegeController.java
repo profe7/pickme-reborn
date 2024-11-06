@@ -17,12 +17,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class RestPrivilegeController {
 
     private final PrivilegeService privilegeService;
+
+    private static final String SUCCESS = "SUCCESS";
     
     @GetMapping("/all")
     @PreAuthorize("hasAnyAuthority('READ_PRIVILEGE')")
     public ResponseEntity<Object> getAllPrivilege() {
         return ResponseHandler.generateResponse(new Response(
-                "Privileges", HttpStatus.OK, "SUCCESS", privilegeService.getAll()
+                "Privileges", HttpStatus.OK, SUCCESS, privilegeService.getAll()
         ));
     }
 }

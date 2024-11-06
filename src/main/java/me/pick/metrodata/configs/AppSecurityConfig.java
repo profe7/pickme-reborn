@@ -30,7 +30,6 @@ public class AppSecurityConfig {
 
     private final AccountDetailService userDetailService;
     private final PasswordEncoder passwordEncoder;
-    // private final SecurityProperties securityProperties;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -39,13 +38,7 @@ public class AppSecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(auth -> auth
-                .anyRequest().permitAll()
-                // .requestMatchers("/login", "/css/**", "/img/**", "/dist/**", "/js/**").permitAll()
-                // .anyRequest().authenticated()
-                )
-                // .formLogin(form -> form
-                // .loginPage("/login").permitAll())
-                // .logout(logout -> logout.permitAll());
+                .anyRequest().permitAll())
                 .httpBasic(withDefaults());
         return http.build();
     }
@@ -68,8 +61,6 @@ public class AppSecurityConfig {
 
     @Autowired
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        // List<SimpleGrantedAuthority> authorities = Stream.of(
-        //         "CREATE_HOLIDAY", "READ_HOLIDAY", "UPDATE_HOLIDAY", "DELETE_HOLIDAY").map(SimpleGrantedAuthority::new).toList();
         auth.userDetailsService(userDetailService).passwordEncoder(passwordEncoder);
     }
 }

@@ -22,12 +22,14 @@ public class AuthController {
 
     private final AuthService authService;
 
+    private static final String ACCESS_DENIED_MESSAGE = "accessDeniedMessage";
+
     @GetMapping
     public String loginPage(LoginRequest loginRequest, Model model, HttpSession session) {
-        String accessDeniedMessage = (String) session.getAttribute("accessDeniedMessage");
+        String accessDeniedMessage = (String) session.getAttribute(ACCESS_DENIED_MESSAGE);
         if (accessDeniedMessage != null) {
-            model.addAttribute("accessDeniedMessage", accessDeniedMessage);
-            session.removeAttribute("accessDeniedMessage");
+            model.addAttribute(ACCESS_DENIED_MESSAGE, accessDeniedMessage);
+            session.removeAttribute(ACCESS_DENIED_MESSAGE);
         }
         return "auth/login";
     }

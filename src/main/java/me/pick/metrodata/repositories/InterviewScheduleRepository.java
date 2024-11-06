@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import me.pick.metrodata.enums.InterviewStatus;
 import me.pick.metrodata.models.entity.*;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -14,18 +13,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface InterviewScheduleRepository
-        extends JpaRepository<InterviewSchedule, Long>, JpaSpecificationExecutor<InterviewSchedule> {
-
-    List<InterviewSchedule> findAllByApplicant_Vacancy_IdAndStatus(Long vacancyId, InterviewStatus status);
-
-    List<InterviewSchedule> findByApplicant_TalentAndDate(Talent talent, LocalDate date);
-
-    List<InterviewSchedule> findByClient_User(User recruiter, Pageable pageable);
-
-    List<InterviewSchedule> findByClient_User(User recruiter);
-
-    List<InterviewSchedule> findByApplicantOrderByUpdatedAtDesc(Applicant applicant);
+public interface InterviewScheduleRepository extends JpaRepository<InterviewSchedule, Long>, JpaSpecificationExecutor<InterviewSchedule> {
 
     InterviewSchedule findInterviewScheduleByClientAndApplicantAndDate(Client client, Applicant applicant,
             LocalDate date);
@@ -41,7 +29,6 @@ public interface InterviewScheduleRepository
             + "WHERE i.id = :instituteId")
     List<InterviewSchedule> findScheduleByMitra(@Param("instituteId") Long instituteId);
 
-    List<InterviewSchedule> findInterviewScheduleByClientAndApplicantAndStatus(Client client, Applicant applicant, InterviewStatus status);
 
     Optional<InterviewSchedule> findInterviewScheduleById(Long id);
 

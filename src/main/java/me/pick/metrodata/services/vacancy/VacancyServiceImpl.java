@@ -17,9 +17,7 @@ import me.pick.metrodata.repositories.VacancyRepository;
 import me.pick.metrodata.repositories.specifications.VacancySpecification;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 

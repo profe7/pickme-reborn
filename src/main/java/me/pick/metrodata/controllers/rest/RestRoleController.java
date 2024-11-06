@@ -17,13 +17,15 @@ public class RestRoleController {
 
     private final RoleService roleService;
 
+    private static final String SUCCESS = "SUCCESS";
+
     @GetMapping("/all")
     @PreAuthorize("hasAnyAuthority('READ_ROLE')")
     public ResponseEntity<Object> getAll(@RequestParam(required = false, defaultValue = "") String name,
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer size) {
         return ResponseHandler.generateResponse(new Response(
-                "Roles fetched successfully", HttpStatus.OK, "SUCCESS", roleService.getAll(name, page, size)
+                "Roles fetched successfully", HttpStatus.OK, SUCCESS, roleService.getAll(name, page, size)
         ));
     }
 
@@ -32,7 +34,7 @@ public class RestRoleController {
     public ResponseEntity<Object> updateRole(@RequestBody RoleUpdateRequest roleUpdateRequest) {
         roleService.updateRole(roleUpdateRequest);
         return ResponseHandler.generateResponse(new Response(
-                "Role updated successfully", HttpStatus.OK, "SUCCESS", null
+                "Role updated successfully", HttpStatus.OK, SUCCESS, null
         ));
     }
 
@@ -40,7 +42,7 @@ public class RestRoleController {
     @PreAuthorize("hasAnyAuthority('READ_ROLE')")
     public ResponseEntity<Object> getRoleById(@PathVariable Long id) {
         return ResponseHandler.generateResponse(new Response(
-                "Role fetched successfully", HttpStatus.OK, "SUCCESS", roleService.getRoleById(id)
+                "Role fetched successfully", HttpStatus.OK, SUCCESS, roleService.getRoleById(id)
         ));
     }
 
@@ -48,7 +50,7 @@ public class RestRoleController {
     @PreAuthorize("hasAnyAuthority('CREATE_ROLE')")
     public ResponseEntity<Object> createRole(@RequestBody RoleUpdateRequest roleUpdateRequest) {
         return ResponseHandler.generateResponse(new Response(
-                "Role created successfully", HttpStatus.CREATED, "SUCCESS", roleService.createRole(roleUpdateRequest)
+                "Role created successfully", HttpStatus.CREATED, SUCCESS, roleService.createRole(roleUpdateRequest)
         ));
     }
 

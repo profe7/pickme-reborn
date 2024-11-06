@@ -15,13 +15,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @AllArgsConstructor
 @RequestMapping("/api/v1/recommendation")
 public class RestRecommendationController {
+
     private final RecommendationService recommendationService;
+
+    private static final String SUCCESS = "SUCCESS";
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> delete(@PathVariable Long id) {
         recommendationService.deleteRecommendation(id);
         return ResponseHandler.generateResponse(new Response(
-                "Recommendation deleted", HttpStatus.OK, "SUCCESS", null
+                "Recommendation deleted", HttpStatus.OK, SUCCESS, null
         ));
     }
 }

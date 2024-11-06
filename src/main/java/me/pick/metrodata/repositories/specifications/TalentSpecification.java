@@ -6,6 +6,9 @@ import org.springframework.data.jpa.domain.Specification;
 
 
 public class TalentSpecification {
+
+    private TalentSpecification() {}
+
     public static Specification<Talent> buildSpecification(String name, Long minSalary, Long maxSalary, Boolean active, Long instituteId, String job, String skill, Boolean idle) {
         return (root, query, criteriaBuilder) -> {
             Predicate predicate = criteriaBuilder.conjunction();
