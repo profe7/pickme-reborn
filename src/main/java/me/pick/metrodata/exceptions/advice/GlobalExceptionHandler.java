@@ -7,6 +7,7 @@ import me.pick.metrodata.exceptions.account.AccountDoesNotExistException;
 import me.pick.metrodata.exceptions.account.AccountInvalidPasswordException;
 import me.pick.metrodata.exceptions.client.ClientDoesNotExistException;
 import me.pick.metrodata.exceptions.institute.InstituteDoesNotExistException;
+import me.pick.metrodata.exceptions.institute.InstituteTypeDoesNotExistException;
 import me.pick.metrodata.exceptions.interviewschedule.ApplicantNotRecommendedException;
 import me.pick.metrodata.exceptions.interviewschedule.InterviewScheduleConflictException;
 import me.pick.metrodata.exceptions.interviewschedule.InterviewScheduleDoesNotExistException;
@@ -43,7 +44,6 @@ public class GlobalExceptionHandler {
             UserDoesNotExistException.class,
             ApplicantDoesNotExistException.class,
             ClientDoesNotExistException.class,
-            VacancyStatusDoesNotExistException.class,
             InterviewScheduleDoesNotExistException.class,
             RecommendationDoesNotExistException.class
     })
@@ -69,7 +69,9 @@ public class GlobalExceptionHandler {
             InterviewScheduleConflictException.class,
             InterviewScheduleUpdateBadRequestException.class,
             IncompleteVacancyRequestException.class,
-            IncompleteTalentCvException.class
+            IncompleteTalentCvException.class,
+            InstituteTypeDoesNotExistException.class,
+            VacancyStatusDoesNotExistException.class,
     })
     public ResponseEntity<Object> badRequestHandler(Exception e) {
         return ResponseHandler.generateResponse(new Response(
