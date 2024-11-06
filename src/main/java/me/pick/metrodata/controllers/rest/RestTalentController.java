@@ -36,7 +36,7 @@ public class RestTalentController {
                 "Talent created", HttpStatus.CREATED, "SUCCESS", talent));
     }
 
-    @PostMapping("/complete-new-talent-data")
+    @PostMapping("/edit-talent")
     @PreAuthorize("hasAnyAuthority('READ_TALENT', 'UPDATE_TALENT')")
     public ResponseEntity<Object> completeNewTalentData(@RequestBody TalentDataCompletionRequest request) {
         Talent talent = talentService.completeNewTalentData(request);
