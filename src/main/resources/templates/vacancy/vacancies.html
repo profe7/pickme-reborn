@@ -12,7 +12,6 @@
     <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
 
 
-
 </head>
 
 <body>
@@ -82,7 +81,7 @@
                                     </p>
                                     <hr>
                                     
-                                    <a href="#" class="btn" style="background-color: #006683; color:antiquewhite;">Detail</a>
+                                    <a th:href="@{'/vacancies/' + ${vacancy.id}}" class="btn" style="background-color: #006683; color:antiquewhite;">Detail</a>
                                     <small class="text-muted" style="margin-left: 10px;">Dibuat <span th:text="${vacancy.daysSinceCreated}"></span> hari yang lalu</small>
                                 </div>
                             </div>

@@ -8,4 +8,6 @@ public interface MitraService {
     Page<Talent> getMitraTalents(Long mitraId, Integer page, Integer size);
 
     MitraDashboardTelemetryResponse getMitraDashboardTelemetry(Long mitraId);
+
+    
 }
