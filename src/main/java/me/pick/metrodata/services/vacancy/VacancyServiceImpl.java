@@ -28,28 +28,16 @@ public class VacancyServiceImpl implements VacancyService {
     private final UserRepository userRepository;
 
     @Override
-    public Page<Vacancy> getOpenVacancies(Integer page, Integer size) {
-        List<Vacancy> vacancies = vacancyRepository.findOpenVacancies();
-        Pageable pageable = PageRequest.of(page, size);
-
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), vacancies.size());
-
-        return new PageImpl<>(vacancies.subList(start, end), pageable, vacancies.size());
+    public Page<Vacancy> getOpenVacancies(Integer page, Integer size, String expiredDate, String updatedAt, String title, String position) {
+        Specification<Vacancy> spec = VacancySpecification.searchSpecification(title, position, expiredDate, updatedAt);
+        return vacancyPaginationHelper(page, size, spec);
     }
 
     @Override
     public Page<Vacancy> getAll(String title, String position, String expiredDate, String updatedAt, String timeInterval, Integer page, Integer size) {
         Specification<Vacancy> spec = VacancySpecification.combinedSpecification(title, position, expiredDate, updatedAt, timeInterval);
-        List<Vacancy> vacancies = vacancyRepository.findAll(spec);
-
-        Pageable pageable = PageRequest.of(page, size);
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), vacancies.size());
-
-        return new PageImpl<>(vacancies.subList(start, end), pageable, vacancies.size());
+        return vacancyPaginationHelper(page, size, spec);
     }
-
 
     @Override
     public Vacancy getVacancyById(Long id) {
@@ -109,5 +97,15 @@ public class VacancyServiceImpl implements VacancyService {
     public void deleteVacancy(Long id) {
         Vacancy vacancy = vacancyRepository.findById(id).orElseThrow(() -> new VacancyNotExistException(id));
         vacancyRepository.delete(vacancy);
+    }
+
+    private Page<Vacancy> vacancyPaginationHelper(Integer page, Integer size, Specification<Vacancy> spec) {
+        List<Vacancy> vacancies = vacancyRepository.findAll(spec);
+
+        Pageable pageable = PageRequest.of(page, size);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), vacancies.size());
+
+        return new PageImpl<>(vacancies.subList(start, end), pageable, vacancies.size());
     }
 }

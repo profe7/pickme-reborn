@@ -22,9 +22,13 @@ public class RestVacancyController {
     @PreAuthorize("hasAnyAuthority('READ_JOB', 'CREATE_APPLICANT')")
     public ResponseEntity<Object> getAvailableVacancies(
             @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "10") Integer size) {
+            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(defaultValue = "") String expiredDate,
+            @RequestParam(defaultValue = "") String updatedAt,
+            @RequestParam(defaultValue = "") String title,
+            @RequestParam(defaultValue = "") String position) {
         return ResponseHandler.generateResponse(new Response(
-                "Available vacancies", HttpStatus.OK, "SUCCESS", vacancyService.getOpenVacancies(page, size)
+                "Available vacancies", HttpStatus.OK, "SUCCESS", vacancyService.getOpenVacancies(page, size, expiredDate, updatedAt, title, position)
         ));
     }
 
