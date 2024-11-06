@@ -30,13 +30,15 @@ public class VacancyServiceImpl implements VacancyService {
     @Override
     public Page<Vacancy> getOpenVacancies(Integer page, Integer size, String expiredDate, String updatedAt, String title, String position) {
         Specification<Vacancy> spec = VacancySpecification.searchSpecification(title, position, expiredDate, updatedAt);
-        return vacancyPaginationHelper(page, size, spec);
+        List<Vacancy> vacancies = vacancyRepository.findOpenVacancies(spec);
+        return vacancyPaginationHelper(page, size, spec, vacancies);
     }
 
     @Override
     public Page<Vacancy> getAll(String title, String position, String expiredDate, String updatedAt, String timeInterval, Integer page, Integer size) {
         Specification<Vacancy> spec = VacancySpecification.combinedSpecification(title, position, expiredDate, updatedAt, timeInterval);
-        return vacancyPaginationHelper(page, size, spec);
+        List<Vacancy> vacancies = vacancyRepository.findAll(spec);
+        return vacancyPaginationHelper(page, size, spec, vacancies);
     }
 
     @Override
@@ -99,9 +101,7 @@ public class VacancyServiceImpl implements VacancyService {
         vacancyRepository.delete(vacancy);
     }
 
-    private Page<Vacancy> vacancyPaginationHelper(Integer page, Integer size, Specification<Vacancy> spec) {
-        List<Vacancy> vacancies = vacancyRepository.findAll(spec);
-
+    private Page<Vacancy> vacancyPaginationHelper(Integer page, Integer size, Specification<Vacancy> spec, List<Vacancy> vacancies) {
         Pageable pageable = PageRequest.of(page, size);
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), vacancies.size());
