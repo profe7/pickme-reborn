@@ -8,6 +8,7 @@ import me.pick.metrodata.utils.ResponseHandler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,7 +24,7 @@ public class RestVacancyController {
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer size) {
         return ResponseHandler.generateResponse(new Response(
-                "Available vacancies", HttpStatus.OK, "SUCCESS", vacancyService.getAllAvailableVacancies(page, size)
+                "Available vacancies", HttpStatus.OK, "SUCCESS", vacancyService.getOpenVacancies(page, size)
         ));
     }
 
@@ -50,6 +51,21 @@ public class RestVacancyController {
         vacancyService.editVacancy(request, id);
         return ResponseHandler.generateResponse(new Response(
                 "Vacancy edited", HttpStatus.OK, "SUCCESS", null
+        ));
+    }
+
+    @GetMapping("/all-vacancies")
+    @PreAuthorize("hasAnyAuthority('MANAGEMENT_READ_ACCOUNT')")
+    public ResponseEntity<Object> getAll(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(defaultValue = "") String title,
+            @RequestParam(defaultValue = "") String position,
+            @RequestParam(defaultValue = "") String expiredDate,
+            @RequestParam(defaultValue = "") String updatedAt,
+            @RequestParam(defaultValue = "") String timeInterval) {
+        return ResponseHandler.generateResponse(new Response(
+                "All vacancies", HttpStatus.OK, "SUCCESS", vacancyService.getAll(title, position, expiredDate, updatedAt, timeInterval, page, size)
         ));
     }
 }

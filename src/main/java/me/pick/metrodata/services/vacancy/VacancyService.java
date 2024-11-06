@@ -6,7 +6,9 @@ import org.springframework.data.domain.Page;
 
 public interface VacancyService {
 
-    Page<Vacancy> getAllAvailableVacancies(Integer page, Integer size);
+    Page<Vacancy> getOpenVacancies(Integer page, Integer size);
+
+    Page<Vacancy> getAll(String title, String position, String expiredDate, String updatedAt, String timeInterval, Integer page, Integer size);
 
     Vacancy getVacancyById(Long id);
 

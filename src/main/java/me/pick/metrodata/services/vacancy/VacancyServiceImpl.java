@@ -11,7 +11,9 @@ import me.pick.metrodata.models.entity.User;
 import me.pick.metrodata.models.entity.Vacancy;
 import me.pick.metrodata.repositories.UserRepository;
 import me.pick.metrodata.repositories.VacancyRepository;
+import me.pick.metrodata.repositories.specifications.VacancySpecification;
 import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -26,7 +28,7 @@ public class VacancyServiceImpl implements VacancyService {
     private final UserRepository userRepository;
 
     @Override
-    public Page<Vacancy> getAllAvailableVacancies(Integer page, Integer size) {
+    public Page<Vacancy> getOpenVacancies(Integer page, Integer size) {
         List<Vacancy> vacancies = vacancyRepository.findOpenVacancies();
         Pageable pageable = PageRequest.of(page, size);
 
@@ -35,6 +37,19 @@ public class VacancyServiceImpl implements VacancyService {
 
         return new PageImpl<>(vacancies.subList(start, end), pageable, vacancies.size());
     }
+
+    @Override
+    public Page<Vacancy> getAll(String title, String position, String expiredDate, String updatedAt, String timeInterval, Integer page, Integer size) {
+        Specification<Vacancy> spec = VacancySpecification.combinedSpecification(title, position, expiredDate, updatedAt, timeInterval);
+        List<Vacancy> vacancies = vacancyRepository.findAll(spec);
+
+        Pageable pageable = PageRequest.of(page, size);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), vacancies.size());
+
+        return new PageImpl<>(vacancies.subList(start, end), pageable, vacancies.size());
+    }
+
 
     @Override
     public Vacancy getVacancyById(Long id) {
