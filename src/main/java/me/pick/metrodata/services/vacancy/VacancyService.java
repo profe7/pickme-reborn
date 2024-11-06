@@ -15,4 +15,6 @@ public interface VacancyService {
     void createVacancy(VacancyCreationRequest request);
 
     void editVacancy(VacancyCreationRequest request, Long id);
+
+    void deleteVacancy(Long id);
 }

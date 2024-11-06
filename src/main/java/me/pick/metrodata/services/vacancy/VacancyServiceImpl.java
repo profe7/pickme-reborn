@@ -105,4 +105,9 @@ public class VacancyServiceImpl implements VacancyService {
         vacancyRepository.save(vacancy);
     }
 
+    @Override
+    public void deleteVacancy(Long id) {
+        Vacancy vacancy = vacancyRepository.findById(id).orElseThrow(() -> new VacancyNotExistException(id));
+        vacancyRepository.delete(vacancy);
+    }
 }

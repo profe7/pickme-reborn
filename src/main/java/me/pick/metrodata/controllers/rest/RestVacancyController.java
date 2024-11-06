@@ -68,4 +68,14 @@ public class RestVacancyController {
                 "All vacancies", HttpStatus.OK, "SUCCESS", vacancyService.getAll(title, position, expiredDate, updatedAt, timeInterval, page, size)
         ));
     }
+
+    @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasAnyAuthority('DELETE_JOB')")
+    public ResponseEntity<Object> deleteVacancy(@PathVariable Long id) {
+        vacancyService.deleteVacancy(id);
+        return ResponseHandler.generateResponse(new Response(
+                "Vacancy deleted", HttpStatus.OK, "SUCCESS", null
+        ));
+    }
+
 }
