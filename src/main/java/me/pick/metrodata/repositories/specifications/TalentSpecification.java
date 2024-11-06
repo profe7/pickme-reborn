@@ -4,7 +4,6 @@ import jakarta.persistence.criteria.Predicate;
 import me.pick.metrodata.models.entity.Talent;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.util.List;
 
 public class TalentSpecification {
     public static Specification<Talent> buildSpecification(String name, Long minSalary, Long maxSalary, Boolean active, Long instituteId, String job, String skill, Boolean idle) {

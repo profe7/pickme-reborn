@@ -8,5 +8,7 @@ import java.util.List;
 public interface RecommendationService {
 	RecommendationPaginationResponse getAll(Integer currentPage, Integer perPage);
 
+	void deleteRecommendation(Long id);
+
 	List<RecommendationGroupedResponse> getAllByInstituteOrUser();
 }
