@@ -7,57 +7,59 @@ import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
 public class AnyUtil {
-  private AnyUtil() {
-    throw new IllegalStateException("Utility class");
-  }
 
-  public static boolean isNumberInArray(Integer[] array, Integer number) {
-    for (int element : array) {
-      if (element == number) {
-        return true;
-      }
+    private AnyUtil() {
+        throw new IllegalStateException("Utility class");
     }
-    return false;
-  }
 
-  public static boolean isLongNumberInArray(Long[] array, Long number) {
-    for (long element : array) {
-      if (element == number) {
-        return true;
-      }
+    public static boolean isNumberInArray(Integer[] array, Integer number) {
+        for (int element : array) {
+            if (element == number) {
+                return true;
+            }
+        }
+        return false;
     }
-    return false;
-  }
 
-  public static DecimalFormat salaryFormat() {
-    Locale indonesiaLocale = new Locale("id", "ID");
-    DecimalFormatSymbols symbols = new DecimalFormatSymbols(indonesiaLocale);
-    symbols.setCurrencySymbol("Rp");
-
-    return new DecimalFormat("###,###,###.##", symbols);
-  }
-
-  public static PageData pagination(Integer count, Integer page, Integer perPage, UriComponentsBuilder uriBuilder) {
-    PageData total = new PageData();
-    total.setPerPage(perPage);
-    total.setTotal(count);
-    try {
-      total.setCurrentPage(page);
-      total.setLastPage((int) Math.floor((double) count / (double) perPage));
-    } catch (Exception e) {
-      total.setCurrentPage(1);
-      total.setLastPage(1);
+    public static boolean isLongNumberInArray(Long[] array, Long number) {
+        for (long element : array) {
+            if (element == number) {
+                return true;
+            }
+        }
+        return false;
     }
-    String previous = total.getCurrentPage() > 0 && total.getCurrentPage() <= total.getLastPage()
-        ? uriBuilder.replaceQueryParam("page", total.getCurrentPage()).toUriString()
-        : "";
-    String next = total.getCurrentPage() >= 0 && total.getCurrentPage() < total.getLastPage()
-        ? uriBuilder.replaceQueryParam("page", total.getCurrentPage() + 2).toUriString()
-        : "";
-    total.setPrevious(previous);
-    total.setNext(next);
 
-    return total;
-  }
+    @SuppressWarnings("deprecation")
+    public static DecimalFormat salaryFormat() {
+        Locale indonesiaLocale = new Locale("id", "ID");
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(indonesiaLocale);
+        symbols.setCurrencySymbol("Rp");
+
+        return new DecimalFormat("###,###,###.##", symbols);
+    }
+
+    public static PageData pagination(Integer count, Integer page, Integer perPage, UriComponentsBuilder uriBuilder) {
+        PageData total = new PageData();
+        total.setPerPage(perPage);
+        total.setTotal(count);
+        try {
+            total.setCurrentPage(page);
+            total.setLastPage((int) Math.floor((double) count / (double) perPage));
+        } catch (Exception e) {
+            total.setCurrentPage(1);
+            total.setLastPage(1);
+        }
+        String previous = total.getCurrentPage() > 0 && total.getCurrentPage() <= total.getLastPage()
+                ? uriBuilder.replaceQueryParam("page", total.getCurrentPage()).toUriString()
+                : "";
+        String next = total.getCurrentPage() >= 0 && total.getCurrentPage() < total.getLastPage()
+                ? uriBuilder.replaceQueryParam("page", total.getCurrentPage() + 2).toUriString()
+                : "";
+        total.setPrevious(previous);
+        total.setNext(next);
+
+        return total;
+    }
 
 }

@@ -10,8 +10,13 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class RecommendationGroupedResponse {
-	Long id;
-	String position;
-	Long jobId;
-	List<TalentResponse> talents;
+
+    Long id;
+
+    String position;
+
+    Long jobId;
+
+    List<TalentResponse> talents;
+
 }

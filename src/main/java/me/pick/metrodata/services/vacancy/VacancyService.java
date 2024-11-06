@@ -9,6 +9,7 @@ import java.util.Optional;
 import me.pick.metrodata.models.dto.requests.VacancyCreationRequest;
 
 public interface VacancyService {
+
     Page<Vacancy> getAllAvailableVacancies(Integer page, Integer size);
     List<String> getAllPositions();
 
@@ -20,5 +21,7 @@ public interface VacancyService {
     ReadVacancyDetailResponse getVacancyDetailWithApplicants(Long vacancyId, Long mitraId);
 
     void createVacancy(VacancyCreationRequest request);
+
+    void editVacancy(VacancyCreationRequest request, Long id);
 }
    

@@ -9,5 +9,6 @@ import java.util.List;
 
 @Repository
 public interface InterviewScheduleHistoryRepository extends JpaRepository<InterviewScheduleHistory, Long> {
+
     List<InterviewScheduleHistory> findInterviewScheduleHistoriesByInterviewSchedule(InterviewSchedule interviewSchedule);
 }

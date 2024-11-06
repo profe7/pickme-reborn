@@ -15,6 +15,7 @@ import java.time.LocalDate;
 @Data
 @Builder
 public class AchievementRequest {
+
     @NotNull
     private String achievementName;
 
@@ -29,4 +30,3 @@ public class AchievementRequest {
     @NotNull
     private String talentId;
 }
-

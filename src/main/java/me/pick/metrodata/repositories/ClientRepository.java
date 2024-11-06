@@ -12,18 +12,19 @@ import java.util.Optional;
 
 @Repository
 public interface ClientRepository extends JpaRepository<Client, Long> {
-	Client findByUserId(Long userId);
 
-	Optional<Client> findClientById(Long id);
+    Client findByUserId(Long userId);
 
-	@Query("SELECT is FROM InterviewSchedule is " +
-			"JOIN is.client c " +
-			"WHERE is.status = 'ACCEPTED' AND c.id = :clientId")
-	List<InterviewSchedule> findEmployeeByInterviewAccepted(@Param("clientId") Long clientId);
+    Optional<Client> findClientById(Long id);
 
-	@Query("SELECT is.position, COUNT(is.position) FROM InterviewSchedule is " +
-			"JOIN is.client c " +
-			"WHERE is.status = 'ACCEPTED' AND c.id = :clientId " +
-			"GROUP BY is.position")
-	List<Object[]> findUniquePositionsAndCountByClientId(@Param("clientId") Long clientId);
+    @Query("SELECT is FROM InterviewSchedule is "
+            + "JOIN is.client c "
+            + "WHERE is.status = 'ACCEPTED' AND c.id = :clientId")
+    List<InterviewSchedule> findEmployeeByInterviewAccepted(@Param("clientId") Long clientId);
+
+    @Query("SELECT is.position, COUNT(is.position) FROM InterviewSchedule is "
+            + "JOIN is.client c "
+            + "WHERE is.status = 'ACCEPTED' AND c.id = :clientId "
+            + "GROUP BY is.position")
+    List<Object[]> findUniquePositionsAndCountByClientId(@Param("clientId") Long clientId);
 }

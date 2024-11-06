@@ -16,8 +16,11 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "reference_param", indexes = {@Index(name = "idx_reference_group1", columnList = "reference_group1"), @Index(name = "idx_reference_group2", columnList = "reference_group2")})
+@Table(name = "reference_param", indexes = {
+    @Index(name = "idx_reference_group1", columnList = "reference_group1"),
+    @Index(name = "idx_reference_group2", columnList = "reference_group2")})
 public class References {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -77,4 +80,3 @@ public class References {
     private List<LanguageSkill> languageSkills;
 
 }
-

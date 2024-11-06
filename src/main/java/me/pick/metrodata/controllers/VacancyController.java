@@ -19,14 +19,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import lombok.AllArgsConstructor;
+
 @Controller
+@AllArgsConstructor
 public class VacancyController {
 
-    @Autowired
-    VacancyService vacancyService;
+    private final VacancyService vacancyService;
 
-    @Autowired
-    TalentService talentService;
+    private final TalentService talentService;
 
     @GetMapping("/vacancies")
     public String getVacanciesPage(Model model,

@@ -8,8 +8,6 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 public class Log {
-   
-
 
     @Around("execution(* me.pick.backend.services.*.*(..)) || execution(* me.pick.backend.controllers.*.*(..))")
     public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -23,4 +21,3 @@ public class Log {
         return result;
     }
 }
-

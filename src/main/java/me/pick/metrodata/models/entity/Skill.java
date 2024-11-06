@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 public class Skill {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -11,30 +11,31 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class TalentResponse {
-	private String id;
 
-	private String nik;
+    private String id;
 
-	private String name;
+    private String nik;
 
-	private String email;
+    private String name;
 
-	private String currentWorkAssignment;
+    private String email;
 
-	private String phone;
+    private String currentWorkAssignment;
 
-	private String photo;
+    private String phone;
 
-	private String userUrl;
+    private String photo;
 
-	private String updateAt;
+    private String userUrl;
 
-	private List<String> skill;
+    private String updateAt;
 
-	private Boolean disabled;
+    private List<String> skill;
 
-	private Boolean invited;
+    private Boolean disabled;
 
-	private Institute institute;
+    private Boolean invited;
+
+    private Institute institute;
 
 }

@@ -12,6 +12,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ApplicantPaginationResponse {
-	private PageData pageData;
-	private List<Applicant> data;
+
+    private PageData pageData;
+
+    private List<Applicant> data;
+
 }

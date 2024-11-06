@@ -16,6 +16,7 @@ import java.time.LocalDate;
 @Data
 @Builder
 public class JobHistoryRequest {
+
     @NotNull
     private String companyName;
 
@@ -43,4 +44,3 @@ public class JobHistoryRequest {
     private Long positionId;
 
 }
-

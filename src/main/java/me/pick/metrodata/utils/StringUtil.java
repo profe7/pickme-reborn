@@ -8,37 +8,38 @@ import java.net.URLDecoder;
 import java.util.Random;
 
 public class StringUtil {
-	public static String generateRandomEmail() {
-		String[] domains = { "gmail.com", "yahoo.com", "hotmail.com", "outlook.com", "example.com" };
-		Random random = new Random();
 
-		int randomLength = 10 + random.nextInt(10); // Panjang acak untuk bagian sebelum "@" (minimal 10 karakter)
-		StringBuilder randomPart = new StringBuilder();
-		for (int i = 0; i < randomLength; i++) {
-			char randomChar = (char) (97 + random.nextInt(26)); // 97 is ASCII code for 'a', generate lowercase letters
-			randomPart.append(randomChar);
-		}
+    public static String generateRandomEmail() {
+        String[] domains = {"gmail.com", "yahoo.com", "hotmail.com", "outlook.com", "example.com"};
+        Random random = new Random();
 
-		String randomDomain = domains[random.nextInt(domains.length)];
+        int randomLength = 10 + random.nextInt(10); // Panjang acak untuk bagian sebelum "@" (minimal 10 karakter)
+        StringBuilder randomPart = new StringBuilder();
+        for (int i = 0; i < randomLength; i++) {
+            char randomChar = (char) (97 + random.nextInt(26)); // 97 is ASCII code for 'a', generate lowercase letters
+            randomPart.append(randomChar);
+        }
 
-		String randomEmail = randomPart.toString() + "@" + randomDomain;
+        String randomDomain = domains[random.nextInt(domains.length)];
 
-		return randomEmail;
-	}
+        String randomEmail = randomPart.toString() + "@" + randomDomain;
 
-	public static String decodeUrlParameter(String param) {
-		try {
-			String decodedValue = URLDecoder.decode(param, "UTF-8");
-			return (decodedValue);
-		} catch (UnsupportedEncodingException e) {
-			throw new HttpServerErrorException (HttpStatus.INTERNAL_SERVER_ERROR, "Failed to decode uri");
-		}
-	}
+        return randomEmail;
+    }
 
-	public static String capitalizeString(String input) {
-		if (input == null || input.isEmpty()) {
-			return "";
-		}
-		return Character.toUpperCase(input.charAt(0)) + input.substring(1).toLowerCase();
-	}
+    public static String decodeUrlParameter(String param) {
+        try {
+            String decodedValue = URLDecoder.decode(param, "UTF-8");
+            return (decodedValue);
+        } catch (UnsupportedEncodingException e) {
+            throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to decode uri");
+        }
+    }
+
+    public static String capitalizeString(String input) {
+        if (input == null || input.isEmpty()) {
+            return "";
+        }
+        return Character.toUpperCase(input.charAt(0)) + input.substring(1).toLowerCase();
+    }
 }

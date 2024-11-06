@@ -16,6 +16,7 @@ import me.pick.metrodata.enums.MessageTemplateEnum;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MessageTemplate {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

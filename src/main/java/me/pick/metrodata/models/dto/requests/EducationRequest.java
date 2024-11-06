@@ -16,6 +16,7 @@ import java.time.LocalDate;
 @Data
 @Builder
 public class EducationRequest {
+
     @NotNull
     private EducationalLevel educationalLevel;
 
@@ -40,5 +41,5 @@ public class EducationRequest {
 
     @NotNull
     private String talentId;
-}
 
+}

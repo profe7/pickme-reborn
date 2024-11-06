@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/account")
 @AllArgsConstructor
 public class RestAccountController {
+
     private final AccountService accountService;
 
     @PostMapping("/create-account")

@@ -17,14 +17,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Account {
+
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column (nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String username;
 
-    @Column (nullable = false)
+    @Column(nullable = false)
     private String password;
 
     private boolean isAccountNonExpired = true;
@@ -42,12 +43,12 @@ public class Account {
     private LocalDateTime updatedAt;
 
     @JsonBackReference
-    @OneToOne (cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     @MapsId
-    @JoinColumn (name = "id")
+    @JoinColumn(name = "id")
     private User user;
 
     @ManyToOne
-    @JoinColumn (name = "role_id", nullable = false)
+    @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 }

@@ -12,6 +12,9 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class VacancyPaginationResponse {
-	private PageData pageData;
-	private List<Vacancy> data;
+
+    private PageData pageData;
+
+    private List<Vacancy> data;
+
 }

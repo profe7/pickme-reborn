@@ -35,5 +35,5 @@ public class OtherExperienceRequest {
 
     @NotNull
     private String talentId;
-}
 
+}

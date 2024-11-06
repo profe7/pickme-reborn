@@ -32,7 +32,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Validated
-public class TalentServiceImpl implements  TalentService{
+public class TalentServiceImpl implements TalentService {
+
     private final TalentRepository talentRepository;
     private final MitraRepository mitraRepository;
     private final RoleRepository roleRepository;
@@ -55,13 +56,14 @@ public class TalentServiceImpl implements  TalentService{
     private final EmailService emailService;
     private final ModelMapper modelMapper;
 
-    private Talent findByIdFromRepo(String id){
-        return talentRepository.findById(id).orElseThrow (() -> new TalentDoesNotExistException(id));
+    private Talent findByIdFromRepo(String id) {
+        return talentRepository.findById(id).orElseThrow(() -> new TalentDoesNotExistException(id));
     }
 
-    public TalentResponse getById(String id){
-        Talent talent = findByIdFromRepo (id);
-        return modelMapper.map (talent, TalentResponse.class);
+    @Override
+    public TalentResponse getById(String id) {
+        Talent talent = findByIdFromRepo(id);
+        return modelMapper.map(talent, TalentResponse.class);
     }
 
     @Override
@@ -122,7 +124,7 @@ public class TalentServiceImpl implements  TalentService{
 
     @Override
     public TalentAvailableForVacancyResponse availableForVacancy(Long vacancyId, Long mitraId) {
-        Vacancy vacancy = vacancyRepository.findVacancyById(vacancyId).orElseThrow(() ->new VacancyNotExistException(vacancyId));
+        Vacancy vacancy = vacancyRepository.findVacancyById(vacancyId).orElseThrow(() -> new VacancyNotExistException(vacancyId));
         Mitra mitra = mitraRepository.findById(mitraId).orElseThrow(() -> new MitraDoesNotExistException(mitraId));
 
         List<Talent> available = talentRepository.findTalentsWithCompleteCVByMitra(mitra.getId());
@@ -130,7 +132,7 @@ public class TalentServiceImpl implements  TalentService{
 
         available = available.stream()
                 .filter(talent -> talent.getApplicants().parallelStream()
-                        .noneMatch(applicant -> applicant.getVacancy().getId().equals(vacancy.getId()) || applicant.getStatus() == ApplicantStatus.ACCEPTED)).toList();
+                .noneMatch(applicant -> applicant.getVacancy().getId().equals(vacancy.getId()) || applicant.getStatus() == ApplicantStatus.ACCEPTED)).toList();
 
         responses.setTalents(availableForVacancyHelper(available));
 
@@ -286,7 +288,7 @@ public class TalentServiceImpl implements  TalentService{
         }
     }
 
-    private void talentTrainingHelper(List<TrainingRequest>request, Talent talent) {
+    private void talentTrainingHelper(List<TrainingRequest> request, Talent talent) {
         for (TrainingRequest training : request) {
             trainingRepository.save(
                     new Training(
