@@ -2,6 +2,7 @@ package me.pick.metrodata.services.vacancy;
 
 import lombok.RequiredArgsConstructor;
 import me.pick.metrodata.enums.VacancyStatus;
+import me.pick.metrodata.exceptions.client.ClientDoesNotExistException;
 import me.pick.metrodata.exceptions.user.UserDoesNotExistException;
 import me.pick.metrodata.exceptions.vacancy.IncompleteVacancyRequestException;
 import me.pick.metrodata.exceptions.vacancy.VacancyNotExistException;
@@ -46,7 +47,10 @@ public class VacancyServiceImpl implements VacancyService {
 
     @Override
     public Page<Vacancy> getAllRm(String title, String position, String expiredDate, String updatedAt, String timeInterval, Integer page, Integer size, Long clientId) {
-        Client client = clientRepository.findClientById(clientId).orElseThrow(() -> new UserDoesNotExistException(clientId.toString()));
+        if (clientId == null) {
+            throw new ClientDoesNotExistException(0L);
+        }
+        Client client = clientRepository.findClientById(clientId).orElseThrow(() -> new ClientDoesNotExistException(clientId));
         Specification<Vacancy> spec = VacancySpecification.combinedSpecification(title, position, expiredDate, updatedAt, timeInterval, client);
         List<Vacancy> vacancies = vacancyRepository.findAll(spec);
         return vacancyPaginationHelper(page, size, spec, vacancies);
