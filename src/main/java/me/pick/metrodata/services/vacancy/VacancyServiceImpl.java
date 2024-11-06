@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.pick.metrodata.enums.VacancyStatus;
 import me.pick.metrodata.exceptions.user.UserDoesNotExistException;
 import me.pick.metrodata.exceptions.vacancy.IncompleteVacancyRequestException;
+import me.pick.metrodata.exceptions.vacancy.VacancyNotExistException;
 import me.pick.metrodata.exceptions.vacancy.VacancyStatusDoesNotExistException;
 import me.pick.metrodata.models.dto.requests.VacancyCreationRequest;
 import me.pick.metrodata.models.entity.User;
@@ -23,18 +24,6 @@ public class VacancyServiceImpl implements VacancyService {
 
     private final VacancyRepository vacancyRepository;
     private final UserRepository userRepository;
-
-    private Pair<UriComponentsBuilder, Pageable> pageableAndUriBuilder(String title, String position, String expiredDate, String updatedAt, Integer currentPage, Integer perPage) {
-        currentPage = currentPage == null ? 0 : currentPage;
-        perPage = perPage == null ? 10 : perPage;
-        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromPath("")
-                .queryParam("title", title)
-                .queryParam("position", position)
-                .queryParam("expiredDate", expiredDate)
-                .queryParam("updatedAt", updatedAt);
-        Pageable pageable = PageRequest.of(currentPage, perPage, Sort.by("createdAt").descending());
-        return Pair.of(uriBuilder, pageable);
-    }
 
     @Override
     public Page<Vacancy> getAllAvailableVacancies(Integer page, Integer size) {
@@ -83,4 +72,22 @@ public class VacancyServiceImpl implements VacancyService {
 
         vacancyRepository.save(vacancy);
     }
+
+    @Override
+    public void editVacancy(VacancyCreationRequest request, Long id) {
+        try {
+            VacancyStatus.valueOf(request.getVacancyStatus());
+        } catch (IllegalArgumentException e) {
+            throw new VacancyStatusDoesNotExistException(request.getVacancyStatus());
+        }
+        Vacancy vacancy = vacancyRepository.findById(id).orElseThrow(() -> new VacancyNotExistException(id));
+        vacancy.setTitle(request.getVacancyTitle());
+        vacancy.setPosition(request.getVacancyPosition());
+        vacancy.setStatus(VacancyStatus.valueOf(request.getVacancyStatus()));
+        vacancy.setExpiredDate(request.getVacancyEndDate());
+        vacancy.setRequiredPositions(request.getApplicantQuantity());
+        vacancy.setDescription(request.getVacancyDescription());
+        vacancyRepository.save(vacancy);
+    }
+
 }

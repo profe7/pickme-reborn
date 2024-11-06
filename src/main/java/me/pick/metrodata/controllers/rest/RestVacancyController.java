@@ -43,4 +43,13 @@ public class RestVacancyController {
                 "Vacancy created", HttpStatus.CREATED, "SUCCESS", null
         ));
     }
+
+    @PostMapping("/edit-vacancy/{id}")
+    @PreAuthorize("hasAnyAuthority('UPDATE_JOB')")
+    public ResponseEntity<Object> editVacancy(@RequestBody VacancyCreationRequest request, @PathVariable Long id) {
+        vacancyService.editVacancy(request, id);
+        return ResponseHandler.generateResponse(new Response(
+                "Vacancy edited", HttpStatus.OK, "SUCCESS", null
+        ));
+    }
 }
