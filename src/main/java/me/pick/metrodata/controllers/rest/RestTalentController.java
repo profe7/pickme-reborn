@@ -51,4 +51,25 @@ public class RestTalentController {
         return ResponseHandler.generateResponse(new Response(
                 "Talents available for vacancy", HttpStatus.OK, "SUCCESS", talents));
     }
+
+    @GetMapping("/all-talents")
+    @PreAuthorize("hasAnyAuthority('MANAGEMENT_READ_ACCOUNT', 'EXTERNAL_READ_ACCOUNT')")
+    public ResponseEntity<Object> getAll(
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "size", defaultValue = "10") Integer size,
+            @RequestParam(value = "search", required = false) String search,
+            @RequestParam(value = "institute", required = false) Long institute,
+            @RequestParam(value = "baseSalary", required = false) Long baseSalary,
+            @RequestParam(value = "limitSalary", required = false) Long limitSalary,
+            @RequestParam(value = "active", required = false) Boolean active,
+            @RequestParam(value = "job", required = false) String job,
+            @RequestParam(value = "skill", required = false) String skill,
+            @RequestParam(value = "idle", required = false) Boolean idle
+    ) {
+        return ResponseHandler.generateResponse(new Response(
+                "Talents fetched", HttpStatus.OK, "SUCCESS",
+                talentService.getAll(page, size, search, institute, baseSalary, limitSalary, active, job, skill, idle)));
+    }
+
 }
+

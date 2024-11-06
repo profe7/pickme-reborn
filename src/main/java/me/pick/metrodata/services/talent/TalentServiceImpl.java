@@ -18,9 +18,15 @@ import me.pick.metrodata.models.dto.responses.TalentResponse;
 import me.pick.metrodata.models.dto.responses.TalentSimpleResponse;
 import me.pick.metrodata.models.entity.*;
 import me.pick.metrodata.repositories.*;
+import me.pick.metrodata.repositories.specifications.TalentSpecification;
 import me.pick.metrodata.services.applicant.ApplicantService;
 import me.pick.metrodata.services.email.EmailService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -58,6 +64,19 @@ public class TalentServiceImpl implements TalentService {
 
     private Talent findByIdFromRepo(String id) {
         return talentRepository.findById(id).orElseThrow(() -> new TalentDoesNotExistException(id));
+    }
+
+    @Override
+    public Page<Talent> getAll(Integer page, Integer size, String search, Long institute, Long baseSalary, Long limitSalary, Boolean active, String job, String skill, Boolean idle) {
+        Specification<Talent> spec = TalentSpecification.buildSpecification(search, baseSalary, limitSalary, active, institute, job, skill, idle);
+        List<Talent> talents = talentRepository.findAll(spec);
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), talents.size());
+
+        return new PageImpl<>(talents.subList(start, end), pageable, talents.size());
     }
 
     @Override
