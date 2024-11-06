@@ -8,5 +8,8 @@ import java.util.Optional;
 
 @Repository
 public interface RecommendationApplicantRepository extends JpaRepository<RecommendationApplicant, Long> {
+
     Optional<RecommendationApplicant> findByApplicantIdAndPosition(Long applicantId, String position);
+
+    void deleteByRecommendation_Id(Long recommendationId);
 }

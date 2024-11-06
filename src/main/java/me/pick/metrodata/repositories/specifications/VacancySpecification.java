@@ -1,6 +1,7 @@
 package me.pick.metrodata.repositories.specifications;
 
 import jakarta.persistence.criteria.Predicate;
+import me.pick.metrodata.models.entity.Client;
 import me.pick.metrodata.models.entity.Vacancy;
 import me.pick.metrodata.utils.DateTimeUtil;
 import org.springframework.data.jpa.domain.Specification;
@@ -8,105 +9,94 @@ import org.springframework.data.jpa.domain.Specification;
 import java.time.LocalDate;
 
 public class VacancySpecification {
-	public static Specification<Vacancy> searchSpecification(String title, String position, String expiredDate, String updatedAt) {
-		return (root, query, criteriaBuilder) -> {
-			Predicate predicate = criteriaBuilder.conjunction();
 
-			if (title != null) {
-				predicate = criteriaBuilder.and(
-						predicate,
-						criteriaBuilder.like(root.get("title"), "%" + title + "%"));
-			}
+    private VacancySpecification() {}
 
-			if (position != null && !position.isEmpty()) {
-				predicate = criteriaBuilder.and(
-						predicate,
-						criteriaBuilder.equal(root.get("position"), position));
-			}
+    private static final String UPDATED = "updatedAt";
 
-			if (expiredDate != null && !expiredDate.isEmpty() && !expiredDate.equals("undefined")) {
-				LocalDate localDate = DateTimeUtil.stringToLocalDate(expiredDate);
-				predicate = criteriaBuilder.and(
-						predicate,
-						criteriaBuilder.equal(root.get("expiredDate"), localDate));
-			}
+    public static Specification<Vacancy> searchSpecification(String title, String position, String expiredDate, String updatedAt, Client client) {
+        return (root, query, criteriaBuilder) -> {
+            Predicate predicate = criteriaBuilder.conjunction();
 
-			if (updatedAt != null && !updatedAt.isEmpty() && !updatedAt.equals("undefined")) {
-				LocalDate localDate = DateTimeUtil.stringToLocalDate(updatedAt);
-				predicate = criteriaBuilder.and(
-						predicate,
-						criteriaBuilder.greaterThanOrEqualTo(root.get("updatedAt"), localDate.atStartOfDay())
-				);
-			}
+            if (title != null) {
+                predicate = criteriaBuilder.and(
+                        predicate,
+                        criteriaBuilder.like(root.get("title"), "%" + title + "%"));
+            }
 
-			return predicate;
-		};
-	}
+            if (position != null && !position.isEmpty()) {
+                predicate = criteriaBuilder.and(
+                        predicate,
+                        criteriaBuilder.equal(root.get("position"), position));
+            }
 
-	// public static Specification<Vacancy> timeIntervalSpecification(String timeInterval) {
-	//   return (root, query, criteriaBuilder) -> {
-	//       LocalDate startDate;
+            if (expiredDate != null && !expiredDate.isEmpty() && !expiredDate.equals("undefined")) {
+                LocalDate localDate = DateTimeUtil.stringToLocalDate(expiredDate);
+                predicate = criteriaBuilder.and(
+                        predicate,
+                        criteriaBuilder.equal(root.get("expiredDate"), localDate));
+            }
 
-	//       switch (timeInterval.toLowerCase()) {
-	//           case "hari":
-	//               startDate = LocalDate.now().minusDays(1);
-	//               break;
-	//           case "minggu":
-	//               startDate = LocalDate.now().minusWeeks(1);
-	//               break;
-	//           case "bulan":
-	//               startDate = LocalDate.now().minusMonths(1);
-	//               break;
-	//           default:
-	//               throw new IllegalArgumentException("Interval waktu tidak valid");
-	//       }
+            if (updatedAt != null && !updatedAt.isEmpty() && !updatedAt.equals("undefined")) {
+                LocalDate localDate = DateTimeUtil.stringToLocalDate(updatedAt);
+                predicate = criteriaBuilder.and(
+                        predicate,
+                        criteriaBuilder.greaterThanOrEqualTo(root.get(UPDATED), localDate.atStartOfDay())
+                );
+            }
 
-	//       return criteriaBuilder.and(
-	//               criteriaBuilder.greaterThanOrEqualTo(root.get("updatedAt"), startDate.atStartOfDay()));
-	//   };
-	// }
+            if (client != null) {
+                predicate = criteriaBuilder.and(
+                        predicate,
+                        criteriaBuilder.equal(root.get("client"), client));
+            }
 
-	public static Specification<Vacancy> timeIntervalSpecification(String timeInterval) {
-		return (root, query, criteriaBuilder) -> {
-			LocalDate startDate;
-			LocalDate endDate = null;
+            return predicate;
+        };
+    }
 
-			switch (timeInterval.toLowerCase()) {
-				case "hari":
-					startDate = LocalDate.now().minusDays(1);
-					break;
-				case "minggu":
-					startDate = LocalDate.now().minusWeeks(1);
-					break;
-				case "bulan":
-					startDate = LocalDate.now().withDayOfMonth(1);
-					endDate = LocalDate.now().plusMonths(1).withDayOfMonth(1).minusDays(1);
-					break;
-				default:
-					throw new IllegalArgumentException("Interval waktu tidak valid");
-			}
+    public static Specification<Vacancy> timeIntervalSpecification(String timeInterval) {
+        return (root, query, criteriaBuilder) -> {
+            LocalDate startDate;
+            LocalDate endDate = null;
 
-			if (timeInterval.equalsIgnoreCase("bulan")) {
-				return criteriaBuilder.and(
-						criteriaBuilder.greaterThanOrEqualTo(root.get("updatedAt"), startDate.atStartOfDay()),
-						criteriaBuilder.lessThanOrEqualTo(root.get("updatedAt"), endDate.atTime(23, 59, 59))
-				);
-			} else {
-				return criteriaBuilder.and(
-						criteriaBuilder.greaterThanOrEqualTo(root.get("updatedAt"), startDate.atStartOfDay())
-				);
-			}
-		};
-	}
+            switch (timeInterval.toLowerCase()) {
+                case "hari" ->
+                        startDate = LocalDate.now().minusDays(1);
+                case "minggu" ->
+                        startDate = LocalDate.now().minusWeeks(1);
+                case "bulan" -> {
+                    startDate = LocalDate.now().withDayOfMonth(1);
+                    endDate = LocalDate.now().plusMonths(1).withDayOfMonth(1).minusDays(1);
+                }
+                default ->
+                        throw new IllegalArgumentException("Interval waktu tidak valid");
+            }
 
-	public static Specification<Vacancy> combinedSpecification(String title, String position, String expiredDate, String updatedAt, String timeInterval) {
-		Specification<Vacancy> searchSpec = searchSpecification(title, position, expiredDate, updatedAt);
+            if (timeInterval.equalsIgnoreCase("bulan")) {
+                if (endDate == null) {
+                    throw new IllegalArgumentException("End date cannot be null");
+                }
+                return criteriaBuilder.and(
+                        criteriaBuilder.greaterThanOrEqualTo(root.get(UPDATED), startDate.atStartOfDay()),
+                        criteriaBuilder.lessThanOrEqualTo(root.get(UPDATED), endDate.atTime(23, 59, 59))
+                );
+            } else {
+                return criteriaBuilder.and(
+                        criteriaBuilder.greaterThanOrEqualTo(root.get("updatedAt"), startDate.atStartOfDay())
+                );
+            }
+        };
+    }
 
-		if (timeInterval != null && !timeInterval.isEmpty()) {
-			Specification<Vacancy> timeIntervalSpec = timeIntervalSpecification(timeInterval);
-			return Specification.where(searchSpec).and(timeIntervalSpec);
-		} else {
-			return searchSpec;
-		}
-	}
+    public static Specification<Vacancy> combinedSpecification(String title, String position, String expiredDate, String updatedAt, String timeInterval, Client client) {
+        Specification<Vacancy> searchSpec = searchSpecification(title, position, expiredDate, updatedAt, client);
+
+        if (timeInterval != null && !timeInterval.isEmpty()) {
+            Specification<Vacancy> timeIntervalSpec = timeIntervalSpecification(timeInterval);
+            return Specification.where(searchSpec).and(timeIntervalSpec);
+        } else {
+            return searchSpec;
+        }
+    }
 }

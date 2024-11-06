@@ -10,12 +10,12 @@ import me.pick.metrodata.enums.InterviewStatus;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class InterviewScheduleRequest {
+
     private String position;
 
     private String locationAddress;
@@ -49,4 +49,5 @@ public class InterviewScheduleRequest {
     @DateTimeFormat(pattern = "HH:mm")
     @JsonFormat(pattern = "HH:mm")
     private LocalTime endTime;
+
 }

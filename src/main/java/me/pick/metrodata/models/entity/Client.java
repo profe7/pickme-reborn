@@ -1,6 +1,5 @@
 package me.pick.metrodata.models.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,6 +16,7 @@ import java.util.List;
 @Data
 @Entity
 public class Client {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,11 +32,11 @@ public class Client {
     private User user;
 
     @OneToMany(mappedBy = "client")
-    @JsonProperty (access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<Vacancy> vacancies;
 
     @OneToMany(mappedBy = "client")
-    @JsonProperty (access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<InterviewSchedule> interviewSchedules;
 
     @ManyToMany(mappedBy = "clients")

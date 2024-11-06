@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Holiday {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

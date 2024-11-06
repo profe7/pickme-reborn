@@ -1,6 +1,7 @@
 package me.pick.metrodata.services.recommendation;
 
 import lombok.RequiredArgsConstructor;
+import me.pick.metrodata.exceptions.recommendation.RecommendationDoesNotExistException;
 import me.pick.metrodata.models.dto.responses.RecommendationGroupedResponse;
 import me.pick.metrodata.models.dto.responses.RecommendationPaginationResponse;
 import me.pick.metrodata.models.dto.responses.RecommendationResponse;
@@ -9,6 +10,7 @@ import me.pick.metrodata.models.entity.Recommendation;
 import me.pick.metrodata.models.entity.RecommendationApplicant;
 import me.pick.metrodata.models.entity.Talent;
 import me.pick.metrodata.models.entity.Vacancy;
+import me.pick.metrodata.repositories.RecommendationApplicantRepository;
 import me.pick.metrodata.repositories.RecommendationRepository;
 import me.pick.metrodata.repositories.specifications.RecommendationSpecification;
 import me.pick.metrodata.services.talent.TalentService;
@@ -30,7 +32,9 @@ import java.util.List;
 public class RecommendationServiceImpl implements RecommendationService {
 	private final RecommendationRepository recommendationRepository;
 	private final TalentService talentService;
+	private final RecommendationApplicantRepository recommendationApplicantRepository;
 
+	@Override
 	public RecommendationPaginationResponse getAll(Integer currentPage, Integer perPage) {
 
 		UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromPath("");
@@ -64,6 +68,7 @@ public class RecommendationServiceImpl implements RecommendationService {
 		return new RecommendationPaginationResponse (pageData, response);
 	}
 
+	@Override
 	public List<RecommendationGroupedResponse> getAllByInstituteOrUser() {
 		var userId = AuthUtil.getLoginUserId();
 		var groupedResponses = new HashMap<String, RecommendationGroupedResponse> ();
@@ -102,5 +107,15 @@ public class RecommendationServiceImpl implements RecommendationService {
 		}
 
 		return new ArrayList<>(groupedResponses.values());
+	}
+
+	@Override
+	public void deleteRecommendation(Long id) {
+		try {
+			recommendationRepository.deleteById(id);
+		} catch (Exception e) {
+			throw new RecommendationDoesNotExistException(id);
+		}
+		recommendationApplicantRepository.deleteByRecommendation_Id(id);
 	}
 }

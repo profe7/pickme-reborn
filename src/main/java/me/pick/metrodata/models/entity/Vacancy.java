@@ -2,6 +2,7 @@ package me.pick.metrodata.models.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import me.pick.metrodata.enums.VacancyStatus;
@@ -17,16 +18,18 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Vacancy {
+
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String title;
 
     private String position;
 
-    @Column (name = "description", columnDefinition = "TEXT")
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
     private Integer requiredPositions;
@@ -54,4 +57,3 @@ public class Vacancy {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<Recommendation> recommendations;
 }
-

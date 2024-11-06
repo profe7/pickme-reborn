@@ -11,7 +11,8 @@ import java.util.Optional;
 
 @Repository
 public interface InstituteRepository extends JpaRepository<Institute, Long>, JpaSpecificationExecutor<Institute> {
-        List<Institute> findInstitutesByInstituteType(InstituteType instituteType);
 
-        Optional<Institute> findInstituteById(Long id);
+    List<Institute> findInstitutesByInstituteType(InstituteType instituteType);
+
+    Optional<Institute> findInstituteById(Long id);
 }

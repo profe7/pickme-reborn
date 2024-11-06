@@ -1,11 +1,15 @@
 package me.pick.metrodata.services.interview;
 
+import lombok.RequiredArgsConstructor;
 import me.pick.metrodata.enums.InterviewStatus;
 import me.pick.metrodata.enums.InterviewType;
 import me.pick.metrodata.exceptions.client.ClientDoesNotExistException;
 import me.pick.metrodata.exceptions.interviewschedule.ApplicantNotRecommendedException;
 import me.pick.metrodata.exceptions.interviewschedule.InterviewScheduleConflictException;
+import me.pick.metrodata.exceptions.interviewschedule.InterviewScheduleDoesNotExistException;
+import me.pick.metrodata.exceptions.interviewschedule.InterviewScheduleUpdateBadRequestException;
 import me.pick.metrodata.models.dto.requests.InterviewScheduleRequest;
+import me.pick.metrodata.models.dto.requests.InterviewUpdateRequest;
 import me.pick.metrodata.models.entity.*;
 import me.pick.metrodata.repositories.ClientRepository;
 import me.pick.metrodata.repositories.InterviewScheduleHistoryRepository;
@@ -13,7 +17,6 @@ import me.pick.metrodata.repositories.InterviewScheduleRepository;
 import me.pick.metrodata.repositories.RecommendationApplicantRepository;
 import me.pick.metrodata.repositories.specifications.InterviewScheduleSpecification;
 import me.pick.metrodata.services.email.EmailService;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -24,26 +27,15 @@ import org.springframework.stereotype.Service;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class InterviewScheduleServiceImpl implements InterviewScheduleService {
     private final InterviewScheduleRepository interviewScheduleRepository;
     private final RecommendationApplicantRepository recommendationApplicantRepository;
     private final ClientRepository clientRepository;
     private final InterviewScheduleHistoryRepository interviewScheduleHistoryRepository;
     private final EmailService emailService;
-    private final ModelMapper modelMapper = new ModelMapper();
-
-    public InterviewScheduleServiceImpl(InterviewScheduleRepository interviewScheduleRepository, RecommendationApplicantRepository recommendationApplicantRepository,
-                                        ClientRepository clientRepository, InterviewScheduleHistoryRepository interviewScheduleHistoryRepository,
-                                        EmailService emailService) {
-        this.interviewScheduleRepository = interviewScheduleRepository;
-        this.recommendationApplicantRepository = recommendationApplicantRepository;
-        this.clientRepository = clientRepository;
-        this.interviewScheduleHistoryRepository = interviewScheduleHistoryRepository;
-        this.emailService = emailService;
-    }
 
     @Override
     public void inviteToInterview(InterviewScheduleRequest request) {
@@ -53,6 +45,79 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
         }
 
         Client client = clientRepository.findClientById(request.getClientId()).orElseThrow(() -> new ClientDoesNotExistException(request.getClientId()));
+        InterviewSchedule interviewSchedule = getInterviewSchedule(request, recommendedApplicant, client);
+        interviewScheduleRepository.save(interviewSchedule);
+
+        InterviewScheduleHistory history = new InterviewScheduleHistory();
+        history.setFeedback("Interview invitation sent");
+        history.setInterviewSchedule(interviewSchedule);
+        interviewScheduleHistoryRepository.save(history);
+
+        emailService.sendInterviewInvitation(interviewSchedule);
+    }
+
+    @Override
+    public void updateInterviewStatus(InterviewUpdateRequest request) {
+        InterviewSchedule interviewSchedule = interviewScheduleRepository.findInterviewScheduleById(request.getInterviewId()).orElseThrow(() -> new InterviewScheduleDoesNotExistException(request.getInterviewId()));
+
+        if (request.getStatus() == InterviewStatus.RESCHEDULED) {
+            if (request.getDate() == null || request.getStartTime() == null || request.getEndTime() == null) {
+                throw new InterviewScheduleUpdateBadRequestException("Date, start time, and end time must be provided");
+            }
+            InterviewScheduleRequest check = new InterviewScheduleRequest();
+            check.setDate(request.getDate());
+            check.setStartTime(request.getStartTime());
+            check.setEndTime(request.getEndTime());
+            check.setClientId(interviewSchedule.getClient().getId());
+            RecommendationApplicant recommendedApplicant = recommendationApplicantRepository.findByApplicantIdAndPosition(interviewSchedule.getApplicant().getId(), interviewSchedule.getPosition())
+                    .orElseThrow(() -> new ApplicantNotRecommendedException(interviewSchedule.getApplicant().getId(), interviewSchedule.getPosition()));
+            if (!interviewConflictHelper(recommendedApplicant, check)) {
+                interviewSaveHelper(interviewSchedule, request);
+                emailService.sendInterviewReschedule(interviewSchedule);
+            } else {
+                throw new InterviewScheduleConflictException(request.getStartTime().toString(), request.getEndTime().toString(), request.getDate().toString());
+            }
+        } else if (request.getStatus() == InterviewStatus.CANCELLED) {
+            interviewSaveHelper(interviewSchedule,request);
+            emailService.sendInterviewCancel(interviewSchedule, request.getFeedback());
+        } else if (request.getStatus() == InterviewStatus.ACCEPTED) {
+            interviewSaveHelper(interviewSchedule,request);
+            emailService.sendInterviewAccept(interviewSchedule, request.getFeedback());
+        } else  if (request.getStatus() == InterviewStatus.REJECTED) {
+            interviewSaveHelper(interviewSchedule,request);
+            emailService.sendInterviewReject(interviewSchedule, request.getFeedback());
+        }
+    }
+
+    private void interviewSaveHelper(InterviewSchedule interviewSchedule, InterviewUpdateRequest request) {
+        interviewSchedule.setStatus(request.getStatus());
+        if (request.getDate() != null && request.getStartTime() != null && request.getEndTime() != null) {
+            interviewSchedule.setDate(request.getDate());
+            interviewSchedule.setStartTime(request.getStartTime());
+            interviewSchedule.setEndTime(request.getEndTime());
+        }
+        if (request.getInterviewType() != null) {
+            interviewSchedule.setInterviewType(request.getInterviewType());
+        }
+        if (request.getInterviewLink() != null) {
+            interviewSchedule.setInterviewLink(request.getInterviewLink());
+        }
+        interviewScheduleRepository.save(interviewSchedule);
+        interviewHistorySaveHelper(interviewSchedule, request.getFeedback());
+    }
+
+    private void interviewHistorySaveHelper(InterviewSchedule interviewSchedule, String feedback) {
+        InterviewScheduleHistory history = new InterviewScheduleHistory();
+        history.setStatus(interviewSchedule.getStatus());
+        if (feedback == null) {
+            feedback = "No feedback provided";
+        }
+        history.setFeedback(feedback);
+        history.setInterviewSchedule(interviewSchedule);
+        interviewScheduleHistoryRepository.save(history);
+    }
+
+    private InterviewSchedule getInterviewSchedule(InterviewScheduleRequest request, RecommendationApplicant recommendedApplicant, Client client) {
         Applicant applicant = recommendedApplicant.getApplicant();
 
         InterviewSchedule interviewSchedule = new InterviewSchedule();
@@ -67,14 +132,7 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
         interviewSchedule.setStatus(request.getStatus());
         interviewSchedule.setClient(client);
         interviewSchedule.setApplicant(applicant);
-        interviewScheduleRepository.save(interviewSchedule);
-
-        InterviewScheduleHistory history = new InterviewScheduleHistory();
-        history.setFeedback(null);
-        history.setInterviewSchedule(interviewSchedule);
-        interviewScheduleHistoryRepository.save(history);
-
-        emailService.sendInterviewInvitation(interviewSchedule);
+        return interviewSchedule;
     }
 
     private boolean interviewConflictHelper(RecommendationApplicant recommendedApplicant, InterviewScheduleRequest request) {
@@ -108,10 +166,7 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
             }
         }
 
-        if (found != null) {
-            return true;
-        }
-        return false;
+        return found != null;
     }
 
     public Page<InterviewSchedule> getAll(String search, Long clientId, InterviewType type, String startDate, String endDate, InterviewStatus status, int page, int size) {
@@ -124,6 +179,11 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
         }
 
         return interviewRetrievalHelper(search, clientId, type, startDate, endDate, status, page, size);
+    }
+
+    public List<InterviewScheduleHistory> getTalentInterviewHistory(Long interviewId) {
+        InterviewSchedule interviewSchedule = interviewScheduleRepository.findInterviewScheduleById(interviewId).orElseThrow(() -> new InterviewScheduleDoesNotExistException(interviewId));
+        return interviewScheduleHistoryRepository.findInterviewScheduleHistoriesByInterviewSchedule(interviewSchedule);
     }
 
     private Page<InterviewSchedule> interviewRetrievalHelper(String search, Long clientId, InterviewType type, String startDate, String endDate, InterviewStatus status, int page, int size) {

@@ -1,8 +1,10 @@
 package me.pick.metrodata.controllers.rest;
 
+import lombok.AllArgsConstructor;
 import me.pick.metrodata.enums.InterviewStatus;
 import me.pick.metrodata.enums.InterviewType;
 import me.pick.metrodata.models.dto.requests.InterviewScheduleRequest;
+import me.pick.metrodata.models.dto.requests.InterviewUpdateRequest;
 import me.pick.metrodata.services.interview.InterviewScheduleService;
 import me.pick.metrodata.utils.Response;
 import me.pick.metrodata.utils.ResponseHandler;
@@ -13,12 +15,13 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/interview")
+@AllArgsConstructor
 public class RestInterviewController {
+
     private final InterviewScheduleService interviewScheduleService;
 
-    public RestInterviewController(InterviewScheduleService interviewScheduleService) {
-        this.interviewScheduleService = interviewScheduleService;
-    }
+    private static final String SUCCESS = "SUCCESS";
+    private static final String INTERVIEWS = "Interviews";
 
     @PostMapping("/invite")
     @PreAuthorize("hasAnyAuthority('CREATE_INTERVIEW', 'UPDATE_INTERVIEW', 'READ_INTERVIEW')")
@@ -26,13 +29,13 @@ public class RestInterviewController {
         interviewScheduleService.inviteToInterview(request);
         return ResponseHandler.generateResponse(
                 new Response(
-                        "Applicant invited", HttpStatus.CREATED, "SUCCESS", null)
+                        "Applicant invited", HttpStatus.CREATED, SUCCESS, null)
         );
     }
 
     @GetMapping("/all-interview")
     @PreAuthorize("hasAnyAuthority('CREATE_INTERVIEW', 'UPDATE_INTERVIEW', 'READ_INTERVIEW')")
-    public ResponseEntity<Object> getAllInterviews (
+    public ResponseEntity<Object> getAllInterviews(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer size,
             @RequestParam(required = false, defaultValue = "") String search,
@@ -40,10 +43,10 @@ public class RestInterviewController {
             @RequestParam(required = false) InterviewType type,
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate,
-            @RequestParam(required = false)InterviewStatus status
-            ) {
+            @RequestParam(required = false) InterviewStatus status
+    ) {
         return ResponseHandler.generateResponse(new Response(
-                "Interviews", HttpStatus.OK, "SUCCESS", interviewScheduleService.getAll(search, clientId, type, startDate, endDate, status, page, size)
+                INTERVIEWS, HttpStatus.OK, SUCCESS, interviewScheduleService.getAll(search, clientId, type, startDate, endDate, status, page, size)
         ));
     }
 
@@ -57,10 +60,28 @@ public class RestInterviewController {
             @RequestParam(required = false) InterviewType type,
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate,
-            @RequestParam(required = false)InterviewStatus status
+            @RequestParam(required = false) InterviewStatus status
     ) {
         return ResponseHandler.generateResponse(new Response(
-                "Interviews", HttpStatus.OK, "SUCCESS", interviewScheduleService.getByRm(search, clientId, type, startDate, endDate, status, page, size)
+                INTERVIEWS, HttpStatus.OK, SUCCESS, interviewScheduleService.getByRm(search, clientId, type, startDate, endDate, status, page, size)
         ));
+    }
+
+    @GetMapping("/talent-interview-history/{interviewId}")
+    @PreAuthorize("hasAnyAuthority('READ_INTERVIEW')")
+    public ResponseEntity<Object> getTalentInterviewHistory(@PathVariable Long interviewId) {
+        return ResponseHandler.generateResponse(new Response(
+                INTERVIEWS, HttpStatus.OK, SUCCESS, interviewScheduleService.getTalentInterviewHistory(interviewId)
+        ));
+    }
+
+    @PostMapping("/update-interview-status")
+    @PreAuthorize("hasAnyAuthority('CREATE_INTERVIEW', 'UPDATE_INTERVIEW', 'READ_INTERVIEW')")
+    public ResponseEntity<Object> updateInterviewStatus(@RequestBody InterviewUpdateRequest request) {
+        interviewScheduleService.updateInterviewStatus(request);
+        return ResponseHandler.generateResponse(
+                new Response(
+                        "Interview status updated", HttpStatus.CREATED, SUCCESS, null)
+        );
     }
 }

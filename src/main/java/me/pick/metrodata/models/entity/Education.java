@@ -1,5 +1,6 @@
 package me.pick.metrodata.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -20,6 +21,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Education {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -60,6 +62,7 @@ public class Education {
 
     @ManyToOne
     @JoinColumn(name = "talent_id")
+    @JsonBackReference
     private Talent talent;
 
     public Education(EducationalLevel educationalLevel, LocalDate startDate, LocalDate endDate, Float academicGrade, String institution, References references, Talent talent) {

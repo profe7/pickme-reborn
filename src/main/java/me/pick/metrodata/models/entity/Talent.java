@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -16,8 +17,6 @@ import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,8 +26,11 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(indexes = {@Index(name = "idx_talent_name", columnList = "name"), @Index(name = "idx_talent_nik", columnList = "nik")})
+@Table(indexes = {
+    @Index(name = "idx_talent_name", columnList = "name"),
+    @Index(name = "idx_talent_nik", columnList = "nik")})
 public class Talent {
+
     @PrePersist
     public void generateId() {
         this.id = UUID.randomUUID().toString();
@@ -100,7 +102,7 @@ public class Talent {
     private LocalDateTime updated_at;
 
     @OneToMany(mappedBy = "talent")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonManagedReference
     private List<Applicant> applicants;
 
     @ManyToOne
@@ -108,43 +110,43 @@ public class Talent {
     private Institute institute;
 
     @OneToMany(mappedBy = "talent", cascade = CascadeType.ALL)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonManagedReference
     private List<OtherExperience> otherExperiences;
 
     @OneToMany(mappedBy = "talent", cascade = CascadeType.ALL)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonManagedReference
     private List<Organization> organizations;
 
     @OneToMany(mappedBy = "talent", cascade = CascadeType.ALL)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonManagedReference
     private List<Certification> certifications;
 
     @OneToMany(mappedBy = "talent", cascade = CascadeType.ALL)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonManagedReference
     private List<Training> trainings;
 
     @OneToMany(mappedBy = "talent", cascade = CascadeType.ALL)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonManagedReference
     private List<Project> projects;
 
     @OneToMany(mappedBy = "talent", cascade = CascadeType.ALL)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonManagedReference
     private List<JobHistory> jobHistories;
 
     @OneToMany(mappedBy = "talent", cascade = CascadeType.ALL)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonManagedReference
     private List<LanguageSkill> languageSkills;
 
     @OneToMany(mappedBy = "talent", cascade = CascadeType.ALL)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonManagedReference
     private List<Education> educations;
 
     @OneToMany(mappedBy = "talent", cascade = CascadeType.ALL)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonManagedReference
     private List<Achievements> achievement;
 
     @OneToMany(mappedBy = "talent", cascade = CascadeType.ALL)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonManagedReference
     private List<Skill> skills;
 
     @ManyToOne
@@ -166,7 +168,6 @@ public class Talent {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
-
 
     @Override
     public String toString() {

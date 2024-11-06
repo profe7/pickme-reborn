@@ -5,15 +5,17 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class DateTimeUtil {
-  public static LocalDateTime datetimelocalStringToLocalDateTime(String input) {
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-    LocalDateTime localDateTime = LocalDateTime.parse(input, formatter);
-    return localDateTime;
-  }
+    private DateTimeUtil() {
+        throw new IllegalStateException("Utility class");
+    }
 
-  public static LocalDate stringToLocalDate(String input) {
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    LocalDate localDate = LocalDate.parse(input, formatter);
-    return localDate;
-  }
+    public static LocalDateTime datetimelocalStringToLocalDateTime(String input) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        return LocalDateTime.parse(input, formatter);
+    }
+
+    public static LocalDate stringToLocalDate(String input) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return LocalDate.parse(input, formatter);
+    }
 }

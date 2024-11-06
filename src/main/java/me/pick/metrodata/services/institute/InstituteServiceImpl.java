@@ -1,6 +1,10 @@
 package me.pick.metrodata.services.institute;
 
+import lombok.RequiredArgsConstructor;
+import me.pick.metrodata.enums.InstituteType;
 import me.pick.metrodata.exceptions.institute.InstituteDoesNotExistException;
+import me.pick.metrodata.exceptions.institute.InstituteTypeDoesNotExistException;
+import me.pick.metrodata.models.dto.requests.InstituteUpdateRequest;
 import me.pick.metrodata.models.entity.Institute;
 import me.pick.metrodata.repositories.InstituteRepository;
 import me.pick.metrodata.repositories.specifications.InstituteSpecification;
@@ -14,19 +18,29 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class InstituteServiceImpl implements InstituteService {
     private final InstituteRepository instituteRepository;
 
-    public InstituteServiceImpl(InstituteRepository instituteRepository) {
-        this.instituteRepository = instituteRepository;
-    }
-
+    @Override
     public Institute getInstituteById(Long id) {
         return instituteRepository.findInstituteById(id).orElseThrow(() -> new InstituteDoesNotExistException(id));
     }
 
+    @Override
     public Page<Institute> getAllInstitutes(String name, Long instituteTypeId, Integer currentPage, Integer perPage) {
         return instituteRetrievalHelper(name, instituteTypeId, currentPage, perPage);
+    }
+
+    @Override
+    public void editInstitute(InstituteUpdateRequest request, Long id) {
+        Institute institute = getInstituteById(id);
+        institute.setInstituteName(request.getName());
+        try {
+            institute.setInstituteType(InstituteType.valueOf(request.getInstituteType()));
+        } catch (IllegalArgumentException e) {
+            throw new InstituteTypeDoesNotExistException(request.getInstituteType());
+        }
     }
 
     private Page<Institute> instituteRetrievalHelper(String name, Long instituteTypeId, Integer currentPage, Integer perPage) {

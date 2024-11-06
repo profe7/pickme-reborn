@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RecommendApplicantRequest {
+
     Long applicantId;
 
     Long vacancyId;
@@ -15,4 +16,5 @@ public class RecommendApplicantRequest {
     Long rmId;
 
     String description;
+
 }

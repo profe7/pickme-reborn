@@ -8,10 +8,8 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 public class Log {
-   
 
-
-    @Around("execution(* me.pick.backend.services.*.*(..)) || execution(* me.pick.backend.controllers.*.*(..))")
+    @Around("execution(* me.pick.metrodata.services.*.*(..)) || execution(* me.pick.metrodata.controllers.*.*(..))")
     public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
         long start = System.currentTimeMillis();
         Object result = joinPoint.proceed();
@@ -23,4 +21,3 @@ public class Log {
         return result;
     }
 }
-

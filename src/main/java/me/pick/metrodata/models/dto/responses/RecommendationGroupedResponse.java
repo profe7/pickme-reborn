@@ -3,7 +3,6 @@ package me.pick.metrodata.models.dto.responses;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import me.pick.metrodata.models.entity.Talent;
 
 import java.util.List;
 
@@ -11,8 +10,13 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class RecommendationGroupedResponse {
-	Long id;
-	String position;
-	Long jobId;
-	List<TalentResponse> talents;
+
+    private Long id;
+
+    private String position;
+
+    private Long jobId;
+
+    private List<TalentResponse> talents;
+
 }

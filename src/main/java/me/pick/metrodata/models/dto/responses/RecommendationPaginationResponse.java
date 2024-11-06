@@ -11,6 +11,9 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class RecommendationPaginationResponse {
-	private PageData pageData;
-	private List<RecommendationResponse> data;
+
+    private PageData pageData;
+
+    private List<RecommendationResponse> data;
+
 }

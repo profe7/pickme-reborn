@@ -1,5 +1,7 @@
 package me.pick.metrodata.controllers.rest;
 
+import lombok.AllArgsConstructor;
+import me.pick.metrodata.models.dto.requests.InstituteUpdateRequest;
 import me.pick.metrodata.models.entity.Institute;
 import me.pick.metrodata.services.institute.InstituteService;
 import me.pick.metrodata.utils.Response;
@@ -11,20 +13,19 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/institute")
+@AllArgsConstructor
 public class RestInstituteController {
 
     private final InstituteService instituteService;
 
-    public RestInstituteController(InstituteService instituteService) {
-        this.instituteService = instituteService;
-    }
+    private static final String SUCCESS = "SUCCESS";
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('READ_INSTITUTE')")
     public ResponseEntity<Object> getInstituteById(@PathVariable Long id) {
         Institute institute = instituteService.getInstituteById(id);
         return ResponseHandler.generateResponse(new Response(
-                "Institute found", HttpStatus.OK, "SUCCESS", institute
+                "Institute found", HttpStatus.OK, SUCCESS, institute
         ));
     }
 
@@ -37,9 +38,18 @@ public class RestInstituteController {
             @RequestParam(defaultValue = "10") Integer size
     ) {
         return ResponseHandler.generateResponse(new Response(
-                "Institutes found", HttpStatus.OK, "SUCCESS", instituteService.getAllInstitutes(
+                "Institutes found", HttpStatus.OK, SUCCESS, instituteService.getAllInstitutes(
                         name, instituteTypeId, page, size
-        )
+                )
+        ));
+    }
+
+    @PutMapping("edit/{id}")
+    @PreAuthorize("hasAnyAuthority('UPDATE_INSTITUTE')")
+    public ResponseEntity<Object> editInstitute(@RequestBody InstituteUpdateRequest request, @PathVariable Long id) {
+        instituteService.editInstitute(request, id);
+        return ResponseHandler.generateResponse(new Response(
+                "Institute updated", HttpStatus.OK, SUCCESS, null
         ));
     }
 

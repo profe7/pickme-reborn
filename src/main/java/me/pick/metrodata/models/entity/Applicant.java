@@ -1,5 +1,6 @@
 package me.pick.metrodata.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
@@ -19,6 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Applicant {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -38,6 +40,7 @@ public class Applicant {
 
     @ManyToOne
     @JoinColumn(name = "talent_id", nullable = false)
+    @JsonBackReference
     private Talent talent;
 
     @OneToMany(mappedBy = "applicant")
@@ -48,11 +51,10 @@ public class Applicant {
     @JsonIgnore
     private List<RecommendationApplicant> recommendationApplicants;
 
-
     @Override
     public String toString() {
-        return "Applicant{" +
-                "id=" + id +
-                '}';
+        return "Applicant{"
+                + "id=" + id
+                + '}';
     }
 }

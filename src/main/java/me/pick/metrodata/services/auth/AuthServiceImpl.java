@@ -27,106 +27,116 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
+import jakarta.servlet.http.HttpSession;
 
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
-	private final AccountRepository accountRepository;
-	private final ResetPasswordTokenRepository resetPasswordTokenRepository;
-	private final AuthenticationManager authenticationManager;
-	private final AccountDetailService accountDetailService;
-	private final PasswordEncoder passwordEncoder;
-	private final EmailService emailService;
 
+    private final AccountRepository accountRepository;
+    private final ResetPasswordTokenRepository resetPasswordTokenRepository;
+    private final AuthenticationManager authenticationManager;
+    private final AccountDetailService accountDetailService;
+    private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
-	public LoginResponse login (LoginRequest loginRequest) {
-		UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken (loginRequest.getUsername (), loginRequest.getPassword ());
+    @Override
+    public LoginResponse login(LoginRequest loginRequest, HttpSession session) {
+        UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
 
-		Account account = accountRepository.findByUsernameOrUserEmail (loginRequest.getUsername (), loginRequest.getUsername ()).orElseThrow (() -> new AccountDoesNotExistException(loginRequest.getUsername()));
+        Account account = accountRepository.findByUsernameOrUserEmail(loginRequest.getUsername(), loginRequest.getUsername()).orElseThrow(() -> new AccountDoesNotExistException(loginRequest.getUsername()));
 
-		try {
-			Authentication auth = authenticationManager.authenticate (authReq);
-			SecurityContextHolder.getContext ().setAuthentication (auth);
-		} catch (AuthenticationException e) {
-			throw new AccountInvalidPasswordException();
-		}
+        try {
+            Authentication auth = authenticationManager.authenticate(authReq);
+            SecurityContextHolder.getContext().setAuthentication(auth);
+            Account loggedAccount = getLoggedAccountData();
+            session.setAttribute("loggedAccount", loggedAccount);
+        } catch (AuthenticationException e) {
+            throw new AccountInvalidPasswordException();
+        }
 
-		UserDetails userDetails = accountDetailService.loadUserByUsername (loginRequest.getUsername ());
+        UserDetails userDetails = accountDetailService.loadUserByUsername(loginRequest.getUsername());
 
-		List<String> authorities = userDetails.getAuthorities ().stream ().map (authority -> authority.getAuthority ()).collect (Collectors.toList ());
+        List<String> authorities = userDetails.getAuthorities().stream().map(authority -> authority.getAuthority()).toList();
 
-		return new LoginResponse (account.getUsername (), authorities);
-	}
+        return new LoginResponse(account.getUsername(), authorities);
+    }
 
-	public Account getLoggedAccountData () {
-		Long id = AuthUtil.getLoginUserId ();
-		return accountRepository.findById (id).orElse (null);
-	}
+    @Override
+    public Account getLoggedAccountData() {
+        Long id = AuthUtil.getLoginUserId();
+        if (id == null) {
+            throw new AccountDoesNotExistException("User is not authenticated or ID is null");
+        }
+        return accountRepository.findById(id).orElse(null);
+    }
 
-	public ForgotPasswordResponse validateResetPasswordToken (String token) {
-		if ( token == null ) {
-			throw new ResponseStatusException (HttpStatus.NOT_FOUND, "Token is null");
-		} else {
+    @Override
+    public ForgotPasswordResponse validateResetPasswordToken(String token) {
+        if (token == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Token is null");
+        } else {
 
-			ResetPasswordToken resetPasswordToken = resetPasswordTokenRepository.findByToken (token).orElseThrow (() -> new ResponseStatusException (HttpStatus.NOT_FOUND, "Token is not found"));
+            ResetPasswordToken resetPasswordToken = resetPasswordTokenRepository.findByToken(token).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Token is not found"));
 
-			if ( resetPasswordToken.getToken () == null ) {
-				throw new ResponseStatusException (HttpStatus.NOT_FOUND, "Token not valid");
-			}
+            if (resetPasswordToken.getToken() == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Token not valid");
+            }
 
-			if ( LocalDateTime.now ().isAfter (resetPasswordToken.getExpiryDateTime ()) ) {
-				throw new ResponseStatusException (HttpStatus.FORBIDDEN, "Token has expired");
-			}
+            if (LocalDateTime.now().isAfter(resetPasswordToken.getExpiryDateTime())) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Token has expired");
+            }
 
-			ForgotPasswordResponse response = new ForgotPasswordResponse ();
-			response.setAccountId (resetPasswordToken.getAccount ().getId ());
-			response.setEmail (resetPasswordToken.getAccount ().getUser ().getEmail ());
-			response.setUpdatedAt (resetPasswordToken.getAccount ().getUpdatedAt ());
-			return response;
-		}
-	}
+            ForgotPasswordResponse response = new ForgotPasswordResponse();
+            response.setAccountId(resetPasswordToken.getAccount().getId());
+            response.setEmail(resetPasswordToken.getAccount().getUser().getEmail());
+            response.setUpdatedAt(resetPasswordToken.getAccount().getUpdatedAt());
+            return response;
+        }
+    }
 
-	public Boolean changePassword (String token, ChangePasswordRequest changePasswordRequest) {
-		ResetPasswordToken resetPasswordToken = resetPasswordTokenRepository.findByToken (token).orElseThrow (() -> new ResponseStatusException (HttpStatus.NOT_FOUND, "Token tidak valid"));
+    @Override
+    public Boolean changePassword(String token, ChangePasswordRequest changePasswordRequest) {
+        ResetPasswordToken resetPasswordToken = resetPasswordTokenRepository.findByToken(token).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Token tidak valid"));
 
-		if ( changePasswordRequest.getNewPassword () == null || changePasswordRequest.getConfirmNewPassword () == null ) {
-			throw new ResponseStatusException (HttpStatus.BAD_REQUEST, "New password and confirm new password cannot be null");
-		}
+        if (changePasswordRequest.getNewPassword() == null || changePasswordRequest.getConfirmNewPassword() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "New password and confirm new password cannot be null");
+        }
 
-		if ( ! changePasswordRequest.getNewPassword ().equals (changePasswordRequest.getConfirmNewPassword ()) ) {
-			throw new ResponseStatusException (HttpStatus.BAD_REQUEST, "New Password and confirm new password must same");
-		}
+        if (!changePasswordRequest.getNewPassword().equals(changePasswordRequest.getConfirmNewPassword())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "New Password and confirm new password must same");
+        }
 
-		if ( LocalDateTime.now ().isAfter (resetPasswordToken.getExpiryDateTime ()) ) {
-			throw new ResponseStatusException (HttpStatus.FORBIDDEN, "Token has expired");
-		}
+        if (LocalDateTime.now().isAfter(resetPasswordToken.getExpiryDateTime())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Token has expired");
+        }
 
-		Account account = resetPasswordToken.getAccount ();
+        Account account = resetPasswordToken.getAccount();
 
-		if ( account == null ) {
-			throw new ResponseStatusException (HttpStatus.BAD_REQUEST, "Account not found");
-		}
+        if (account == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account not found");
+        }
 
-		account.setPassword (passwordEncoder.encode (changePasswordRequest.getConfirmNewPassword ()));
-		accountRepository.save (account);
-		resetPasswordTokenRepository.delete (resetPasswordToken);
+        account.setPassword(passwordEncoder.encode(changePasswordRequest.getConfirmNewPassword()));
+        accountRepository.save(account);
+        resetPasswordTokenRepository.delete(resetPasswordToken);
 
-		return true;
-	}
+        return true;
+    }
 
-	public Boolean requestForget (String emailOrUsername, String url) {
-		Account account = accountRepository.findByUsernameOrUserEmail (emailOrUsername, emailOrUsername).orElseThrow (() -> new ResponseStatusException (HttpStatus.NOT_FOUND, "Account is not found"));
-		String token = UUID.randomUUID ().toString ();
+    @Override
+    public Boolean requestForget(String emailOrUsername, String url) {
+        Account account = accountRepository.findByUsernameOrUserEmail(emailOrUsername, emailOrUsername).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account is not found"));
+        String token = UUID.randomUUID().toString();
 
-		ResetPasswordToken resetPasswordToken = new ResetPasswordToken ();
-		resetPasswordToken.setToken (token);
-		resetPasswordToken.setAccount (account);
-		resetPasswordToken.setExpiryDateTime (LocalDateTime.now ().plusDays (1));
-		resetPasswordTokenRepository.save (resetPasswordToken);
+        ResetPasswordToken resetPasswordToken = new ResetPasswordToken();
+        resetPasswordToken.setToken(token);
+        resetPasswordToken.setAccount(account);
+        resetPasswordToken.setExpiryDateTime(LocalDateTime.now().plusDays(1));
+        resetPasswordTokenRepository.save(resetPasswordToken);
 
-		emailService.sendResetPasswordMessage (account, url, token);
+        emailService.sendResetPasswordMessage(account, url, token);
 
-		return true;
-	}
+        return true;
+    }
 }
