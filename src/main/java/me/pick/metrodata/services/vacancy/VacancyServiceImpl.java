@@ -35,14 +35,14 @@ public class VacancyServiceImpl implements VacancyService {
     public Page<Vacancy> getOpenVacancies(Integer page, Integer size, String expiredDate, String updatedAt, String title, String position) {
         Specification<Vacancy> spec = VacancySpecification.searchSpecification(title, position, expiredDate, updatedAt, null);
         List<Vacancy> vacancies = vacancyRepository.findOpenVacancies(spec);
-        return vacancyPaginationHelper(page, size, spec, vacancies);
+        return vacancyPaginationHelper(page, size, vacancies);
     }
 
     @Override
     public Page<Vacancy> getAll(String title, String position, String expiredDate, String updatedAt, String timeInterval, Integer page, Integer size) {
         Specification<Vacancy> spec = VacancySpecification.combinedSpecification(title, position, expiredDate, updatedAt, timeInterval, null);
         List<Vacancy> vacancies = vacancyRepository.findAll(spec);
-        return vacancyPaginationHelper(page, size, spec, vacancies);
+        return vacancyPaginationHelper(page, size, vacancies);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class VacancyServiceImpl implements VacancyService {
         Client client = clientRepository.findClientById(clientId).orElseThrow(() -> new ClientDoesNotExistException(clientId));
         Specification<Vacancy> spec = VacancySpecification.combinedSpecification(title, position, expiredDate, updatedAt, timeInterval, client);
         List<Vacancy> vacancies = vacancyRepository.findAll(spec);
-        return vacancyPaginationHelper(page, size, spec, vacancies);
+        return vacancyPaginationHelper(page, size, vacancies);
     }
 
     @Override
@@ -116,7 +116,7 @@ public class VacancyServiceImpl implements VacancyService {
         vacancyRepository.delete(vacancy);
     }
 
-    private Page<Vacancy> vacancyPaginationHelper(Integer page, Integer size, Specification<Vacancy> spec, List<Vacancy> vacancies) {
+    private Page<Vacancy> vacancyPaginationHelper(Integer page, Integer size, List<Vacancy> vacancies) {
         Pageable pageable = PageRequest.of(page, size);
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), vacancies.size());
