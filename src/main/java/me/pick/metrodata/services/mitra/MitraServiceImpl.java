@@ -46,12 +46,14 @@ public class MitraServiceImpl implements MitraService{
         Long totalTApplicants = applicantRepository.countApplicantByStatusAndMitra(mitra.getId(), ApplicantStatus.ASSIGNED);
         Long totalRejectedApplicants = applicantRepository.countApplicantByStatusAndMitra(mitra.getId(), ApplicantStatus.REJECTED);
         Long totalAcceptedApplicants = applicantRepository.countApplicantByStatusAndMitra(mitra.getId(), ApplicantStatus.ACCEPTED);
+        Long totalAssignedApplicants = applicantRepository.countApplicantByStatusAndMitra(mitra.getId(), ApplicantStatus.ASSIGNED);
 
         MitraDashboardTelemetryResponse response = new MitraDashboardTelemetryResponse();
         response.setAvailableVacancies(availableVacancies);
         response.setTotalApplicants(totalTApplicants);
         response.setTotalRejectedApplicants(totalRejectedApplicants);
         response.setTotalAcceptedApplicants(totalAcceptedApplicants);
+        response.setTotalAssignedApplicants(totalAssignedApplicants);
         response.setNewestVacancies(vacancyResponseHelper(vacancyRepository.findTop5ByOrderByCreatedAtDesc()));
         return response;
     }
