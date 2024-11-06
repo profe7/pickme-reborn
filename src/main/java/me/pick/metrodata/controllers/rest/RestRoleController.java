@@ -1,13 +1,16 @@
 package me.pick.metrodata.controllers.rest;
 
 import lombok.AllArgsConstructor;
+import me.pick.metrodata.models.dto.requests.RoleUpdateRequest;
 import me.pick.metrodata.models.dto.responses.RolePaginationResponse;
 import me.pick.metrodata.services.role.RoleService;
+import me.pick.metrodata.utils.Response;
+import me.pick.metrodata.utils.ResponseHandler;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
@@ -18,9 +21,29 @@ public class RestRoleController {
 
     @GetMapping("/all")
     @PreAuthorize("hasAnyAuthority('READ_ROLE')")
-    public RolePaginationResponse getAll(@RequestParam(required = false, defaultValue = "") String name,
+    public ResponseEntity<Object> getAll(@RequestParam(required = false, defaultValue = "") String name,
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer size) {
-        return roleService.getAll(name, page, size);
+        return ResponseHandler.generateResponse(new Response(
+                "Roles fetched successfully", HttpStatus.OK, "SUCCESS", roleService.getAll(name, page, size)
+        ));
     }
+
+    @PutMapping("/update")
+    @PreAuthorize("hasAnyAuthority('UPDATE_ROLE')")
+    public ResponseEntity<Object> updateRole(@RequestBody RoleUpdateRequest roleUpdateRequest) {
+        roleService.updateRole(roleUpdateRequest);
+        return ResponseHandler.generateResponse(new Response(
+                "Role updated successfully", HttpStatus.OK, "SUCCESS", null
+        ));
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('READ_ROLE')")
+    public ResponseEntity<Object> getRoleById(@PathVariable Long id) {
+        return ResponseHandler.generateResponse(new Response(
+                "Role fetched successfully", HttpStatus.OK, "SUCCESS", roleService.getRoleById(id)
+        ));
+    }
+
 }
