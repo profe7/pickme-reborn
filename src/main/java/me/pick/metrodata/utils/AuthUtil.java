@@ -1,6 +1,7 @@
 package me.pick.metrodata.utils;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import me.pick.metrodata.models.entity.AccountDetail;
 import me.pick.metrodata.services.auth.AuthServiceImpl;
 
@@ -9,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AuthUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.class);

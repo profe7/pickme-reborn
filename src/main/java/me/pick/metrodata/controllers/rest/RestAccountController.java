@@ -1,6 +1,6 @@
 package me.pick.metrodata.controllers.rest;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import me.pick.metrodata.models.dto.requests.AccountRequest;
 import me.pick.metrodata.services.account.AccountService;
 import me.pick.metrodata.utils.Response;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/account")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class RestAccountController {
 
     private final AccountService accountService;

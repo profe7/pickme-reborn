@@ -1,19 +1,17 @@
 package me.pick.metrodata.controllers.rest;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import me.pick.metrodata.models.dto.requests.RoleUpdateRequest;
-import me.pick.metrodata.models.dto.responses.RolePaginationResponse;
 import me.pick.metrodata.services.role.RoleService;
 import me.pick.metrodata.utils.Response;
 import me.pick.metrodata.utils.ResponseHandler;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/role")
 public class RestRoleController {
 
