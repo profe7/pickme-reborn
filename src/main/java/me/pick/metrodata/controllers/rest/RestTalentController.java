@@ -28,6 +28,13 @@ public class RestTalentController {
                 "Talent created", HttpStatus.CREATED, "SUCCESS", talent));
     }
 
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('READ_TALENT')")
+    public ResponseEntity<Object> getById(@PathVariable String id) {
+        return ResponseHandler.generateResponse(new Response(
+                "Talent fetched", HttpStatus.OK, "SUCCESS", talentService.getTalentDetail(id)));
+    }
+
     @PostMapping("/create-new-talent")
     @PreAuthorize("hasAnyAuthority('CREATE_TALENT')")
     public ResponseEntity<Object> createTalent(@RequestBody TalentDataCompletionRequest request) {

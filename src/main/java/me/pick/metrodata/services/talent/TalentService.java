@@ -11,6 +11,8 @@ import org.springframework.data.domain.Page;
 public interface TalentService {
     TalentResponse getById(String id);
 
+    Talent getTalentDetail(String id);
+
     Talent createViaVacancy(TalentFromVacancyRequest request);
 
     Talent completeNewTalentData(TalentDataCompletionRequest request);
