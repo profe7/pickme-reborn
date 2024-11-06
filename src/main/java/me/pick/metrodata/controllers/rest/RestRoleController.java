@@ -46,4 +46,12 @@ public class RestRoleController {
         ));
     }
 
+    @PostMapping
+    @PreAuthorize("hasAnyAuthority('CREATE_ROLE')")
+    public ResponseEntity<Object> createRole(@RequestBody RoleUpdateRequest roleUpdateRequest) {
+        return ResponseHandler.generateResponse(new Response(
+                "Role created successfully", HttpStatus.CREATED, "SUCCESS", roleService.createRole(roleUpdateRequest)
+        ));
+    }
+
 }
