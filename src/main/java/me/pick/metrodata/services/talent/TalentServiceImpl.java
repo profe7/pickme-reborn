@@ -16,27 +16,24 @@ import me.pick.metrodata.models.dto.requests.*;
 import me.pick.metrodata.models.dto.responses.TalentAvailableForVacancyResponse;
 import me.pick.metrodata.models.dto.responses.TalentResponse;
 import me.pick.metrodata.models.dto.responses.TalentSimpleResponse;
-import me.pick.metrodata.models.dto.responses.TotalMitraTalentResponse;
 import me.pick.metrodata.models.entity.*;
 import me.pick.metrodata.repositories.*;
 import me.pick.metrodata.services.applicant.ApplicantService;
-import me.pick.metrodata.services.auth.AuthService;
 import me.pick.metrodata.services.email.EmailService;
-import me.pick.metrodata.services.user.UserService;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.validation.annotation.Validated;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class TalentServiceImpl implements  TalentService{
+@Validated
+public class TalentServiceImpl implements TalentService {
+
     private final TalentRepository talentRepository;
     private final MitraRepository mitraRepository;
     private final RoleRepository roleRepository;
@@ -58,42 +55,15 @@ public class TalentServiceImpl implements  TalentService{
     private final VacancyRepository vacancyRepository;
     private final EmailService emailService;
     private final ModelMapper modelMapper;
-    private final AuthService authService;
-    private final UserService userService;
 
-    private Talent findByIdFromRepo(String id){
-        return talentRepository.findById(id).orElseThrow (() -> new ResponseStatusException (HttpStatus.NOT_FOUND, "Talent not found"));
+    private Talent findByIdFromRepo(String id) {
+        return talentRepository.findById(id).orElseThrow(() -> new TalentDoesNotExistException(id));
     }
 
-    public TalentResponse getById(String id){
-        Talent talent = findByIdFromRepo (id);
-        return modelMapper.map (talent, TalentResponse.class);
-    }
-
-    public List<TotalMitraTalentResponse> getTotalByMitra() {
-        User currentUser = userService.getLoggedUserData ();
-        Mitra currentMitra = currentUser.getMitra();
-        List<Talent> instituteTalents = talentRepository.findTalentByMitraId (currentMitra.getId ());
-
-        List<Talent> totalAppliedTalents = instituteTalents.stream()
-                .filter(talent -> talent.getApplicants().stream()
-                        .anyMatch(applicant -> applicant.getStatus() == ApplicantStatus.ASSIGNED))
-                .toList();
-        List<Talent> totalAcceptedTalents = instituteTalents.stream()
-                .filter(talent -> talent.getApplicants().stream()
-                        .anyMatch(applicant -> applicant.getStatus() == ApplicantStatus.ACCEPTED))
-                .toList();
-        List<Talent> totalRejectedTalents = instituteTalents.stream()
-                .filter(talent -> talent.getApplicants().stream()
-                        .anyMatch(applicant -> applicant.getStatus() == ApplicantStatus.REJECTED))
-                .toList();
-
-        List<TotalMitraTalentResponse> totals = new ArrayList<>();
-        totals.add(new TotalMitraTalentResponse("Shortlisted", (long) totalAppliedTalents.size(), "rgb(48, 60, 108)"));
-        totals.add(new TotalMitraTalentResponse("Hired", (long) totalAcceptedTalents.size(), "rgb(250, 151, 108)"));
-        totals.add(new TotalMitraTalentResponse("Rejected", (long) totalRejectedTalents.size(), "rgb(180, 223, 229)"));
-
-        return totals;
+    @Override
+    public TalentResponse getById(String id) {
+        Talent talent = findByIdFromRepo(id);
+        return modelMapper.map(talent, TalentResponse.class);
     }
 
     @Override
@@ -154,15 +124,15 @@ public class TalentServiceImpl implements  TalentService{
 
     @Override
     public TalentAvailableForVacancyResponse availableForVacancy(Long vacancyId, Long mitraId) {
-        Vacancy vacancy = vacancyRepository.findVacancyById(vacancyId).orElseThrow(() ->new VacancyNotExistException(vacancyId));
+        Vacancy vacancy = vacancyRepository.findVacancyById(vacancyId).orElseThrow(() -> new VacancyNotExistException(vacancyId));
         Mitra mitra = mitraRepository.findById(mitraId).orElseThrow(() -> new MitraDoesNotExistException(mitraId));
 
         List<Talent> available = talentRepository.findTalentsWithCompleteCVByMitra(mitra.getId());
         TalentAvailableForVacancyResponse responses = new TalentAvailableForVacancyResponse();
 
         available = available.stream()
-                .filter(talent -> talent.getApplicants().stream()
-                        .noneMatch(applicant -> applicant.getVacancy().getId().equals(vacancy.getId()) || applicant.getStatus() == ApplicantStatus.ACCEPTED)).toList();
+                .filter(talent -> talent.getApplicants().parallelStream()
+                .noneMatch(applicant -> applicant.getVacancy().getId().equals(vacancy.getId()) || applicant.getStatus() == ApplicantStatus.ACCEPTED)).toList();
 
         responses.setTalents(availableForVacancyHelper(available));
 
@@ -318,7 +288,7 @@ public class TalentServiceImpl implements  TalentService{
         }
     }
 
-    private void talentTrainingHelper(List<TrainingRequest>request, Talent talent) {
+    private void talentTrainingHelper(List<TrainingRequest> request, Talent talent) {
         for (TrainingRequest training : request) {
             trainingRepository.save(
                     new Training(

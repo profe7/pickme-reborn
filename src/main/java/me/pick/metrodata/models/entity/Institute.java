@@ -2,7 +2,6 @@ package me.pick.metrodata.models.entity;
 
 import java.util.List;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
@@ -18,6 +17,7 @@ import me.pick.metrodata.enums.InstituteType;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Institute {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)

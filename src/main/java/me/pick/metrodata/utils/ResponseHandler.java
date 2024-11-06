@@ -6,8 +6,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ResponseHandler {
+
     private ResponseHandler() {
     }
+
     public static ResponseEntity<Object> generateResponse(Response response) {
         Map<String, Object> map = new HashMap<>();
         map.put("message", response.getMessage());
@@ -18,4 +20,3 @@ public class ResponseHandler {
         return new ResponseEntity<>(map, response.getCode());
     }
 }
-

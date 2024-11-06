@@ -10,6 +10,9 @@ import me.pick.metrodata.utils.PageData;
 @Data
 @AllArgsConstructor
 public class InterviewSchedulePaginationResponse {
-	private PageData pageData;
-	private List<InterviewSchedule> data;
+
+    private PageData pageData;
+
+    private List<InterviewSchedule> data;
+
 }

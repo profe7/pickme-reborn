@@ -10,15 +10,16 @@ import java.time.Duration;
 
 @Configuration
 public class CachingConfig {
-	@Bean
-	public CacheManager cacheManager () {
-		CaffeineCacheManager cacheManager = new CaffeineCacheManager ();
-		cacheManager.setCaffeine (caffeineCacheBuilder ());
-		return cacheManager;
-	}
 
-	private Caffeine<Object, Object> caffeineCacheBuilder () {
-		return Caffeine.newBuilder ().initialCapacity (100).maximumSize (500).expireAfterWrite (Duration.ofMinutes (10));
-	}
+    @Bean
+    public CacheManager cacheManager() {
+        CaffeineCacheManager cacheManager = new CaffeineCacheManager();
+        cacheManager.setCaffeine(caffeineCacheBuilder());
+        return cacheManager;
+    }
+
+    private Caffeine<Object, Object> caffeineCacheBuilder() {
+        return Caffeine.newBuilder().initialCapacity(100).maximumSize(500).expireAfterWrite(Duration.ofMinutes(10));
+    }
 
 }

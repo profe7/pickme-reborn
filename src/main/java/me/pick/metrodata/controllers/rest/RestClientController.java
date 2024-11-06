@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/client")
 @AllArgsConstructor
 public class RestClientController {
+
     private final ClientService clientService;
 
     @GetMapping("/employees/{clientId}")

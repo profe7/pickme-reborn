@@ -13,6 +13,7 @@ import me.pick.metrodata.exceptions.interviewschedule.InterviewScheduleDoesNotEx
 import me.pick.metrodata.exceptions.interviewschedule.InterviewScheduleUpdateBadRequestException;
 import me.pick.metrodata.exceptions.mitra.MitraDoesNotExistException;
 import me.pick.metrodata.exceptions.role.RoleDoesNotExistException;
+import me.pick.metrodata.exceptions.talent.IncompleteTalentCvException;
 import me.pick.metrodata.exceptions.talent.InvalidTalentNikException;
 import me.pick.metrodata.exceptions.talent.TalentAlreadyExistException;
 import me.pick.metrodata.exceptions.talent.TalentDoesNotExistException;
@@ -65,7 +66,8 @@ public class GlobalExceptionHandler {
             ApplicantNotRecommendedException.class,
             InterviewScheduleConflictException.class,
             InterviewScheduleUpdateBadRequestException.class,
-            IncompleteVacancyRequestException.class
+            IncompleteVacancyRequestException.class,
+            IncompleteTalentCvException.class
     })
     public ResponseEntity<Object> badRequestHandler(Exception e) {
         return ResponseHandler.generateResponse(new Response(

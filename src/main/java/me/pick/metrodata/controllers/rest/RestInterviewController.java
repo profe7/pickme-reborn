@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/interview")
 @AllArgsConstructor
 public class RestInterviewController {
+
     private final InterviewScheduleService interviewScheduleService;
 
     @PostMapping("/invite")
@@ -31,7 +32,7 @@ public class RestInterviewController {
 
     @GetMapping("/all-interview")
     @PreAuthorize("hasAnyAuthority('CREATE_INTERVIEW', 'UPDATE_INTERVIEW', 'READ_INTERVIEW')")
-    public ResponseEntity<Object> getAllInterviews (
+    public ResponseEntity<Object> getAllInterviews(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer size,
             @RequestParam(required = false, defaultValue = "") String search,
@@ -39,8 +40,8 @@ public class RestInterviewController {
             @RequestParam(required = false) InterviewType type,
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate,
-            @RequestParam(required = false)InterviewStatus status
-            ) {
+            @RequestParam(required = false) InterviewStatus status
+    ) {
         return ResponseHandler.generateResponse(new Response(
                 "Interviews", HttpStatus.OK, "SUCCESS", interviewScheduleService.getAll(search, clientId, type, startDate, endDate, status, page, size)
         ));
@@ -56,7 +57,7 @@ public class RestInterviewController {
             @RequestParam(required = false) InterviewType type,
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate,
-            @RequestParam(required = false)InterviewStatus status
+            @RequestParam(required = false) InterviewStatus status
     ) {
         return ResponseHandler.generateResponse(new Response(
                 "Interviews", HttpStatus.OK, "SUCCESS", interviewScheduleService.getByRm(search, clientId, type, startDate, endDate, status, page, size)

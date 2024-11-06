@@ -28,33 +28,38 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
+
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final InstituteRepository instituteRepository;
     private final UserRepository userRepository;
 
+    @Override
     public Account createAccount(AccountRequest request) {
         Account existing = accountRepository.findByUsername(request.getAccountUsername()).orElse(null);
         if (existing != null) {
             throw new AccountAlreadyExistException(request.getAccountUsername());
         }
         Account account = new Account();
-        User user  = new User();
+        User user = new User();
         return accountDataHelper(account, request, user);
     }
 
+    @Override
     public Account editAccount(Long id, AccountRequest request) {
         Account account = accountRepository.findById(id).orElseThrow(() -> new AccountDoesNotExistException(id.toString()));
         User user = userRepository.findById(account.getUser().getId()).orElseThrow(() -> new AccountDoesNotExistException(account.getUser().getId().toString()));
         return accountDataHelper(account, request, user);
     }
 
+    @Override
     public Page<Account> getAllAvailableAccounts(Integer page, Integer size, String search, Long institute, Long baseBudget, Long limitBudget) {
         List<Institute> institutes = new ArrayList<>();
         return accountRetrievalHelper(search, institute, baseBudget, limitBudget, institutes, page, size);
     }
 
+    @Override
     public Page<Account> getAvailableAccountsOfRm(Integer page, Integer size, String search, Long institute, Long baseBudget, Long limitBudget) {
         Account account = accountRepository.findById(AuthUtil.getLoginUserId()).orElseThrow(() -> new AccountDoesNotExistException(AuthUtil.getLoginUserId().toString()));
         User user = userRepository.findById(account.getUser().getId()).orElseThrow(() -> new AccountDoesNotExistException(account.getUser().getId().toString()));
@@ -65,6 +70,7 @@ public class AccountServiceImpl implements AccountService {
         return accountRetrievalHelper(search, institute, baseBudget, limitBudget, institutes, page, size);
     }
 
+    @Override
     public Account getAccountById(Long id) {
         return accountRepository.findById(id).orElseThrow(() -> new AccountDoesNotExistException(id.toString()));
     }
@@ -80,7 +86,7 @@ public class AccountServiceImpl implements AccountService {
         return new PageImpl<>(accounts.subList(start, end), pageable, accounts.size());
     }
 
-    private Account accountDataHelper (Account account, AccountRequest request, User user) {
+    private Account accountDataHelper(Account account, AccountRequest request, User user) {
         account.setUsername(request.getAccountUsername());
         account.setPassword(passwordEncoder.encode(request.getAccountPassword()));
         account.setRole(roleRepository.findById(request.getRoleId()).orElseThrow(() -> new RoleDoesNotExistException(request.getRoleId())));

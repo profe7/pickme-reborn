@@ -37,7 +37,7 @@ public class RestInstituteController {
         return ResponseHandler.generateResponse(new Response(
                 "Institutes found", HttpStatus.OK, "SUCCESS", instituteService.getAllInstitutes(
                         name, instituteTypeId, page, size
-        )
+                )
         ));
     }
 

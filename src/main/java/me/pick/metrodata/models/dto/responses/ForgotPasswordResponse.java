@@ -11,8 +11,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Data
 public class ForgotPasswordResponse {
-	public Long accountId;
-	public String email;
-	@JsonFormat (pattern = "yyyy-MM-dd HH:mm:ss.SSS")
-	public LocalDateTime updatedAt;
+
+    public Long accountId;
+
+    public String email;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
+    public LocalDateTime updatedAt;
+
 }

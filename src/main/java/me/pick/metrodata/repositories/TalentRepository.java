@@ -12,10 +12,11 @@ import java.util.Optional;
 
 @Repository
 public interface TalentRepository extends JpaRepository<Talent, String>, JpaSpecificationExecutor<Talent> {
-	Optional<Talent> findByNik(String nik);
 
-	List<Talent> findTalentByMitraId(Long mitraId);
+    Optional<Talent> findByNik(String nik);
 
-	@Query("SELECT t FROM Talent t WHERE t.statusCV = 'COMPLETE' AND t.mitra.id = :mitraId")
-	List<Talent> findTalentsWithCompleteCVByMitra(@Param("mitraId") Long mitraId);
+    List<Talent> findTalentByMitraId(Long mitraId);
+
+    @Query("SELECT t FROM Talent t WHERE t.statusCV = 'COMPLETE' AND t.mitra.id = :mitraId")
+    List<Talent> findTalentsWithCompleteCVByMitra(@Param("mitraId") Long mitraId);
 }
