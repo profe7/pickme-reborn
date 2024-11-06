@@ -18,7 +18,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +41,34 @@ public class MitraServiceImpl implements MitraService{
 
         return new PageImpl<>(talents.subList(start, end), pageable, talents.size());
     }
+
+    @Override
+    public Page<Talent> getFilteredMitraTalents(Long mitraId, Integer page, Integer size, String position, String skill) {
+        
+        Page<Talent> pagedTalents = getMitraTalents(mitraId, page, size);
+
+        List<Talent> talents = new ArrayList<>(pagedTalents.getContent());
+
+        if (position != null && !position.isEmpty()) {
+            talents = talents.stream()
+                    .filter(t -> t.getApplicants().stream()
+                            .anyMatch(a -> a.getVacancy() != null && a.getVacancy().getPosition().contains(position)))
+                    .collect(Collectors.toList());
+        }
+        if (skill != null && !skill.isEmpty()) {
+            talents = talents.stream()
+                    .filter(t -> t.getSkills().stream()
+                            .anyMatch(s -> s.getName().contains(skill)))
+                    .collect(Collectors.toList());
+        }
+
+        Pageable pageable = PageRequest.of(page, size);
+        int start = Math.min((int) pageable.getOffset(), talents.size());
+        int end = Math.min((start + pageable.getPageSize()), talents.size());
+
+        return new PageImpl<>(talents.subList(start, end), pageable, talents.size());
+    }
+
 
     public MitraDashboardTelemetryResponse getMitraDashboardTelemetry(Long mitraId) {
         Mitra mitra = mitraRepository.findById(mitraId).orElseThrow(() -> new MitraDoesNotExistException(mitraId));

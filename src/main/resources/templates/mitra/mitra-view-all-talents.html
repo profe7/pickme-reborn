@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talent List</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Basic styling for the talent cards */
+        .talent-container {
+            display: flex;
+        }
+        .talent-list {
+            width: 70%;
+            padding: 20px;
+            border-right: 1px solid #ddd;
+        }
+        .talent-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .talent-card img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 1rem;
+        }
+        .tag {
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 12px;
+            padding: 5px 10px;
+            margin-right: 5px;
+            font-size: 0.8rem;
+        }
+        .btn-edit {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            margin-right: 5px;
+        }
+        .btn-delete {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        .right-section {
+            width: 30%;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-4">
+    <div class="talent-container">
+        <!-- Left Section: Talent List -->
+        <div class="talent-list">
+            <!-- Header with Description and Skills -->
+            <div class="alert alert-secondary">
+                Semua kandidat Software Developer kami adalah talenta digital yang siap kerja yang setelah melalui seleksi ketat yang diawasi oleh para ahli, lulus dari program kami, menyelesaikan Full Stack Web Development Bootcamp, dan telah menguasai keterampilan seperti:
+                <div class="mt-2">
+                    <span class="tag">HTML</span>
+                    <span class="tag">CSS</span>
+                    <span class="tag">JavaScript</span>
+                    <span class="tag">React JS</span>
+                    <span class="tag">MySQL</span>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="d-flex justify-content-between mb-3">
+                <input type="text" class="form-control mr-2" placeholder="Cari berdasarkan posisi" th:value="${position}">
+                <input type="text" class="form-control" placeholder="Cari berdasarkan skill" th:value="${skill}">
+            </div>
+
+            <!-- Talent Cards -->
+            <div th:each="talent : ${talents.content}" class="talent-card">
+                <img th:src="@{/images/default-avatar.png}" alt="Talent Photo">
+                <div>
+                    <h5 th:text="${talent.name}">Talent Name</h5>
+                    <p class="mb-1" th:text="${talent.applicants[0]?.vacancy.position}">Position</p>
+                    <div>
+                        <span th:each="skill : ${talent.skills}" th:text="${skill.name}" class="tag">Skill</span>
+                    </div>
+                </div>
+                <div class="ml-auto">
+                    <button class="btn-edit">Edit</button>
+                    <button class="btn-delete">Hapus</button>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination">
+                <nav>
+                    <ul class="pagination">
+                        <li th:classappend="${talents.hasPrevious()} ? 'page-item' : 'page-item disabled'">
+                            <a class="page-link" th:href="@{|/{mitraId}/talent(page=${currentPage - 1}, position=${position}, skill=${skill})|}">«</a>
+                        </li>
+                        <li th:each="i : ${#numbers.sequence(0, talents.totalPages - 1)}" th:classappend="${i == currentPage} ? 'page-item active'">
+                            <a class="page-link" th:href="@{|/{mitraId}/talent(page=${i}, position=${position}, skill=${skill})|}" th:text="${i + 1}">1</a>
+                        </li>
+                        <li th:classappend="${talents.hasNext()} ? 'page-item' : 'page-item disabled'">
+                            <a class="page-link" th:href="@{|/{mitraId}/talent(page=${currentPage + 1}, position=${position}, skill=${skill})|}">»</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Right Section -->
+        <div class="right-section">
+            <h5>Talent Details</h5>
+            <p>Data of a selected talent will appear here. Customize this section as needed.</p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
