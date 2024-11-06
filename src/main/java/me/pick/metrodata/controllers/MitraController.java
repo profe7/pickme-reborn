@@ -30,6 +30,6 @@ public class MitraController {
 
         model.addAttribute("newestVacancies", response.getNewestVacancies());
 
-        return "mitra/dashboard"; 
+        return "mitra/dashboard-mitra"; 
     }
 }
