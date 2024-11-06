@@ -10,6 +10,8 @@ public interface VacancyService {
 
     Page<Vacancy> getAll(String title, String position, String expiredDate, String updatedAt, String timeInterval, Integer page, Integer size);
 
+    Page<Vacancy> getAllRm(String title, String position, String expiredDate, String updatedAt, String timeInterval, Integer page, Integer size, Long clientId);
+
     Vacancy getVacancyById(Long id);
 
     void createVacancy(VacancyCreationRequest request);

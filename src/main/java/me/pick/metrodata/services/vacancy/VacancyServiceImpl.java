@@ -7,8 +7,10 @@ import me.pick.metrodata.exceptions.vacancy.IncompleteVacancyRequestException;
 import me.pick.metrodata.exceptions.vacancy.VacancyNotExistException;
 import me.pick.metrodata.exceptions.vacancy.VacancyStatusDoesNotExistException;
 import me.pick.metrodata.models.dto.requests.VacancyCreationRequest;
+import me.pick.metrodata.models.entity.Client;
 import me.pick.metrodata.models.entity.User;
 import me.pick.metrodata.models.entity.Vacancy;
+import me.pick.metrodata.repositories.ClientRepository;
 import me.pick.metrodata.repositories.UserRepository;
 import me.pick.metrodata.repositories.VacancyRepository;
 import me.pick.metrodata.repositories.specifications.VacancySpecification;
@@ -26,17 +28,26 @@ public class VacancyServiceImpl implements VacancyService {
 
     private final VacancyRepository vacancyRepository;
     private final UserRepository userRepository;
+    private final ClientRepository clientRepository;
 
     @Override
     public Page<Vacancy> getOpenVacancies(Integer page, Integer size, String expiredDate, String updatedAt, String title, String position) {
-        Specification<Vacancy> spec = VacancySpecification.searchSpecification(title, position, expiredDate, updatedAt);
+        Specification<Vacancy> spec = VacancySpecification.searchSpecification(title, position, expiredDate, updatedAt, null);
         List<Vacancy> vacancies = vacancyRepository.findOpenVacancies(spec);
         return vacancyPaginationHelper(page, size, spec, vacancies);
     }
 
     @Override
     public Page<Vacancy> getAll(String title, String position, String expiredDate, String updatedAt, String timeInterval, Integer page, Integer size) {
-        Specification<Vacancy> spec = VacancySpecification.combinedSpecification(title, position, expiredDate, updatedAt, timeInterval);
+        Specification<Vacancy> spec = VacancySpecification.combinedSpecification(title, position, expiredDate, updatedAt, timeInterval, null);
+        List<Vacancy> vacancies = vacancyRepository.findAll(spec);
+        return vacancyPaginationHelper(page, size, spec, vacancies);
+    }
+
+    @Override
+    public Page<Vacancy> getAllRm(String title, String position, String expiredDate, String updatedAt, String timeInterval, Integer page, Integer size, Long clientId) {
+        Client client = clientRepository.findClientById(clientId).orElseThrow(() -> new UserDoesNotExistException(clientId.toString()));
+        Specification<Vacancy> spec = VacancySpecification.combinedSpecification(title, position, expiredDate, updatedAt, timeInterval, client);
         List<Vacancy> vacancies = vacancyRepository.findAll(spec);
         return vacancyPaginationHelper(page, size, spec, vacancies);
     }

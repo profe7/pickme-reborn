@@ -1,6 +1,7 @@
 package me.pick.metrodata.repositories.specifications;
 
 import jakarta.persistence.criteria.Predicate;
+import me.pick.metrodata.models.entity.Client;
 import me.pick.metrodata.models.entity.Vacancy;
 import me.pick.metrodata.utils.DateTimeUtil;
 import org.springframework.data.jpa.domain.Specification;
@@ -9,7 +10,7 @@ import java.time.LocalDate;
 
 public class VacancySpecification {
 
-    public static Specification<Vacancy> searchSpecification(String title, String position, String expiredDate, String updatedAt) {
+    public static Specification<Vacancy> searchSpecification(String title, String position, String expiredDate, String updatedAt, Client client) {
         return (root, query, criteriaBuilder) -> {
             Predicate predicate = criteriaBuilder.conjunction();
 
@@ -40,6 +41,12 @@ public class VacancySpecification {
                 );
             }
 
+            if (client != null) {
+                predicate = criteriaBuilder.and(
+                        predicate,
+                        criteriaBuilder.equal(root.get("client"), client));
+            }
+
             return predicate;
         };
     }
@@ -51,15 +58,15 @@ public class VacancySpecification {
 
             switch (timeInterval.toLowerCase()) {
                 case "hari" ->
-                    startDate = LocalDate.now().minusDays(1);
+                        startDate = LocalDate.now().minusDays(1);
                 case "minggu" ->
-                    startDate = LocalDate.now().minusWeeks(1);
+                        startDate = LocalDate.now().minusWeeks(1);
                 case "bulan" -> {
                     startDate = LocalDate.now().withDayOfMonth(1);
                     endDate = LocalDate.now().plusMonths(1).withDayOfMonth(1).minusDays(1);
                 }
                 default ->
-                    throw new IllegalArgumentException("Interval waktu tidak valid");
+                        throw new IllegalArgumentException("Interval waktu tidak valid");
             }
 
             if (timeInterval.equalsIgnoreCase("bulan")) {
@@ -78,8 +85,8 @@ public class VacancySpecification {
         };
     }
 
-    public static Specification<Vacancy> combinedSpecification(String title, String position, String expiredDate, String updatedAt, String timeInterval) {
-        Specification<Vacancy> searchSpec = searchSpecification(title, position, expiredDate, updatedAt);
+    public static Specification<Vacancy> combinedSpecification(String title, String position, String expiredDate, String updatedAt, String timeInterval, Client client) {
+        Specification<Vacancy> searchSpec = searchSpecification(title, position, expiredDate, updatedAt, client);
 
         if (timeInterval != null && !timeInterval.isEmpty()) {
             Specification<Vacancy> timeIntervalSpec = timeIntervalSpecification(timeInterval);
