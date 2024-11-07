@@ -59,7 +59,7 @@ public class AuthServiceImpl implements AuthService {
 
         List<String> authorities = userDetails.getAuthorities().stream().map(authority -> authority.getAuthority()).toList();
 
-        return new LoginResponse(account.getUsername(), authorities);
+        return new LoginResponse(account.getRole().getName(), account.getUsername(), authorities);
     }
 
     @Override
