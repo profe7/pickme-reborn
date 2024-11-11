@@ -21,6 +21,9 @@ import me.pick.metrodata.repositories.*;
 import me.pick.metrodata.services.applicant.ApplicantService;
 import me.pick.metrodata.services.email.EmailService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -96,7 +99,8 @@ public class TalentServiceImpl implements TalentService {
         }
 
         newTalentUser.setLastName(lastName);
-        newTalentUser.setMitra(mitraRepository.findById(request.getTalentMitraId()).orElseThrow(() -> new MitraDoesNotExistException(request.getTalentMitraId())));
+        newTalentUser.setMitra(mitraRepository.findById(request.getTalentMitraId())
+                .orElseThrow(() -> new MitraDoesNotExistException(request.getTalentMitraId())));
         newTalentUser.setEmail(request.getTalentEmail());
         userRepository.save(newTalentUser);
 
@@ -112,7 +116,8 @@ public class TalentServiceImpl implements TalentService {
         newTalent.setStatusCV(StatusCV.DRAFT);
         talentRepository.save(newTalent);
 
-        ApplicantCreationRequest applicantCreationRequest = new ApplicantCreationRequest(request.getVacancyId(), newTalent.getId());
+        ApplicantCreationRequest applicantCreationRequest = new ApplicantCreationRequest(request.getVacancyId(),
+                newTalent.getId());
         applicantCreationRequest.setTalentId(newTalent.getId());
         applicantCreationRequest.setVacancyId(request.getVacancyId());
         applicantService.createApplicant(applicantCreationRequest);
@@ -124,7 +129,8 @@ public class TalentServiceImpl implements TalentService {
 
     @Override
     public TalentAvailableForVacancyResponse availableForVacancy(Long vacancyId, Long mitraId) {
-        Vacancy vacancy = vacancyRepository.findVacancyById(vacancyId).orElseThrow(() -> new VacancyNotExistException(vacancyId));
+        Vacancy vacancy = vacancyRepository.findVacancyById(vacancyId)
+                .orElseThrow(() -> new VacancyNotExistException(vacancyId));
         Mitra mitra = mitraRepository.findById(mitraId).orElseThrow(() -> new MitraDoesNotExistException(mitraId));
 
         List<Talent> available = talentRepository.findTalentsWithCompleteCVByMitra(mitra.getId());
@@ -132,7 +138,9 @@ public class TalentServiceImpl implements TalentService {
 
         available = available.stream()
                 .filter(talent -> talent.getApplicants().parallelStream()
-                .noneMatch(applicant -> applicant.getVacancy().getId().equals(vacancy.getId()) || applicant.getStatus() == ApplicantStatus.ACCEPTED)).toList();
+                        .noneMatch(applicant -> applicant.getVacancy().getId().equals(vacancy.getId())
+                                || applicant.getStatus() == ApplicantStatus.ACCEPTED))
+                .toList();
 
         responses.setTalents(availableForVacancyHelper(available));
 
@@ -141,7 +149,8 @@ public class TalentServiceImpl implements TalentService {
 
     @Override
     public Talent completeNewTalentData(TalentDataCompletionRequest request) {
-        Talent talent = talentRepository.findById(request.getTalentId()).orElseThrow(() -> new TalentDoesNotExistException(request.getTalentId()));
+        Talent talent = talentRepository.findById(request.getTalentId())
+                .orElseThrow(() -> new TalentDoesNotExistException(request.getTalentId()));
         return talentFullDataHelper(request, talent);
     }
 
@@ -152,7 +161,8 @@ public class TalentServiceImpl implements TalentService {
             throw new TalentAlreadyExistException(request.getTalentFullName());
         }
         Talent newTalent = new Talent();
-        newTalent.setMitra(mitraRepository.findById(request.getMitraId()).orElseThrow(() -> new MitraDoesNotExistException(request.getMitraId())));
+        newTalent.setMitra(mitraRepository.findById(request.getMitraId())
+                .orElseThrow(() -> new MitraDoesNotExistException(request.getMitraId())));
         return talentFullDataHelper(request, newTalent);
     }
 
@@ -161,9 +171,12 @@ public class TalentServiceImpl implements TalentService {
         talent.setNik(request.getTalentNik());
         talent.setBirthOfDate(request.getDateOfBirth());
         talent.setPlaceOfBirth(request.getPlaceOfBirth());
-        talent.setNationality(referenceRepository.findById(request.getNationalityId()).orElseThrow(() -> new ReferenceDoesNotExistException(request.getNationalityId())));
-        talent.setProvince(referenceRepository.findById(request.getProvinceId()).orElseThrow(() -> new ReferenceDoesNotExistException(request.getProvinceId())));
-        talent.setCity(referenceRepository.findById(request.getCityId()).orElseThrow(() -> new ReferenceDoesNotExistException(request.getCityId())));
+        talent.setNationality(referenceRepository.findById(request.getNationalityId())
+                .orElseThrow(() -> new ReferenceDoesNotExistException(request.getNationalityId())));
+        talent.setProvince(referenceRepository.findById(request.getProvinceId())
+                .orElseThrow(() -> new ReferenceDoesNotExistException(request.getProvinceId())));
+        talent.setCity(referenceRepository.findById(request.getCityId())
+                .orElseThrow(() -> new ReferenceDoesNotExistException(request.getCityId())));
         talent.setFullAddress(request.getFullAddress());
 
         talentLanguageSkillHelper(request.getLanguageSkills(), talent);
@@ -215,9 +228,9 @@ public class TalentServiceImpl implements TalentService {
                                 languageSkills.getReadingAbilityLevel(),
                                 languageSkills.getWritingAbilityLevel(),
                                 languageSkills.getSpeakingAbilityLevel(),
-                                referenceRepository.findById(languageSkills.getLanguageId()).orElseThrow(() -> new ReferenceDoesNotExistException(languageSkills.getLanguageId())),
-                                talent
-                        ));
+                                referenceRepository.findById(languageSkills.getLanguageId()).orElseThrow(
+                                        () -> new ReferenceDoesNotExistException(languageSkills.getLanguageId())),
+                                talent));
             }
         }
     }
@@ -234,9 +247,9 @@ public class TalentServiceImpl implements TalentService {
                                 education.getEndDate(),
                                 education.getAcademicGrade(),
                                 education.getInstitution(),
-                                referenceRepository.findById(education.getMajorId()).orElseThrow(() -> new ReferenceDoesNotExistException(education.getMajorId())),
-                                talent
-                        ));
+                                referenceRepository.findById(education.getMajorId())
+                                        .orElseThrow(() -> new ReferenceDoesNotExistException(education.getMajorId())),
+                                talent));
             }
         }
     }
@@ -251,8 +264,7 @@ public class TalentServiceImpl implements TalentService {
                                 skill.getName(),
                                 skill.getCategory(),
                                 skill.getLevel(),
-                                talent
-                        ));
+                                talent));
             }
         }
     }
@@ -268,8 +280,8 @@ public class TalentServiceImpl implements TalentService {
                             jobHistory.getDescription(),
                             jobHistory.getProjectSpecification(),
                             talent,
-                            referenceRepository.findById(jobHistory.getPositionId()).orElseThrow(() -> new ReferenceDoesNotExistException(jobHistory.getPositionId()))
-                    ));
+                            referenceRepository.findById(jobHistory.getPositionId()).orElseThrow(
+                                    () -> new ReferenceDoesNotExistException(jobHistory.getPositionId()))));
         }
     }
 
@@ -283,8 +295,8 @@ public class TalentServiceImpl implements TalentService {
                             project.getStartDate(),
                             project.getEndDate(),
                             talent,
-                            referenceRepository.findById(project.getSkillId()).orElseThrow(() -> new ReferenceDoesNotExistException(project.getSkillId()))
-                    ));
+                            referenceRepository.findById(project.getSkillId())
+                                    .orElseThrow(() -> new ReferenceDoesNotExistException(project.getSkillId()))));
         }
     }
 
@@ -295,8 +307,7 @@ public class TalentServiceImpl implements TalentService {
                             training.getTrainingName(),
                             training.getTrainingDate(),
                             training.getSyllabus(),
-                            talent
-                    ));
+                            talent));
         }
     }
 
@@ -308,8 +319,7 @@ public class TalentServiceImpl implements TalentService {
                             certification.getInstitutionName(),
                             certification.getCertificateIssueDate(),
                             certification.getValidUntil(),
-                            talent
-                    ));
+                            talent));
         }
     }
 
@@ -321,8 +331,7 @@ public class TalentServiceImpl implements TalentService {
                             organization.getOrganizationPosition(),
                             organization.getStartDate(),
                             organization.getEndDate(),
-                            talent
-                    ));
+                            talent));
         }
     }
 
@@ -335,8 +344,7 @@ public class TalentServiceImpl implements TalentService {
                             otherExperience.getPositionName(),
                             otherExperience.getPositionName(),
                             otherExperience.getExperienceDate(),
-                            talent
-                    ));
+                            talent));
         }
     }
 
@@ -347,8 +355,7 @@ public class TalentServiceImpl implements TalentService {
                             achievement.getAchievementName(),
                             achievement.getInstitution(),
                             achievement.getAchievementDate(),
-                            talent
-                    ));
+                            talent));
         }
     }
 
@@ -363,5 +370,22 @@ public class TalentServiceImpl implements TalentService {
                     return response;
                 }).toList();
 
+    }
+
+    @Override
+    public List<Talent> getByMitraId(Long mitraId) {
+        return talentRepository.findTalentByMitraId(mitraId);
+    }
+
+    @Override
+    public Page<TalentResponse> getFilteredTalent(String searchName, String searchMitra, StatusCV status, Integer page,
+            Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return talentRepository.findAllWithFilters(searchName, searchMitra, status, pageable).map(talent -> {
+            TalentResponse talentResponse = modelMapper.map(talent,
+                    TalentResponse.class);
+            talentResponse.setInstituteName(talent.getInstitute().getInstituteName());
+            return talentResponse;
+        });
     }
 }

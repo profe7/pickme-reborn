@@ -15,6 +15,7 @@ import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -82,5 +83,11 @@ public class VacancyServiceImpl implements VacancyService {
                 .build();
 
         vacancyRepository.save(vacancy);
+    }
+
+    @Override
+    public Page<Vacancy> getFilteredVacancy(String searchTitle, String searchPosition, LocalDate date, VacancyStatus status, Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return vacancyRepository.findAllWithFilters(searchTitle, searchPosition, date, status, pageable);
     }
 }

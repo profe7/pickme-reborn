@@ -19,10 +19,12 @@ import java.util.List;
 public class InstituteServiceImpl implements InstituteService {
     private final InstituteRepository instituteRepository;
 
+    @Override
     public Institute getInstituteById(Long id) {
         return instituteRepository.findInstituteById(id).orElseThrow(() -> new InstituteDoesNotExistException(id));
     }
 
+    @Override
     public Page<Institute> getAllInstitutes(String name, Long instituteTypeId, Integer currentPage, Integer perPage) {
         return instituteRetrievalHelper(name, instituteTypeId, currentPage, perPage);
     }
@@ -36,6 +38,11 @@ public class InstituteServiceImpl implements InstituteService {
         int end = Math.min((start + pageable.getPageSize()), institutes.size());
 
         return new PageImpl<>(institutes.subList(start, end), pageable, institutes.size());
+    }
+
+    @Override
+    public List<Institute> getAll() {
+        return instituteRepository.findAll();
     }
 }
 

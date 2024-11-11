@@ -5,7 +5,10 @@ import java.util.List;
 import java.util.Optional;
 
 import me.pick.metrodata.enums.InterviewStatus;
+import me.pick.metrodata.enums.InterviewType;
 import me.pick.metrodata.models.entity.*;
+
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -48,5 +51,19 @@ public interface InterviewScheduleRepository
     List<InterviewSchedule> findInterviewScheduleByClientIdAndStatus(Long clientId, InterviewStatus status);
 
     Optional<InterviewSchedule> findByApplicantAndClientIdAndStatus(Applicant applicant, Long clientId, InterviewStatus status);
+
+    @Query("SELECT i FROM InterviewSchedule i WHERE "
+            + "(:recruiter IS NULL OR i.client.user.firstName LIKE %:recruiter%) AND "
+            + "(:talent IS NULL OR i.applicant.talent.name LIKE %:talent%) AND "
+            + "(:type IS NULL OR i.interviewType = :type) AND "
+            + "(:date IS NULL OR i.date = :date) AND "
+            + "(:status IS NULL OR i.status = :status)")
+    Page<InterviewSchedule> findAllWithFilters(
+            @Param("recruiter") String recruiter,
+            @Param("talent") String talent,
+            @Param("type") InterviewType type,
+            @Param("date") LocalDate date,
+            @Param("status") InterviewStatus status, 
+            Pageable pageable);
 
 }
