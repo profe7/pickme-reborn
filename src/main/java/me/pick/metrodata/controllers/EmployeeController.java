@@ -13,7 +13,7 @@ import lombok.AllArgsConstructor;
 public class EmployeeController {
     @GetMapping
     public String landingPage() {
-        return "employee/employee";
+        return "client/employee";
     }
     
 }
