@@ -85,7 +85,7 @@ public class RestInterviewController {
         );
     }
 
-    @GetMapping("/interview-calendar/client/{clientId}")
+    @GetMapping("/git calendar/client/{clientId}")
     @PreAuthorize("hasAnyAuthority('READ_INTERVIEW')")
     public ResponseEntity<Object> getClientInterviewCalendar(@PathVariable Long clientId) {
         return ResponseHandler.generateResponse(new Response(
@@ -93,7 +93,7 @@ public class RestInterviewController {
         ));
     }
 
-    @GetMapping("/interview-calendar/mitra/{mitraId}")
+    @GetMapping("/calendar/mitra/{mitraId}")
     @PreAuthorize("hasAnyAuthority('READ_INTERVIEW')")
     public ResponseEntity<Object> getInterviewCalendarMitra(@PathVariable Long mitraId) {
         return ResponseHandler.generateResponse(new Response(

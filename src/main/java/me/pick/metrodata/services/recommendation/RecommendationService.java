@@ -2,6 +2,7 @@ package me.pick.metrodata.services.recommendation;
 
 import me.pick.metrodata.models.dto.responses.RecommendationGroupedResponse;
 import me.pick.metrodata.models.dto.responses.RecommendationPaginationResponse;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -10,5 +11,5 @@ public interface RecommendationService {
 
 	void deleteRecommendation(Long id);
 
-	List<RecommendationGroupedResponse> getAllByInstituteOrUser();
+	Page<RecommendationGroupedResponse> getAllByInstituteOrUser(Integer page, Integer size);
 }

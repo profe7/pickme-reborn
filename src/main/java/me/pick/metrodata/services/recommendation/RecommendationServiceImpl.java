@@ -17,6 +17,8 @@ import me.pick.metrodata.services.talent.TalentService;
 import me.pick.metrodata.utils.AnyUtil;
 import me.pick.metrodata.utils.AuthUtil;
 import me.pick.metrodata.utils.PageData;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -69,13 +71,13 @@ public class RecommendationServiceImpl implements RecommendationService {
 	}
 
 	@Override
-	public List<RecommendationGroupedResponse> getAllByInstituteOrUser() {
+	public Page<RecommendationGroupedResponse> getAllByInstituteOrUser(Integer page, Integer size) {
 		var userId = AuthUtil.getLoginUserId();
 		var groupedResponses = new HashMap<String, RecommendationGroupedResponse> ();
-		var recommendations = recommendationRepository.findByUser_id (userId);
+		var recommendations = recommendationRepository.findByUser_id(userId);
 
 		if (recommendations == null || recommendations.isEmpty()) {
-			return new ArrayList<>();
+			return Page.empty();
 		}
 
 		for (Recommendation recommendation : recommendations) {
@@ -106,7 +108,13 @@ public class RecommendationServiceImpl implements RecommendationService {
 			groupedResponses.put(position, groupedResponse);
 		}
 
-		return new ArrayList<>(groupedResponses.values());
+		List<RecommendationGroupedResponse> responseList = new ArrayList<>(groupedResponses.values());
+		Pageable pageable = PageRequest.of(page, size);
+
+		int start = (int) pageable.getOffset();
+		int end = Math.min((start + pageable.getPageSize()), responseList.size());
+
+		return new PageImpl<>(responseList.subList(start, end), pageable, responseList.size());
 	}
 
 	@Override
