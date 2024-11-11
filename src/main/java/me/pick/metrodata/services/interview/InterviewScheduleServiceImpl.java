@@ -8,13 +8,13 @@ import me.pick.metrodata.exceptions.interviewschedule.ApplicantNotRecommendedExc
 import me.pick.metrodata.exceptions.interviewschedule.InterviewScheduleConflictException;
 import me.pick.metrodata.exceptions.interviewschedule.InterviewScheduleDoesNotExistException;
 import me.pick.metrodata.exceptions.interviewschedule.InterviewScheduleUpdateBadRequestException;
+import me.pick.metrodata.exceptions.mitra.MitraDoesNotExistException;
+import me.pick.metrodata.exceptions.user.UserDoesNotExistException;
 import me.pick.metrodata.models.dto.requests.InterviewScheduleRequest;
 import me.pick.metrodata.models.dto.requests.InterviewUpdateRequest;
+import me.pick.metrodata.models.dto.responses.InterviewScheduleCalendarResponse;
 import me.pick.metrodata.models.entity.*;
-import me.pick.metrodata.repositories.ClientRepository;
-import me.pick.metrodata.repositories.InterviewScheduleHistoryRepository;
-import me.pick.metrodata.repositories.InterviewScheduleRepository;
-import me.pick.metrodata.repositories.RecommendationApplicantRepository;
+import me.pick.metrodata.repositories.*;
 import me.pick.metrodata.repositories.specifications.InterviewScheduleSpecification;
 import me.pick.metrodata.services.email.EmailService;
 import org.springframework.data.domain.Page;
@@ -35,6 +35,7 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
     private final RecommendationApplicantRepository recommendationApplicantRepository;
     private final ClientRepository clientRepository;
     private final InterviewScheduleHistoryRepository interviewScheduleHistoryRepository;
+    private final MitraRepository mitraRepository;
     private final EmailService emailService;
 
     @Override
@@ -87,6 +88,36 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
             interviewSaveHelper(interviewSchedule,request);
             emailService.sendInterviewReject(interviewSchedule, request.getFeedback());
         }
+    }
+
+    @Override
+    public List<InterviewScheduleCalendarResponse> getInterviewCalendarClient(Long clientId) {
+        Client client = clientRepository.findClientById(clientId).orElseThrow(() -> new ClientDoesNotExistException(clientId));
+        List<InterviewSchedule> schedules = interviewScheduleRepository.findInterviewScheduleByClient(client);
+        return interviewCalendarHelper(schedules);
+    }
+
+    @Override
+    public List<InterviewScheduleCalendarResponse> getInterviewCalendarMitra(Long mitraId) {
+        Mitra mitra = mitraRepository.findMitraById(mitraId).orElseThrow(() -> new MitraDoesNotExistException(mitraId));
+        List<InterviewSchedule> schedules = interviewScheduleRepository.findInterviewScheduleByMitraId(mitra.getId());
+        return interviewCalendarHelper(schedules);
+    }
+
+    private List<InterviewScheduleCalendarResponse> interviewCalendarHelper(List<InterviewSchedule> schedules) {
+        List<InterviewScheduleCalendarResponse> responses = new ArrayList<>();
+        for (InterviewSchedule schedule : schedules) {
+            InterviewScheduleCalendarResponse response = new InterviewScheduleCalendarResponse();
+            response.setId(schedule.getId());
+            response.setTitle(schedule.getApplicant().getTalent().getName());
+            response.setStart(schedule.getDate());
+            response.setEnd(schedule.getDate());
+            response.setBackgroundColor(schedule.getStatus().toString());
+            response.setAllDay(false);
+            response.setEditable(false);
+            responses.add(response);
+        }
+        return responses;
     }
 
     private void interviewSaveHelper(InterviewSchedule interviewSchedule, InterviewUpdateRequest request) {

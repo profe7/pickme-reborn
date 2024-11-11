@@ -4,6 +4,7 @@ import me.pick.metrodata.enums.InterviewStatus;
 import me.pick.metrodata.enums.InterviewType;
 import me.pick.metrodata.models.dto.requests.InterviewScheduleRequest;
 import me.pick.metrodata.models.dto.requests.InterviewUpdateRequest;
+import me.pick.metrodata.models.dto.responses.InterviewScheduleCalendarResponse;
 import me.pick.metrodata.models.entity.InterviewSchedule;
 import me.pick.metrodata.models.entity.InterviewScheduleHistory;
 import org.springframework.data.domain.Page;
@@ -22,4 +23,8 @@ public interface InterviewScheduleService {
     Page<InterviewSchedule> getByRm(String search, Long clientId, InterviewType type, String startDate, String endDate, InterviewStatus status, int page, int size);
 
     List<InterviewScheduleHistory> getTalentInterviewHistory(Long interviewId);
+
+    List<InterviewScheduleCalendarResponse> getInterviewCalendarClient (Long clientId);
+
+    List<InterviewScheduleCalendarResponse> getInterviewCalendarMitra (Long mitraId);
 }

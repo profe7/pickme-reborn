@@ -84,4 +84,20 @@ public class RestInterviewController {
                         "Interview status updated", HttpStatus.CREATED, SUCCESS, null)
         );
     }
+
+    @GetMapping("/interview-calendar/client/{clientId}")
+    @PreAuthorize("hasAnyAuthority('READ_INTERVIEW')")
+    public ResponseEntity<Object> getClientInterviewCalendar(@PathVariable Long clientId) {
+        return ResponseHandler.generateResponse(new Response(
+                INTERVIEWS, HttpStatus.OK, SUCCESS, interviewScheduleService.getInterviewCalendarClient(clientId)
+        ));
+    }
+
+    @GetMapping("/interview-calendar/mitra/{mitraId}")
+    @PreAuthorize("hasAnyAuthority('READ_INTERVIEW')")
+    public ResponseEntity<Object> getInterviewCalendarMitra(@PathVariable Long mitraId) {
+        return ResponseHandler.generateResponse(new Response(
+                INTERVIEWS, HttpStatus.OK, SUCCESS, interviewScheduleService.getInterviewCalendarMitra(mitraId)
+        ));
+    }
 }

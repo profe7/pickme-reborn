@@ -34,6 +34,15 @@ public interface InterviewScheduleRepository extends JpaRepository<InterviewSche
 
     List<InterviewSchedule> findInterviewScheduleByClientIdAndStatus(Long clientId, InterviewStatus status);
 
+    List<InterviewSchedule> findInterviewScheduleByClient(Client client);
+
+    @Query("SELECT is2 FROM InterviewSchedule is2 "
+            + "JOIN is2.applicant a "
+            + "JOIN a.talent t "
+            + "JOIN t.mitra m "
+            + "WHERE m.id = :mitraId")
+    List<InterviewSchedule> findInterviewScheduleByMitraId(@Param("mitraId")Long mitraId);
+
     Optional<InterviewSchedule> findByApplicantAndClientIdAndStatus(Applicant applicant, Long clientId, InterviewStatus status);
 
 }
