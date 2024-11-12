@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/main}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Mitra</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/responsive.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+</head>
+
+<body>
+    <!-- <div th:replace="~{fragments/navbar :: navbar}"></div> -->
+
+    <div class="content-wrapper custom-container" layout:fragment="content">
+        <div class="hero_area">
+            <div class="hero_bg_box">
+                <div class="bg_img_box">
+                </div>
+            </div>
+
+            <section class="slider_section custom-mitra-section">
+                <div class="container">
+                    <div class="row">
+                        <div th:if="${accessDeniedMessage}" class="alert alert-danger alert-dismissible fade show">
+                            <p th:text="${accessDeniedMessage}"></p>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-box2" style="color: black;">
+                                <h1>Selamat Datang di Pick Me</h1>
+                                <h1 sec:authorize="isAuthenticated()">
+                                    <span sec:authentication="name"></span>
+                                </h1>
+                            </div>
+                        </div>
+                        <div class="col-md-6" style="
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                      ">
+                            <div class="img-box-mitra">
+                                <img th:src="@{img/mitra-img.png}" alt="Ilustrasi Mitra" title="Ilustrasi" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <section class="data_section layout_padding3">
+            <div class="data_container container-fluid">
+                <div class="row">
+                    <div class="col-md-12 my-2">
+                        <div class="row amount-data">
+                            <div class="col-md-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h6 class="card-title">Lowongan</h6>
+                                        <h3 th:text="${availableVacancies}"></h3>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h6 class="card-title">Jumlah Pelamar</h6>
+                                        <h3 th:text="${totalApplicants}"></h3>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-3">
+                                <div class="card" data-toggle="modal" data-target="#rejectModal">
+                                    <div class="card-body">
+                                        <h6 class="card-title">Jumlah Ditolak</h6>
+                                        <h3 th:text="${totalRejectedApplicants}"></h3>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-3">
+                                <div class="card" data-toggle="modal" data-target="#rejectModal">
+                                    <div class="card-body">
+                                        <h6 class="card-title">Jumlah Diterima</h6>
+                                        <h3 th:text="${totalAcceptedApplicants}"></h3>
+                                    </div>
+                                </div>
+                            </div>
+                            
+
+                            <div class="modal fade" id="rejectModal" tabindex="-1" role="dialog"
+                                aria-labelledby="rejectModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="acceptModalLabel">Detail Hirings</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+
+                                        <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">#</th>
+                                                        <th scope="col">Talent Name</th>
+                                                        <th scope="col">Recruiter</th>
+                                                        <th scope="col">On Board Date</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tableBody2">
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; flex-direction: row;">
+                        <div class="col-md-4 my-3" style="flex: 1;">
+                            <div class="card card-talent" style="height: 100%;">
+                                <div class="card-body">
+                                    <h5 class="card-title">My Talent</h5>
+                                    <div class="col-md-12 my-2">
+                                        <canvas id="myTalentChart"></canvas>
+                                    </div>
+
+                                    <div class="col-md-12 my-2">
+                                        <div class="row">
+                                            <!-- <div th:each="total : ${totals}" class="col-md-4 px-0">
+                                                <p>
+                                                    <span class="rounded-pill mx-1"
+                                                        th:style="'background-color:' + ${total.color} + ';'">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                                    <span th:text="${total.status}"></span>
+                                                </p>
+                                                <h2 th:text="${total.total}" class="fw-bold"></h2>
+                                            </div> -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-8 my-3" style="flex: 1;">
+                            <div class="card card-lowongan">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h4 class="card-title">Lowongan Terbaru</h4>
+                                        </div>
+
+                                        <div class="table-responsive pt-3 scrollable-content">
+                                            <table class="table table-hover">
+                                                <thead class="text-center">
+                                                    <tr>
+                                                        <th scope="col">Judul Pekerjaan</th>
+                                                        <th scope="col">Posisi</th>
+                                                        <th scope="col">Total Pelamar</th>
+                                                        <th scope="col">Batas Pendaftaran</th>
+                                                    </tr>
+
+                                                </thead>
+                                                <tbody class="align-middle text-center" >
+                                                    <tr th:each="vacancy : ${newestVacancies}">
+                                                        <td th:text="${vacancy.vacancyTitle}"></td>
+                                                        <td th:text="${vacancy.vacancyPosition}"></td>
+                                                        <td th:text="${vacancy.vacancyApplicants}"></td>
+                                                        <td th:text="${#temporals.format(vacancy.expiredDate, 'dd-MM-yyyy')}"></td>
+                                                    </tr>
+                                                    
+                                                </tbody>
+                                            </table>
+
+                                            <div style="position: relative;">
+                                                <button type="button" class="btn rounded"
+                                                        style="background-color: #006683; color: antiquewhite; position: absolute; right: 0;">Semua Lowongan</button>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+
+
+    <div th:insert="~{components/footer :: footer}"></div>
+
+
+</body>
+
+</html>

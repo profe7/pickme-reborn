@@ -1,5 +1,6 @@
 package me.pick.metrodata.models.entity;
 
+import java.time.temporal.ChronoUnit;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -58,6 +59,10 @@ public class Vacancy {
     @OneToMany(mappedBy = "vacancy")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<Recommendation> recommendations;
+
+    // Metode untuk menghitung hari sejak tanggal pembuatan
+    public long getDaysSinceCreated() {
+        return createdAt != null ? ChronoUnit.DAYS.between(createdAt.toLocalDate(), LocalDate.now()) : 0;
 
     @JsonProperty("totalApplicants")
     public Integer getTotalApplicants() {

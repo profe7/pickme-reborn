@@ -388,6 +388,7 @@ public class TalentServiceImpl implements TalentService {
                     response.setTalentName(talent.getName());
                     response.setTalentPosition(talent.getJobHistories().getLast().getPosition().getReference_name());
                     response.setTalentSkill(talent.getSkills().getLast().getName());
+                    response.setStatusCV(talent.getStatusCV().toString());
                     return response;
                 }).toList();
 

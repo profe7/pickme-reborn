@@ -49,8 +49,7 @@ public class AuthServiceImpl implements AuthService {
         try {
             Authentication auth = authenticationManager.authenticate(authReq);
             SecurityContextHolder.getContext().setAuthentication(auth);
-            Account loggedAccount = getLoggedAccountData();
-            session.setAttribute("loggedAccount", loggedAccount);
+            session.setAttribute("loggedAccount", account);
         } catch (AuthenticationException e) {
             throw new AccountInvalidPasswordException();
         }
@@ -59,7 +58,7 @@ public class AuthServiceImpl implements AuthService {
 
         List<String> authorities = userDetails.getAuthorities().stream().map(authority -> authority.getAuthority()).toList();
 
-        return new LoginResponse(account.getRole().getName(), account.getUsername(), authorities);
+        return new LoginResponse(account.getRole(), account.getId(), account.getUsername(), authorities);
     }
 
     @Override

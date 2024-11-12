@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -30,16 +31,42 @@ public class AppSecurityConfig {
 
     private final AccountDetailService userDetailService;
     private final PasswordEncoder passwordEncoder;
+    // private final SecurityProperties securityProperties;
 
+    @SuppressWarnings("removal")
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(withDefaults())
                 .csrf(csrf -> csrf.disable())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
-                .authorizeHttpRequests(auth -> auth
-                .anyRequest().permitAll())
-                .httpBasic(withDefaults());
+                .sessionManagement(session ->
+                        {
+                            try {
+                                session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                                        .and()
+                                        .authorizeHttpRequests(requests -> requests
+                                                .requestMatchers(new AntPathRequestMatcher("/mitra/**")).authenticated()
+                                                .requestMatchers(new AntPathRequestMatcher("/login")).permitAll()
+                                                .requestMatchers(new AntPathRequestMatcher("/landing-page")).permitAll()
+                                                .requestMatchers(new AntPathRequestMatcher("/css/**")).permitAll()
+                                                .requestMatchers(new AntPathRequestMatcher("/js/**")).permitAll()
+                                                .requestMatchers(new AntPathRequestMatcher("/img/**")).permitAll()
+                                        );
+                            } catch (Exception e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                )
+                .formLogin(form -> form
+                        .loginPage("/login").permitAll()
+                        .successHandler(new CustomAuthenticationSuccessHandler())
+                        .failureUrl("/login?error=true")
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout=true")
+                        .permitAll()
+                );
         return http.build();
     }
 
@@ -61,6 +88,8 @@ public class AppSecurityConfig {
 
     @Autowired
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
+        // List<SimpleGrantedAuthority> authorities = Stream.of(
+        //         "CREATE_HOLIDAY", "READ_HOLIDAY", "UPDATE_HOLIDAY", "DELETE_HOLIDAY").map(SimpleGrantedAuthority::new).toList();
         auth.userDetailsService(userDetailService).passwordEncoder(passwordEncoder);
     }
 }

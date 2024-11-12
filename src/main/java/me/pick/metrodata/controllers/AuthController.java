@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import me.pick.metrodata.exceptions.account.AccountDoesNotExistException;
 import me.pick.metrodata.exceptions.account.AccountInvalidPasswordException;
 import me.pick.metrodata.models.dto.requests.LoginRequest;
+import me.pick.metrodata.models.dto.responses.LoginResponse;
+import me.pick.metrodata.repositories.AccountRepository;
 import me.pick.metrodata.services.auth.AuthService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import me.pick.metrodata.models.entity.Account;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -21,6 +24,9 @@ import jakarta.servlet.http.HttpSession;
 public class AuthController {
 
     private final AuthService authService;
+    private static final String ACCESS_DENIED_MESSAGE = "accessDeniedMessage";
+    private final AccountRepository accountRepository;
+
 
     private static final String ACCESS_DENIED_MESSAGE = "accessDeniedMessage";
 
@@ -37,17 +43,9 @@ public class AuthController {
     @PostMapping
     public String login(LoginRequest loginRequest, HttpSession session) {
         try {
-            authService.login(loginRequest, session);
-
-            if (hasAuthority("UPDATE_APPLICANT_NOMINEE") && hasAuthority("READ_PARAMETER")) {
-                return "redirect:/talent-mitra/add";
-            } else if (hasAuthority("CREATE_APPLICANT_NOMINEE")) {
-                return "redirect:/mitra";
-            } else if (hasAuthority("CREATE_ROLE")) {
-                return "redirect:/admin";
-            } else {
-                return "redirect:/";
-            }
+            LoginResponse response = authService.login(loginRequest, session);
+            Account account = accountRepository.findById(response.getAccountId()).orElseThrow(() -> new AccountDoesNotExistException(response.getUsername()));
+            return null;
         } catch (AccountDoesNotExistException | AccountInvalidPasswordException e) {
             session.setAttribute("loginErrorMessage", "Username atau password salah.");
             return "redirect:/login?error=true";

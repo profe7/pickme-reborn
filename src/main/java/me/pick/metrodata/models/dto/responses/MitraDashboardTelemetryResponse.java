@@ -19,6 +19,8 @@ public class MitraDashboardTelemetryResponse {
 
     private Long totalAcceptedApplicants;
 
+    private Long totalAssignedApplicants;
+
     private List<VacancyDashboardTelemetryResponse> newestVacancies;
     
 }

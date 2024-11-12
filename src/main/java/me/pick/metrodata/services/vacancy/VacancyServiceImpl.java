@@ -1,5 +1,12 @@
 package me.pick.metrodata.services.vacancy;
 
+import me.pick.metrodata.models.dto.responses.ReadApplicantResponse;
+import me.pick.metrodata.models.dto.responses.ReadVacancyDetailResponse;
+import me.pick.metrodata.models.entity.Applicant;
+import me.pick.metrodata.models.entity.Talent;
+import me.pick.metrodata.models.entity.Vacancy;
+import me.pick.metrodata.repositories.ApplicantRepository;
+import me.pick.metrodata.repositories.VacancyRepository;
 import lombok.RequiredArgsConstructor;
 import me.pick.metrodata.enums.VacancyStatus;
 import me.pick.metrodata.exceptions.client.ClientDoesNotExistException;
@@ -10,7 +17,9 @@ import me.pick.metrodata.exceptions.vacancy.VacancyStatusDoesNotExistException;
 import me.pick.metrodata.models.dto.requests.VacancyCreationRequest;
 import me.pick.metrodata.models.entity.Client;
 import me.pick.metrodata.models.entity.User;
-import me.pick.metrodata.models.entity.Vacancy;
+
+import me.pick.metrodata.repositories.UserRepository;
+
 import me.pick.metrodata.repositories.ClientRepository;
 import me.pick.metrodata.repositories.UserRepository;
 import me.pick.metrodata.repositories.VacancyRepository;
@@ -18,7 +27,9 @@ import me.pick.metrodata.repositories.specifications.VacancySpecification;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
+import org.springframework.web.util.UriComponentsBuilder;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -28,7 +39,16 @@ public class VacancyServiceImpl implements VacancyService {
 
     private final VacancyRepository vacancyRepository;
     private final UserRepository userRepository;
+    private final ApplicantRepository applicantRepository;
     private final ClientRepository clientRepository;
+
+    @Override
+    public Page<Vacancy> getAllAvailableVacancies(Integer page, Integer size) {
+        List<Vacancy> vacancies = vacancyRepository.findOpenVacancies();
+        Pageable pageable = PageRequest.of(page, size);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), vacancies.size());
+
 
     @Override
     public Page<Vacancy> getOpenVacancies(Integer page, Integer size, String expiredDate, String updatedAt, String title, String position) {
@@ -49,8 +69,55 @@ public class VacancyServiceImpl implements VacancyService {
     }
 
     @Override
-    public Vacancy getVacancyById(Long id) {
-        return vacancyRepository.findById(id).orElse(null);
+    public List<String> getAllPositions() {
+        return vacancyRepository.findDistinctPositions();
+    }
+
+    @Override
+    public Page<Vacancy> searchVacanciesByTitle(String title, Integer page, Integer size) {
+        return vacancyRepository.findByTitleContainingIgnoreCase(title, PageRequest.of(page, size));
+    }
+
+    @Override
+    public Page<Vacancy> searchVacanciesByPosition(String position, Integer page, Integer size) {
+        return vacancyRepository.findByPositionContainingIgnoreCase(position, PageRequest.of(page, size));
+    }
+
+    @Override
+    public Optional<Vacancy> getVacancyById(Long id) {
+        return vacancyRepository.findById(id);
+    }
+
+    @Override
+    public ReadVacancyDetailResponse getVacancyDetailWithApplicants(Long vacancyId, Long mitraId){
+        Optional<Vacancy> vacancyOptional = getVacancyById(vacancyId);
+
+        if (vacancyOptional.isPresent()){
+            Vacancy vacancy = vacancyOptional.get();
+            List<Applicant> applicants = applicantRepository.findApplicantsByVacancyIdAndMitraId(vacancyId, mitraId);
+
+            List<ReadApplicantResponse> applicantResponses = applicants.stream()
+                .map(applicant -> {
+                    Talent talent = applicant.getTalent();
+                    return new ReadApplicantResponse(
+                        talent != null ? talent.getName() : null,
+                        talent != null ? talent.getStatusCV().toString() : null
+                    );
+                }).collect(Collectors.toList());
+
+            ReadVacancyDetailResponse vacancyResponse = new ReadVacancyDetailResponse();
+            vacancyResponse.setTitle(vacancy.getTitle());
+            vacancyResponse.setExpiredDate(vacancy.getExpiredDate());
+            vacancyResponse.setDescription(vacancy.getDescription());
+            vacancyResponse.setPosition(vacancy.getPosition());
+            vacancyResponse.setApplicants(applicantResponses);
+
+            return vacancyResponse;
+
+        }
+
+        return null;
+
     }
 
     @Override

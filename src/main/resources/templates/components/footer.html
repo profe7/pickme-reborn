@@ -1,9 +1,10 @@
-Tentu, berikut adalah codingan lengkap dengan konten yang diminta untuk bagian client dan mitra:
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-```html
+
 <div th:fragment="footer">
   <!-- Client -->
-  <section class="info_section layout_padding2" sec:authorize="hasAuthority('CREATE_INTERVIEW')">
+  <!-- <section class="info_section layout_padding2" sec:authorize="hasAuthority('CREATE_INTERVIEW')">
     <div class="container">
       <div class="row">
         <div class="col-md-6 col-lg-4 info_col">
@@ -72,11 +73,11 @@ Tentu, berikut adalah codingan lengkap dengan konten yang diminta untuk bagian c
         </div>
       </div>
     </div>
-  </section>
+  </section> -->
   <!-- end client info section -->
 
   <!-- Mitra -->
-  <section class="info_section layout_padding2" sec:authorize="hasAuthority('CREATE_APPLICANT_NOMINEE')">
+  <!-- <section class="info_section layout_padding2" sec:authorize="hasAuthority('CREATE_APPLICANT_NOMINEE')">
     <div class="container">
       <div class="row">
         <div class="col-md-6 col-lg-4 info_col">
@@ -126,36 +127,94 @@ Tentu, berikut adalah codingan lengkap dengan konten yang diminta untuk bagian c
         </div>
         <div class="col-md-6 col-lg-6 info_col">
           <div class="info_detail">
-            <h4>Info</h4>
+            <h4>Informasi</h4>
             <p>
-              PT. Mitra Integrasi Informatika (MII) was founded on March 1,
-              1996 as a subsidiary of the publicly listed PT Metrodata
-              Electronics, Tbk.
-            </p>
-            <p>
-              Operating independently from its holding company, MII has
-              teams of young and dynamic professionals with regular
-              refreshed necessary knowledge and skill sets. It has also
-              build strategic alliances with a number of national, regional,
-              and global technology partners that have Digital
-              Transformation vision, to strengthen its offerings.
+              Beroperasi secara independen dari perusahaan induknya,
+              MII memiliki tim yang terdiri dari para profesional muda dan dinamis dengan pengetahuan dan keahlian yang
+              selalu disegarkan.
+              MII juga telah membangun aliansi strategis dengan sejumlah mitra teknologi nasional, regional, dan global
+              yang memiliki visi
+              Transformasi Digital, untuk memperkuat penawarannya.
             </p>
           </div>
         </div>
       </div>
     </div>
+  </section> -->
+  <!-- end mitra info section -->
+
+
+
+  <!-- new footer mitra -->
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+  <section class="info_section layout_padding2">
+    <div class="container">
+      <div class="row">
+
+        <!-- Logo dan Informasi Perusahaan -->
+        <div class="col-md-4">
+          <img src="/img/logo.png" alt="Logo Pick-Me" style="height: 100px;">
+          <p>
+            PT. Mitra Integrasi Informatika (MII)<br>
+             didirikan pada tanggal 1 Maret 1996
+            sebagai anak perusahaan dari PT Metrodata Electronics, Tbk.
+          </p>
+
+          <div class="d-flex gap-3">
+            <a href="https://www.instagram.com/mii_metrodata/?hl=en" class="text-dark">
+              <i class="fab fa-instagram fa-lg"></i>
+            </a>
+            <a href="https://www.linkedin.com/company/pt.-mitra-integrasi-informatika/mycompany/" class="text-dark">
+              <i class="fab fa-linkedin fa-lg"></i>
+            </a>
+            <a href="https://www.youtube.com/channel/UCSS5z57cgnAMEJdPlkpH8TA" class="text-dark">
+              <i class="fab fa-youtube fa-lg"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Informasi Kontak -->
+        <div class="col-md-4">
+          <h6 class="fw-bold">HOTLINE (HARI KERJA, PUKUL 08.00 - 17.00)</h6>
+          <p>
+            APL Tower lt.37 Suite 1-8
+            Jl. Letjen S. Parman Kav. 28
+            Kel. Tanjung Duren Selatan, Kec. Grogol Petamburan
+            Kota Administrasi Jakarta Barat
+          </p>
+          <p>
+            <i class="fa fa-phone"></i> Office:
+            <a href="tel:622129345777" class="text-dark" style="text-decoration: none;">+62 21 29345777</a><br>
+            <i class="fa fa-envelope"></i> Support:
+            <a href="mailto:contact@mii.co.id" class="text-dark" style="text-decoration: none;">contact@mii.co.id</a>
+        </p>
+        
+        </div>
+
+        <!-- Informasi Tambahan -->
+        <div class="col-md-4">
+          <h6 class="fw-bold">INFORMASI</h6>
+          <p>
+            Beroperasi secara independen dari perusahaan induknya, MII memiliki tim yang terdiri dari
+            para profesional muda dan dinamis dengan pengetahuan dan keahlian yang selalu disegarkan.
+            MII juga telah membangun aliansi strategis dengan sejumlah mitra teknologi nasional, regional,
+            dan global yang memiliki visi Transformasi Digital, untuk memperkuat penawarannya.
+          </p>
+        </div>
+      </div>
   </section>
-              
-                  <!-- end mitra info section -->
-                
-                  <!-- footer section -->
-                  <section class="footer_section">
-                    <div class="container">
-                      <p>&copy; <span id="displayYear"></span> Pick-Me</p>
-                    </div>
-                  </section>
-                  <!-- footer section -->
-                </div>
-                ```
-                
-                Pastikan untuk mengganti komentar dengan konten yang sesuai untuk masing-masing bagian, seperti alamat, kontak, media sosial, dan informasi mitra.
+
+  <!-- footer section -->
+  <section class="footer_section">
+    <div class="container">
+      <p>Copyright &copy; <span id="displayYear"></span> Pick-Me by Metrodata</p>
+    </div>
+  </section>
+  <!-- footer section -->
+</div>
+
+<!-- Tambahkan Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/js/bootstrap.bundle.min.js"></script>

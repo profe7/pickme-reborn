@@ -1,9 +1,7 @@
 package me.pick.metrodata.services.talent;
 
+
 import java.util.List;
-
-import org.springframework.data.domain.Page;
-
 import me.pick.metrodata.enums.StatusCV;
 import me.pick.metrodata.models.dto.requests.TalentDataCompletionRequest;
 import me.pick.metrodata.models.dto.requests.TalentFromVacancyRequest;
