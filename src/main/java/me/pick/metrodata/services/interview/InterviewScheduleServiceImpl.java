@@ -107,7 +107,8 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
 
     @Override
     public List<InterviewScheduleCalendarResponse> getInterviewCalendarClient(Long clientId) {
-        Client client = clientRepository.findClientById(clientId).orElseThrow(() -> new ClientDoesNotExistException(clientId));
+        Client client = clientRepository.findClientById(clientId)
+                .orElseThrow(() -> new ClientDoesNotExistException(clientId));
         List<InterviewSchedule> schedules = interviewScheduleRepository.findInterviewScheduleByClient(client);
         return interviewCalendarHelper(schedules);
     }
