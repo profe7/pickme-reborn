@@ -7,11 +7,14 @@ import me.pick.metrodata.exceptions.account.AccountDoesNotExistException;
 import me.pick.metrodata.exceptions.account.AccountInvalidPasswordException;
 import me.pick.metrodata.exceptions.client.ClientDoesNotExistException;
 import me.pick.metrodata.exceptions.institute.InstituteDoesNotExistException;
+import me.pick.metrodata.exceptions.institute.InstituteTypeDoesNotExistException;
 import me.pick.metrodata.exceptions.interviewschedule.ApplicantNotRecommendedException;
 import me.pick.metrodata.exceptions.interviewschedule.InterviewScheduleConflictException;
 import me.pick.metrodata.exceptions.interviewschedule.InterviewScheduleDoesNotExistException;
 import me.pick.metrodata.exceptions.interviewschedule.InterviewScheduleUpdateBadRequestException;
 import me.pick.metrodata.exceptions.mitra.MitraDoesNotExistException;
+import me.pick.metrodata.exceptions.privilege.PrivilegeDoesNotExistException;
+import me.pick.metrodata.exceptions.recommendation.RecommendationDoesNotExistException;
 import me.pick.metrodata.exceptions.role.RoleDoesNotExistException;
 import me.pick.metrodata.exceptions.talent.IncompleteTalentCvException;
 import me.pick.metrodata.exceptions.talent.InvalidTalentNikException;
@@ -42,8 +45,9 @@ public class GlobalExceptionHandler {
             UserDoesNotExistException.class,
             ApplicantDoesNotExistException.class,
             ClientDoesNotExistException.class,
-            VacancyStatusDoesNotExistException.class,
-            InterviewScheduleDoesNotExistException.class
+            InterviewScheduleDoesNotExistException.class,
+            RecommendationDoesNotExistException.class,
+            PrivilegeDoesNotExistException.class
     })
     public ResponseEntity<Object> resourceNotAvailableHandler(Exception e) {
         return ResponseHandler.generateResponse(new Response(
@@ -67,7 +71,9 @@ public class GlobalExceptionHandler {
             InterviewScheduleConflictException.class,
             InterviewScheduleUpdateBadRequestException.class,
             IncompleteVacancyRequestException.class,
-            IncompleteTalentCvException.class
+            IncompleteTalentCvException.class,
+            InstituteTypeDoesNotExistException.class,
+            VacancyStatusDoesNotExistException.class,
     })
     public ResponseEntity<Object> badRequestHandler(Exception e) {
         return ResponseHandler.generateResponse(new Response(

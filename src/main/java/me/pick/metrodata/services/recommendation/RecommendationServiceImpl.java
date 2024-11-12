@@ -1,6 +1,7 @@
 package me.pick.metrodata.services.recommendation;
 
 import lombok.RequiredArgsConstructor;
+import me.pick.metrodata.exceptions.recommendation.RecommendationDoesNotExistException;
 import me.pick.metrodata.models.dto.responses.RecommendationGroupedResponse;
 import me.pick.metrodata.models.dto.responses.RecommendationResponse;
 import me.pick.metrodata.models.dto.responses.TalentResponse;
@@ -8,21 +9,22 @@ import me.pick.metrodata.models.entity.Recommendation;
 import me.pick.metrodata.models.entity.RecommendationApplicant;
 import me.pick.metrodata.models.entity.Talent;
 import me.pick.metrodata.models.entity.Vacancy;
+import me.pick.metrodata.repositories.RecommendationApplicantRepository;
 import me.pick.metrodata.repositories.RecommendationRepository;
 import me.pick.metrodata.services.talent.TalentService;
 import me.pick.metrodata.utils.AuthUtil;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
+import me.pick.metrodata.utils.PageData;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import me.pick.metrodata.repositories.RecommendationApplicantRepository;
 
 @RequiredArgsConstructor
 @Service
@@ -55,13 +57,13 @@ public class RecommendationServiceImpl implements RecommendationService {
 	}
 
 	@Override
-	public List<RecommendationGroupedResponse> getAllByInstituteOrUser() {
+	public Page<RecommendationGroupedResponse> getAllByInstituteOrUser(Integer page, Integer size) {
 		var userId = AuthUtil.getLoginUserId();
-		var groupedResponses = new HashMap<String, RecommendationGroupedResponse>();
+		var groupedResponses = new HashMap<String, RecommendationGroupedResponse> ();
 		var recommendations = recommendationRepository.findByUser_id(userId);
 
 		if (recommendations == null || recommendations.isEmpty()) {
-			return new ArrayList<>();
+			return Page.empty();
 		}
 
 		for (Recommendation recommendation : recommendations) {
@@ -93,6 +95,22 @@ public class RecommendationServiceImpl implements RecommendationService {
 			groupedResponses.put(position, groupedResponse);
 		}
 
-		return new ArrayList<>(groupedResponses.values());
+		List<RecommendationGroupedResponse> responseList = new ArrayList<>(groupedResponses.values());
+		Pageable pageable = PageRequest.of(page, size);
+
+		int start = (int) pageable.getOffset();
+		int end = Math.min((start + pageable.getPageSize()), responseList.size());
+
+		return new PageImpl<>(responseList.subList(start, end), pageable, responseList.size());
+	}
+
+	@Override
+	public void deleteRecommendation(Long id) {
+		try {
+			recommendationRepository.deleteById(id);
+		} catch (Exception e) {
+			throw new RecommendationDoesNotExistException(id);
+		}
+		recommendationApplicantRepository.deleteByRecommendation_Id(id);
 	}
 }

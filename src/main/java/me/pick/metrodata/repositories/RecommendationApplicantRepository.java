@@ -13,4 +13,6 @@ public interface RecommendationApplicantRepository extends JpaRepository<Recomme
     Optional<RecommendationApplicant> findByApplicantIdAndPosition(Long applicantId, String position);
 
     List<RecommendationApplicant> findByRecommendationId(Long recommendationId);
+  
+    void deleteByRecommendation_Id(Long recommendationId);
 }

@@ -1,6 +1,6 @@
 package me.pick.metrodata.controllers.rest;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import me.pick.metrodata.models.dto.requests.AccountRequest;
 import me.pick.metrodata.services.account.AccountService;
 import me.pick.metrodata.utils.Response;
@@ -12,16 +12,18 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/account")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class RestAccountController {
 
     private final AccountService accountService;
+
+    private static final String SUCCESS = "SUCCESS";
 
     @PostMapping("/create-account")
     @PreAuthorize("hasAnyAuthority('MANAGEMENT_CREATE_ACCOUNT', 'EXTERNAL_CREATE_ACCOUNT')")
     public ResponseEntity<Object> createAccount(@RequestBody AccountRequest request) {
         return ResponseHandler.generateResponse(new Response(
-                "Account created", HttpStatus.CREATED, "SUCCESS", accountService.createAccount(request)
+                "Account created", HttpStatus.CREATED, SUCCESS, accountService.createAccount(request)
         ));
     }
 
@@ -36,7 +38,7 @@ public class RestAccountController {
             @RequestParam(required = false) Long limitBudget
     ) {
         return ResponseHandler.generateResponse(new Response(
-                "Available accounts", HttpStatus.OK, "SUCCESS", accountService.getAllAvailableAccounts(page, size, search, institute, baseBudget, limitBudget)
+                "Available accounts", HttpStatus.OK,  SUCCESS, accountService.getAllAvailableAccounts(page, size, search, institute, baseBudget, limitBudget)
         ));
     }
 
@@ -51,7 +53,7 @@ public class RestAccountController {
             @RequestParam(required = false) Long limitBudget
     ) {
         return ResponseHandler.generateResponse(new Response(
-                "Available accounts", HttpStatus.OK, "SUCCESS", accountService.getAvailableAccountsOfRm(page, size, search, institute, baseBudget, limitBudget)
+                "Available accounts", HttpStatus.OK, SUCCESS, accountService.getAvailableAccountsOfRm(page, size, search, institute, baseBudget, limitBudget)
         ));
     }
 
@@ -59,7 +61,7 @@ public class RestAccountController {
     @PreAuthorize("hasAnyAuthority('MANAGEMENT_UPDATE_ACCOUNT', 'EXTERNAL_UPDATE_ACCOUNT')")
     public ResponseEntity<Object> editAccount(@PathVariable Long id, @RequestBody AccountRequest request) {
         return ResponseHandler.generateResponse(new Response(
-                "Account updated", HttpStatus.OK, "SUCCESS", accountService.editAccount(id, request)
+                "Account updated", HttpStatus.OK, SUCCESS, accountService.editAccount(id, request)
         ));
     }
 
@@ -67,7 +69,7 @@ public class RestAccountController {
     @PreAuthorize("hasAnyAuthority('MANAGEMENT_READ_ACCOUNT','EXTERNAL_READ_ACCOUNT')")
     public ResponseEntity<Object> getAccountById(@PathVariable Long id) {
         return ResponseHandler.generateResponse(new Response(
-                "Account found", HttpStatus.OK, "SUCCESS", accountService.getAccountById(id)
+                "Account found", HttpStatus.OK, SUCCESS, accountService.getAccountById(id)
         ));
     }
 }

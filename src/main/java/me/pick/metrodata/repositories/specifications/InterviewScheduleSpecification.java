@@ -10,6 +10,9 @@ import jakarta.persistence.criteria.*;
 import java.time.LocalDate;
 
 public class InterviewScheduleSpecification {
+
+    private InterviewScheduleSpecification() {}
+
     public static Specification<InterviewSchedule> searchSpecification(String search, Long clientId, InterviewType type, String startDate, String endDate, InterviewStatus status) {
         return (root, query, criteriaBuilder) -> {
             Predicate predicate = criteriaBuilder.conjunction();

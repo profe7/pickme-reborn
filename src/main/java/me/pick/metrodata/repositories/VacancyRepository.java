@@ -5,6 +5,7 @@ import me.pick.metrodata.models.entity.Vacancy;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -21,7 +22,7 @@ public interface VacancyRepository extends JpaRepository<Vacancy, Long>, JpaSpec
     Optional<Vacancy> findVacancyById(Long id);
 
     @Query("SELECT v FROM Vacancy v WHERE v.status != 'CLOSED'")
-    List<Vacancy> findOpenVacancies();
+    List<Vacancy> findOpenVacancies(Specification<Vacancy> spec);
 
     @Query("SELECT v, COUNT(a.id) AS totalNominee "
             + "FROM Vacancy v "

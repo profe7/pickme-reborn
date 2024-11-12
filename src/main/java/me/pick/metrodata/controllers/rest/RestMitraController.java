@@ -20,6 +20,8 @@ public class RestMitraController {
 
     private final MitraService mitraService;
 
+    private static final String SUCCESS = "SUCCESS";
+
     @GetMapping("/all-talents/{mitraId}")
     @PreAuthorize("hasAnyAuthority('READ_TALENT')")
     public ResponseEntity<Object> getAllTalents(
@@ -28,7 +30,7 @@ public class RestMitraController {
             @PathVariable Long mitraId
     ) {
         return ResponseHandler.generateResponse(new Response(
-                "Talents found", HttpStatus.OK, "SUCCESS", mitraService.getMitraTalents(mitraId, page, size)
+                "Talents found", HttpStatus.OK, SUCCESS, mitraService.getMitraTalents(mitraId, page, size)
         ));
     }
 
@@ -36,7 +38,7 @@ public class RestMitraController {
     @PreAuthorize("hasAnyAuthority('CREATE_TALENT')")
     public ResponseEntity<Object> getDashboardTelemetry(@PathVariable Long mitraId) {
         return ResponseHandler.generateResponse(new Response(
-                "Dashboard telemetry", HttpStatus.OK, "SUCCESS", mitraService.getMitraDashboardTelemetry(mitraId)
+                "Dashboard telemetry", HttpStatus.OK, SUCCESS, mitraService.getMitraDashboardTelemetry(mitraId)
         ));
     }
 
