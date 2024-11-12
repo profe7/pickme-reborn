@@ -39,7 +39,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Validated
 public class TalentServiceImpl implements TalentService {
-
     private final TalentRepository talentRepository;
     private final MitraRepository mitraRepository;
     private final RoleRepository roleRepository;

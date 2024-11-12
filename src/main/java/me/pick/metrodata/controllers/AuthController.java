@@ -27,9 +27,6 @@ public class AuthController {
     private static final String ACCESS_DENIED_MESSAGE = "accessDeniedMessage";
     private final AccountRepository accountRepository;
 
-
-    private static final String ACCESS_DENIED_MESSAGE = "accessDeniedMessage";
-
     @GetMapping
     public String loginPage(LoginRequest loginRequest, Model model, HttpSession session) {
         String accessDeniedMessage = (String) session.getAttribute(ACCESS_DENIED_MESSAGE);
@@ -50,11 +47,5 @@ public class AuthController {
             session.setAttribute("loginErrorMessage", "Username atau password salah.");
             return "redirect:/login?error=true";
         }
-    }
-
-    private boolean hasAuthority(String authority) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication.getAuthorities().stream()
-                .anyMatch(auth -> auth.getAuthority().equals(authority));
     }
 }

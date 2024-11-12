@@ -22,7 +22,7 @@ import me.pick.metrodata.services.user.UserService;
 @Controller
 @RequestMapping("/admin/recommendation")
 @AllArgsConstructor
-public class RecommendationController {
+public class AdminRecommendationController {
 
     private final UserService userService;
     private final RecommendationService recommendationService;

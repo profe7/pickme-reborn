@@ -36,25 +36,16 @@ public class VacancyController {
                                     @RequestParam(defaultValue = "0") Integer page,
                                     @RequestParam(defaultValue = "10") Integer size) {
     
-            Page<Vacancy> vacancyPage;
+            Page<Vacancy> vacancyPage = vacancyService.getOpenVacancies(page, size, null, null, title, position);
 
-        if (title != null && !title.isEmpty()) {
-            vacancyPage = vacancyService.searchVacanciesByTitle(title, page, size);
-        } else if (position != null && !position.isEmpty()) {
-            vacancyPage = vacancyService.searchVacanciesByPosition(position, page, size);
-        } else {
-            vacancyPage = vacancyService.getAllAvailableVacancies(page, size);
-        }
+            model.addAttribute("vacancies", vacancyPage.getContent());
+            model.addAttribute("positions", vacancyService.getAllPositions());
+            model.addAttribute("currentPage", page);
+            model.addAttribute("totalPages", vacancyPage.getTotalPages());
+            model.addAttribute("title", title);
+            model.addAttribute("position", position);
 
-        model.addAttribute("vacancies", vacancyPage.getContent());
-        model.addAttribute("positions", vacancyService.getAllPositions());
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", vacancyPage.getTotalPages());
-
-        model.addAttribute("title", title);
-        model.addAttribute("position", position);
-
-    return "vacancy/vacancies"; 
+        return "vacancy/vacancies";
 
     }
 

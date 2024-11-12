@@ -31,7 +31,6 @@ public class AppSecurityConfig {
 
     private final AccountDetailService userDetailService;
     private final PasswordEncoder passwordEncoder;
-    // private final SecurityProperties securityProperties;
 
     @SuppressWarnings("removal")
     @Bean

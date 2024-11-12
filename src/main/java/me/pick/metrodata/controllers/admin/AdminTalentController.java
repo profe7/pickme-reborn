@@ -23,7 +23,7 @@ import me.pick.metrodata.services.user.UserService;
 @Controller
 @RequestMapping("/admin/talent")
 @AllArgsConstructor
-public class TalentController {
+public class AdminTalentController {
 
     private final TalentService talentService;
     private final UserService userService;

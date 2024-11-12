@@ -53,13 +53,13 @@ public class MitraServiceImpl implements MitraService{
             talents = talents.stream()
                     .filter(t -> t.getApplicants().stream()
                             .anyMatch(a -> a.getVacancy() != null && a.getVacancy().getPosition().contains(position)))
-                    .collect(Collectors.toList());
+                    .toList();
         }
         if (skill != null && !skill.isEmpty()) {
             talents = talents.stream()
                     .filter(t -> t.getSkills().stream()
                             .anyMatch(s -> s.getName().contains(skill)))
-                    .collect(Collectors.toList());
+                    .toList();
         }
 
         Pageable pageable = PageRequest.of(page, size);
