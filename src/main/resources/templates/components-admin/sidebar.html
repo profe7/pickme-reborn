@@ -151,19 +151,6 @@
               </li>
               <li
                 class="nav-item"
-                sec:authorize="hasAnyAuthority('READ_INSTITUTE_TYPE')"
-              >
-                <a
-                  th:href="@{/admin/institute-type}"
-                  class="nav-link"
-                  th:classappend="${isActive} == institute-type ? 'fw-bold': ''"
-                >
-                  <i class="nav-icon fa fa-book"></i>
-                  <p>Tipe Instansi</p>
-                </a>
-              </li>
-              <li
-                class="nav-item"
                 sec:authorize="hasAnyAuthority('READ_MESSAGE_TEMPLATE')"
               >
                 <a
