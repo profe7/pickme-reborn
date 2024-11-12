@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import me.pick.metrodata.enums.ApplicantStatus;
 import me.pick.metrodata.enums.VacancyStatus;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -14,6 +15,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Data
@@ -61,5 +63,22 @@ public class Vacancy {
     // Metode untuk menghitung hari sejak tanggal pembuatan
     public long getDaysSinceCreated() {
         return createdAt != null ? ChronoUnit.DAYS.between(createdAt.toLocalDate(), LocalDate.now()) : 0;
+
+    @JsonProperty("totalApplicants")
+    public Integer getTotalApplicants() {
+        return (applicants != null) ? applicants.size() : 0;
+    }
+
+    @JsonProperty("totalTalentsFromRecommendations")
+    public Integer getTotalTalentsFromRecommendations() {
+        return (recommendations != null) ? recommendations.size() : 0;
+    }
+
+    @JsonProperty("totalApplicantsAccepted")
+    public Integer getTotalApplicantsAccepted() {
+        return (applicants != null)
+                ? applicants.stream().filter(status -> status.getStatus().equals(ApplicantStatus.ACCEPTED))
+                        .collect(Collectors.toList()).size()
+                : 0;
     }
 }

@@ -10,8 +10,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 @AllArgsConstructor
 public class PageData {
 
-    private int total, perPage, currentPage, lastPage;
-    private String previous, next;
+    private int total;
+    private int perPage;
+    private int currentPage;
+    private int lastPage;
+    private String previous;
+    private String next;
 
     public static PageData pagination(long totalElements, int currentPage, int pageSize, UriComponentsBuilder uriBuilder) {
         int lastPage = (int) Math.ceil((double) totalElements / pageSize);

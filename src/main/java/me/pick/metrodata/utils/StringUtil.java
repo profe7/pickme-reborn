@@ -9,6 +9,8 @@ import java.util.Random;
 
 public class StringUtil {
 
+    private StringUtil() {}
+
     public static String generateRandomEmail() {
         String[] domains = {"gmail.com", "yahoo.com", "hotmail.com", "outlook.com", "example.com"};
         Random random = new Random();
@@ -22,15 +24,12 @@ public class StringUtil {
 
         String randomDomain = domains[random.nextInt(domains.length)];
 
-        String randomEmail = randomPart.toString() + "@" + randomDomain;
-
-        return randomEmail;
+        return randomPart.toString() + "@" + randomDomain;
     }
 
     public static String decodeUrlParameter(String param) {
         try {
-            String decodedValue = URLDecoder.decode(param, "UTF-8");
-            return (decodedValue);
+            return URLDecoder.decode(param, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to decode uri");
         }
