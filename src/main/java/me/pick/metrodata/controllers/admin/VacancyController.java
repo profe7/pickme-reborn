@@ -4,9 +4,13 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
+import me.pick.metrodata.utils.Response;
+import me.pick.metrodata.utils.ResponseHandler;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +33,8 @@ public class VacancyController {
 
     private final VacancyService vacancyService;
     private final UserService userService;
+
+    private static final String SUCCESS = "SUCCESS";
 
     @GetMapping
     public String index(Model model, HttpSession session) {
@@ -59,5 +65,21 @@ public class VacancyController {
         response.put("totalItems", vacancyPage.getTotalElements());
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/all-rm-vacancies")
+    @PreAuthorize("hasAnyAuthority('EXTERNAL_READ_ACCOUNT')")
+    public ResponseEntity<Object> getAllRm(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(defaultValue = "") String title,
+            @RequestParam(defaultValue = "") String position,
+            @RequestParam(defaultValue = "") String expiredDate,
+            @RequestParam(defaultValue = "") String updatedAt,
+            @RequestParam(defaultValue = "") String timeInterval,
+            @RequestParam(defaultValue = "") Long clientId) {
+        return ResponseHandler.generateResponse(new Response(
+                "All vacancies", HttpStatus.OK, SUCCESS, vacancyService.getAllRm(title, position, expiredDate, updatedAt, timeInterval, page, size, clientId)
+        ));
     }
 }

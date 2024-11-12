@@ -27,15 +27,4 @@ public class RestRecommendationController {
                 "Recommendation deleted", HttpStatus.OK, SUCCESS, null
         ));
     }
-
-    @GetMapping("/get-all")
-    @PreAuthorize("hasAnyAuthority('READ_INTERVIEW')")
-    public ResponseEntity<Object> getAll(
-            @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "10") Integer size
-    ) {
-        return ResponseHandler.generateResponse(new Response(
-                "Recommendations found", HttpStatus.OK, SUCCESS, recommendationService.getAll(page, size)
-        ));
-    }
 }

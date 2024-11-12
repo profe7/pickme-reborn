@@ -59,36 +59,6 @@ public class RestVacancyController {
         ));
     }
 
-    @GetMapping("/all-vacancies")
-    @PreAuthorize("hasAnyAuthority('MANAGEMENT_READ_ACCOUNT')")
-    public ResponseEntity<Object> getAll(
-            @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "10") Integer size,
-            @RequestParam(defaultValue = "") String title,
-            @RequestParam(defaultValue = "") String position,
-            @RequestParam(defaultValue = "") String expiredDate,
-            @RequestParam(defaultValue = "") String updatedAt,
-            @RequestParam(defaultValue = "") String timeInterval) {
-        return ResponseHandler.generateResponse(new Response(
-                "All vacancies", HttpStatus.OK, SUCCESS, vacancyService.getAll(title, position, expiredDate, updatedAt, timeInterval, page, size)
-        ));
-    }
-
-    @GetMapping("/all-rm-vacancies")
-    @PreAuthorize("hasAnyAuthority('EXTERNAL_READ_ACCOUNT')")
-    public ResponseEntity<Object> getAllRm(
-            @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "10") Integer size,
-            @RequestParam(defaultValue = "") String title,
-            @RequestParam(defaultValue = "") String position,
-            @RequestParam(defaultValue = "") String expiredDate,
-            @RequestParam(defaultValue = "") String updatedAt,
-            @RequestParam(defaultValue = "") String timeInterval,
-            @RequestParam(defaultValue = "") Long clientId) {
-        return ResponseHandler.generateResponse(new Response(
-                "All vacancies", HttpStatus.OK, SUCCESS, vacancyService.getAllRm(title, position, expiredDate, updatedAt, timeInterval, page, size, clientId)
-        ));
-    }
 
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasAnyAuthority('DELETE_JOB')")
