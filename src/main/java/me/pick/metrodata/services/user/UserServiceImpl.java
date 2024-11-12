@@ -5,6 +5,9 @@ import me.pick.metrodata.exceptions.user.UserDoesNotExistException;
 import me.pick.metrodata.models.entity.User;
 import me.pick.metrodata.repositories.UserRepository;
 import me.pick.metrodata.utils.AuthUtil;
+
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,5 +28,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getById(Long id) {
         return userRepository.findUserById(id).orElse(null);
+    }
+
+    @Override
+    public List<User> getAll() {
+        return userRepository.findAll();
     }
 }

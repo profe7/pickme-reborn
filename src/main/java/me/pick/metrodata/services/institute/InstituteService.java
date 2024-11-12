@@ -2,6 +2,9 @@ package me.pick.metrodata.services.institute;
 
 import me.pick.metrodata.models.dto.requests.InstituteUpdateRequest;
 import me.pick.metrodata.models.entity.Institute;
+
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 
 public interface InstituteService {
@@ -9,5 +12,7 @@ public interface InstituteService {
 
     Page<Institute> getAllInstitutes(String name, Long instituteTypeId, Integer currentPage, Integer perPage);
 
+    List<Institute> getAll();
+  
     void editInstitute(InstituteUpdateRequest request, Long id);
 }

@@ -19,6 +19,7 @@ import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -33,13 +34,6 @@ public class VacancyServiceImpl implements VacancyService {
     public Page<Vacancy> getOpenVacancies(Integer page, Integer size, String expiredDate, String updatedAt, String title, String position) {
         Specification<Vacancy> spec = VacancySpecification.searchSpecification(title, position, expiredDate, updatedAt, null);
         List<Vacancy> vacancies = vacancyRepository.findOpenVacancies(spec);
-        return vacancyPaginationHelper(page, size, vacancies);
-    }
-
-    @Override
-    public Page<Vacancy> getAll(String title, String position, String expiredDate, String updatedAt, String timeInterval, Integer page, Integer size) {
-        Specification<Vacancy> spec = VacancySpecification.combinedSpecification(title, position, expiredDate, updatedAt, timeInterval, null);
-        List<Vacancy> vacancies = vacancyRepository.findAll(spec);
         return vacancyPaginationHelper(page, size, vacancies);
     }
 
@@ -91,6 +85,12 @@ public class VacancyServiceImpl implements VacancyService {
         vacancyRepository.save(vacancy);
     }
 
+    @Override
+    public Page<Vacancy> getFilteredVacancy(String searchTitle, String searchPosition, LocalDate date, VacancyStatus status, Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return vacancyRepository.findAllWithFilters(searchTitle, searchPosition, date, status, pageable);  
+    }
+  
     @Override
     public void editVacancy(VacancyCreationRequest request, Long id) {
         try {

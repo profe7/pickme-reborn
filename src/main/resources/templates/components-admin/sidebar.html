@@ -1,0 +1,190 @@
+<div th:fragment="sidebar">
+  <aside class="main-sidebar elevation-4 sidebar-dark-navy sidebar-color">
+    <!-- Brand Logo -->
+    <a
+      th:href="@{/admin}"
+      class="brand-link d-flex align-items-center justify-content-center"
+    >
+      <img
+        th:src="@{/img/metrodata-academy-logo-sidebar.png}"
+        alt="Logo"
+        class="brand-image border-0"
+      />
+      <span class="brand-text text-white fw-bold">PICK-ME</span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul
+          class="nav nav-pills nav-sidebar flex-column"
+          data-widget="treeview"
+          role="menu"
+        >
+          <!-- <li class="nav-item">
+            <a th:href="@{/user}" class="nav-link">
+              <i class="nav-icon fa fa-user"></i>
+              <p>User</p>
+            </a>
+          </li> -->
+          <li class="nav-item">
+            <a
+              th:href="@{/admin}"
+              class="nav-link"
+              th:classappend="${isActive} == home ? 'active fw-bold': ''"
+            >
+              <i class="nav-icon fa fa-home"></i>
+              <p>Beranda</p>
+            </a>
+          </li>
+          <li
+            class="nav-item"
+            sec:authorize="hasAnyAuthority('READ_INTERVIEW')"
+          >
+            <a
+              th:href="@{/admin/interview-schedule}"
+              class="nav-link"
+              th:classappend="${isActive} == schedule ? 'active fw-bold': ''"
+            >
+              <i class="nav-icon fa fa-calendar-check"></i>
+              <p>Jadwal Wawancara</p>
+            </a>
+          </li>
+          <li class="nav-item" sec:authorize="hasAnyAuthority('READ_JOB')">
+            <a
+              th:href="@{/admin/vacancy}"
+              class="nav-link"
+              th:classappend="${isActive} == vacancy ? 'active fw-bold': ''"
+            >
+              <i class="nav-icon fa fa-file-contract"></i>
+              <p>Lowongan</p>
+            </a>
+          </li>
+          <li class="nav-item" sec:authorize="hasAnyAuthority('READ_TALENT')">
+            <a
+              th:href="@{/admin/talent}"
+              class="nav-link"
+              th:classappend="${isActive} == talent ? 'active fw-bold': ''"
+            >
+              <i class="nav-icon fa fa-address-card"></i>
+              <p>Talent</p>
+            </a>
+          </li>
+
+          <li class="nav-item" sec:authorize="hasAnyAuthority('READ_TALENT')">
+            <a
+              th:href="@{/admin/recommendation}"
+              class="nav-link"
+              th:classappend="${isActive} == recommendation ? 'active fw-bold': ''"
+            >
+              <i class="nav-icon fa fa-user-check"></i>
+              <p>Rekomendasi Talent</p>
+            </a>
+          </li>
+
+          <li
+            class="nav-item"
+            th:classappend="${isActive == 'parameter' || isActive == 'account' || isActive == 'role' || isActive == 'institute' || isActive == 'institute-type' || isActive == 'message-template' || isActive == 'holiday' ? 'menu-open' : ''}"
+            sec:authorize="hasAnyAuthority('MANAGEMENT_READ_ACCOUNT','EXTERNAL_READ_ACCOUNT','READ_ROLE')"
+          >
+            <a
+              href="#"
+              class="nav-link"
+              th:classappend="${isActive == 'parameter' || isActive == 'account' || isActive == 'role' || isActive == 'institute' || isActive == 'institute-type' || isActive == 'message-template' || isActive == 'holiday' ? 'menu-open' : ''}"
+            >
+              <i class="nav-icon fa fa-cog"></i>
+              <p>
+                Pengaturan
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview ml-1">
+              <li
+                class="nav-item"
+                sec:authorize="hasAnyAuthority('READ_PARAMETER')"
+              >
+                <a
+                  th:href="@{/admin/parameter}"
+                  class="nav-link"
+                  th:classappend="${isActive} == 'parameter' ? 'fw-bold' : ''"
+                >
+                  <i class="nav-icon fa fa-cogs"></i>
+                  <p>Parameter</p>
+                </a>
+              </li>
+              <li
+                class="nav-item"
+                sec:authorize="hasAnyAuthority('MANAGEMENT_READ_ACCOUNT','EXTERNAL_READ_ACCOUNT')"
+              >
+                <a
+                  th:href="@{/admin/account}"
+                  class="nav-link"
+                  th:classappend="${isActive} == account ? 'fw-bold': ''"
+                >
+                  <i class="nav-icon fa fa-user"></i>
+                  <p>Akun</p>
+                </a>
+              </li>
+              <li class="nav-item" sec:authorize="hasAnyAuthority('READ_ROLE')">
+                <a
+                  th:href="@{/admin/role}"
+                  class="nav-link"
+                  th:classappend="${isActive} == 'role' ? 'fw-bold' : ''"
+                >
+                  <i class="nav-icon fa fa-user-shield"></i>
+                  <p>Role</p>
+                </a>
+              </li>
+              <li
+                class="nav-item"
+                sec:authorize="hasAnyAuthority('READ_INSTITUTE')"
+              >
+                <a
+                  th:href="@{/admin/institute}"
+                  class="nav-link"
+                  th:classappend="${isActive} == institute ? 'fw-bold': ''"
+                >
+                  <i class="nav-icon fa fa-building"></i>
+                  <p>Instansi</p>
+                </a>
+              </li>
+              <li
+                class="nav-item"
+                sec:authorize="hasAnyAuthority('READ_MESSAGE_TEMPLATE')"
+              >
+                <a
+                  th:href="@{/admin/message-template}"
+                  class="nav-link"
+                  th:classappend="${isActive} == message-template ? 'fw-bold': ''"
+                >
+                  <i class="nav-icon fa fa-envelope"></i>
+                  <p>Template Pesan</p>
+                </a>
+              </li>
+              <li
+                class="nav-item"
+                sec:authorize="hasAnyAuthority('READ_HOLIDAY')"
+              >
+                <a
+                  th:href="@{/admin/holiday}"
+                  class="nav-link"
+                  th:classappend="${isActive} == holiday ? 'fw-bold': ''"
+                >
+                  <i class="nav-icon fa fa-calendar-week"></i>
+                  <p>Hari Libur</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <div
+      class="sidebar-footer text-center text-muted mb-0 py-0"
+      style="position: absolute; bottom: 0; width: 100%"
+    >
+      <p>versi 1.0.9</p>
+    </div>
+  </aside>
+</div>

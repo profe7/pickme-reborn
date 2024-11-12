@@ -53,5 +53,10 @@ public class InstituteServiceImpl implements InstituteService {
 
         return new PageImpl<>(institutes.subList(start, end), pageable, institutes.size());
     }
+
+    @Override
+    public List<Institute> getAll() {
+        return instituteRepository.findAll();
+    }
 }
 

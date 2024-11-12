@@ -1,0 +1,105 @@
+document.addEventListener("DOMContentLoaded", function () {
+  async function fetchSchedules(page = 0) {
+    const response = await fetch(`/admin/recommendation/api?page=${page}`);
+
+    if (response.ok) {
+      const data = await response.json();
+      updateTable(data);
+      updatePagination(data);
+    } else {
+      console.error("Error fetching data", response.status);
+    }
+  }
+
+  const updateTable = (data) => {
+    const tbody = document.getElementById("recommendation-body");
+    tbody.innerHTML = "";
+
+    const itemsPerPage = data.itemsPerPage || 10;
+    const currentPage = data.currentPage || 0;
+    const startNumber = currentPage * itemsPerPage;
+
+    data.recommendations.forEach((recommendation, index) => {
+      const rowNumber = startNumber + index + 1;
+
+      const formattedDate = recommendation.assignDate
+        ? new Date(recommendation.assignDate).toLocaleDateString("en-CA")
+        : "N/A";
+
+      const row = document.createElement("tr");
+      row.innerHTML = `
+      <td>${rowNumber}</td>
+      <td>${recommendation.position || "N/A"}</td>
+      <td>${recommendation.assignInstitute || "N/A"}</td>
+      <td>${recommendation.totalTalents || "0"}</td>
+      <td>${formattedDate}</td>
+      <td>${recommendation.description || "N/A"}</td>
+      <td>
+        <a class="btn btn-success">
+          <i class="bi bi-person-check-fill text-white"></i>
+        </a>
+        <a class="btn btn-danger">
+          <i class="bi bi-trash3-fill text-white"></i>
+        </a>
+      </td>
+    `;
+      tbody.appendChild(row);
+    });
+  };
+
+  const updatePagination = (data) => {
+    const pagination = document.getElementById("pagination");
+    pagination.innerHTML = "";
+    const currentPage = data.currentPage ?? 0;
+    const totalPages = data.totalPages ?? 1;
+    const prevButton = document.createElement("li");
+    prevButton.classList.add("page-item");
+    prevButton.classList.toggle("disabled", currentPage <= 0);
+    const prevLink = document.createElement("a");
+    prevLink.classList.add("page-link");
+    prevLink.textContent = "Prev";
+    prevLink.href = "#";
+    prevLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (currentPage > 0) fetchSchedules(currentPage - 1);
+    });
+    prevButton.appendChild(prevLink);
+    pagination.appendChild(prevButton);
+
+    for (let i = 0; i < totalPages; i++) {
+      const pageButton = document.createElement("li");
+      pageButton.classList.add("page-item");
+      pageButton.classList.toggle("active", i === currentPage);
+      const pageLink = document.createElement("a");
+      pageLink.classList.add("page-link");
+      pageLink.textContent = i + 1;
+      pageLink.href = "#";
+      pageLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        fetchSchedules(i);
+      });
+      pageButton.appendChild(pageLink);
+      pagination.appendChild(pageButton);
+    }
+
+    const nextButton = document.createElement("li");
+    nextButton.classList.add("page-item");
+    nextButton.classList.toggle("disabled", currentPage >= totalPages - 1);
+    const nextLink = document.createElement("a");
+    nextLink.classList.add("page-link");
+    nextLink.textContent = "Next";
+    nextLink.href = "#";
+    nextLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (currentPage < totalPages - 1) fetchSchedules(currentPage + 1);
+    });
+    nextButton.appendChild(nextLink);
+    pagination.appendChild(nextButton);
+
+    document.getElementById("paginationInfo").textContent = `Page ${
+      currentPage + 1
+    } of ${totalPages}`;
+  };
+
+  fetchSchedules();
+});

@@ -3,7 +3,6 @@ package me.pick.metrodata.services.recommendation;
 import lombok.RequiredArgsConstructor;
 import me.pick.metrodata.exceptions.recommendation.RecommendationDoesNotExistException;
 import me.pick.metrodata.models.dto.responses.RecommendationGroupedResponse;
-import me.pick.metrodata.models.dto.responses.RecommendationPaginationResponse;
 import me.pick.metrodata.models.dto.responses.RecommendationResponse;
 import me.pick.metrodata.models.dto.responses.TalentResponse;
 import me.pick.metrodata.models.entity.Recommendation;
@@ -12,19 +11,17 @@ import me.pick.metrodata.models.entity.Talent;
 import me.pick.metrodata.models.entity.Vacancy;
 import me.pick.metrodata.repositories.RecommendationApplicantRepository;
 import me.pick.metrodata.repositories.RecommendationRepository;
-import me.pick.metrodata.repositories.specifications.RecommendationSpecification;
 import me.pick.metrodata.services.talent.TalentService;
-import me.pick.metrodata.utils.AnyUtil;
 import me.pick.metrodata.utils.AuthUtil;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import me.pick.metrodata.utils.PageData;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.web.util.UriComponentsBuilder;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,42 +29,31 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class RecommendationServiceImpl implements RecommendationService {
+
 	private final RecommendationRepository recommendationRepository;
 	private final TalentService talentService;
 	private final RecommendationApplicantRepository recommendationApplicantRepository;
+	private final ModelMapper modelMapper;
 
 	@Override
-	public RecommendationPaginationResponse getAll(Integer currentPage, Integer perPage) {
-
-		UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromPath("");
-		Pageable pageable = PageRequest.of(currentPage, perPage);
-		currentPage = currentPage == null ? 0 : currentPage;
-		perPage = perPage == null ? 10 : perPage;
-
-		Specification<Recommendation> spec = RecommendationSpecification.searchSpecification();
-		var recommendations = recommendationRepository.findAll(spec, pageable).getContent();
-		int total = (int) recommendationRepository.count(spec);
-
-		PageData pageData = AnyUtil.pagination(total, currentPage, perPage, uriBuilder);
-
-		var response = new ArrayList<RecommendationResponse> ();
-		for (Recommendation recommendation : recommendations) {
-			List<TalentResponse> talents = new ArrayList<>();
-			for (RecommendationApplicant applicants : recommendation.getRecommendationApplicants()) {
-				talents.add(talentService.getById(applicants.getApplicant().getTalent().getId()));
-			}
-			response.add(new RecommendationResponse(
-					recommendation.getId(),
-					recommendation.getCreatedAt(),
-					recommendation.getVacancy().getPosition(),
-					recommendation.getVacancy().getId(),
-					recommendation.getUser().getInstitute(),
-					recommendation.getUser(),
-					talents,
-					recommendation.getDescription(),
-					recommendation.getRecommendationApplicants().size()));
-		}
-		return new RecommendationPaginationResponse (pageData, response);
+	public Page<RecommendationResponse> getFilteredRecommendation(Integer page, Integer size) {
+		Pageable pageable = PageRequest.of(page, size);
+		return recommendationRepository.findAllWithFilters(pageable).map(recommendation -> {
+			RecommendationResponse recommendationResponse = modelMapper.map(recommendation,
+					RecommendationResponse.class);
+			recommendationResponse
+					.setAssignInstitute(
+							recommendation.getVacancy().getClient().getUser().getInstitute().getInstituteName());
+			recommendationResponse.setAssignDate(recommendation.getCreatedAt());
+			recommendationResponse.setTotalTalents(recommendation.getTotalTalents());
+			recommendationResponse
+					.setPosition(recommendationApplicantRepository.findByRecommendationId(recommendation.getId())
+							.stream()
+							.map(RecommendationApplicant::getPosition)
+							.findFirst()
+							.orElse(null));
+			return recommendationResponse;
+		});
 	}
 
 	@Override
@@ -88,7 +74,8 @@ public class RecommendationServiceImpl implements RecommendationService {
 			Long vacancyId = vacancy.getId();
 
 			RecommendationGroupedResponse groupedResponse = groupedResponses
-					.getOrDefault(position, new RecommendationGroupedResponse(id, position, vacancyId, new ArrayList<>()));
+					.getOrDefault(position,
+							new RecommendationGroupedResponse(id, position, vacancyId, new ArrayList<>()));
 
 			List<RecommendationApplicant> applicants = recommendation.getRecommendationApplicants();
 
