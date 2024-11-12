@@ -43,16 +43,7 @@ public class AuthController {
         try {
             LoginResponse response = authService.login(loginRequest, session);
             Account account = accountRepository.findById(response.getAccountId()).orElseThrow(() -> new AccountDoesNotExistException(response.getUsername()));
-            if (hasAuthority("UPDATE_APPLICANT_NOMINEE") && hasAuthority("READ_PARAMETER")) {
-                return "redirect:/talent-mitra/add";
-            } else if (response.getRole().getName().equals("MITRA")) {
-                session.setAttribute("mitraId", account.getUser().getMitra().getId());
-                return "redirect:/mitra";
-            } else if (hasAuthority("CREATE_ROLE")) {
-                return "redirect:/admin";
-            } else {
-                return "redirect:/";
-            }
+            return null;
         } catch (AccountDoesNotExistException | AccountInvalidPasswordException e) {
             session.setAttribute("loginErrorMessage", "Username atau password salah.");
             return "redirect:/login?error=true";

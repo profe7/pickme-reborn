@@ -59,7 +59,7 @@ public class AppSecurityConfig {
                 )
                 .formLogin(form -> form
                         .loginPage("/login").permitAll()
-                        .defaultSuccessUrl("/landing-page", true)
+                        .successHandler(new CustomAuthenticationSuccessHandler())
                         .failureUrl("/login?error=true")
                 )
                 .logout(logout -> logout
