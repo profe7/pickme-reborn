@@ -37,9 +37,9 @@ document.addEventListener("DOMContentLoaded", function () {
       const row = document.createElement("tr");
       row.innerHTML = `
       <td>${rowNumber}</td>
-      <td>${talent.name || "N/A"}</td>
-      <td>${talent.email || "N/A"}</td>
-      <td>${talent.instituteName || "N/A"}</td>
+      <td>${talent.name || ""}</td>
+      <td>${talent.email || ""}</td>
+      <td>${talent.instituteName || ""}</td>
       <td>
         <a class="btn btn-primary">
           <i class="bi bi-file-earmark-text-fill text-white"></i>

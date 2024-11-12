@@ -57,7 +57,7 @@ public class RecommendationServiceImpl implements RecommendationService {
 	@Override
 	public Page<RecommendationGroupedResponse> getAllByInstituteOrUser(Integer page, Integer size) {
 		var userId = AuthUtil.getLoginUserId();
-		var groupedResponses = new HashMap<String, RecommendationGroupedResponse> ();
+		var groupedResponses = new HashMap<String, RecommendationGroupedResponse>();
 		var recommendations = recommendationRepository.findByUser_id(userId);
 
 		if (recommendations == null || recommendations.isEmpty()) {

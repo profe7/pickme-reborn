@@ -93,30 +93,30 @@ document.addEventListener("DOMContentLoaded", function () {
 
       const formattedDate = interview.date
         ? new Date(interview.date).toLocaleDateString("en-CA")
-        : "N/A";
+        : "";
 
       const formattedStartTime = interview.startTime
         ? formatTime(interview.startTime)
-        : "N/A";
+        : "";
 
       const formattedEndTime = interview.endTime
         ? formatTime(interview.endTime)
-        : "N/A";
+        : "";
 
       const timeRange =
-        formattedStartTime !== "N/A" && formattedEndTime !== "N/A"
+        formattedStartTime !== "" && formattedEndTime !== ""
           ? `${formattedStartTime} - ${formattedEndTime}`
-          : "N/A";
+          : "";
 
       const row = document.createElement("tr");
       row.innerHTML = `
       <td>${rowNumber}</td>
       <td><a href="/admin/interview-schedule/history/${interview.id}">${
-        interview.clientUserFirstName || "N/A"
+        interview.clientUserFirstName || ""
       }</a></td>
-      <td>${interview.applicantTalentName || "N/A"}</td>
-      <td>${interview.position || "N/A"}</td>
-      <td>${interview.interviewType || "N/A"}</td>
+      <td>${interview.applicantTalentName || ""}</td>
+      <td>${interview.position || ""}</td>
+      <td>${interview.interviewType || ""}</td>
       <td>${formattedDate}</td>
       <td>${timeRange}</td>
       <td><span class="badge" style="background-color:${statusColor}">${status}</span></td>
