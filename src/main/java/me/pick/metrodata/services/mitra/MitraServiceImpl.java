@@ -20,11 +20,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class MitraServiceImpl implements MitraService{
+public class MitraServiceImpl implements MitraService {
 
     private final TalentRepository talentRepository;
     private final MitraRepository mitraRepository;
@@ -34,7 +33,7 @@ public class MitraServiceImpl implements MitraService{
     public Page<Talent> getMitraTalents(Long mitraId, Integer page, Integer size) {
         Mitra mitra = mitraRepository.findById(mitraId).orElseThrow(() -> new MitraDoesNotExistException(mitraId));
         List<Talent> talents = talentRepository.findTalentByMitraId(mitra.getId());
-        Pageable pageable =  PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size);
 
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), talents.size());
@@ -43,8 +42,9 @@ public class MitraServiceImpl implements MitraService{
     }
 
     @Override
-    public Page<Talent> getFilteredMitraTalents(Long mitraId, Integer page, Integer size, String position, String skill) {
-        
+    public Page<Talent> getFilteredMitraTalents(Long mitraId, Integer page, Integer size, String position,
+            String skill) {
+
         Page<Talent> pagedTalents = getMitraTalents(mitraId, page, size);
 
         List<Talent> talents = new ArrayList<>(pagedTalents.getContent());
@@ -69,14 +69,17 @@ public class MitraServiceImpl implements MitraService{
         return new PageImpl<>(talents.subList(start, end), pageable, talents.size());
     }
 
-
     public MitraDashboardTelemetryResponse getMitraDashboardTelemetry(Long mitraId) {
         Mitra mitra = mitraRepository.findById(mitraId).orElseThrow(() -> new MitraDoesNotExistException(mitraId));
         Long availableVacancies = vacancyRepository.countActiveVacancy();
-        Long totalTApplicants = applicantRepository.countApplicantByStatusAndMitra(mitra.getId(), ApplicantStatus.ASSIGNED);
-        Long totalRejectedApplicants = applicantRepository.countApplicantByStatusAndMitra(mitra.getId(), ApplicantStatus.REJECTED);
-        Long totalAcceptedApplicants = applicantRepository.countApplicantByStatusAndMitra(mitra.getId(), ApplicantStatus.ACCEPTED);
-        Long totalAssignedApplicants = applicantRepository.countApplicantByStatusAndMitra(mitra.getId(), ApplicantStatus.ASSIGNED);
+        Long totalTApplicants = applicantRepository.countApplicantByStatusAndMitra(mitra.getId(),
+                ApplicantStatus.ASSIGNED);
+        Long totalRejectedApplicants = applicantRepository.countApplicantByStatusAndMitra(mitra.getId(),
+                ApplicantStatus.REJECTED);
+        Long totalAcceptedApplicants = applicantRepository.countApplicantByStatusAndMitra(mitra.getId(),
+                ApplicantStatus.ACCEPTED);
+        Long totalAssignedApplicants = applicantRepository.countApplicantByStatusAndMitra(mitra.getId(),
+                ApplicantStatus.ASSIGNED);
 
         MitraDashboardTelemetryResponse response = new MitraDashboardTelemetryResponse();
         response.setAvailableVacancies(availableVacancies);
