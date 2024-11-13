@@ -7,8 +7,7 @@ import java.util.Map;
 
 public class ResponseHandler {
 
-    private ResponseHandler() {
-    }
+    private ResponseHandler() {}
 
     public static ResponseEntity<Object> generateResponse(Response response) {
         Map<String, Object> map = new HashMap<>();

@@ -1,0 +1,36 @@
+<div th:fragment="navbar">
+  <nav class="main-header navbar navbar-expand tranparent-navbar">
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button"
+          ><i class="fa fa-bars"></i
+        ></a>
+      </li>
+    </ul>
+
+    <!-- Right navbar links -->
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item dropdown">
+        <button
+          class="nav-item nav-link dropdown-toggle fw-bold"
+          data-toggle="dropdown"
+          th:text="${logged.firstName} + ' ' + ${logged.lastName}"
+        ></button>
+        <div
+          class="dropdown-menu dropdown-menu-lg"
+          style="left: inherit; right: 0px"
+        >
+          <div class="dropdown-divider"></div>
+          <a th:href="@{/account/update-profile}" class="dropdown-item">
+            <i class="fas fa-user mr-2"></i> Perbarui Profil
+          </a>
+          <div class="dropdown-divider"></div>
+          <a th:href="@{/logout}" class="dropdown-item dropdown-footer"
+            >Logout</a
+          >
+        </div>
+      </li>
+    </ul>
+  </nav>
+</div>

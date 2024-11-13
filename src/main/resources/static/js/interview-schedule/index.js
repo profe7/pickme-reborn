@@ -124,7 +124,7 @@ function displayData(page, name = "", date = "") {
   let talentDetailNoData = $("#talentDetailNoData");
   talentDetailNoData.hide();
 
-  var url = `/api/interview-schedule/processed-interview?page=${page}&name=${name}&date=${date}`;
+  var url = `/interview-schedules?page=${page}&name=${name}&date=${date}`;
 
   console.log(`url = ${url}`);
 

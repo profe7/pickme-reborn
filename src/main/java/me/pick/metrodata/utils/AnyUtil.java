@@ -8,9 +8,7 @@ import java.util.Locale;
 
 public class AnyUtil {
 
-    private AnyUtil() {
-        throw new IllegalStateException("Utility class");
-    }
+    private AnyUtil() {}
 
     public static boolean isNumberInArray(Integer[] array, Integer number) {
         for (int element : array) {

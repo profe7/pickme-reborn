@@ -12,11 +12,11 @@ import java.time.LocalDateTime;
 @Data
 public class ForgotPasswordResponse {
 
-    public Long accountId;
+    private Long accountId;
 
-    public String email;
+    private String email;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
-    public LocalDateTime updatedAt;
+    private LocalDateTime updatedAt;
 
 }

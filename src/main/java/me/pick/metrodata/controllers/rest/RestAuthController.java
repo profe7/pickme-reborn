@@ -23,6 +23,9 @@ public class RestAuthController {
 
     private final AuthService authService;
 
+    private static final String SUCCESS = "SUCCESS";
+    private static final String FAILED = "FAILED";
+
     @PostMapping("/login")
     public LoginResponse login(@RequestBody LoginRequest loginRequest, HttpSession session) {
         return authService.login(loginRequest, session);
@@ -35,11 +38,11 @@ public class RestAuthController {
 
         if (check) {
             return ResponseHandler.generateResponse(new Response(
-                    "Institute found", HttpStatus.OK, "SUCCESS", null
+                    "Institute found", HttpStatus.OK, SUCCESS, null
             ));
         } else {
             return ResponseHandler.generateResponse(new Response(
-                    "Institute not found", HttpStatus.NOT_FOUND, "FAILURE", null
+                    "Institute not found", HttpStatus.NOT_FOUND, FAILED, null
             ));
         }
     }
@@ -48,7 +51,7 @@ public class RestAuthController {
     public ResponseEntity<Object> confirmForget(@PathVariable String token) {
         ForgotPasswordResponse forgotPasswordResponse = authService.validateResetPasswordToken(token);
         return ResponseHandler.generateResponse(new Response(
-                "Confirm forgot password has success", HttpStatus.OK, "SUCCESS", forgotPasswordResponse
+                "Confirm forgot password has success", HttpStatus.OK, SUCCESS, forgotPasswordResponse
         ));
     }
 
@@ -58,11 +61,11 @@ public class RestAuthController {
     public ResponseEntity<Object> changePassword(@PathVariable String token, @RequestBody ChangePasswordRequest changePasswordRequest) {
         if (authService.changePassword(token, changePasswordRequest)) {
             return ResponseHandler.generateResponse(new Response(
-                    "Confirm forgot password has success", HttpStatus.OK, "SUCCESS", changePasswordRequest
+                    "Confirm forgot password has success", HttpStatus.OK, SUCCESS, changePasswordRequest
             ));
         }
         return ResponseHandler.generateResponse(new Response(
-                "Confirm forgot password has failed", HttpStatus.INTERNAL_SERVER_ERROR, "FAILED", changePasswordRequest
+                "Confirm forgot password has failed", HttpStatus.INTERNAL_SERVER_ERROR, FAILED, changePasswordRequest
         ));
     }
 }

@@ -11,12 +11,12 @@ import java.util.List;
 @Data
 public class RecommendationGroupedResponse {
 
-    Long id;
+    private Long id;
 
-    String position;
+    private String position;
 
-    Long jobId;
+    private Long jobId;
 
-    List<TalentResponse> talents;
+    private List<TalentResponse> talents;
 
 }

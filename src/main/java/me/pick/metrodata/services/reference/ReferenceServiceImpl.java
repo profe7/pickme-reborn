@@ -2,18 +2,41 @@ package me.pick.metrodata.services.reference;
 
 import lombok.RequiredArgsConstructor;
 import me.pick.metrodata.exceptions.reference.ReferenceDoesNotExistException;
+import me.pick.metrodata.models.dto.responses.ReferenceResponse;
 import me.pick.metrodata.models.entity.References;
 import me.pick.metrodata.repositories.ReferenceRepository;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import springfox.documentation.annotations.Cacheable;
 
 @Service
 @RequiredArgsConstructor
-public class ReferenceServiceImpl implements ReferenceService{
+public class ReferenceServiceImpl implements ReferenceService {
+
     private final ReferenceRepository referenceRepository;
+    private final ModelMapper modelMapper;
 
     @Cacheable("references-by-id")
+    @Override
     public References getReferenceById(Long id) {
         return referenceRepository.findById(id).orElseThrow(() -> new ReferenceDoesNotExistException(id));
+    }
+
+    @Override
+    public Page<ReferenceResponse> getFilteredReference(String searchParameterName, String searchParameterValue,
+            Integer page,
+            Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return referenceRepository.findAllWithFilters(
+                searchParameterName, searchParameterValue, pageable).map(reference -> {
+                    ReferenceResponse referenceResponse = modelMapper.map(
+                            reference,
+                            ReferenceResponse.class);
+                    return referenceResponse;
+                });
     }
 }

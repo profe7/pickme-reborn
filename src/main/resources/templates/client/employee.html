@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/main}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Pegawai</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/responsive.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+
+
+</head>
+
+<body class="hold-transition sidebar-mini">
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper" layout:fragment="content">
+      <div class="container-fluid custom-container">
+        <div class="row gap-4 justify-content-between m-2 h-100">
+          <div class="col card rounded-5 custom-color-1 max-h-100 overflow-y-hidden">
+            <div class="card rounded-5 mx-4 mt-4 mb-2 custom-color-2">
+              <div class="card-body">
+                <h5 class="card-title text-center text-white">Total Pegawai</h5>
+                <!-- <h1 class="card-title text-center text-white" th:text="${count.getTotal()}"></h1> -->
+              </div>
+            </div>
+            <div class="card-body scrollable-content">
+              <div class="row">
+                <!-- <th:block th:each="elem : ${count.getTotalByCategory()}">
+                  <h4 class="card-text d-flex justify-content-between">
+                    <span th:text="${elem.key}"></span>
+                    <span th:text="${elem.value}"></span>
+                  </h4>
+                </th:block> -->
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-9 col-8 p-0 h-auto">
+            <div class="card px-4 py-2 h-100 col">
+              <div class="row justify-content-between align-items-center">
+                <!-- <div class="col-6">
+                  <input id="searchInput" class="form-control" type="search" placeholder="Search" aria-label="Search" />
+                </div>
+                <div class="col-3">
+                  <input id="date" class="form-control" type="date" placeholder="Date" aria-label="Date" />
+                </div> -->
+                <div class="d-flex">
+                    <div class="form-group me-2" style="width: 50%;">
+                      <input type="text" class="form-control" placeholder="Cari Berdasarkan Nama" id="searchTalentName"
+                        oninput="filterTalentsName()">
+                    </div>
+                    <div class="form-group me-2" style="width: 50%;">
+                      <input type="text" class="form-control" placeholder="Cari Berdasarkan Posisi" id="searchTalentPosition"
+                        oninput="filterTalentsPosition()">
+                    </div>  
+              </div>
+              <div class="table-responsive mt-4 flex-fill">
+                <table id="table-schedule" class="table table-hover">
+                  <thead class="table-primary">
+                    <tr>
+                      <th class="text-center">No</th>
+                      <th class="text-center">Nama</th>
+                      <th class="text-center">Posisi</th>
+                      <th class="text-center">Tanggal Onboard</th>
+                      <th class="text-center">Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="employeeTbl"></tbody>
+                </table>
+              </div>
+              <div class="pagination-container justify-content-between align-items-start d-flex">
+                <span id="paginationInfo">Halaman 1 dari 1, Total Data: 0</span>
+                <nav aria-label="Page navigation">
+                  <ul class="pagination pb-0" id="pagination">
+                    <li class="page-item" id="firstPageBtn">
+                      <a class="page-link" href="#" onclick="displayData(0)">
+                     </a>
+                    </li>
+                    <li class="page-item" id="lastPageBtn">
+                      <a class="page-link" href="#" onclick="displayData(totalPage - 1)">>></a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div th:insert="~{components/footer :: footer}"></div>
+    </div>
+</body>
+
+</html>

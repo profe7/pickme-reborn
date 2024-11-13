@@ -20,13 +20,16 @@ public class RestInterviewController {
 
     private final InterviewScheduleService interviewScheduleService;
 
+    private static final String SUCCESS = "SUCCESS";
+    private static final String INTERVIEWS = "Interviews";
+
     @PostMapping("/invite")
     @PreAuthorize("hasAnyAuthority('CREATE_INTERVIEW', 'UPDATE_INTERVIEW', 'READ_INTERVIEW')")
     public ResponseEntity<Object> inviteInterview(@RequestBody InterviewScheduleRequest request) {
         interviewScheduleService.inviteToInterview(request);
         return ResponseHandler.generateResponse(
                 new Response(
-                        "Applicant invited", HttpStatus.CREATED, "SUCCESS", null)
+                        "Applicant invited", HttpStatus.CREATED, SUCCESS, null)
         );
     }
 
@@ -43,7 +46,7 @@ public class RestInterviewController {
             @RequestParam(required = false) InterviewStatus status
     ) {
         return ResponseHandler.generateResponse(new Response(
-                "Interviews", HttpStatus.OK, "SUCCESS", interviewScheduleService.getAll(search, clientId, type, startDate, endDate, status, page, size)
+                INTERVIEWS, HttpStatus.OK, SUCCESS, interviewScheduleService.getAll(search, clientId, type, startDate, endDate, status, page, size)
         ));
     }
 
@@ -60,7 +63,7 @@ public class RestInterviewController {
             @RequestParam(required = false) InterviewStatus status
     ) {
         return ResponseHandler.generateResponse(new Response(
-                "Interviews", HttpStatus.OK, "SUCCESS", interviewScheduleService.getByRm(search, clientId, type, startDate, endDate, status, page, size)
+                INTERVIEWS, HttpStatus.OK, SUCCESS, interviewScheduleService.getByRm(search, clientId, type, startDate, endDate, status, page, size)
         ));
     }
 
@@ -68,7 +71,7 @@ public class RestInterviewController {
     @PreAuthorize("hasAnyAuthority('READ_INTERVIEW')")
     public ResponseEntity<Object> getTalentInterviewHistory(@PathVariable Long interviewId) {
         return ResponseHandler.generateResponse(new Response(
-                "Interviews", HttpStatus.OK, "SUCCESS", interviewScheduleService.getTalentInterviewHistory(interviewId)
+                INTERVIEWS, HttpStatus.OK, SUCCESS, interviewScheduleService.getTalentInterviewHistory(interviewId)
         ));
     }
 
@@ -78,7 +81,23 @@ public class RestInterviewController {
         interviewScheduleService.updateInterviewStatus(request);
         return ResponseHandler.generateResponse(
                 new Response(
-                        "Interview status updated", HttpStatus.CREATED, "SUCCESS", null)
+                        "Interview status updated", HttpStatus.CREATED, SUCCESS, null)
         );
+    }
+
+    @GetMapping("/git calendar/client/{clientId}")
+    @PreAuthorize("hasAnyAuthority('READ_INTERVIEW')")
+    public ResponseEntity<Object> getClientInterviewCalendar(@PathVariable Long clientId) {
+        return ResponseHandler.generateResponse(new Response(
+                INTERVIEWS, HttpStatus.OK, SUCCESS, interviewScheduleService.getInterviewCalendarClient(clientId)
+        ));
+    }
+
+    @GetMapping("/calendar/mitra/{mitraId}")
+    @PreAuthorize("hasAnyAuthority('READ_INTERVIEW')")
+    public ResponseEntity<Object> getInterviewCalendarMitra(@PathVariable Long mitraId) {
+        return ResponseHandler.generateResponse(new Response(
+                INTERVIEWS, HttpStatus.OK, SUCCESS, interviewScheduleService.getInterviewCalendarMitra(mitraId)
+        ));
     }
 }
