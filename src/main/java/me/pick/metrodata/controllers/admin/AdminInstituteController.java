@@ -13,18 +13,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
-import me.pick.metrodata.models.dto.responses.RecommendationResponse;
+import me.pick.metrodata.enums.InstituteType;
+import me.pick.metrodata.models.dto.responses.InstituteResponse;
 import me.pick.metrodata.models.entity.User;
-import me.pick.metrodata.services.recommendation.RecommendationService;
+import me.pick.metrodata.services.institute.InstituteService;
 import me.pick.metrodata.services.user.UserService;
 
 @Controller
-@RequestMapping("/admin/recommendation")
+@RequestMapping("/admin/institute")
 @AllArgsConstructor
-public class AdminRecommendationController {
+public class AdminInstituteController {
 
+    private final InstituteService instituteService;
     private final UserService userService;
-    private final RecommendationService recommendationService;
 
     @GetMapping
     public String index(Model model, HttpServletRequest request) {
@@ -32,20 +33,23 @@ public class AdminRecommendationController {
         User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
 
         model.addAttribute("logged", loggedUser);
-        model.addAttribute("isActive", "recommendation");
-        return "recommendation-admin/index";
+        model.addAttribute("isActive", "institute");
+        return "institute-admin/index";
     }
 
     @GetMapping("/api")
     // @PreAuthorize("hasAnyAuthority('READ_TALENT')")
-    public ResponseEntity<Map<String, Object>> getRecommendations(
+    public ResponseEntity<Map<String, Object>> getInstitutes(
+            @RequestParam(value = "searchName", required = false) String searchName,
+            @RequestParam(value = "searchType", required = false) InstituteType searchType,
             @RequestParam(value = "page", required = false) Integer page,
             @RequestParam(defaultValue = "10", required = false) Integer size) {
 
-        Page<RecommendationResponse> recommendationPage = recommendationService.getFilteredRecommendation(page, size);
+        Page<InstituteResponse> institutePage = instituteService.getFilteredInstitute(
+                searchName, searchType, page, size);
 
         Map<String, Object> response = new HashMap<>();
-        response.put("recommendations", recommendationPage.getContent());
+        response.put("institutes", institutePage.getContent());
 
         return ResponseEntity.ok(response);
     }

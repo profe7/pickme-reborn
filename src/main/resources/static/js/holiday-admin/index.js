@@ -1,6 +1,18 @@
 document.addEventListener("DOMContentLoaded", function () {
+  document
+    .getElementById("searchName")
+    .addEventListener("input", () => fetchSchedules());
+  document
+    .getElementById("date")
+    .addEventListener("input", () => fetchSchedules());
+
   async function fetchSchedules(page = 0) {
-    const response = await fetch(`/admin/recommendation/api?page=${page}`);
+    const searchName = document.getElementById("searchName").value;
+    const date = document.getElementById("date").value;
+
+    const response = await fetch(
+      `/admin/holiday/api?page=${page}&searchName=${searchName}&date=${date}`
+    );
 
     if (response.ok) {
       const data = await response.json();
@@ -11,32 +23,36 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  const statusColors = {
+    LOW: "#808080", // abu-abu
+    MEDIUM: "#FFFF00", // kuning
+    HIGH: "#FF0000", // merah
+  };
+
   const updateTable = (data) => {
-    const tbody = document.getElementById("recommendation-body");
+    const tbody = document.getElementById("holiday-body");
     tbody.innerHTML = "";
 
     const itemsPerPage = data.itemsPerPage || 10;
     const currentPage = data.currentPage || 0;
     const startNumber = currentPage * itemsPerPage;
 
-    data.recommendations.forEach((recommendation, index) => {
+    data.holidays.forEach((holiday, index) => {
       const rowNumber = startNumber + index + 1;
 
-      const formattedDate = recommendation.assignDate
-        ? new Date(recommendation.assignDate).toLocaleDateString("en-CA")
+      const formattedDate = holiday.date
+        ? new Date(holiday.date).toLocaleDateString("en-CA")
         : "";
 
       const row = document.createElement("tr");
       row.innerHTML = `
       <td>${rowNumber}</td>
-      <td>${recommendation.position || ""}</td>
-      <td>${recommendation.assignInstitute || ""}</td>
-      <td>${recommendation.totalTalents || "0"}</td>
+      <td>${holiday.name || ""}</td>
+      <td>${holiday.description || ""}</td>
       <td>${formattedDate}</td>
-      <td>${recommendation.description || ""}</td>
       <td>
-        <a class="btn btn-success">
-          <i class="bi bi-person-check-fill text-white"></i>
+        <a class="btn btn-primary">
+          <i class="bi bi-pencil-square text-white"></i>
         </a>
         <a class="btn btn-danger">
           <i class="bi bi-trash3-fill text-white"></i>

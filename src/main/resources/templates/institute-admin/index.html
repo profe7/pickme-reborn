@@ -8,7 +8,7 @@
       content="upgrade-insecure-requests"
     />
     <div th:insert="~{components-admin/plugin :: css}"></div>
-    <title>Talent</title>
+    <title>Instansi</title>
   </head>
 
   <body>
@@ -24,17 +24,16 @@
                 <li
                   class="breadcrumb-item d-flex align-items-center text-muted"
                 >
-                  <i class="nav-icon fa fa-home me-2"></i>
-                  <a class="text-muted" href="/admin">Beranda</a>
+                  <i class="nav-icon fa fa-cog me-2"></i>Pengaturan
                 </li>
                 <li
                   class="breadcrumb-item active d-flex align-items-center"
                   style="color: #0066cc"
                 >
-                  <i class="nav-icon fa fa-address-card me-2"></i>Talent
+                  <i class="nav-icon fa fa-building me-2"></i>Instansi
                 </li>
               </ol>
-              <h1 class="mt-2"><strong>Talent</strong></h1>
+              <h1 class="mt-2"><strong>Instansi</strong></h1>
             </div>
           </div>
         </div>
@@ -46,7 +45,7 @@
                 <div class="card">
                   <div class="col-12 mt-3">
                     <form
-                      th:action="@{/admin/talent}"
+                      th:action="@{/admin/institute}"
                       method="get"
                       id="filter-form"
                     >
@@ -65,14 +64,14 @@
                             />
                           </div>
                           <div class="col-6">
-                            <input
-                              id="searchMitra"
-                              class="form-control"
-                              type="search"
-                              placeholder="Cari Mitra"
-                              aria-label="Cari Mitra"
+                            <select
+                              id="searchType"
+                              class="form-select"
+                              name="searchType"
                               onchange="applyFilter()"
-                            />
+                            >
+                              <option value="">Tipe</option>
+                            </select>
                           </div>
                         </div>
                       </div>
@@ -84,17 +83,16 @@
                     style="display: none"
                   ></p>
                   <div class="card-body table-responsive">
-                    <table id="table-talent" class="table table-hover">
+                    <table id="table-institute" class="table table-hover">
                       <thead class="table-primary">
                         <tr>
                           <th class="col-1">No</th>
                           <th>Nama</th>
-                          <th>Email</th>
-                          <th>Mitra</th>
+                          <th>Tipe</th>
                           <th>Aksi</th>
                         </tr>
                       </thead>
-                      <tbody id="talent-body"></tbody>
+                      <tbody id="institute-body"></tbody>
                     </table>
                   </div>
                   <div class="pagination-wrapper">
@@ -118,7 +116,7 @@
 
     <!-- JS Local -->
     <div layout:fragment="script">
-      <script th:src="@{/js/talent-admin/index.js}"></script>
+      <script th:src="@{/js/institute-admin/index.js}"></script>
     </div>
   </body>
 </html>

@@ -8,7 +8,7 @@
       content="upgrade-insecure-requests"
     />
     <div th:insert="~{components-admin/plugin :: css}"></div>
-    <title>Talent</title>
+    <title>Hari Libur</title>
   </head>
 
   <body>
@@ -24,17 +24,16 @@
                 <li
                   class="breadcrumb-item d-flex align-items-center text-muted"
                 >
-                  <i class="nav-icon fa fa-home me-2"></i>
-                  <a class="text-muted" href="/admin">Beranda</a>
+                  <i class="nav-icon fa fa-cog me-2"></i>Pengaturan
                 </li>
                 <li
                   class="breadcrumb-item active d-flex align-items-center"
                   style="color: #0066cc"
                 >
-                  <i class="nav-icon fa fa-address-card me-2"></i>Talent
+                  <i class="nav-icon fa fa-calendar-week me-2"></i>Hari Libur
                 </li>
               </ol>
-              <h1 class="mt-2"><strong>Talent</strong></h1>
+              <h1 class="mt-2"><strong>Hari Libur</strong></h1>
             </div>
           </div>
         </div>
@@ -45,8 +44,22 @@
               <div class="col-12">
                 <div class="card">
                   <div class="col-12 mt-3">
+                    <div class="row justify-content-between">
+                      <div class="col-4 text-start mb-3 mt-2 ml-3">
+                        <a
+                          class="btn bi bi-plus"
+                          href="/admin/holiday/create"
+                          style="
+                            background-color: #006699;
+                            color: white;
+                            border: none;
+                          "
+                          >&nbsp;&nbsp;Tambah Hari Libur</a
+                        >
+                      </div>
+                    </div>
                     <form
-                      th:action="@{/admin/talent}"
+                      th:action="@{/admin/holiday}"
                       method="get"
                       id="filter-form"
                     >
@@ -66,11 +79,10 @@
                           </div>
                           <div class="col-6">
                             <input
-                              id="searchMitra"
+                              id="date"
                               class="form-control"
-                              type="search"
-                              placeholder="Cari Mitra"
-                              aria-label="Cari Mitra"
+                              type="date"
+                              aria-label="date"
                               onchange="applyFilter()"
                             />
                           </div>
@@ -84,17 +96,17 @@
                     style="display: none"
                   ></p>
                   <div class="card-body table-responsive">
-                    <table id="table-talent" class="table table-hover">
+                    <table id="table-holiday" class="table table-hover">
                       <thead class="table-primary">
                         <tr>
                           <th class="col-1">No</th>
                           <th>Nama</th>
-                          <th>Email</th>
-                          <th>Mitra</th>
+                          <th>Deskripsi</th>
+                          <th>Tanggal</th>
                           <th>Aksi</th>
                         </tr>
                       </thead>
-                      <tbody id="talent-body"></tbody>
+                      <tbody id="holiday-body"></tbody>
                     </table>
                   </div>
                   <div class="pagination-wrapper">
@@ -118,7 +130,7 @@
 
     <!-- JS Local -->
     <div layout:fragment="script">
-      <script th:src="@{/js/talent-admin/index.js}"></script>
+      <script th:src="@{/js/holiday-admin/index.js}"></script>
     </div>
   </body>
 </html>

@@ -13,18 +13,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
-import me.pick.metrodata.models.dto.responses.RecommendationResponse;
+import me.pick.metrodata.models.dto.responses.ReferenceResponse;
 import me.pick.metrodata.models.entity.User;
-import me.pick.metrodata.services.recommendation.RecommendationService;
+import me.pick.metrodata.services.reference.ReferenceService;
 import me.pick.metrodata.services.user.UserService;
 
 @Controller
-@RequestMapping("/admin/recommendation")
+@RequestMapping("/admin/parameter")
 @AllArgsConstructor
-public class AdminRecommendationController {
+public class AdminParameterController {
 
+    private final ReferenceService referenceService;
     private final UserService userService;
-    private final RecommendationService recommendationService;
 
     @GetMapping
     public String index(Model model, HttpServletRequest request) {
@@ -32,20 +32,24 @@ public class AdminRecommendationController {
         User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
 
         model.addAttribute("logged", loggedUser);
-        model.addAttribute("isActive", "recommendation");
-        return "recommendation-admin/index";
+        model.addAttribute("isActive", "parameter");
+        return "parameter-admin/index";
     }
 
     @GetMapping("/api")
     // @PreAuthorize("hasAnyAuthority('READ_TALENT')")
-    public ResponseEntity<Map<String, Object>> getRecommendations(
+    public ResponseEntity<Map<String, Object>> getParameters(
+            @RequestParam(value = "searchParameterName", required = false) String searchParameterName,
+            @RequestParam(value = "searchParameterValue", required = false) String searchParameterValue,
             @RequestParam(value = "page", required = false) Integer page,
             @RequestParam(defaultValue = "10", required = false) Integer size) {
 
-        Page<RecommendationResponse> recommendationPage = recommendationService.getFilteredRecommendation(page, size);
+        Page<ReferenceResponse> parameterPage = referenceService.getFilteredReference(
+                searchParameterName,
+                searchParameterName, page, size);
 
         Map<String, Object> response = new HashMap<>();
-        response.put("recommendations", recommendationPage.getContent());
+        response.put("parameters", parameterPage.getContent());
 
         return ResponseEntity.ok(response);
     }

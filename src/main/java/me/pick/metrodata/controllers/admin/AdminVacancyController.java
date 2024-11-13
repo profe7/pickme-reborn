@@ -17,10 +17,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import me.pick.metrodata.enums.VacancyStatus;
-import me.pick.metrodata.models.entity.Account;
 import me.pick.metrodata.models.entity.User;
 import me.pick.metrodata.models.entity.Vacancy;
 import me.pick.metrodata.services.user.UserService;
@@ -37,9 +36,9 @@ public class AdminVacancyController {
     private static final String SUCCESS = "SUCCESS";
 
     @GetMapping
-    public String index(Model model, HttpSession session) {
-        Account loggedAccount = (Account) session.getAttribute("loggedAccount");
-        User loggedUser = userService.getById(loggedAccount.getId());
+    public String index(Model model, HttpServletRequest request) {
+
+        User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
 
         model.addAttribute("logged", loggedUser);
         model.addAttribute("isActive", "vacancy");
@@ -56,7 +55,8 @@ public class AdminVacancyController {
             @RequestParam(value = "page", required = false) Integer page,
             @RequestParam(defaultValue = "10", required = false) Integer size) {
 
-        Page<Vacancy> vacancyPage = vacancyService.getFilteredVacancy(searchTitle, searchPosition, date, status, page, size);
+        Page<Vacancy> vacancyPage = vacancyService.getFilteredVacancy(searchTitle, searchPosition, date, status, page,
+                size);
 
         Map<String, Object> response = new HashMap<>();
         response.put("vacancies", vacancyPage.getContent());
@@ -79,7 +79,7 @@ public class AdminVacancyController {
             @RequestParam(defaultValue = "") String timeInterval,
             @RequestParam(defaultValue = "") Long clientId) {
         return ResponseHandler.generateResponse(new Response(
-                "All vacancies", HttpStatus.OK, SUCCESS, vacancyService.getAllRm(title, position, expiredDate, updatedAt, timeInterval, page, size, clientId)
-        ));
+                "All vacancies", HttpStatus.OK, SUCCESS,
+                vacancyService.getAllRm(title, position, expiredDate, updatedAt, timeInterval, page, size, clientId)));
     }
 }

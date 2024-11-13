@@ -38,34 +38,32 @@ public class AppSecurityConfig {
         http
                 .cors(withDefaults())
                 .csrf(csrf -> csrf.disable())
-                .sessionManagement(session ->
-                        {
-                            try {
-                                session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                                        .and()
-                                        .authorizeHttpRequests(requests -> requests
-                                                .requestMatchers(new AntPathRequestMatcher("/mitra/**")).authenticated()
-                                                .requestMatchers(new AntPathRequestMatcher("/login")).permitAll()
-                                                .requestMatchers(new AntPathRequestMatcher("/landing-page")).permitAll()
-                                                .requestMatchers(new AntPathRequestMatcher("/css/**")).permitAll()
-                                                .requestMatchers(new AntPathRequestMatcher("/js/**")).permitAll()
-                                                .requestMatchers(new AntPathRequestMatcher("/img/**")).permitAll()
-                                        );
-                            } catch (Exception e) {
-                                throw new RuntimeException(e);
-                            }
-                        }
-                )
+                .sessionManagement(session -> {
+                    try {
+                        session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                                .and()
+                                .authorizeHttpRequests(requests -> requests
+                                        .requestMatchers(new AntPathRequestMatcher("/mitra/**")).authenticated()
+                                        .requestMatchers(new AntPathRequestMatcher("/admin/**")).authenticated()
+                                        .requestMatchers(new AntPathRequestMatcher("/login")).permitAll()
+                                        .requestMatchers(new AntPathRequestMatcher("/landing-page")).permitAll()
+                                        .requestMatchers(new AntPathRequestMatcher("/css/**")).permitAll()
+                                        .requestMatchers(new AntPathRequestMatcher("/js/**")).permitAll()
+                                        .requestMatchers(new AntPathRequestMatcher("/dist/**")).permitAll()
+                                        .requestMatchers(new AntPathRequestMatcher("/fonts/**")).permitAll()
+                                        .requestMatchers(new AntPathRequestMatcher("/img/**")).permitAll());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                })
                 .formLogin(form -> form
                         .loginPage("/login").permitAll()
                         .successHandler(new CustomAuthenticationSuccessHandler())
-                        .failureUrl("/login?error=true")
-                )
+                        .failureUrl("/login?error=true"))
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login?logout=true")
-                        .permitAll()
-                );
+                        .permitAll());
         return http.build();
     }
 
@@ -81,14 +79,16 @@ public class AppSecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Autowired
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         // List<SimpleGrantedAuthority> authorities = Stream.of(
-        //         "CREATE_HOLIDAY", "READ_HOLIDAY", "UPDATE_HOLIDAY", "DELETE_HOLIDAY").map(SimpleGrantedAuthority::new).toList();
+        // "CREATE_HOLIDAY", "READ_HOLIDAY", "UPDATE_HOLIDAY",
+        // "DELETE_HOLIDAY").map(SimpleGrantedAuthority::new).toList();
         auth.userDetailsService(userDetailService).passwordEncoder(passwordEncoder);
     }
 }

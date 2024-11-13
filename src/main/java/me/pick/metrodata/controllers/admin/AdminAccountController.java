@@ -11,46 +11,45 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
-import me.pick.metrodata.models.dto.responses.ReferenceResponse;
-import me.pick.metrodata.models.entity.Account;
+import me.pick.metrodata.models.dto.responses.AccountResponse;
 import me.pick.metrodata.models.entity.User;
-import me.pick.metrodata.services.reference.ReferenceService;
+import me.pick.metrodata.services.account.AccountService;
 import me.pick.metrodata.services.user.UserService;
 
 @Controller
-@RequestMapping("/admin/parameter")
+@RequestMapping("/admin/account")
 @AllArgsConstructor
-public class ParameterController {
+public class AdminAccountController {
 
-    private final ReferenceService referenceService;
+    private final AccountService accountService;
     private final UserService userService;
 
     @GetMapping
-    public String index(Model model, HttpSession session) {
-        Account loggedAccount = (Account) session.getAttribute("loggedAccount");
-        User loggedUser = userService.getById(loggedAccount.getId());
+    public String index(Model model, HttpServletRequest request) {
+
+        User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
 
         model.addAttribute("logged", loggedUser);
-        model.addAttribute("isActive", "parameter");
-        return "parameter-admin/index";
+        model.addAttribute("isActive", "account");
+        return "account-admin/index";
     }
 
     @GetMapping("/api")
     // @PreAuthorize("hasAnyAuthority('READ_TALENT')")
     public ResponseEntity<Map<String, Object>> getTalents(
-            @RequestParam(value = "searchParameterName", required = false) String searchParameterName,
-            @RequestParam(value = "searchParameterValue", required = false) String searchParameterValue,
+            @RequestParam(value = "searchUsername", required = false) String searchUsername,
+            @RequestParam(value = "role", required = false) String role,
+            @RequestParam(value = "status", required = false) String status,
             @RequestParam(value = "page", required = false) Integer page,
             @RequestParam(defaultValue = "10", required = false) Integer size) {
 
-        Page<ReferenceResponse> parameterPage = referenceService.getFilteredReference(
-                searchParameterName,
-                searchParameterName, page, size);
+        Page<AccountResponse> accountPage = accountService.getFilteredAccount(
+                searchUsername, role, status, page, size);
 
         Map<String, Object> response = new HashMap<>();
-        response.put("parameters", parameterPage.getContent());
+        response.put("accounts", accountPage.getContent());
 
         return ResponseEntity.ok(response);
     }
