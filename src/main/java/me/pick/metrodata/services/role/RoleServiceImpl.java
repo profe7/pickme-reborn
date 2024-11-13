@@ -43,10 +43,12 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public void updateRole(RoleUpdateRequest roleUpdateRequest) {
-        Role role = roleRepository.findById(roleUpdateRequest.getId()).orElseThrow(() -> new RoleDoesNotExistException(roleUpdateRequest.getId()));
+        Role role = roleRepository.findById(roleUpdateRequest.getId())
+                .orElseThrow(() -> new RoleDoesNotExistException(roleUpdateRequest.getId()));
         role.setName(roleUpdateRequest.getName());
         for (Long privilegeId : roleUpdateRequest.getPrivilegeIds()) {
-            role.getPrivileges().add(privilegeRepository.findById(privilegeId).orElseThrow(() -> new PrivilegeDoesNotExistException(privilegeId)));
+            role.getPrivileges().add(privilegeRepository.findById(privilegeId)
+                    .orElseThrow(() -> new PrivilegeDoesNotExistException(privilegeId)));
         }
         roleRepository.save(role);
     }
@@ -61,7 +63,8 @@ public class RoleServiceImpl implements RoleService {
         Role role = new Role();
         role.setName(roleUpdateRequest.getName());
         for (Long privilegeId : roleUpdateRequest.getPrivilegeIds()) {
-            role.getPrivileges().add(privilegeRepository.findById(privilegeId).orElseThrow(() -> new PrivilegeDoesNotExistException(privilegeId)));
+            role.getPrivileges().add(privilegeRepository.findById(privilegeId)
+                    .orElseThrow(() -> new PrivilegeDoesNotExistException(privilegeId)));
         }
         return roleRepository.save(role);
     }

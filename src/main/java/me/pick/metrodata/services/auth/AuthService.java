@@ -10,13 +10,13 @@ import jakarta.servlet.http.HttpSession;
 
 public interface AuthService {
 
-	LoginResponse login (LoginRequest loginRequest, HttpSession session);
+	LoginResponse login(LoginRequest loginRequest, HttpSession session);
 
-	Account getLoggedAccountData ();
+	Account getLoggedAccountData();
 
-	ForgotPasswordResponse validateResetPasswordToken (String token);
+	ForgotPasswordResponse validateResetPasswordToken(String token);
 
-	Boolean changePassword (String token, ChangePasswordRequest changePasswordRequest);
+	Boolean changePassword(String token, ChangePasswordRequest changePasswordRequest);
 
-	Boolean requestForget (String emailOrUsername, String url);
+	Boolean requestForget(String emailOrUsername, String url);
 }

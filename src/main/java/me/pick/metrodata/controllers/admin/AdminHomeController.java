@@ -5,9 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import me.pick.metrodata.models.entity.Account;
-
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import me.pick.metrodata.models.entity.User;
 import me.pick.metrodata.services.user.UserService;
@@ -21,11 +19,9 @@ public class AdminHomeController {
 
     @GetMapping
     // @PreAuthorize("hasAnyAuthority('MANAGEMENT_READ_ACCOUNT','EXTERNAL_READ_ACCOUNT')")
-    public String home(Model model, HttpSession session) {
+    public String home(Model model, HttpServletRequest request) {
 
-        Account loggedAccount = (Account) session.getAttribute("loggedAccount");
-
-        User loggedUser = userService.getById(loggedAccount.getId());
+        User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
 
         model.addAttribute("logged", loggedUser);
 

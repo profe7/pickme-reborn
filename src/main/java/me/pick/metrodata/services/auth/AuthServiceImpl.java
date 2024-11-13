@@ -42,21 +42,24 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public LoginResponse login(LoginRequest loginRequest, HttpSession session) {
-        UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
+        UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(
+                loginRequest.getUsername(), loginRequest.getPassword());
 
-        Account account = accountRepository.findByUsernameOrUserEmail(loginRequest.getUsername(), loginRequest.getUsername()).orElseThrow(() -> new AccountDoesNotExistException(loginRequest.getUsername()));
+        Account account = accountRepository
+                .findByUsernameOrUserEmail(loginRequest.getUsername(), loginRequest.getUsername())
+                .orElseThrow(() -> new AccountDoesNotExistException(loginRequest.getUsername()));
 
         try {
             Authentication auth = authenticationManager.authenticate(authReq);
             SecurityContextHolder.getContext().setAuthentication(auth);
-            session.setAttribute("loggedAccount", account);
         } catch (AuthenticationException e) {
             throw new AccountInvalidPasswordException();
         }
 
         UserDetails userDetails = accountDetailService.loadUserByUsername(loginRequest.getUsername());
 
-        List<String> authorities = userDetails.getAuthorities().stream().map(authority -> authority.getAuthority()).toList();
+        List<String> authorities = userDetails.getAuthorities().stream().map(authority -> authority.getAuthority())
+                .toList();
 
         return new LoginResponse(account.getRole(), account.getId(), account.getUsername(), authorities);
     }
@@ -76,7 +79,8 @@ public class AuthServiceImpl implements AuthService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Token is null");
         } else {
 
-            ResetPasswordToken resetPasswordToken = resetPasswordTokenRepository.findByToken(token).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Token is not found"));
+            ResetPasswordToken resetPasswordToken = resetPasswordTokenRepository.findByToken(token)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Token is not found"));
 
             if (resetPasswordToken.getToken() == null) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Token not valid");
@@ -96,14 +100,17 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public Boolean changePassword(String token, ChangePasswordRequest changePasswordRequest) {
-        ResetPasswordToken resetPasswordToken = resetPasswordTokenRepository.findByToken(token).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Token tidak valid"));
+        ResetPasswordToken resetPasswordToken = resetPasswordTokenRepository.findByToken(token)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Token tidak valid"));
 
         if (changePasswordRequest.getNewPassword() == null || changePasswordRequest.getConfirmNewPassword() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "New password and confirm new password cannot be null");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "New password and confirm new password cannot be null");
         }
 
         if (!changePasswordRequest.getNewPassword().equals(changePasswordRequest.getConfirmNewPassword())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "New Password and confirm new password must same");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "New Password and confirm new password must same");
         }
 
         if (LocalDateTime.now().isAfter(resetPasswordToken.getExpiryDateTime())) {
@@ -125,7 +132,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public Boolean requestForget(String emailOrUsername, String url) {
-        Account account = accountRepository.findByUsernameOrUserEmail(emailOrUsername, emailOrUsername).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account is not found"));
+        Account account = accountRepository.findByUsernameOrUserEmail(emailOrUsername, emailOrUsername)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account is not found"));
         String token = UUID.randomUUID().toString();
 
         ResetPasswordToken resetPasswordToken = new ResetPasswordToken();

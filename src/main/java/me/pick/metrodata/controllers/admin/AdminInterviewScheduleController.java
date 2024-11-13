@@ -13,12 +13,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import me.pick.metrodata.enums.InterviewStatus;
 import me.pick.metrodata.enums.InterviewType;
 import me.pick.metrodata.models.dto.responses.InterviewScheduleResponse;
-import me.pick.metrodata.models.entity.Account;
 import me.pick.metrodata.models.entity.User;
 import me.pick.metrodata.services.interview.InterviewScheduleService;
 import me.pick.metrodata.services.user.UserService;
@@ -33,10 +32,9 @@ public class AdminInterviewScheduleController {
 
     @GetMapping
     // @PreAuthorize("hasAnyAuthority('READ_INTERVIEW')")
-    public String index(Model model, HttpSession session) {
+    public String index(Model model, HttpServletRequest request) {
 
-        Account loggedAccount = (Account) session.getAttribute("loggedAccount");
-        User loggedUser = userService.getById(loggedAccount.getId());
+        User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
 
         model.addAttribute("logged", loggedUser);
         model.addAttribute("isActive", "schedule");

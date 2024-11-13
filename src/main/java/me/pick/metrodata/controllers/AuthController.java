@@ -7,8 +7,6 @@ import me.pick.metrodata.models.dto.requests.LoginRequest;
 import me.pick.metrodata.models.dto.responses.LoginResponse;
 import me.pick.metrodata.repositories.AccountRepository;
 import me.pick.metrodata.services.auth.AuthService;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,7 +39,8 @@ public class AuthController {
     public String login(LoginRequest loginRequest, HttpSession session) {
         try {
             LoginResponse response = authService.login(loginRequest, session);
-            Account account = accountRepository.findById(response.getAccountId()).orElseThrow(() -> new AccountDoesNotExistException(response.getUsername()));
+            Account account = accountRepository.findById(response.getAccountId())
+                    .orElseThrow(() -> new AccountDoesNotExistException(response.getUsername()));
             return null;
         } catch (AccountDoesNotExistException | AccountInvalidPasswordException e) {
             session.setAttribute("loginErrorMessage", "Username atau password salah.");
