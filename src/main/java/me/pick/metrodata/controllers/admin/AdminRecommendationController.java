@@ -38,7 +38,7 @@ public class AdminRecommendationController {
 
     @GetMapping("/api")
     // @PreAuthorize("hasAnyAuthority('READ_TALENT')")
-    public ResponseEntity<Map<String, Object>> getTalents(
+    public ResponseEntity<Map<String, Object>> getRecommendations(
             @RequestParam(value = "page", required = false) Integer page,
             @RequestParam(defaultValue = "10", required = false) Integer size) {
 
