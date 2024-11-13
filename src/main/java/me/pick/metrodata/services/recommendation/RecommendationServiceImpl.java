@@ -24,6 +24,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
@@ -65,42 +66,41 @@ public class RecommendationServiceImpl implements RecommendationService {
 	}
 
 	public List<RecommendationGroupedResponse> getAllByInstituteOrUser() {
-		var userId = AuthUtil.getLoginUserId();
-		var groupedResponses = new HashMap<String, RecommendationGroupedResponse> ();
-		var recommendations = recommendationRepository.findByUser_id (userId);
-
+		Long userId = AuthUtil.getLoginUserId();
+		Map<String, RecommendationGroupedResponse> groupedResponses = new HashMap<>();
+		List<Recommendation> recommendations = recommendationRepository.findByUser_id(userId);
+	
 		if (recommendations == null || recommendations.isEmpty()) {
 			return new ArrayList<>();
 		}
-
+	
 		for (Recommendation recommendation : recommendations) {
-			Long id = recommendation.getId();
+			Long recommendationId = recommendation.getId();
 			Vacancy vacancy = recommendation.getVacancy();
-
+			if (vacancy == null) continue;
+	
 			String position = vacancy.getPosition();
 			Long vacancyId = vacancy.getId();
-
+	
 			RecommendationGroupedResponse groupedResponse = groupedResponses
-					.getOrDefault(position, new RecommendationGroupedResponse(id, position, vacancyId, new ArrayList<>()));
-
+					.getOrDefault(position, new RecommendationGroupedResponse(recommendationId, position, vacancyId, new ArrayList<>()));
+	
 			List<RecommendationApplicant> applicants = recommendation.getRecommendationApplicants();
-
+	
 			if (applicants != null) {
 				for (RecommendationApplicant applicant : applicants) {
 					Talent talent = applicant.getApplicant().getTalent();
-
-					if (talent == null) {
-						continue;
-					}
-
+					if (talent == null) continue;
+	
 					TalentResponse talentResponse = talentService.getById(talent.getId());
 					groupedResponse.getTalents().add(talentResponse);
 				}
 			}
-
+	
 			groupedResponses.put(position, groupedResponse);
 		}
-
+	
 		return new ArrayList<>(groupedResponses.values());
 	}
+	
 }

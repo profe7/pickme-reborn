@@ -41,7 +41,7 @@ $(document).ready(function() {
   const page = 0
   const size = 10
 
-  var url = `/api/recommendations?page=${page}&size=${size}`; 
+  var url = `/recommendations?page=${page}&size=${size}`; 
 
   $.ajax({
       url: url,  

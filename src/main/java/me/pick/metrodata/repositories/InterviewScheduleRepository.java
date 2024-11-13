@@ -49,4 +49,11 @@ public interface InterviewScheduleRepository
 
     Optional<InterviewSchedule> findByApplicantAndClientIdAndStatus(Applicant applicant, Long clientId, InterviewStatus status);
 
+    @Query("SELECT is2 FROM InterviewSchedule is2 "
+        + "JOIN is2.applicant a "
+        + "JOIN a.talent t "
+        + "JOIN t.mitra m "
+        + "WHERE m.id = :mitraId")
+    List<InterviewSchedule> findInterviewScheduleByMitraId(@Param("mitraId") Long mitraId);
+
 }

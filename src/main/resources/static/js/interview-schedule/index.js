@@ -168,15 +168,15 @@ function displayData(page, name = "", date = "") {
             <div class="card rounded-5 interview-list-card my-1 mx-1">
               <div class="rounded-image ml-3">
                 <img src="${
-                  interviewSchedule.talent.photo
-                    ? interviewSchedule.talent.photo
+                  interviewSchedule.applicant.talent.photo
+                    ? interviewSchedule.applicant.talent.photo
                     : "https://cdn-icons-png.flaticon.com/512/3106/3106773.png"
                 }" alt="Profile Image"/>
               </div>
               <div class="card-body row">
                 <div class="col-8">
                   <h6 class="card-title mb-2 ml-3">${
-                    interviewSchedule.talent.name
+                    interviewSchedule.applicant.talent.name
                   }</h6>
                   <h6 class="card-text mb-1 ml-3 text-sm-start">${
                     interviewSchedule.position
@@ -185,7 +185,7 @@ function displayData(page, name = "", date = "") {
                     interviewSchedule.date
                   }</h6>
                   <h6 class="card-text mb-1 ml-3 text-sm-start">${
-                    interviewSchedule.status.name
+                    interviewSchedule.status
                   }</h6>
                 </div>
                 <div class="col-3 d-flex flex-column ml-2">
