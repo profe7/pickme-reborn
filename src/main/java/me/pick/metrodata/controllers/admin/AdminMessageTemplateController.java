@@ -13,19 +13,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
-import me.pick.metrodata.enums.InstituteType;
-import me.pick.metrodata.models.dto.responses.InstituteResponse;
+import me.pick.metrodata.models.entity.MessageTemplate;
 import me.pick.metrodata.models.entity.User;
-import me.pick.metrodata.services.institute.InstituteService;
+import me.pick.metrodata.services.message.MessageTemplateService;
 import me.pick.metrodata.services.user.UserService;
 
 @Controller
-@RequestMapping("/admin/institute")
+@RequestMapping("/admin/message-template")
 @AllArgsConstructor
-public class AdminInstituteController {
+public class AdminMessageTemplateController {
 
-    private final InstituteService instituteService;
     private final UserService userService;
+    private final MessageTemplateService messageTemplateService;
 
     @GetMapping
     public String index(Model model, HttpServletRequest request) {
@@ -33,23 +32,21 @@ public class AdminInstituteController {
         User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
 
         model.addAttribute("logged", loggedUser);
-        model.addAttribute("isActive", "institute");
-        return "institute-admin/index";
+        model.addAttribute("isActive", "message-template");
+        return "message-template-admin/index";
     }
 
     @GetMapping("/api")
     // @PreAuthorize("hasAnyAuthority('READ_TALENT')")
-    public ResponseEntity<Map<String, Object>> getInstitutes(
-            @RequestParam(value = "searchName", required = false) String searchName,
-            @RequestParam(value = "searchType", required = false) InstituteType searchType,
+    public ResponseEntity<Map<String, Object>> getRMessageTemplate(
             @RequestParam(value = "page", required = false) Integer page,
             @RequestParam(defaultValue = "10", required = false) Integer size) {
 
-        Page<InstituteResponse> institutePage = instituteService.getFilteredInstitute(
-                searchName, searchType, page, size);
+        Page<MessageTemplate> messageTemplatePage = messageTemplateService.getFilteredMessageTemplate(page,
+                size);
 
         Map<String, Object> response = new HashMap<>();
-        response.put("institutes", institutePage.getContent());
+        response.put("messages", messageTemplatePage.getContent());
 
         return ResponseEntity.ok(response);
     }
