@@ -16,8 +16,6 @@ import me.pick.metrodata.utils.AuthUtil;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import me.pick.metrodata.utils.PageData;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -59,7 +57,7 @@ public class RecommendationServiceImpl implements RecommendationService {
 	@Override
 	public Page<RecommendationGroupedResponse> getAllByInstituteOrUser(Integer page, Integer size) {
 		var userId = AuthUtil.getLoginUserId();
-		var groupedResponses = new HashMap<String, RecommendationGroupedResponse> ();
+		var groupedResponses = new HashMap<String, RecommendationGroupedResponse>();
 		var recommendations = recommendationRepository.findByUser_id(userId);
 
 		if (recommendations == null || recommendations.isEmpty()) {

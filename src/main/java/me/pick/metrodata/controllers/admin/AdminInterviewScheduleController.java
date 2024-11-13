@@ -26,7 +26,7 @@ import me.pick.metrodata.services.user.UserService;
 @Controller
 @RequestMapping("/admin/interview-schedule")
 @AllArgsConstructor
-public class InterviewScheduleController {
+public class AdminInterviewScheduleController {
 
     private final InterviewScheduleService interviewScheduleService;
     private final UserService userService;

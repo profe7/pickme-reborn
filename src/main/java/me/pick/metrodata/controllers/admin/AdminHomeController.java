@@ -15,7 +15,7 @@ import me.pick.metrodata.services.user.UserService;
 @Controller
 @AllArgsConstructor
 @RequestMapping("/admin")
-public class HomeController {
+public class AdminHomeController {
 
     private final UserService userService;
 

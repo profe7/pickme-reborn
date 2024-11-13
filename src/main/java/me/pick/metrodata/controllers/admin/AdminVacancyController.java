@@ -29,7 +29,7 @@ import me.pick.metrodata.services.vacancy.VacancyService;
 @Controller
 @RequestMapping("/admin/vacancy")
 @AllArgsConstructor
-public class VacancyController {
+public class AdminVacancyController {
 
     private final VacancyService vacancyService;
     private final UserService userService;

@@ -1,6 +1,22 @@
 document.addEventListener("DOMContentLoaded", function () {
+  document
+    .getElementById("searchParameterName")
+    .addEventListener("input", () => fetchSchedules());
+  document
+    .getElementById("searchParameterValue")
+    .addEventListener("input", () => fetchSchedules());
+
   async function fetchSchedules(page = 0) {
-    const response = await fetch(`/admin/recommendatiopi?page=${page}`);
+    const searchParameterName = document.getElementById(
+      "searchParameterName"
+    ).value;
+    const searchParameterValue = document.getElementById(
+      "searchParameterValue"
+    ).value;
+
+    const response = await fetch(
+      `/admin/parameter/api?page=${page}&searchParameterName=${searchParameterName}&searchParameterValue=${searchParameterValue}`
+    );
 
     if (response.ok) {
       const data = await response.json();
@@ -12,31 +28,25 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   const updateTable = (data) => {
-    const tbody = document.getElementById("recommendation-body");
+    const tbody = document.getElementById("parameter-body");
     tbody.innerHTML = "";
 
     const itemsPerPage = data.itemsPerPage || 10;
     const currentPage = data.currentPage || 0;
     const startNumber = currentPage * itemsPerPage;
 
-    data.recommendations.forEach((recommendation, index) => {
+    data.parameters.forEach((parameter, index) => {
       const rowNumber = startNumber + index + 1;
-
-      const formattedDate = recommendation.assignDate
-        ? new Date(recommendation.assignDate).toLocaleDateString("en-CA")
-        : "";
 
       const row = document.createElement("tr");
       row.innerHTML = `
       <td>${rowNumber}</td>
-      <td>${recommendation.position || ""}</td>
-      <td>${recommendation.assignInstitute || ""}</td>
-      <td>${recommendation.totalTalents || "0"}</td>
-      <td>${formattedDate}</td>
-      <td>${recommendation.description || ""}</td>
+      <td>${parameter.reference_group1 || ""}</td>
+      <td>${parameter.reference_group2 || ""}</td>
+      <td>${parameter.reference_name || ""}</td>
       <td>
-        <a class="btn btn-success">
-          <i class="bi bi-person-check-fill text-white"></i>
+        <a class="btn btn-primary">
+          <i class="bi bi-pencil-square text-white"></i>
         </a>
         <a class="btn btn-danger">
           <i class="bi bi-trash3-fill text-white"></i>

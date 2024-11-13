@@ -63,6 +63,7 @@ public class Vacancy {
     // Metode untuk menghitung hari sejak tanggal pembuatan
     public long getDaysSinceCreated() {
         return createdAt != null ? ChronoUnit.DAYS.between(createdAt.toLocalDate(), LocalDate.now()) : 0;
+    }
 
     @JsonProperty("totalApplicants")
     public Integer getTotalApplicants() {

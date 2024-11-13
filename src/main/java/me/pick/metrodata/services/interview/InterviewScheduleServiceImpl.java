@@ -9,7 +9,6 @@ import me.pick.metrodata.exceptions.interviewschedule.InterviewScheduleConflictE
 import me.pick.metrodata.exceptions.interviewschedule.InterviewScheduleDoesNotExistException;
 import me.pick.metrodata.exceptions.interviewschedule.InterviewScheduleUpdateBadRequestException;
 import me.pick.metrodata.exceptions.mitra.MitraDoesNotExistException;
-import me.pick.metrodata.exceptions.user.UserDoesNotExistException;
 import me.pick.metrodata.models.dto.requests.InterviewScheduleRequest;
 import me.pick.metrodata.models.dto.requests.InterviewUpdateRequest;
 import me.pick.metrodata.models.dto.responses.InterviewScheduleResponse;
@@ -108,7 +107,8 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
 
     @Override
     public List<InterviewScheduleCalendarResponse> getInterviewCalendarClient(Long clientId) {
-        Client client = clientRepository.findClientById(clientId).orElseThrow(() -> new ClientDoesNotExistException(clientId));
+        Client client = clientRepository.findClientById(clientId)
+                .orElseThrow(() -> new ClientDoesNotExistException(clientId));
         List<InterviewSchedule> schedules = interviewScheduleRepository.findInterviewScheduleByClient(client);
         return interviewCalendarHelper(schedules);
     }

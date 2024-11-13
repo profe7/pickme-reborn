@@ -65,13 +65,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
       const formattedDate = vacancy.expiredDate
         ? new Date(vacancy.expiredDate).toLocaleDateString("en-CA")
-        : "N/A";
+        : "";
 
       const row = document.createElement("tr");
       row.innerHTML = `
       <td>${rowNumber}</td>
-      <td>${vacancy.title || "N/A"}</td>
-      <td>${vacancy.position || "N/A"}</td>
+      <td>${vacancy.title || ""}</td>
+      <td>${vacancy.position || ""}</td>
       <td>${vacancy.requiredPositions || "0"}</td>
       <td>${vacancy.totalApplicants || "0"}</td>
       <td>${vacancy.totalTalentsFromRecommendations || "0"}</td>

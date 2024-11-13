@@ -21,13 +21,10 @@ import me.pick.metrodata.models.entity.User;
 import me.pick.metrodata.repositories.UserRepository;
 
 import me.pick.metrodata.repositories.ClientRepository;
-import me.pick.metrodata.repositories.UserRepository;
-import me.pick.metrodata.repositories.VacancyRepository;
 import me.pick.metrodata.repositories.specifications.VacancySpecification;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.web.util.UriComponentsBuilder;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.time.LocalDate;
@@ -41,14 +38,6 @@ public class VacancyServiceImpl implements VacancyService {
     private final UserRepository userRepository;
     private final ApplicantRepository applicantRepository;
     private final ClientRepository clientRepository;
-
-    @Override
-    public Page<Vacancy> getAllAvailableVacancies(Integer page, Integer size) {
-        List<Vacancy> vacancies = vacancyRepository.findOpenVacancies();
-        Pageable pageable = PageRequest.of(page, size);
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), vacancies.size());
-
 
     @Override
     public Page<Vacancy> getOpenVacancies(Integer page, Integer size, String expiredDate, String updatedAt, String title, String position) {
@@ -73,15 +62,6 @@ public class VacancyServiceImpl implements VacancyService {
         return vacancyRepository.findDistinctPositions();
     }
 
-    @Override
-    public Page<Vacancy> searchVacanciesByTitle(String title, Integer page, Integer size) {
-        return vacancyRepository.findByTitleContainingIgnoreCase(title, PageRequest.of(page, size));
-    }
-
-    @Override
-    public Page<Vacancy> searchVacanciesByPosition(String position, Integer page, Integer size) {
-        return vacancyRepository.findByPositionContainingIgnoreCase(position, PageRequest.of(page, size));
-    }
 
     @Override
     public Optional<Vacancy> getVacancyById(Long id) {

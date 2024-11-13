@@ -39,7 +39,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Validated
 public class TalentServiceImpl implements TalentService {
-
     private final TalentRepository talentRepository;
     private final MitraRepository mitraRepository;
     private final RoleRepository roleRepository;
@@ -72,8 +71,10 @@ public class TalentServiceImpl implements TalentService {
     }
 
     @Override
-    public Page<Talent> getAll(Integer page, Integer size, String search, Long institute, Long baseSalary, Long limitSalary, Boolean active, String job, String skill, Boolean idle) {
-        Specification<Talent> spec = TalentSpecification.buildSpecification(search, baseSalary, limitSalary, active, institute, job, skill, idle);
+    public Page<Talent> getAll(Integer page, Integer size, String search, Long institute, Long baseSalary,
+            Long limitSalary, Boolean active, String job, String skill, Boolean idle) {
+        Specification<Talent> spec = TalentSpecification.buildSpecification(search, baseSalary, limitSalary, active,
+                institute, job, skill, idle);
         List<Talent> talents = talentRepository.findAll(spec);
 
         Pageable pageable = PageRequest.of(page, size);
