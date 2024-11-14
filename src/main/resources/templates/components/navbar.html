@@ -1,5 +1,5 @@
-<div th:fragment="navbar">
-  <!-- Client
+<!-- <div th:fragment="navbar"> -->
+<!-- Client
   <div class="header_section">
     <div class="container-fluid shadow-sm">
       <nav
@@ -79,42 +79,52 @@
           </ul>
         </div>
       </nav> -->
-
-  <!-- Mitra -->
-  <nav class="navbar navbar-expand-lg user_nav-container" sec:authorize="hasAuthority('CREATE_APPLICANT_NOMINEE')">
+<!-- Mitra Navbar -->
+<div th:fragment="navbar">
+  <nav class="navbar navbar-expand-lg user_nav-container">
     <a class="navbar-brand fw-bold" th:href="@{/mitra}">
       <img th:src="@{/img/metrodata-logo.webp}" alt="pickme-logo" class="brand-image border-0" />
       <span>Pick-Me</span>
     </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
       aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarText">
-      <ul class="navbar-nav nav ml-auto">
-        <li class="nav-item" th:classappend="${#httpServletRequest.requestURI == '/mitra' ? 'active fw-bold' : ''}">
+      <ul class="navbar-nav ms-auto">
+        <!-- Home -->
+        <li class="nav-item" th:classappend="${currentPage == '/mitra' ? 'active fw-bold' : ''}">
           <a class="nav-link" th:href="@{/mitra}">Beranda</a>
         </li>
-        <li class="nav-item"
-          th:classappend="${#httpServletRequest.requestURI.contains('/talent') ? 'active fw-bold' : ''}">
-          <a class="nav-link" th:href="@{'/' + ${session.mitraId} + '/talent'}">Talent</a>
+
+        <!-- Talent (Visible to ROLE_MITRA) -->
+        <li class="nav-item" th:classappend="${currentPage == '/mitra/talent' ? 'active fw-bold' : ''}"
+          sec:authorize="hasRole('ROLE_MITRA')">
+          <a class="nav-link" th:href="@{/mitra/talent}">Talent</a>
         </li>
-        <li class="nav-item" th:classappend="${#httpServletRequest.requestURI == '/vacancies' ? 'active fw-bold' : ''}">
+
+        <!-- Vacancies -->
+        <li class="nav-item" th:classappend="${currentPage == '/vacancies' ? 'active fw-bold' : ''}"
+        sec:authorize="hasRole('ROLE_MITRA')">
           <a class="nav-link" th:href="@{/vacancies}">Lowongan</a>
         </li>
+
+        <!-- User Dropdown (Visible to authenticated users) -->
         <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
-          <a class="nav-item nav-link dropdown-toggle cursor-pointer" data-toggle="dropdown"
-            sec:authentication="name"></a>
-          <div class="dropdown-menu dropdown-menu-lg" style="left: inherit; right: 0px">
-            <a th:href="@{/account/update-profile}" class="dropdown-item">
-              <i class="fas fa-user mr-2"></i> Perbarui Profil
-            </a>
-            <div class="dropdown-divider"></div>
-            <a th:href="@{/logout}" class="dropdown-item dropdown-footer">Logout</a>
-          </div>
+          <a class="nav-item nav-link dropdown-toggle cursor-pointer" id="navbarDropdown" role="button"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            <span sec:authentication="name"></span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-lg" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" th:href="@{/account/update-profile}"><i class="fas fa-user mr-2"></i> Perbarui
+                Profil</a></li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" th:href="@{/logout}">Logout</a></li>
+          </ul>
         </li>
       </ul>
     </div>
   </nav>
-
 </div>
