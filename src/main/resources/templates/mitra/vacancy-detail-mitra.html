@@ -12,7 +12,7 @@
 </head>
 
 <body>
-
+    <div th:replace="~{components/navbar :: navbar}"></div>
     <div class="container-fluid">
 
         <div class="row justify-content-center">
@@ -307,8 +307,6 @@
         function closeTalentModal() {
             $("#talentModal").modal("hide");
         }
-
-
     function validateForm() {
         const namaLengkap = document.getElementById("namaLengkap").value.trim();
         const email = document.getElementById("email").value.trim();

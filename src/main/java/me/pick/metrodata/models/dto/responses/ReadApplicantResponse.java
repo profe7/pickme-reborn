@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class ReadApplicantResponse{
+    Long mitraId;
     String namaTalent;
     String status;
 }

@@ -8,6 +8,7 @@ import me.pick.metrodata.services.mitra.MitraService;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
+@PreAuthorize("hasRole('ROLE_MITRA')")
 @RequestMapping("/mitra")
 @AllArgsConstructor
 public class MitraController {
@@ -38,13 +40,14 @@ public class MitraController {
         return "mitra/dashboard-mitra";
     }
 
-    @GetMapping("/{mitraId}/talent")
-    public String viewAllTalentByMitra(@PathVariable Long mitraId,
-            @RequestParam(required = false) String position,
-            @RequestParam(required = false) String skill,
-            @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "10") Integer size,
-            Model model) {
+    @GetMapping("/talent")
+    public String viewAllTalentByMitra(HttpSession session,
+                                    @RequestParam(required = false) String position,
+                                    @RequestParam(required = false) String skill,
+                                    @RequestParam(defaultValue = "0") Integer page,
+                                    @RequestParam(defaultValue = "10") Integer size,
+                                    Model model) {
+        Long mitraId = (Long) session.getAttribute("mitraId");
         Page<Talent> talents = mitraService.getFilteredMitraTalents(mitraId, page, size, position, skill);
         model.addAttribute("talents", talents);
         model.addAttribute("currentPage", page);
