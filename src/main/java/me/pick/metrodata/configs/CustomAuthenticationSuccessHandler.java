@@ -15,11 +15,12 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-            Authentication authentication) throws IOException, ServletException {
+                                        Authentication authentication) throws IOException, ServletException {
         AccountDetail accountDetail = (AccountDetail) authentication.getPrincipal();
 
         String redirectUrl = "/";
         if ("CLIENT".equals(accountDetail.getAccount().getRole().getName())) {
+            request.getSession().setAttribute("clientId", accountDetail.getAccount().getUser().getClient().getId());
             redirectUrl = "/client";
         } else if ("MITRA".equals(accountDetail.getAccount().getRole().getName())) {
             request.getSession().setAttribute("mitraId", accountDetail.getAccount().getUser().getMitra().getId());

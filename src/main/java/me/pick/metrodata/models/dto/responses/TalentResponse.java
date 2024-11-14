@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 @Data
 public class TalentResponse {
 
+    private String photo;
+
     private String id;
 
     private String name;

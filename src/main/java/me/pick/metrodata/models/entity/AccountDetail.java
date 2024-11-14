@@ -23,12 +23,10 @@ public class AccountDetail implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
         Role role = account.getRole();
-        authorities.add(new SimpleGrantedAuthority("ROLE_"
-                + role.getName().toUpperCase()));
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName().toUpperCase()));
         role.getPrivileges().forEach(privilege -> {
             authorities.add(new SimpleGrantedAuthority(privilege.getName().toUpperCase()));
         });
-
         return authorities;
     }
 
@@ -65,5 +63,4 @@ public class AccountDetail implements UserDetails {
     public boolean isEnabled() {
         return account.isEnabled();
     }
-
 }
