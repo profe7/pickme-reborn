@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class Log {
 
-    @Around("execution(* me.pick.backend.services.*.*(..)) || execution(* me.pick.backend.controllers.*.*(..))")
+    @Around("execution(* me.pick.metrodata.services.*.*(..)) || execution(* me.pick.metrodata.controllers.*.*(..))")
     public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
         long start = System.currentTimeMillis();
         Object result = joinPoint.proceed();

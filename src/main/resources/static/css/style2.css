@@ -1,0 +1,141 @@
+* {
+  font-family: "Poppins", sans-serif;
+}
+
+* {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.custom-modal-dialog {
+  max-width: 90%; /* Adjust the percentage based on your preference */
+}
+
+/* Error Template */
+#error {
+  position: relative;
+  height: 100vh;
+}
+
+#error .error {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.error {
+  max-width: 710px;
+  width: 100%;
+  text-align: center;
+  padding: 0px 15px;
+  line-height: 1.4;
+}
+
+.error .error-code {
+  height: 200px;
+  line-height: 200px;
+}
+
+.error .error-code h1 {
+  font-family: "Fredoka One", cursive;
+  font-size: 168px;
+  margin: 0px;
+  color: #0a0a29;
+  text-transform: uppercase;
+}
+
+.error h2 {
+  font-family: "Raleway", sans-serif;
+  font-size: 22px;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: #222;
+  margin: 0;
+}
+
+.error a {
+  font-family: "Raleway", sans-serif;
+  display: inline-block;
+  font-weight: 700;
+  border-radius: 15px;
+  text-decoration: none;
+  color: #39b1cb;
+}
+
+.error a > .arrow {
+  position: relative;
+  top: -2px;
+  border: solid #39b1cb;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+  -webkit-transform: rotate(135deg);
+  -ms-transform: rotate(135deg);
+  transform: rotate(135deg);
+}
+
+@media only screen and (max-width: 767px) {
+  .error .error-code {
+    height: 122px;
+    line-height: 122px;
+  }
+  .error .error-code h1 {
+    font-size: 122px;
+  }
+}
+/* Error Template End*/
+
+.transparent-navbar {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.sidebar-color {
+  background-color: #0a0a29;
+}
+
+.pagination-container {
+  display: flex;
+  align-items: center;
+}
+
+.login-cover > div {
+  width: 38%;
+}
+
+.login-card {
+  border-radius: 30px;
+}
+
+.gradient-custom-2 {
+  background: #0a0a29;
+}
+
+@media (min-width: 1280px) {
+  .gradient-form {
+    height: fit-content !important;
+    background-color: #e7e7e7;
+  }
+}
+@media (min-width: 769px) {
+  .gradient-custom-2 {
+    /* background-image: url('/img/wp-img.jpg'); */
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
+    border-bottom-left-radius: 30px;
+    border-top-left-radius: 30px;
+  }
+}
+
+.shadow {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+}
+
+.required::after {
+  content: " *";
+  color: red;
+}

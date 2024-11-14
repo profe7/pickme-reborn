@@ -45,7 +45,7 @@ public class AccountSpecification {
       }
 
       if (institutes != null && !institutes.isEmpty()) {
-        institutes.forEach(instituteItem -> inBuilder.value(instituteItem));
+        institutes.forEach(inBuilder::value);
         predicate = criteriaBuilder.and(predicate, inBuilder);
       }
 

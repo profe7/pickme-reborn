@@ -9,7 +9,6 @@ public class MultipartConfig {
 
     @Bean
     public StandardServletMultipartResolver multipartResolver() {
-        StandardServletMultipartResolver multipartResolver = new StandardServletMultipartResolver();
-        return multipartResolver;
+        return new StandardServletMultipartResolver();
     }
 }

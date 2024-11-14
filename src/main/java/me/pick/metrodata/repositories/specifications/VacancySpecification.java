@@ -1,6 +1,7 @@
 package me.pick.metrodata.repositories.specifications;
 
 import jakarta.persistence.criteria.Predicate;
+import me.pick.metrodata.models.entity.Client;
 import me.pick.metrodata.models.entity.Vacancy;
 import me.pick.metrodata.utils.DateTimeUtil;
 import org.springframework.data.jpa.domain.Specification;
@@ -9,7 +10,11 @@ import java.time.LocalDate;
 
 public class VacancySpecification {
 
-    public static Specification<Vacancy> searchSpecification(String title, String position, String expiredDate, String updatedAt) {
+    private VacancySpecification() {}
+
+    private static final String UPDATED = "updatedAt";
+
+    public static Specification<Vacancy> searchSpecification(String title, String position, String expiredDate, String updatedAt, Client client) {
         return (root, query, criteriaBuilder) -> {
             Predicate predicate = criteriaBuilder.conjunction();
 
@@ -36,8 +41,14 @@ public class VacancySpecification {
                 LocalDate localDate = DateTimeUtil.stringToLocalDate(updatedAt);
                 predicate = criteriaBuilder.and(
                         predicate,
-                        criteriaBuilder.greaterThanOrEqualTo(root.get("updatedAt"), localDate.atStartOfDay())
+                        criteriaBuilder.greaterThanOrEqualTo(root.get(UPDATED), localDate.atStartOfDay())
                 );
+            }
+
+            if (client != null) {
+                predicate = criteriaBuilder.and(
+                        predicate,
+                        criteriaBuilder.equal(root.get("client"), client));
             }
 
             return predicate;
@@ -51,15 +62,15 @@ public class VacancySpecification {
 
             switch (timeInterval.toLowerCase()) {
                 case "hari" ->
-                    startDate = LocalDate.now().minusDays(1);
+                        startDate = LocalDate.now().minusDays(1);
                 case "minggu" ->
-                    startDate = LocalDate.now().minusWeeks(1);
+                        startDate = LocalDate.now().minusWeeks(1);
                 case "bulan" -> {
                     startDate = LocalDate.now().withDayOfMonth(1);
                     endDate = LocalDate.now().plusMonths(1).withDayOfMonth(1).minusDays(1);
                 }
                 default ->
-                    throw new IllegalArgumentException("Interval waktu tidak valid");
+                        throw new IllegalArgumentException("Interval waktu tidak valid");
             }
 
             if (timeInterval.equalsIgnoreCase("bulan")) {
@@ -67,8 +78,8 @@ public class VacancySpecification {
                     throw new IllegalArgumentException("End date cannot be null");
                 }
                 return criteriaBuilder.and(
-                        criteriaBuilder.greaterThanOrEqualTo(root.get("updatedAt"), startDate.atStartOfDay()),
-                        criteriaBuilder.lessThanOrEqualTo(root.get("updatedAt"), endDate.atTime(23, 59, 59))
+                        criteriaBuilder.greaterThanOrEqualTo(root.get(UPDATED), startDate.atStartOfDay()),
+                        criteriaBuilder.lessThanOrEqualTo(root.get(UPDATED), endDate.atTime(23, 59, 59))
                 );
             } else {
                 return criteriaBuilder.and(
@@ -78,8 +89,8 @@ public class VacancySpecification {
         };
     }
 
-    public static Specification<Vacancy> combinedSpecification(String title, String position, String expiredDate, String updatedAt, String timeInterval) {
-        Specification<Vacancy> searchSpec = searchSpecification(title, position, expiredDate, updatedAt);
+    public static Specification<Vacancy> combinedSpecification(String title, String position, String expiredDate, String updatedAt, String timeInterval, Client client) {
+        Specification<Vacancy> searchSpec = searchSpecification(title, position, expiredDate, updatedAt, client);
 
         if (timeInterval != null && !timeInterval.isEmpty()) {
             Specification<Vacancy> timeIntervalSpec = timeIntervalSpecification(timeInterval);

@@ -2,15 +2,10 @@ package me.pick.metrodata.controllers;
 
 import me.pick.metrodata.models.dto.responses.ReadVacancyDetailResponse;
 import me.pick.metrodata.models.dto.responses.TalentAvailableForVacancyResponse;
-import me.pick.metrodata.models.entity.Talent;
 import me.pick.metrodata.models.entity.Vacancy;
 import me.pick.metrodata.services.talent.TalentService;
 import me.pick.metrodata.services.vacancy.VacancyService;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,27 +35,18 @@ public class VacancyController {
                                     @RequestParam(required = false) String position,
                                     @RequestParam(defaultValue = "0") Integer page,
                                     @RequestParam(defaultValue = "10") Integer size) {
-    
-            Page<Vacancy> vacancyPage;
 
-        if (title != null && !title.isEmpty()) {
-            vacancyPage = vacancyService.searchVacanciesByTitle(title, page, size);
-        } else if (position != null && !position.isEmpty()) {
-            vacancyPage = vacancyService.searchVacanciesByPosition(position, page, size);
-        } else {
-            vacancyPage = vacancyService.getAllAvailableVacancies(page, size);
-        }
+        Page<Vacancy> vacancyPage = vacancyService.getOpenVacancies(page, size, null, null, title, position);
 
         model.addAttribute("vacancies", vacancyPage.getContent());
         model.addAttribute("positions", vacancyService.getAllPositions());
         model.addAttribute("currentPage", "/vacancies");
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", vacancyPage.getTotalPages());
-
         model.addAttribute("title", title);
         model.addAttribute("position", position);
 
-    return "vacancy/vacancies"; 
+        return "vacancy/vacancies";
 
     }
 
@@ -69,7 +55,7 @@ public class VacancyController {
         Long mitraId = (Long) httpSession.getAttribute("mitraId");
         ReadVacancyDetailResponse vacancyDetail = vacancyService.getVacancyDetailWithApplicants(vacancyId, mitraId);
 
-        if (vacancyDetail != null){
+        if (vacancyDetail != null) {
             model.addAttribute("detailVacancy", vacancyDetail);
         }
 
@@ -85,4 +71,3 @@ public class VacancyController {
     }
 
 }
-    

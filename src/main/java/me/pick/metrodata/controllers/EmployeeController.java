@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import lombok.AllArgsConstructor;
 import me.pick.metrodata.models.entity.Talent;
 import me.pick.metrodata.services.client.ClientService;
-import me.pick.metrodata.services.client.ClientServiceImpl;
 
 @Controller
 @RequestMapping("/employee")

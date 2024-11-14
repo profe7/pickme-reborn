@@ -16,11 +16,13 @@ public class RestClientController {
 
     private final ClientService clientService;
 
+    private static final String SUCCESS = "SUCCESS";
+
     @GetMapping("/employees/{clientId}")
     @PreAuthorize("hasAnyAuthority('READ_APPLICANT')")
     public ResponseEntity<Object> getClientEmployees(@PathVariable Long clientId) {
         return ResponseHandler.generateResponse(new Response(
-                "Employees found", HttpStatus.OK, "SUCCESS", clientService.getClientEmployees(clientId)
+                "Employees found", HttpStatus.OK, SUCCESS, clientService.getClientEmployees(clientId)
         ));
     }
 
@@ -29,7 +31,7 @@ public class RestClientController {
     public ResponseEntity<Object> deleteClientEmployee(@PathVariable Long clientId, @PathVariable String talentId) {
         clientService.deleteClientEmployee(clientId, talentId);
         return ResponseHandler.generateResponse(new Response(
-                "Employee deleted", HttpStatus.OK, "SUCCESS", null
+                "Employee deleted", HttpStatus.OK, SUCCESS, null
         ));
     }
 
@@ -37,7 +39,7 @@ public class RestClientController {
     @PreAuthorize("hasAnyAuthority('READ_APPLICANT')")
     public ResponseEntity<Object> getClientDashboardTelemetry(@PathVariable Long clientId) {
         return ResponseHandler.generateResponse(new Response(
-                "Dashboard telemetry", HttpStatus.OK, "SUCCESS", clientService.getClientDashboardTelemetry(clientId)
+                "Dashboard telemetry", HttpStatus.OK, SUCCESS, clientService.getClientDashboardTelemetry(clientId)
         ));
     }
 }

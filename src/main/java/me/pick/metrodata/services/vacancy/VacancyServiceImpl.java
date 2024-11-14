@@ -9,19 +9,25 @@ import me.pick.metrodata.repositories.ApplicantRepository;
 import me.pick.metrodata.repositories.VacancyRepository;
 import lombok.RequiredArgsConstructor;
 import me.pick.metrodata.enums.VacancyStatus;
+import me.pick.metrodata.exceptions.client.ClientDoesNotExistException;
 import me.pick.metrodata.exceptions.user.UserDoesNotExistException;
 import me.pick.metrodata.exceptions.vacancy.IncompleteVacancyRequestException;
 import me.pick.metrodata.exceptions.vacancy.VacancyNotExistException;
 import me.pick.metrodata.exceptions.vacancy.VacancyStatusDoesNotExistException;
 import me.pick.metrodata.models.dto.requests.VacancyCreationRequest;
+import me.pick.metrodata.models.entity.Client;
 import me.pick.metrodata.models.entity.User;
+
 import me.pick.metrodata.repositories.UserRepository;
+
+import me.pick.metrodata.repositories.ClientRepository;
+import me.pick.metrodata.repositories.specifications.VacancySpecification;
 import org.springframework.data.domain.*;
-import org.springframework.data.util.Pair;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.web.util.UriComponentsBuilder;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -31,15 +37,24 @@ public class VacancyServiceImpl implements VacancyService {
     private final VacancyRepository vacancyRepository;
     private final UserRepository userRepository;
     private final ApplicantRepository applicantRepository;
+    private final ClientRepository clientRepository;
 
     @Override
-    public Page<Vacancy> getAllAvailableVacancies(Integer page, Integer size) {
-        List<Vacancy> vacancies = vacancyRepository.findOpenVacancies();
-        Pageable pageable = PageRequest.of(page, size);
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), vacancies.size());
+    public Page<Vacancy> getOpenVacancies(Integer page, Integer size, String expiredDate, String updatedAt, String title, String position) {
+        Specification<Vacancy> spec = VacancySpecification.searchSpecification(title, position, expiredDate, updatedAt, null);
+        List<Vacancy> vacancies = vacancyRepository.findOpenVacancies(spec);
+        return vacancyPaginationHelper(page, size, vacancies);
+    }
 
-        return new PageImpl<>(vacancies.subList(start, end), pageable, vacancies.size());
+    @Override
+    public Page<Vacancy> getAllRm(String title, String position, String expiredDate, String updatedAt, String timeInterval, Integer page, Integer size, Long clientId) {
+        if (clientId == null) {
+            throw new ClientDoesNotExistException(0L);
+        }
+        Client client = clientRepository.findClientById(clientId).orElseThrow(() -> new ClientDoesNotExistException(clientId));
+        Specification<Vacancy> spec = VacancySpecification.combinedSpecification(title, position, expiredDate, updatedAt, timeInterval, client);
+        List<Vacancy> vacancies = vacancyRepository.findAll(spec);
+        return vacancyPaginationHelper(page, size, vacancies);
     }
 
     @Override
@@ -47,15 +62,6 @@ public class VacancyServiceImpl implements VacancyService {
         return vacancyRepository.findDistinctPositions();
     }
 
-    @Override
-    public Page<Vacancy> searchVacanciesByTitle(String title, Integer page, Integer size) {
-        return vacancyRepository.findByTitleContainingIgnoreCase(title, PageRequest.of(page, size));
-    }
-
-    @Override
-    public Page<Vacancy> searchVacanciesByPosition(String position, Integer page, Integer size) {
-        return vacancyRepository.findByPositionContainingIgnoreCase(position, PageRequest.of(page, size));
-    }
 
     @Override
     public Optional<Vacancy> getVacancyById(Long id) {
@@ -127,6 +133,12 @@ public class VacancyServiceImpl implements VacancyService {
     }
 
     @Override
+    public Page<Vacancy> getFilteredVacancy(String searchTitle, String searchPosition, LocalDate date, VacancyStatus status, Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return vacancyRepository.findAllWithFilters(searchTitle, searchPosition, date, status, pageable);  
+    }
+  
+    @Override
     public void editVacancy(VacancyCreationRequest request, Long id) {
         try {
             VacancyStatus.valueOf(request.getVacancyStatus());
@@ -143,4 +155,17 @@ public class VacancyServiceImpl implements VacancyService {
         vacancyRepository.save(vacancy);
     }
 
+    @Override
+    public void deleteVacancy(Long id) {
+        Vacancy vacancy = vacancyRepository.findById(id).orElseThrow(() -> new VacancyNotExistException(id));
+        vacancyRepository.delete(vacancy);
+    }
+
+    private Page<Vacancy> vacancyPaginationHelper(Integer page, Integer size, List<Vacancy> vacancies) {
+        Pageable pageable = PageRequest.of(page, size);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), vacancies.size());
+
+        return new PageImpl<>(vacancies.subList(start, end), pageable, vacancies.size());
+    }
 }
