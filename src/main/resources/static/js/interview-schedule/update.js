@@ -1,11 +1,3 @@
-// $(document).ready(function () {
-//   $("#message").summernote({
-//     height: 150,
-//     minHeight: null,
-//     maxHeight: null,
-//   });
-// });
-
 $(document).ready(function () {
   $(".select2").select2();
   $("#ccSelect").select2({
@@ -402,4 +394,31 @@ function compareTimes(time1, time2) {
       return 0;
     }
   }
+}
+
+// Function to filter talents by name
+function filterTalentsName() {
+  let talentName = document.getElementById('searchTalentName').value;
+  let clientId = document.getElementById('clientId').value;
+
+  fetchRecommendations(clientId, talentName);
+}
+
+// Function to fetch recommendations from the server
+function fetchRecommendations(clientId, talentName) {
+  $.ajax({
+    url: `/client/interview-schedules`,
+    type: 'GET',
+    data: {
+      clientId: clientId,
+      search: talentName
+    },
+    success: function(data) {
+      $('#talent-interview-schedules').empty().html($(data).find('#talent-interview-schedules').html());
+      $('#pagination-controls').empty().html($(data).find('#pagination-controls').html());
+    },
+    error: function(error) {
+      console.error('Error fetching recommendations:', error);
+    }
+  });
 }

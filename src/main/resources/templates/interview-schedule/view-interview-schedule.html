@@ -216,147 +216,157 @@
       </div>
     </div>
 
-    <!-- Modal Reschedule -->
-    <div class="modal fade" id="rescheduleModal" tabindex="-1" aria-labelledby="rescheduleModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="rescheduleModalLabel">Reschedule Interview</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <form id="rescheduleForm" th:action="@{/client/update-interview/{id}(id=${interviewSchedules.content.id})}" method="post">
-                  <input type="hidden" name="status" value="RESCHEDULED" />
-                  <div class="mb-3">
-                      <label for="date" class="form-label">Tanggal</label>
-                      <input type="date" class="form-control" id="date" name="date" required />
-                  </div>
-                  <div class="mb-3">
-                      <label for="startTime" class="form-label">Waktu Mulai</label>
-                      <input type="time" class="form-control" id="startTime" name="startTime" required />
-                  </div>
-                  <div class="mb-3">
-                      <label for="endTime" class="form-label">Waktu Selesai</label>
-                      <input type="time" class="form-control" id="endTime" name="endTime" required />
-                  </div>
-                  <div class="mb-3">
-                      <label for="feedback" class="form-label">Feedback</label>
-                      <input type="text" class="form-control" id="feedback" name="feedback" rows="3"></input>
-                  </div>
-                  <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
-              </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                  <button type="submit" form="rescheduleForm" class="btn btn-primary">Jadwalkan Ulang</button>
-              </div>
-          </div>
-      </div>
+    <div th:each="schedule : ${interviewSchedules.content}">
+        <!-- Modal Reschedule -->
+        <div class="modal fade" id="rescheduleModal" tabindex="-1" aria-labelledby="rescheduleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="rescheduleModalLabel">Reschedule Interview</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="rescheduleForm" th:action="@{/client/update-interview/{id}(id=${schedule.id})}" method="post">
+                            <input type="hidden" name="status" value="RESCHEDULED" />
+                            <div class="mb-3">
+                                <label for="date" class="form-label">Tanggal</label>
+                                <input type="date" class="form-control" id="date" name="date" required />
+                            </div>
+                            <div class="mb-3">
+                                <label for="startTime" class="form-label">Waktu Mulai</label>
+                                <input type="time" class="form-control" id="startTime" name="startTime" required />
+                            </div>
+                            <div class="mb-3">
+                                <label for="endTime" class="form-label">Waktu Selesai</label>
+                                <input type="time" class="form-control" id="endTime" name="endTime" required />
+                            </div>
+                            <div class="mb-3">
+                                <label for="feedback" class="form-label">Feedback</label>
+                                <input type="text" class="form-control" id="feedback" name="feedback" rows="3"></input>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" form="rescheduleForm" class="btn btn-primary">Jadwalkan Ulang</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Modal Form Accepted -->
-    <div class="modal fade" id="acceptModal" tabindex="-1" aria-labelledby="acceptModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="acceptModalLabel">Form Terima Talent</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <form id="acceptForm" th:action="@{/client/update-interview/{id}(id=${interviewSchedules.content.id})}" method="post">
-                    <input type="hidden" name="status" value="ACCEPTED" />
-                    <div class="mb-3">
-                        <label for="startDate" class="form-label">Tanggal Mulai</label>
-                        <input type="date" class="form-control" id="startDate" name="startDate" required />
+    <div th:each="schedule : ${interviewSchedules.content}">
+        <!-- Modal Form Accepted -->
+        <div class="modal fade" id="acceptModal" tabindex="-1" aria-labelledby="acceptModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="acceptModalLabel">Form Terima Talent</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="mb-3">
-                        <label for="endDate" class="form-label">Tanggal Selesai</label>
-                        <input type="date" class="form-control" id="endDate" name="endDate" required />
+                    <div class="modal-body">
+                        <form id="acceptForm" th:action="@{/client/update-interview/{id}(id=${schedule.id})}" method="post">
+                            <input type="hidden" name="status" value="ACCEPTED" />
+                            <div class="mb-3">
+                                <label for="startDate" class="form-label">Tanggal Mulai</label>
+                                <input type="date" class="form-control" id="startDate" name="startDate" required />
+                            </div>
+                            <div class="mb-3">
+                                <label for="endDate" class="form-label">Tanggal Selesai</label>
+                                <input type="date" class="form-control" id="endDate" name="endDate" required />
+                            </div>
+                            <div class="mb-3">
+                                <label for="feedback-accept-${schedule.id}" class="form-label">Feedback</label>
+                                <input type="text" class="form-control" id="feedback-accept-${schedule.id}" name="feedback" rows="3" required></input>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
                     </div>
-                    <div class="mb-3">
-                        <label for="feedback" class="form-label">Feedback</label>
-                        <input type="text" class="form-control" id="feedback" name="feedback" rows="3" required></input>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" form="acceptForm" class="btn btn-primary">Submit</button>
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
-              </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                  <button type="submit" form="acceptForm" class="btn btn-primary">Submit</button>
-              </div>
-          </div>
-      </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Modal Form Rejected -->
-    <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="rejectModalLabel">Form Tolak Talent</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <form id="rejectForm" th:action="@{/client/update-interview/{id}(id=${interviewSchedules.content.id})}" method="post">
-                    <input type="hidden" name="status" value="REJECTED" />
-                    <div class="mb-3">
-                        <label for="feedback" class="form-label">Alasan Penolakan</label>
-                        <input type="text" class="form-control" id="feedback" name="feedback" rows="3" required></input>
+    <div th:each="schedule : ${interviewSchedules.content}">
+        <!-- Modal Form Rejected -->
+        <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="rejectModalLabel">Form Tolak Talent</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form> 
-              </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                  <button type="submit" form="rejectForm" class="btn btn-primary">Submit</button>
-              </div>
-          </div>
-      </div>
+                    <div class="modal-body">
+                        <form id="rejectForm" th:action="@{/client/update-interview/{id}(id=${schedule.id})}" method="post">
+                            <input type="hidden" name="status" value="REJECTED" />
+                            <div class="mb-3">
+                                <label for="feedback-reject-${schedule.id}" class="form-label">Alasan Penolakan</label>
+                                <input type="text" class="form-control" id="feedback-reject-${schedule.id}" name="feedback" rows="3" required></input>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" form="rejectForm" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- process talent confirmation modal -->
-    <div class="modal fade" id="processModal" tabindex="-1" aria-labelledby="processModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="processModalLabel">Proses Talent</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                  <p id="processModalMessage">Apakah anda yakin ingin memproses talent ini?</p>
-              </div>
-              <div class="modal-footer">
-                  <form id="processForm" th:action="@{/client/update-interview/{id}(id=${interviewSchedules.content.id})}" method="post">
-                      <input type="hidden" name="status" value="PROCESS" />
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tidak</button>
-                      <button type="submit" class="btn btn-primary">Ya</button>
-                  </form>
-              </div>
-          </div>
-      </div>
-    </div>   
-    
-    <!-- cancel interview confirmation modal -->
-    <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="cancelModalLabel">Konfirmasi Pembatalan</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                  <p id="cancelModalMessage">Apakah anda yakin ingin membatalkan wawancara talent ini?</p>
-              </div>
-              <div class="modal-footer">
-                  <form id="cancelForm" th:action="@{/client/update-interview/{id}(id=${interviewSchedules.content.id})}" method="post">
-                      <input type="hidden" name="status" value="CANCELLED" />
-                      <input type="hidden" name="interviewId" id="cancelInterviewId" />
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tidak</button>
-                      <button type="submit" class="btn btn-primary">Ya</button>
-                  </form>
-              </div>
-          </div>
-      </div>
+    <div th:each="schedule : ${interviewSchedules.content}">
+        <!-- process talent confirmation modal -->
+        <div class="modal fade" id="processModal" tabindex="-1" aria-labelledby="processModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="processModalLabel">Proses Talent</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="processModalMessage">Apakah anda yakin ingin memproses talent ini?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form id="processForm" th:action="@{/client/update-interview/{id}(id=${schedule.id})}" method="post">
+                            <input type="hidden" name="status" value="PROCESS" />
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tidak</button>
+                            <button type="submit" class="btn btn-primary">Ya</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:each="schedule : ${interviewSchedules.content}">
+        <!-- cancel interview confirmation modal -->
+        <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="cancelModalLabel">Konfirmasi Pembatalan</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="cancelModalMessage">Apakah anda yakin ingin membatalkan wawancara talent ini?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form id="cancelForm" th:action="@{/client/update-interview/{id}(id=${schedule.id})}" method="post">
+                            <input type="hidden" name="status" value="CANCELLED" />
+                            <input type="hidden" name="interviewId" id="cancelInterviewId" />
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tidak</button>
+                            <button type="submit" class="btn btn-primary">Ya</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Second Confirmation Modal for Reschedule, Accept, and Reject Talents -->
@@ -381,86 +391,7 @@
     </div>
     <div th:insert="~{components/footer :: footer}"></div>
   </body>
-  <script>
-  //   // Function to filter talents by name
-  // function filterTalentsName() {
-  //   let talentName = document.getElementById('searchTalentName').value;
-  //   let clientId = document.getElementById('clientId').value;
-
-  //   fetchTalents(clientId, talentName);
-  // }
-
-  // // Function to fetch recommendations from the server
-  // function fetchTalents(clientId, talentName) {
-  //   $.ajax({
-  //       url: `/client/interview-schedules`,
-  //       type: 'GET',
-  //       data: {
-  //           clientId: clientId,
-  //           talentName: talentName,
-  //       },
-  //       success: function(data) {
-  //           $('#talent-interview-schedule').empty().html($(data).find('#talent-interview-schedules').html());
-  //           $('#pagination-controls').empty().html($(data).find('#pagination-controls').html());
-  //       },
-  //       error: function(error) {
-  //           console.error('Error fetching talents:', error);
-  //       }
-  //   });
-
-
-  //           button.addEventListener("click", function () {
-  //     console.log("Button clicked:", this);
-  //   });
-
-  // }
-
-  // document.addEventListener("DOMContentLoaded", function () {
-  //     const confirmModal = document.getElementById("confirmModal"); // Modal konfirmasi kedua
-  //     const confirmForm = confirmModal?.querySelector("form");     // Form dalam modal konfirmasi
-  //     const confirmMessage = confirmModal?.querySelector("#confirmModalMessage");
-
-  //     // Map untuk pesan konfirmasi berdasarkan form
-  //     const formsWithConfirmation = {
-  //         acceptForm: {
-  //             message: "Apakah Anda yakin ingin menerima talent ini?",
-  //         },
-  //         rejectForm: {
-  //             message: "Apakah Anda yakin ingin menolak talent ini?",
-  //         },
-  //         rescheduleForm: {
-  //             message: "Apakah Anda yakin ingin menjadwalkan ulang wawancara?",
-  //         }
-  //     };
-
-  //     Object.keys(formsWithConfirmation).forEach(formId => {
-  //         const form = document.getElementById(formId);
-
-  //         if (form) {
-  //             form.addEventListener("submit", function (event) {
-  //                 event.preventDefault(); // Cegah submit form langsung
-  //                 const formAction = this.action; // Ambil action URL form
-  //                 const { message } = formsWithConfirmation[formId]; // Pesan konfirmasi sesuai form
-
-  //                 // Set action ke form dalam modal konfirmasi
-  //                 if (confirmForm) {
-  //                     confirmForm.action = formAction;
-  //                 }
-
-  //                 // Set pesan konfirmasi
-  //                 if (confirmMessage) {
-  //                     confirmMessage.textContent = message;
-  //                 }
-
-  //                 // Tampilkan modal konfirmasi kedua
-  //                 const bootstrapModal = new bootstrap.Modal(confirmModal);
-  //                 bootstrapModal.show();
-  //             });
-  //         }
-  //     });
-  // });
-
-
-
-  </script>
+  <div layout:fragment="script">
+      <script th:src="@{/js/interview-schedule/update.js}"></script>
+  </div>
 </html>
