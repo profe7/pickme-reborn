@@ -16,6 +16,7 @@ import me.pick.metrodata.exceptions.vacancy.VacancyNotExistException;
 import me.pick.metrodata.exceptions.vacancy.VacancyStatusDoesNotExistException;
 import me.pick.metrodata.models.dto.requests.VacancyCreationRequest;
 import me.pick.metrodata.models.entity.Client;
+import me.pick.metrodata.models.entity.Mitra;
 import me.pick.metrodata.models.entity.User;
 
 import me.pick.metrodata.repositories.UserRepository;
@@ -79,13 +80,16 @@ public class VacancyServiceImpl implements VacancyService {
             List<ReadApplicantResponse> applicantResponses = applicants.stream()
                 .map(applicant -> {
                     Talent talent = applicant.getTalent();
+                    Mitra mitra = talent.getMitra();
                     return new ReadApplicantResponse(
+                        mitra != null ? mitra.getId() : null,
                         talent != null ? talent.getName() : null,
                         talent != null ? talent.getStatusCV().toString() : null
                     );
                 }).collect(Collectors.toList());
 
             ReadVacancyDetailResponse vacancyResponse = new ReadVacancyDetailResponse();
+            vacancyResponse.setVacancyId(vacancyId);
             vacancyResponse.setTitle(vacancy.getTitle());
             vacancyResponse.setExpiredDate(vacancy.getExpiredDate());
             vacancyResponse.setDescription(vacancy.getDescription());

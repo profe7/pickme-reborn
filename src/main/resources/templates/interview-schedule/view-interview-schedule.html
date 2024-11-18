@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/main}">
+  <head>
+    <title>Jadwal Wawancara</title>
+    <div th:replace="~{components/plugin :: css}"></div>
+    <div th:replace="~{components/plugin :: js}"></div>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  </head>
+  
+  <body>
+    <input type="hidden" id="clientId" th:value="${clientId}">
+    <div class="content-wrapper" layout:fragment="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12 my-2">
+            <div class="row justify-content-between align-items-center">
+              <div class="col-lg-4 select2-container">
+                <input type="text" class="form-control" placeholder="Cari nama Talent" id="searchTalentName" oninput="filterTalentsName()">
+              </div>
+            </div>
+          </div>
+
+          <!-- Interview Schedule Cards -->
+          <div id="talent-interview-schedules" class="col-md-12">
+          <div th:if="${successMessage}" class="alert alert-success">
+              <p th:text="${successMessage}"></p>
+          </div>
+          
+            <div class="row">
+              <div class="col-12" th:each="schedule : ${interviewSchedules.content}">
+                <div class="card my-2 p-3 border-0 shadow-sm">
+                  <div class="row">
+                    <div class="col-3 d-flex justify-content-center align-items-center">
+                      <!-- Profile Image -->
+                      <img src="https://via.placeholder.com/80" alt="Talent Image" class="img-fluid rounded-circle" />
+                    </div>
+                    <div class="col-9">
+                      <h5 th:text="${schedule.applicant.talent.name}"></h5>
+                      <p th:text="${schedule.position}"></p>
+                      <p th:text="${#temporals.format(schedule.date, 'dd-MM-yyyy')}"></p>
+                      
+                      <!-- Conditional Status Display -->
+                      <p th:if="${schedule.status != null}" th:text="${schedule?.status?.name().replace('_', ' ')}" style="color: #0067AC; font-weight: bold;"></p>
+                      
+                      <!-- If Status is Null, Don't Display Status Text but Show Buttons -->
+                      <div th:if="${schedule.status == null}" class="btn-group mt-2" role="group" aria-label="Action buttons">
+                        <!--Process-->
+                        <button 
+                          type="button" 
+                          class="btn btn-info action-button" 
+                          data-bs-toggle="modal" 
+                          data-bs-target="#processModal"
+                          data-message="Apakah anda yakin ingin memproses talent ini?"
+                          data-id="${schedule.id}">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
+                              <path fill="white" d="M6 4H4V2h16v2h-2v2c0 
+                                  1.615-.816 2.915-1.844 3.977c-.703.726-1.558 1.395-2.425 2.023c.867.628 1.722 1.297 2.425 2.023C17.184 15.085 18 
+                                  16.385 18 18v2h2v2H4v-2h2v-2c0-1.615.816-2.915 1.844-3.977c.703-.726 1.558-1.395 2.425-2.023c-.867-.628-1.722-1.297-2.425-2.023C6.816 
+                                  8.915 6 7.615 6 6zm2 0v2c0 .685.26 1.335.771 2h6.458c.51-.665.771-1.315.771-2V4zm4 9.222c-1.045.738-1.992 1.441-2.719 2.192a7 
+                                  7 0 0 0-.51.586h6.458a7 7 0 0 0-.51-.586c-.727-.751-1.674-1.454-2.719-2.192"/>
+                          </svg>
+                        </button>
+                        <!--Reschedule-->
+                        <button 
+                            type="button" 
+                            class="btn btn-info" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#rescheduleModal" 
+                            data-id="${schedule.id}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
+                                <path fill="white" fill-rule="evenodd" 
+                                      d="M12 1.25C6.063 1.25 1.25 6.063 1.25 12S6.063 22.75 12 22.75S22.75 17.937 22.75 12S17.937 1.25 12 1.25M12.75 6a.75.75 0 0 0-1.5 
+                                      0v6c0 .414.336.75.75.75h6a.75.75 0 0 0 0-1.5h-5.25z" clip-rule="evenodd"/>
+                            </svg>
+                        </button>
+                        <!--Cancel-->
+                        <button 
+                            type="button" 
+                            class="btn btn-warning action-button" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#cancelModal"
+                            data-message="Apakah anda yakin ingin membatalkan wawancara talent ini?"
+                            data-id="${schedule.id}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20">
+                                <path fill="white" d="M10 0a10 10 0 1 0 10 10A10 
+                                    10 0 0 0 10 0M2 10a8 8 0 0 1 1.69-4.9L14.9 16.31A8 8 0 0 1 2 10m14.31 4.9L5.1 3.69A8 8 0 0 1 16.31 14.9"/>
+                            </svg>
+                        </button>
+
+                      </div>
+
+                      <!-- Buttons for Accepted, Rejected, and History (for status Accepted, Cancelled, Rejected) -->
+                      <div th:if="${schedule?.status?.name() == 'ACCEPTED' or schedule?.status?.name() == 'CANCELLED' or schedule?.status?.name() == 'REJECTED'}" 
+                            class="btn-group mt-2" role="group" aria-label="Action buttons">
+                        <a th:href="@{/client/interview-schedules/history/{interviewId}(interviewId=${schedule.id})}" class="btn btn-info">
+                            <!--History-->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M11.962 
+                                20q-3.046 0-5.311-1.99q-2.264-1.989-2.62-5.01h1.011q.408 2.58 2.351 4.29T11.962 19q2.925 0 4.962-2.037T18.962 12t-2.038-4.963T11.962 
+                                5q-1.553 0-2.918.656q-1.365.655-2.41 1.805h2.481v1H4.962V4.309h1v2.388q1.16-1.273 2.718-1.984T11.962 4q1.663 0 3.118.626t2.542 1.714t1.714 
+                                2.542t.626 3.118t-.626 3.118t-1.714 2.542t-2.542 1.714t-3.118.626m3.204-4.146l-3.647-3.646V7h1v4.792l3.354 3.354z"/>
+                            </svg>
+                        </a>
+                      </div>
+
+                      <!-- Buttons for On Process (with accepted and rejected) -->
+                      <div th:if="${schedule?.status?.name() == 'ON_PROCESS'}" class="btn-group mt-2" role="group" aria-label="Action buttons">
+                        <!--Accepted-->
+                        <button 
+                            type="button" 
+                            class="btn btn-success action-button" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#acceptModal"
+                            data-id="${schedule.id}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
+                                <path fill="white" d="m21.1 12.5l1.4 1.41l-6.53 6.59L12.5 17l1.4-1.41l2.07 2.08zM10 17l3 3H3v-2c0-2.21 3.58-4 8-4l1.89.11zm1-13a4 4 0 0 1 4 4a4 4 0 0 1-4 4a4 4 0 0 1-4-4a4 4 0 0 1 4-4"/>
+                            </svg>
+                        </button>
+                        <!--Rejected-->
+                        <button 
+                            type="button" 
+                            class="btn btn-danger action-button" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#rejectModal"
+                            data-id="${schedule.id}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
+                                <path fill="white" d="M10 4a4 4 0 0 0-4 4a4 4 0 0 0 4 4a4 4 0 0 0 4-4a4 4 0 0 0-4-4m7.5 9C15 13 13 15 13 17.5s2 4.5 4.5 4.5s4.5-2 4.5-4.5s-2-4.5-4.5-4.5M10 14c-4.42 0-8 1.79-8 4v2h9.5a6.5 6.5 0 0 1-.5-2.5a6.5 6.5 0 0 1 .95-3.36c-.63-.08-1.27-.14-1.95-.14m7.5.5c1.66 0 3 1.34 3 3c0 .56-.15 1.08-.42 1.5L16 14.92c.42-.27.94-.42 1.5-.42M14.92 16L19 20.08c-.42.27-.94.42-1.5.42c-1.66 0-3-1.34-3-3c0-.56.15-1.08.42-1.5"/>
+                            </svg>
+                        </button>
+
+                      </div>
+
+                      <!-- Buttons for Rescheduled (with Process, Rescheduled, and Cancelled) -->
+                      <div th:if="${schedule?.status?.name() == 'RESCHEDULED'}" class="btn-group mt-2" role="group" aria-label="Action buttons">
+                        <!--Process-->
+                        <button 
+                          type="button" 
+                          class="btn btn-info action-button" 
+                          data-bs-toggle="modal" 
+                          data-bs-target="#processModal"
+                          data-message="Apakah anda yakin ingin memproses talent ini?"
+                          data-id="${schedule.id}">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
+                              <path fill="white" d="M6 4H4V2h16v2h-2v2c0 
+                                  1.615-.816 2.915-1.844 3.977c-.703.726-1.558 1.395-2.425 2.023c.867.628 1.722 1.297 2.425 2.023C17.184 15.085 18 
+                                  16.385 18 18v2h2v2H4v-2h2v-2c0-1.615.816-2.915 1.844-3.977c.703-.726 1.558-1.395 2.425-2.023c-.867-.628-1.722-1.297-2.425-2.023C6.816 
+                                  8.915 6 7.615 6 6zm2 0v2c0 .685.26 1.335.771 2h6.458c.51-.665.771-1.315.771-2V4zm4 9.222c-1.045.738-1.992 1.441-2.719 2.192a7 
+                                  7 0 0 0-.51.586h6.458a7 7 0 0 0-.51-.586c-.727-.751-1.674-1.454-2.719-2.192"/>
+                          </svg>
+                        </button>
+                        <!--Reschedule-->
+                        <button 
+                            type="button" 
+                            class="btn btn-info" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#rescheduleModal" 
+                            data-id="${schedule.id}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
+                                <path fill="white" fill-rule="evenodd" 
+                                      d="M12 1.25C6.063 1.25 1.25 6.063 1.25 12S6.063 22.75 12 22.75S22.75 17.937 22.75 12S17.937 1.25 12 1.25M12.75 6a.75.75 0 0 0-1.5 
+                                      0v6c0 .414.336.75.75.75h6a.75.75 0 0 0 0-1.5h-5.25z" clip-rule="evenodd"/>
+                            </svg>
+                        </button>
+                        <!--Cancel-->
+                        <button 
+                            type="button" 
+                            class="btn btn-warning action-button" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#cancelModal"
+                            data-message="Apakah anda yakin ingin membatalkan wawancara talent ini?"
+                            data-id="${schedule.id}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20">
+                                <path fill="white" d="M10 0a10 10 0 1 0 10 10A10 
+                                    10 0 0 0 10 0M2 10a8 8 0 0 1 1.69-4.9L14.9 16.31A8 8 0 0 1 2 10m14.31 4.9L5.1 3.69A8 8 0 0 1 16.31 14.9"/>
+                            </svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pagination Information -->
+            <div class="pagination-info mb-3">
+                <p th:text="'Halaman ' + (${interviewSchedules.number + 1}) + ' dari ' + ${interviewSchedules.totalPages} + ', Total Data: ' + ${interviewSchedules.totalElements}"></p>
+            </div>
+
+            <!-- Pagination Information and Pagination Links -->
+            <div id="pagination-controls" class="pagination justify-content-center my-4">
+              
+                <!-- Previous Page Button -->
+                <a th:if="${interviewSchedules.hasPrevious()}"
+                   th:href="@{/client/interview-schedules(size=${interviewSchedules.size}, page=${interviewSchedules.number - 1})}"
+                   class="page-link" aria-label="Previous">
+                  <span aria-hidden="true">&lt;</span>
+                </a>
+              
+                <!-- Page Numbers -->
+                <a th:each="pageNumber : ${pageNumbers}" 
+                   th:href="@{/client/interview-schedules(size=${interviewSchedules.size}, page=${pageNumber})}"
+                   class="page-link" 
+                   th:text="${pageNumber + 1}" 
+                   th:classappend="${pageNumber == interviewSchedules.number} ? 'active' : ''"></a>
+              
+                <!-- Next Page Button -->
+                <a th:if="${interviewSchedules.hasNext()}"
+                   th:href="@{/client/interview-schedules(size=${interviewSchedules.size}, page=${interviewSchedules.number + 1})}"
+                   class="page-link" aria-label="Next">
+                  <span aria-hidden="true">&gt;</span>
+                </a>
+              </div>
+              
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Reschedule -->
+    <div class="modal fade" id="rescheduleModal" tabindex="-1" aria-labelledby="rescheduleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="rescheduleModalLabel">Reschedule Interview</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form id="rescheduleForm" th:action="@{/client/update-interview/{id}(id=${interviewSchedules.content.id})}" method="post">
+                  <input type="hidden" name="status" value="RESCHEDULED" />
+                  <div class="mb-3">
+                      <label for="date" class="form-label">Tanggal</label>
+                      <input type="date" class="form-control" id="date" name="date" required />
+                  </div>
+                  <div class="mb-3">
+                      <label for="startTime" class="form-label">Waktu Mulai</label>
+                      <input type="time" class="form-control" id="startTime" name="startTime" required />
+                  </div>
+                  <div class="mb-3">
+                      <label for="endTime" class="form-label">Waktu Selesai</label>
+                      <input type="time" class="form-control" id="endTime" name="endTime" required />
+                  </div>
+                  <div class="mb-3">
+                      <label for="feedback" class="form-label">Feedback</label>
+                      <input type="text" class="form-control" id="feedback" name="feedback" rows="3"></input>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                  <button type="submit" form="rescheduleForm" class="btn btn-primary">Jadwalkan Ulang</button>
+              </div>
+          </div>
+      </div>
+    </div>
+
+    <!-- Modal Form Accepted -->
+    <div class="modal fade" id="acceptModal" tabindex="-1" aria-labelledby="acceptModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="acceptModalLabel">Form Terima Talent</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form id="acceptForm" th:action="@{/client/update-interview/{id}(id=${interviewSchedules.content.id})}" method="post">
+                    <input type="hidden" name="status" value="ACCEPTED" />
+                    <div class="mb-3">
+                        <label for="startDate" class="form-label">Tanggal Mulai</label>
+                        <input type="date" class="form-control" id="startDate" name="startDate" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="endDate" class="form-label">Tanggal Selesai</label>
+                        <input type="date" class="form-control" id="endDate" name="endDate" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="feedback" class="form-label">Feedback</label>
+                        <input type="text" class="form-control" id="feedback" name="feedback" rows="3" required></input>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                  <button type="submit" form="acceptForm" class="btn btn-primary">Submit</button>
+              </div>
+          </div>
+      </div>
+    </div>
+
+    <!-- Modal Form Rejected -->
+    <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="rejectModalLabel">Form Tolak Talent</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form id="rejectForm" th:action="@{/client/update-interview/{id}(id=${interviewSchedules.content.id})}" method="post">
+                    <input type="hidden" name="status" value="REJECTED" />
+                    <div class="mb-3">
+                        <label for="feedback" class="form-label">Alasan Penolakan</label>
+                        <input type="text" class="form-control" id="feedback" name="feedback" rows="3" required></input>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form> 
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                  <button type="submit" form="rejectForm" class="btn btn-primary">Submit</button>
+              </div>
+          </div>
+      </div>
+    </div>
+
+    <!-- process talent confirmation modal -->
+    <div class="modal fade" id="processModal" tabindex="-1" aria-labelledby="processModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="processModalLabel">Proses Talent</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <p id="processModalMessage">Apakah anda yakin ingin memproses talent ini?</p>
+              </div>
+              <div class="modal-footer">
+                  <form id="processForm" th:action="@{/client/update-interview/{id}(id=${interviewSchedules.content.id})}" method="post">
+                      <input type="hidden" name="status" value="PROCESS" />
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tidak</button>
+                      <button type="submit" class="btn btn-primary">Ya</button>
+                  </form>
+              </div>
+          </div>
+      </div>
+    </div>   
+    
+    <!-- cancel interview confirmation modal -->
+    <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="cancelModalLabel">Konfirmasi Pembatalan</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <p id="cancelModalMessage">Apakah anda yakin ingin membatalkan wawancara talent ini?</p>
+              </div>
+              <div class="modal-footer">
+                  <form id="cancelForm" th:action="@{/client/update-interview/{id}(id=${interviewSchedules.content.id})}" method="post">
+                      <input type="hidden" name="status" value="CANCELLED" />
+                      <input type="hidden" name="interviewId" id="cancelInterviewId" />
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tidak</button>
+                      <button type="submit" class="btn btn-primary">Ya</button>
+                  </form>
+              </div>
+          </div>
+      </div>
+    </div>
+
+    <!-- Second Confirmation Modal for Reschedule, Accept, and Reject Talents -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="confirmModalLabel">Konfirmasi Tindakan</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <p id="confirmModalMessage"></p>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tidak</button>
+                  <form method="post">
+                      <button type="submit" class="btn btn-primary">Ya</button>
+                  </form>
+              </div>
+          </div>
+      </div>
+    </div>
+    <div th:insert="~{components/footer :: footer}"></div>
+  </body>
+  <script>
+  //   // Function to filter talents by name
+  // function filterTalentsName() {
+  //   let talentName = document.getElementById('searchTalentName').value;
+  //   let clientId = document.getElementById('clientId').value;
+
+  //   fetchTalents(clientId, talentName);
+  // }
+
+  // // Function to fetch recommendations from the server
+  // function fetchTalents(clientId, talentName) {
+  //   $.ajax({
+  //       url: `/client/interview-schedules`,
+  //       type: 'GET',
+  //       data: {
+  //           clientId: clientId,
+  //           talentName: talentName,
+  //       },
+  //       success: function(data) {
+  //           $('#talent-interview-schedule').empty().html($(data).find('#talent-interview-schedules').html());
+  //           $('#pagination-controls').empty().html($(data).find('#pagination-controls').html());
+  //       },
+  //       error: function(error) {
+  //           console.error('Error fetching talents:', error);
+  //       }
+  //   });
+
+
+  //           button.addEventListener("click", function () {
+  //     console.log("Button clicked:", this);
+  //   });
+
+  // }
+
+  // document.addEventListener("DOMContentLoaded", function () {
+  //     const confirmModal = document.getElementById("confirmModal"); // Modal konfirmasi kedua
+  //     const confirmForm = confirmModal?.querySelector("form");     // Form dalam modal konfirmasi
+  //     const confirmMessage = confirmModal?.querySelector("#confirmModalMessage");
+
+  //     // Map untuk pesan konfirmasi berdasarkan form
+  //     const formsWithConfirmation = {
+  //         acceptForm: {
+  //             message: "Apakah Anda yakin ingin menerima talent ini?",
+  //         },
+  //         rejectForm: {
+  //             message: "Apakah Anda yakin ingin menolak talent ini?",
+  //         },
+  //         rescheduleForm: {
+  //             message: "Apakah Anda yakin ingin menjadwalkan ulang wawancara?",
+  //         }
+  //     };
+
+  //     Object.keys(formsWithConfirmation).forEach(formId => {
+  //         const form = document.getElementById(formId);
+
+  //         if (form) {
+  //             form.addEventListener("submit", function (event) {
+  //                 event.preventDefault(); // Cegah submit form langsung
+  //                 const formAction = this.action; // Ambil action URL form
+  //                 const { message } = formsWithConfirmation[formId]; // Pesan konfirmasi sesuai form
+
+  //                 // Set action ke form dalam modal konfirmasi
+  //                 if (confirmForm) {
+  //                     confirmForm.action = formAction;
+  //                 }
+
+  //                 // Set pesan konfirmasi
+  //                 if (confirmMessage) {
+  //                     confirmMessage.textContent = message;
+  //                 }
+
+  //                 // Tampilkan modal konfirmasi kedua
+  //                 const bootstrapModal = new bootstrap.Modal(confirmModal);
+  //                 bootstrapModal.show();
+  //             });
+  //         }
+  //     });
+  // });
+
+
+
+  </script>
+</html>

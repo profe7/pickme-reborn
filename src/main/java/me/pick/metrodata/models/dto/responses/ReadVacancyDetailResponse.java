@@ -11,6 +11,8 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class ReadVacancyDetailResponse {
+    Long vacancyId;
+    
     String title;
     String position;
     LocalDate expiredDate;

@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Base64;
 
 @RequiredArgsConstructor
@@ -86,26 +87,23 @@ public class RecommendationServiceImpl implements RecommendationService {
 		var recommendations = recommendationRepository.findAll(specification);
 
 		for (Recommendation recommendation : recommendations) {
-			Long id = recommendation.getId();
+			Long recommendationId = recommendation.getId();
 			Vacancy vacancy = recommendation.getVacancy();
 
 			String vacancyPosition = vacancy.getPosition();
 			Long vacancyId = vacancy.getId();
-
+	
 			RecommendationGroupedResponse groupedResponse = groupedResponses
 					.getOrDefault(vacancyPosition,
-							new RecommendationGroupedResponse(id, vacancyPosition, vacancyId, new ArrayList<>()));
+							new RecommendationGroupedResponse(recommendationId, vacancyPosition, vacancyId, new ArrayList<>()));
 
 			List<RecommendationApplicant> applicants = recommendation.getRecommendationApplicants();
-
+	
 			if (applicants != null) {
 				for (RecommendationApplicant applicant : applicants) {
 					Talent talent = applicant.getApplicant().getTalent();
-
-					if (talent == null) {
-						continue;
-					}
-
+					if (talent == null) continue;
+	
 					TalentResponse talentResponse = talentService.getById(talent.getId());
 					if (talent.getPhoto() != null) {
 						talentResponse.setPhoto(Base64.getEncoder().encodeToString(talent.getPhoto()));
@@ -118,4 +116,5 @@ public class RecommendationServiceImpl implements RecommendationService {
 		}
 		return new ArrayList<>(groupedResponses.values());
 	}
+	
 }
