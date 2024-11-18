@@ -98,7 +98,7 @@
                         <tr th:each="history, i: ${histories}">
                           <td th:text="${i.count}"></td>
                           <td
-                            th:text="|${history.clientUserFirstName} ${history.clientUserFirstName}|"
+                            th:text="|${history.clientUserFirstName} ${history.clientUserLastName}|"
                           ></td>
                           <td th:text="${history.position}"></td>
                           <td
