@@ -17,14 +17,24 @@ import me.pick.metrodata.enums.InterviewType;
 public class InterviewScheduleResponse {
 
     private Long id;
+
     private String clientUserFirstName;
+
+    private String clientUserLastName;
+
     private String applicantTalentName;
+
     private String position;
+
     @Enumerated(EnumType.STRING)
     private InterviewType interviewType;
+
     private LocalDate date;
+
     private LocalTime startTime;
+
     private LocalTime endTime;
+
     @Enumerated(EnumType.STRING)
     private InterviewStatus status;
 }
