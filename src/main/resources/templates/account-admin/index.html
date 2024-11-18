@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="upgrade-insecure-requests"
+    />
+    <div th:insert="~{components-admin/plugin :: css}"></div>
+    <title>Akun</title>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <div th:insert="~{components-admin/navbar :: navbar}"></div>
+      <div th:insert="~{components-admin/sidebar :: sidebar}"></div>
+
+      <div class="content-wrapper">
+        <div class="content-header">
+          <div class="container-fluid">
+            <div class="m-2">
+              <ol class="breadcrumb">
+                <li
+                  class="breadcrumb-item d-flex align-items-center text-muted"
+                >
+                  <i class="nav-icon fa fa-cog me-2"></i>Pengaturan
+                </li>
+                <li
+                  class="breadcrumb-item active d-flex align-items-center"
+                  style="color: #0066cc"
+                >
+                  <i class="nav-icon fa fa-user me-2"></i>Akun
+                </li>
+              </ol>
+              <h1 class="mt-2"><strong>Akun</strong></h1>
+            </div>
+          </div>
+        </div>
+
+        <section class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="col-12 mt-3">
+                    <div class="row justify-content-between">
+                      <div class="col-4 text-start mb-3 mt-2 ml-3">
+                        <a
+                          class="btn bi bi-plus"
+                          href="/admin/account/create"
+                          style="
+                            background-color: #006699;
+                            color: white;
+                            border: none;
+                          "
+                          >&nbsp;&nbsp;Tambah Akun</a
+                        >
+                      </div>
+                    </div>
+                    <form
+                      th:action="@{/admin/account}"
+                      method="get"
+                      id="filter-form"
+                    >
+                      <div
+                        class="row justify-content-between align-items-center"
+                      >
+                        <div class="input-group">
+                          <div class="col-4">
+                            <input
+                              id="searchUsername"
+                              class="form-control"
+                              type="search"
+                              placeholder="Cari Username"
+                              aria-label="Cari Username"
+                              onchange="applyFilter()"
+                            />
+                          </div>
+                          <div class="col-4">
+                            <select
+                              id="role"
+                              class="form-select"
+                              name="role"
+                              onchange="applyFilter()"
+                            >
+                              <option value="">Role</option>
+                            </select>
+                          </div>
+                          <div class="col-4">
+                            <select
+                              id="status"
+                              class="form-select"
+                              name="status"
+                              onchange="applyFilter()"
+                            >
+                              <option value="">Status</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                  <p
+                    id="loggedUserId"
+                    th:text="${logged.id}"
+                    style="display: none"
+                  ></p>
+                  <div class="card-body table-responsive">
+                    <table id="table-account" class="table table-hover">
+                      <thead class="table-primary">
+                        <tr>
+                          <th class="col-1">No</th>
+                          <th>Username</th>
+                          <th>Email</th>
+                          <th>Instansi</th>
+                          <th>Role</th>
+                          <th>Akses</th>
+                          <th>Status</th>
+                          <th>Aksi</th>
+                        </tr>
+                      </thead>
+                      <tbody id="account-body"></tbody>
+                    </table>
+                  </div>
+                  <div class="pagination-wrapper">
+                    <div class="ml-3 pagination-container">
+                      <p id="paginationInfo"></p>
+                      <nav aria-label="Page navigation" class="ms-auto">
+                        <ul
+                          class="pagination justify-content-end mr-3"
+                          id="pagination"
+                        ></ul>
+                      </nav>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- JS Local -->
+    <div layout:fragment="script">
+      <script th:src="@{/js/account-admin/index.js}"></script>
+    </div>
+  </body>
+</html>

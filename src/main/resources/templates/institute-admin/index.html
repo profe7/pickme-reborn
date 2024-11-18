@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="upgrade-insecure-requests"
+    />
+    <div th:insert="~{components-admin/plugin :: css}"></div>
+    <title>Instansi</title>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <div th:insert="~{components-admin/navbar :: navbar}"></div>
+      <div th:insert="~{components-admin/sidebar :: sidebar}"></div>
+
+      <div class="content-wrapper">
+        <div class="content-header">
+          <div class="container-fluid">
+            <div class="m-2">
+              <ol class="breadcrumb">
+                <li
+                  class="breadcrumb-item d-flex align-items-center text-muted"
+                >
+                  <i class="nav-icon fa fa-cog me-2"></i>Pengaturan
+                </li>
+                <li
+                  class="breadcrumb-item active d-flex align-items-center"
+                  style="color: #0066cc"
+                >
+                  <i class="nav-icon fa fa-building me-2"></i>Instansi
+                </li>
+              </ol>
+              <h1 class="mt-2"><strong>Instansi</strong></h1>
+            </div>
+          </div>
+        </div>
+
+        <section class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="col-12 mt-3">
+                    <form
+                      th:action="@{/admin/institute}"
+                      method="get"
+                      id="filter-form"
+                    >
+                      <div
+                        class="row justify-content-between align-items-center"
+                      >
+                        <div class="input-group">
+                          <div class="col-6">
+                            <input
+                              id="searchName"
+                              class="form-control"
+                              type="search"
+                              placeholder="Cari berdasarkan nama"
+                              aria-label="Cari berdasarkan nama"
+                              onchange="applyFilter()"
+                            />
+                          </div>
+                          <div class="col-6">
+                            <select
+                              id="searchType"
+                              class="form-select"
+                              name="searchType"
+                              onchange="applyFilter()"
+                            >
+                              <option value="">Tipe</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                  <p
+                    id="loggedUserId"
+                    th:text="${logged.id}"
+                    style="display: none"
+                  ></p>
+                  <div class="card-body table-responsive">
+                    <table id="table-institute" class="table table-hover">
+                      <thead class="table-primary">
+                        <tr>
+                          <th class="col-1">No</th>
+                          <th>Nama</th>
+                          <th>Tipe</th>
+                          <th>Aksi</th>
+                        </tr>
+                      </thead>
+                      <tbody id="institute-body"></tbody>
+                    </table>
+                  </div>
+                  <div class="pagination-wrapper">
+                    <div class="ml-3 pagination-container">
+                      <p id="paginationInfo"></p>
+                      <nav aria-label="Page navigation" class="ms-auto">
+                        <ul
+                          class="pagination justify-content-end mr-3"
+                          id="pagination"
+                        ></ul>
+                      </nav>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- JS Local -->
+    <div layout:fragment="script">
+      <script th:src="@{/js/institute-admin/index.js}"></script>
+    </div>
+  </body>
+</html>

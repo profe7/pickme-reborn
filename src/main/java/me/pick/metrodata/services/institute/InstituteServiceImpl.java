@@ -5,9 +5,12 @@ import me.pick.metrodata.enums.InstituteType;
 import me.pick.metrodata.exceptions.institute.InstituteDoesNotExistException;
 import me.pick.metrodata.exceptions.institute.InstituteTypeDoesNotExistException;
 import me.pick.metrodata.models.dto.requests.InstituteUpdateRequest;
+import me.pick.metrodata.models.dto.responses.InstituteResponse;
 import me.pick.metrodata.models.entity.Institute;
 import me.pick.metrodata.repositories.InstituteRepository;
 import me.pick.metrodata.repositories.specifications.InstituteSpecification;
+
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -20,7 +23,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class InstituteServiceImpl implements InstituteService {
+
     private final InstituteRepository instituteRepository;
+    private final ModelMapper modelMapper;
 
     @Override
     public Institute getInstituteById(Long id) {
@@ -43,7 +48,8 @@ public class InstituteServiceImpl implements InstituteService {
         }
     }
 
-    private Page<Institute> instituteRetrievalHelper(String name, Long instituteTypeId, Integer currentPage, Integer perPage) {
+    private Page<Institute> instituteRetrievalHelper(String name, Long instituteTypeId, Integer currentPage,
+            Integer perPage) {
         Specification<Institute> spec = InstituteSpecification.searchSpecification(name, instituteTypeId, null);
         List<Institute> institutes = instituteRepository.findAll(spec);
         Pageable pageable = PageRequest.of(currentPage, perPage);
@@ -58,5 +64,16 @@ public class InstituteServiceImpl implements InstituteService {
     public List<Institute> getAll() {
         return instituteRepository.findAll();
     }
-}
 
+    @Override
+    public Page<InstituteResponse> getFilteredInstitute(String searchName, InstituteType searchType, Integer page,
+            Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return instituteRepository.findAllWithFilters(
+                searchName, searchType, pageable).map(institute -> {
+                    InstituteResponse instituteResponse = modelMapper.map(
+                            institute, InstituteResponse.class);
+                    return instituteResponse;
+                });
+    }
+}

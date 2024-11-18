@@ -27,4 +27,5 @@ public class RestRecommendationController {
                 "Recommendation deleted", HttpStatus.OK, SUCCESS, null
         ));
     }
+
 }

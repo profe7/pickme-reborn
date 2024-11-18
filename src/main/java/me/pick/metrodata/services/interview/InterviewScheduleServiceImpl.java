@@ -12,6 +12,7 @@ import me.pick.metrodata.exceptions.mitra.MitraDoesNotExistException;
 import me.pick.metrodata.models.dto.requests.InterviewScheduleRequest;
 import me.pick.metrodata.models.dto.requests.InterviewUpdateRequest;
 import me.pick.metrodata.models.dto.responses.InterviewScheduleResponse;
+import me.pick.metrodata.models.dto.responses.InterviewHistoryResponse;
 import me.pick.metrodata.models.dto.responses.InterviewScheduleCalendarResponse;
 import me.pick.metrodata.models.entity.*;
 import me.pick.metrodata.repositories.*;
@@ -30,6 +31,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -255,11 +257,24 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
     }
 
     @Override
-    public List<InterviewScheduleHistory> getTalentInterviewHistory(Long interviewId) {
+    public List<InterviewHistoryResponse> getTalentInterviewHistory(Long interviewId) {
+        // Fetch the InterviewSchedule by ID or throw an exception if it does not exist
         InterviewSchedule interviewSchedule = interviewScheduleRepository.findInterviewScheduleById(interviewId)
                 .orElseThrow(() -> new InterviewScheduleDoesNotExistException(interviewId));
-        return interviewScheduleHistoryRepository.findInterviewScheduleHistoriesByInterviewSchedule(interviewSchedule);
+
+        // Fetch the history entries for the given InterviewSchedule
+        List<InterviewScheduleHistory> histories = interviewScheduleHistoryRepository.findInterviewScheduleHistoriesByInterviewSchedule(interviewSchedule);
+
+        // Map each history entry to an InterviewHistoryResponse DTO
+        return histories.stream()
+                .map(history -> new InterviewHistoryResponse(
+                        interviewSchedule.getApplicant().getTalent().getName(), // Get the name of the talent
+                        history.getStatus().toString(), // Get the status of the history
+                        history.getCreated_at() // Get the date changes
+                ))
+                .collect(Collectors.toList());
     }
+
 
     private Page<InterviewSchedule> interviewRetrievalHelper(String search, Long clientId, InterviewType type,
             String startDate, String endDate, InterviewStatus status, int page, int size) {

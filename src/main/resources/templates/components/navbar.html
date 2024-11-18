@@ -78,10 +78,10 @@
             </li>
           </ul>
         </div>
-      </nav> -->
-<!-- Mitra Navbar -->
-<div th:fragment="navbar">
-  <nav class="navbar navbar-expand-lg user_nav-container">
+      </nav>
+
+  <!-- Mitra -->
+  <nav class="navbar navbar-expand-lg user_nav-container" sec:authorize="hasAuthority('CREATE_APPLICANT_NOMINEE')">
     <a class="navbar-brand fw-bold" th:href="@{/mitra}">
       <img th:src="@{/img/metrodata-logo.webp}" alt="pickme-logo" class="brand-image border-0" />
       <span>Pick-Me</span>

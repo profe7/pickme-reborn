@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
   async function fetchSchedules(page = 0) {
-    const response = await fetch(`/admin/recommendatiopi?page=${page}`);
+    const response = await fetch(`/admin/recommendation/api?page=${page}`);
 
     if (response.ok) {
       const data = await response.json();
