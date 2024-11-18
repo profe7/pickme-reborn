@@ -85,9 +85,19 @@ public class AccountServiceImpl implements AccountService {
         }
 
         @Override
-        public Account getAccountById(Long id) {
-                return accountRepository.findById(id)
-                                .orElseThrow(() -> new AccountDoesNotExistException(id.toString()));
+        public AccountResponse getAccountById(Long id) {
+                return accountRepository.findById(id).map(account -> {
+                        AccountResponse accountResponse = modelMapper.map(account, AccountResponse.class);
+                        accountResponse.setFirstName(account.getUser().getFirstName());
+                        accountResponse.setLastName(account.getUser().getLastName());
+                        accountResponse.setPhone(account.getUser().getPhone());
+                        accountResponse.setBaseBudget(account.getUser().getBaseBudget());
+                        accountResponse.setLimitBudget(account.getUser().getLimitBudget());
+                        accountResponse.setEmail(account.getUser().getEmail());
+                        accountResponse.setInstituteName(account.getUser().getInstitute().getInstituteName());
+                        accountResponse.setRoleName(account.getRole().getName());
+                        return accountResponse;
+                }).orElse(null);
         }
 
         private Page<Account> accountRetrievalHelper(String search, Long institute, Long baseBudget, Long limitBudget,

@@ -14,6 +14,7 @@ import me.pick.metrodata.exceptions.talent.TalentDoesNotExistException;
 import me.pick.metrodata.exceptions.vacancy.VacancyNotExistException;
 import me.pick.metrodata.models.dto.requests.*;
 import me.pick.metrodata.models.dto.responses.TalentAvailableForVacancyResponse;
+import me.pick.metrodata.models.dto.responses.TalentInterviewScheduleHistory;
 import me.pick.metrodata.models.dto.responses.TalentResponse;
 import me.pick.metrodata.models.dto.responses.TalentSimpleResponse;
 import me.pick.metrodata.models.entity.*;
@@ -21,6 +22,9 @@ import me.pick.metrodata.repositories.*;
 import me.pick.metrodata.repositories.specifications.TalentSpecification;
 import me.pick.metrodata.services.applicant.ApplicantService;
 import me.pick.metrodata.services.email.EmailService;
+import me.pick.metrodata.services.interview.InterviewScheduleService;
+import me.pick.metrodata.services.interviewhistory.InterviewScheduleHistoryService;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,6 +37,7 @@ import org.springframework.validation.annotation.Validated;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -60,6 +65,8 @@ public class TalentServiceImpl implements TalentService {
     private final VacancyRepository vacancyRepository;
     private final EmailService emailService;
     private final ModelMapper modelMapper;
+    private final InterviewScheduleService interviewScheduleService;
+    private final InterviewScheduleHistoryService interviewScheduleHistoryService;
 
     private Talent findByIdFromRepo(String id) {
         return talentRepository.findById(id).orElseThrow(() -> new TalentDoesNotExistException(id));
@@ -411,4 +418,20 @@ public class TalentServiceImpl implements TalentService {
             return talentResponse;
         });
     }
+
+    @Override
+    public List<TalentInterviewScheduleHistory> getTalentInterviewScheduleHistories(String talentId) {
+        return interviewScheduleService.getByTalentId(talentId).stream()
+                .flatMap(interview -> interviewScheduleHistoryService.getByInterviewScheduleId(interview.getId())
+                        .stream()
+                        .map(history -> {
+                            TalentInterviewScheduleHistory talentInterviewScheduleHistory = modelMapper.map(history,
+                                    TalentInterviewScheduleHistory.class);
+                            talentInterviewScheduleHistory.setClientUserFirstName(interview.getClientUserFirstName());
+                            talentInterviewScheduleHistory.setPosition(interview.getPosition());
+                            return talentInterviewScheduleHistory;
+                        }))
+                .collect(Collectors.toList());
+    }
+
 }

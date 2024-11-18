@@ -23,4 +23,14 @@ public class AccountResponse {
 
     private boolean status;
 
+    private String firstName;
+
+    private String lastName;
+
+    private String phone;
+
+    private Long baseBudget;
+
+    private Long limitBudget;
+
 }

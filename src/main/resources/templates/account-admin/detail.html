@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="upgrade-insecure-requests"
+    />
+    <div th:insert="~{components-admin/plugin :: css}"></div>
+    <title>Akun</title>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <div th:insert="~{components-admin/navbar :: navbar}"></div>
+      <div th:insert="~{components-admin/sidebar :: sidebar}"></div>
+
+      <div class="content-wrapper">
+        <div class="content-header">
+          <div class="container-fluid">
+            <div class="m-2">
+              <ol class="breadcrumb">
+                <li
+                  class="breadcrumb-item d-flex align-items-center text-muted"
+                >
+                  <i class="nav-icon fa fa-cog me-2"></i>Pengaturan
+                </li>
+                <li
+                  class="breadcrumb-item active d-flex align-items-center"
+                  style="color: #0066cc"
+                >
+                  <i class="nav-icon fa fa-user me-2"></i>Akun
+                </li>
+              </ol>
+              <h1 class="mt-2"><strong>Detail Akun</strong></h1>
+            </div>
+          </div>
+        </div>
+
+        <section class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="mb-3 p-2" style="background-color: #cfe2ff">
+                      <strong>Detail Akun</strong>
+                    </div>
+                    <div class="mb-3">
+                      <strong>Username:</strong>
+                      <div th:text="${account.username}"></div>
+                    </div>
+
+                    <div class="mb-3">
+                      <strong>Nama Depan:</strong>
+                      <div th:text="${account.firstName}"></div>
+                    </div>
+
+                    <div class="mb-3">
+                      <strong>Nama Belakang:</strong>
+                      <div th:text="${account.lastName}"></div>
+                    </div>
+
+                    <div class="mb-3">
+                      <strong>Email:</strong>
+                      <div th:text="${account.email}"></div>
+                    </div>
+
+                    <div class="mb-3">
+                      <strong>No. Telp:</strong>
+                      <div th:text="${account.phone}"></div>
+                    </div>
+
+                    <div class="mb-3">
+                      <strong>Role:</strong>
+                      <div th:text="${account.roleName}"></div>
+                    </div>
+
+                    <div class="mb-3">
+                      <strong>Instansi:</strong>
+                      <div th:text="${account.instituteName}"></div>
+                    </div>
+
+                    <div class="mb-3">
+                      <strong>Anggaran:</strong>
+                      <div>
+                        <span th:text="${account.baseBudget}"></span> -
+                        <span th:text="${account.limitBudget}"></span>
+                      </div>
+                    </div>
+                    <a th:href="@{/admin/account}" class="btn btn-primary me-2"
+                      >Kembali</a
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </body>
+</html>
