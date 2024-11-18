@@ -6,18 +6,21 @@ import me.pick.metrodata.models.entity.Account;
 import org.springframework.data.domain.Page;
 
 public interface AccountService {
-    Account createAccount(AccountRequest accountRequest);
 
-    Account editAccount(Long id, AccountRequest accountRequest);
+        Account createAccount(AccountRequest accountRequest);
 
-    Account getAccountById(Long id);
+        Account editAccount(Long id, AccountRequest accountRequest);
 
-    Page<Account> getAllAvailableAccounts(Integer page, Integer size, String search, Long institute, Long baseBudget,
-            Long limitBudget);
+        AccountResponse getAccountById(Long id);
 
-    Page<Account> getAvailableAccountsOfRm(Integer page, Integer size, String search, Long institute, Long baseBudget,
-            Long limitBudget);
+        Page<Account> getAllAvailableAccounts(Integer page, Integer size, String search, Long institute,
+                        Long baseBudget,
+                        Long limitBudget);
 
-    Page<AccountResponse> getFilteredAccount(String searchUsername, String role, String status, Integer page,
-            Integer size);
+        Page<Account> getAvailableAccountsOfRm(Integer page, Integer size, String search, Long institute,
+                        Long baseBudget,
+                        Long limitBudget);
+
+        Page<AccountResponse> getFilteredAccount(String searchUsername, String role, String status, Integer page,
+                        Integer size);
 }

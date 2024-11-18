@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="upgrade-insecure-requests"
+    />
+    <div th:insert="~{components-admin/plugin :: css}"></div>
+    <title>Jadwal Wawancara</title>
+  </head>
+
+  <body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+      <div th:insert="~{components-admin/navbar :: navbar}"></div>
+      <div th:insert="~{components-admin/sidebar :: sidebar}"></div>
+
+      <div class="content-wrapper">
+        <div class="content-header">
+          <div class="container-fluid">
+            <div class="m-2">
+              <ol class="breadcrumb">
+                <li
+                  class="breadcrumb-item d-flex align-items-center text-muted"
+                >
+                  <i class="nav-icon fa fa-home me-2"></i>
+                  <a class="text-muted" href="/admin">Beranda</a>
+                </li>
+                <li
+                  class="breadcrumb-item active d-flex align-items-center"
+                  style="color: #0066cc"
+                >
+                  <i class="nav-icon fa fa-calendar-check me-2"></i>Jadwal
+                  Wawancara
+                </li>
+              </ol>
+              <h1 class="mt-2"><strong>Riwayat Wawancara</strong></h1>
+            </div>
+          </div>
+        </div>
+
+        <section class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-body">
+                    <ul class="list-group">
+                      <li
+                        class="list-group-item border-0 ps-0 text-sm mx-2 p-0 mb-0"
+                      >
+                        <strong class="text-dark">Nama Perekrut :</strong>
+                        &nbsp;
+                        <span th:text="${recruiter}"></span>
+                      </li>
+                      <li
+                        class="list-group-item border-0 ps-0 text-sm mx-2 p-0 mb-2"
+                      >
+                        <strong class="text-dark">Nama Talent :</strong> &nbsp;
+                        <span th:text="${talent}"></span>
+                      </li>
+                    </ul>
+                    <div class="table-responsive">
+                      <table id="table-history" class="table table-hover">
+                        <thead class="table-primary">
+                          <tr style="text-align: center">
+                            <th class="col-1">No</th>
+                            <th>Tanggal</th>
+                            <th>Status</th>
+                            <th>Keterangan</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr
+                            th:each="history, rowStatus : ${histories}"
+                            style="text-align: center"
+                          >
+                            <td th:text="${rowStatus.index + 1}"></td>
+                            <td
+                              class="createdAtElement"
+                              th:text="${history.created_at}"
+                            ></td>
+                            <td>
+                              <span
+                                th:text="${history.status}"
+                                class="badge"
+                              ></span>
+                            </td>
+                            <td>
+                              <span
+                                th:text="${history.feedback}"
+                                class="feedback"
+                              ></span>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <a
+                      th:href="@{/admin/interview-schedule}"
+                      class="btn btn-primary me-2"
+                      >Kembali</a
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- JS Local -->
+    <div layout:fragment="script">
+      <script th:src="@{/js/interview-schedule-admin/history.js}"></script>
+    </div>
+  </body>
+</html>

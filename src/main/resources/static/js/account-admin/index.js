@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <a class="btn btn-primary">
           <i class="bi bi-pencil-square text-white"></i>
         </a>
-        <a class="btn btn-secondary">
+        <a href="/admin/account/${account.id}" class="btn btn-secondary">
           <i class="bi bi-info-circle-fill text-white"></i>
         </a>
       </td>

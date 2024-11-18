@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -18,8 +19,10 @@ import lombok.AllArgsConstructor;
 import me.pick.metrodata.enums.InterviewStatus;
 import me.pick.metrodata.enums.InterviewType;
 import me.pick.metrodata.models.dto.responses.InterviewScheduleResponse;
+import me.pick.metrodata.models.entity.InterviewSchedule;
 import me.pick.metrodata.models.entity.User;
 import me.pick.metrodata.services.interview.InterviewScheduleService;
+import me.pick.metrodata.services.interviewhistory.InterviewScheduleHistoryService;
 import me.pick.metrodata.services.user.UserService;
 
 @Controller
@@ -28,6 +31,7 @@ import me.pick.metrodata.services.user.UserService;
 public class AdminInterviewScheduleController {
 
     private final InterviewScheduleService interviewScheduleService;
+    private final InterviewScheduleHistoryService interviewScheduleHistoryService;
     private final UserService userService;
 
     @GetMapping
@@ -61,5 +65,23 @@ public class AdminInterviewScheduleController {
         response.put("totalItems", interviewPage.getTotalElements());
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/history/{id}")
+    // @PreAuthorize("hasAnyAuthority('READ_INTERVIEW')")
+    public String history(@PathVariable Long id, Model model, HttpServletRequest request) {
+
+        User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
+        InterviewSchedule interviewSchedule = interviewScheduleService.getById(id);
+        String recruiter = interviewSchedule.getClient().getUser().getFirstName()
+                + " " + interviewSchedule.getClient().getUser().getLastName();
+        String talent = interviewSchedule.getApplicant().getTalent().getName();
+
+        model.addAttribute("logged", loggedUser);
+        model.addAttribute("histories", interviewScheduleHistoryService.getByInterviewScheduleId(id));
+        model.addAttribute("recruiter", recruiter);
+        model.addAttribute("talent", talent);
+
+        return "interview-schedule-admin/history";
     }
 }
