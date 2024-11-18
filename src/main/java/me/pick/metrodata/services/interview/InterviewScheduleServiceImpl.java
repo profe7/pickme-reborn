@@ -263,7 +263,8 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
                 .orElseThrow(() -> new InterviewScheduleDoesNotExistException(interviewId));
 
         // Fetch the history entries for the given InterviewSchedule
-        List<InterviewScheduleHistory> histories = interviewScheduleHistoryRepository.findInterviewScheduleHistoriesByInterviewSchedule(interviewSchedule);
+        List<InterviewScheduleHistory> histories = interviewScheduleHistoryRepository
+                .findInterviewScheduleHistoriesByInterviewSchedule(interviewSchedule);
 
         // Map each history entry to an InterviewHistoryResponse DTO
         return histories.stream()
@@ -274,7 +275,6 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
                 ))
                 .collect(Collectors.toList());
     }
-
 
     private Page<InterviewSchedule> interviewRetrievalHelper(String search, Long clientId, InterviewType type,
             String startDate, String endDate, InterviewStatus status, int page, int size) {
@@ -300,6 +300,7 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
             InterviewScheduleResponse interviewScheduleResponse = modelMapper.map(interview,
                     InterviewScheduleResponse.class);
             interviewScheduleResponse.setClientUserFirstName(interview.getClient().getUser().getFirstName());
+            interviewScheduleResponse.setClientUserLastName(interview.getClient().getUser().getLastName());
             return interviewScheduleResponse;
         })
                 .collect(Collectors.toList());

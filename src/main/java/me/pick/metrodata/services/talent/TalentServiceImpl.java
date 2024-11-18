@@ -428,6 +428,7 @@ public class TalentServiceImpl implements TalentService {
                             TalentInterviewScheduleHistory talentInterviewScheduleHistory = modelMapper.map(history,
                                     TalentInterviewScheduleHistory.class);
                             talentInterviewScheduleHistory.setClientUserFirstName(interview.getClientUserFirstName());
+                            talentInterviewScheduleHistory.setClientUserLastName(interview.getClientUserLastName());
                             talentInterviewScheduleHistory.setPosition(interview.getPosition());
                             return talentInterviewScheduleHistory;
                         }))

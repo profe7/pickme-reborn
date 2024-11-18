@@ -16,6 +16,8 @@ public class TalentInterviewScheduleHistory {
 
     private String clientUserFirstName;
 
+    private String clientUserLastName;
+
     private String position;
 
     private LocalDate created_at;
