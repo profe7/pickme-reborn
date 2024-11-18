@@ -1,6 +1,7 @@
 package me.pick.metrodata.services.interview;
 
 import lombok.RequiredArgsConstructor;
+import me.pick.metrodata.enums.ApplicantStatus;
 import me.pick.metrodata.enums.InterviewStatus;
 import me.pick.metrodata.enums.InterviewType;
 import me.pick.metrodata.exceptions.client.ClientDoesNotExistException;
@@ -31,6 +32,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -150,6 +152,21 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
         }
         if (request.getInterviewLink() != null) {
             interviewSchedule.setInterviewLink(request.getInterviewLink());
+        }
+        if (request.getStatus() == InterviewStatus.ACCEPTED) {
+            Talent talent = interviewSchedule.getApplicant().getTalent();
+            for (Applicant applicant : talent.getApplicants()) {
+                applicant.setStatus(ApplicantStatus.REJECTED);
+            }
+            interviewSchedule.getApplicant().setStatus(ApplicantStatus.ACCEPTED);
+            for (InterviewSchedule interview : interviewSchedule.getApplicant().getInterviewSchedules()) {
+                if (!Objects.equals(interview.getId(), interviewSchedule.getId())) {
+                    interview.setStatus(InterviewStatus.REJECTED);
+                }
+            }
+        }
+        if (request.getStatus() == InterviewStatus.REJECTED) {
+            interviewSchedule.getApplicant().setStatus(ApplicantStatus.REJECTED);
         }
         interviewScheduleRepository.save(interviewSchedule);
         interviewHistorySaveHelper(interviewSchedule, request.getFeedback());
