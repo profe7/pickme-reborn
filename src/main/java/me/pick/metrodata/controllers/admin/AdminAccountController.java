@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -52,5 +53,17 @@ public class AdminAccountController {
         response.put("accounts", accountPage.getContent());
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}")
+    // @PreAuthorize("hasAnyAuthority('MANAGEMENT_READ_ACCOUNT','EXTERNAL_READ_ACCOUNT')")
+    public String detail(@PathVariable Long id, Model model, HttpServletRequest request) {
+
+        User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
+
+        model.addAttribute("logged", loggedUser);
+        model.addAttribute("account", accountService.getAccountById(id));
+
+        return "account-admin/detail";
     }
 }

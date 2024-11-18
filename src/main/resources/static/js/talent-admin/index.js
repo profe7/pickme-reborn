@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <a class="btn btn-primary">
           <i class="bi bi-file-earmark-text-fill text-white"></i>
         </a>
-        <a class="btn btn-secondary">
+        <a href="/admin/talent/detail/${talent.id}" class="btn btn-secondary">
           <i class="bi bi-info-circle-fill text-white"></i>
         </a>
       </td>
