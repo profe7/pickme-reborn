@@ -96,15 +96,9 @@ public class ClientController {
 
         // Tetapkan interviewId dari path variable ke DTO
         request.setInterviewId(interviewId);
-        System.out.println(request);
 
         // Panggil service untuk memproses perubahan status
-        try {
-            interviewScheduleService.updateInterviewStatus(request);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        interviewScheduleService.updateInterviewStatus(request);
 
         // Tentukan pesan sukses berdasarkan status
         String successMessage;
@@ -130,7 +124,7 @@ public class ClientController {
         redirectAttributes.addFlashAttribute("successMessage", successMessage);
 
         // Redirect ke halaman daftar wawancara
-        return new RedirectView("/client/interview-schedules", true);
+        return new RedirectView("/client/interview-schedules");
     }
 
 
