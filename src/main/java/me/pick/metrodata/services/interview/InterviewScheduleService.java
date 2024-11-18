@@ -18,25 +18,29 @@ import java.util.List;
 @Service
 public interface InterviewScheduleService {
 
-    void inviteToInterview(InterviewScheduleRequest request);
+        void inviteToInterview(InterviewScheduleRequest request);
 
-    void updateInterviewStatus(InterviewUpdateRequest request);
+        void updateInterviewStatus(InterviewUpdateRequest request);
 
-    Page<InterviewSchedule> getAll(String search, Long clientId, InterviewType type, String startDate, String endDate,
-            InterviewStatus status, int page, int size);
+        Page<InterviewSchedule> getAll(String search, Long clientId, InterviewType type, String startDate,
+                        String endDate,
+                        InterviewStatus status, int page, int size);
 
-    Page<InterviewSchedule> getByRm(String search, Long clientId, InterviewType type, String startDate, String endDate,
-            InterviewStatus status, int page, int size);
+        Page<InterviewSchedule> getByRm(String search, Long clientId, InterviewType type, String startDate,
+                        String endDate,
+                        InterviewStatus status, int page, int size);
 
-    List<InterviewHistoryResponse> getTalentInterviewHistory(Long interviewId);
+        List<InterviewHistoryResponse> getTalentInterviewHistory(Long interviewId);
 
-    InterviewSchedule getById(Long id);
+        InterviewSchedule getById(Long id);
 
-    Page<InterviewScheduleResponse> getFilteredInterviews(String searchRecruiter, String searchTalent,
-            InterviewType type, LocalDate date, InterviewStatus status,
-            int page, int size);
-  
-    List<InterviewScheduleCalendarResponse> getInterviewCalendarClient (Long clientId);
+        Page<InterviewScheduleResponse> getFilteredInterviews(String searchRecruiter, String searchTalent,
+                        InterviewType type, LocalDate date, InterviewStatus status,
+                        int page, int size);
 
-    List<InterviewScheduleCalendarResponse> getInterviewCalendarMitra (Long mitraId);
+        List<InterviewScheduleCalendarResponse> getInterviewCalendarClient(Long clientId);
+
+        List<InterviewScheduleCalendarResponse> getInterviewCalendarMitra(Long mitraId);
+
+        List<InterviewScheduleResponse> getByTalentId(String talentId);
 }

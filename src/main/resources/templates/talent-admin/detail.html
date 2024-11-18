@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="upgrade-insecure-requests"
+    />
+    <div th:insert="~{components-admin/plugin :: css}"></div>
+    <title>Talent</title>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <div th:insert="~{components-admin/navbar :: navbar}"></div>
+      <div th:insert="~{components-admin/sidebar :: sidebar}"></div>
+
+      <div class="content-wrapper">
+        <div class="content-header">
+          <div class="container-fluid">
+            <div class="m-2">
+              <ol class="breadcrumb">
+                <li
+                  class="breadcrumb-item d-flex align-items-center text-muted"
+                >
+                  <i class="nav-icon fa fa-home me-2"></i>
+                  <a class="text-muted" href="/admin">Beranda</a>
+                </li>
+                <li
+                  class="breadcrumb-item active d-flex align-items-center"
+                  style="color: #0066cc"
+                >
+                  <i class="nav-icon fa fa-address-card me-2"></i>Talent
+                </li>
+              </ol>
+              <h1 class="mt-2"><strong>Detail Talent</strong></h1>
+            </div>
+          </div>
+        </div>
+
+        <section class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="mb-3 p-2" style="background-color: #cfe2ff">
+                      <strong>Detail Akun</strong>
+                    </div>
+                    <div class="mb-3">
+                      <strong>Nama:</strong>
+                      <div th:text="${talent.name}"></div>
+                    </div>
+                    <div class="mb-3">
+                      <strong>Email:</strong>
+                      <div th:text="${talent.email}"></div>
+                    </div>
+                    <div class="mb-3">
+                      <strong>Pekerjaan:</strong>
+                      <div th:text="${talent.currentWorkAssigment}"></div>
+                    </div>
+                    <div class="mb-3">
+                      <strong>Status:</strong>
+                      <div
+                        th:text="${talent.disabled} ? 'NOT IDLE' : 'IDLE'"
+                      ></div>
+                    </div>
+                    <div class="mb-3">
+                      <strong>Gaji:</strong>
+                      <div th:text="${talent.salary}"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="card-body">
+                    <div class="mb-2">
+                      <strong>Riwayat Wawancara Talent</strong>
+                    </div>
+                    <div class="text-muted" th:if="${histories.isEmpty()}">
+                      Belum ada riwayat wawancara
+                    </div>
+                    <table
+                      class="table table-hover"
+                      th:if="${!histories.isEmpty()}"
+                    >
+                      <thead class="table-primary">
+                        <tr>
+                          <th class="col-1">No</th>
+                          <th>Perekrut</th>
+                          <th>Posisi</th>
+                          <th>Tanggal</th>
+                          <th>Status</th>
+                          <th>Feedback</th>
+                        </tr>
+                      </thead>
+                      <tbody id="interviewTbl">
+                        <tr th:each="history, i: ${histories}">
+                          <td th:text="${i.count}"></td>
+                          <td
+                            th:text="|${history.clientUserFirstName} ${history.clientUserFirstName}|"
+                          ></td>
+                          <td th:text="${history.position}"></td>
+                          <td
+                            class="createdAtElement"
+                            th:text="${history.created_at}"
+                          ></td>
+                          <td>
+                            <span
+                              th:text="${history.status}"
+                              class="badge"
+                            ></span>
+                          </td>
+                          <td th:text="${history.feedback}"></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <a th:href="@{/admin/talent}" class="btn btn-primary me-2"
+                  >Kembali</a
+                >
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- JS Local -->
+    <div layout:fragment="script">
+      <script th:src="@{/js/talent-admin/detail.js}"></script>
+    </div>
+  </body>
+</html>

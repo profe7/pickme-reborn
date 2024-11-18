@@ -293,4 +293,15 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
     public InterviewSchedule getById(Long id) {
         return interviewScheduleRepository.findById(id).orElse(null);
     }
+
+    @Override
+    public List<InterviewScheduleResponse> getByTalentId(String id) {
+        return interviewScheduleRepository.findInterviewScheduleByTalentId(id).stream().map(interview -> {
+            InterviewScheduleResponse interviewScheduleResponse = modelMapper.map(interview,
+                    InterviewScheduleResponse.class);
+            interviewScheduleResponse.setClientUserFirstName(interview.getClient().getUser().getFirstName());
+            return interviewScheduleResponse;
+        })
+                .collect(Collectors.toList());
+    }
 }

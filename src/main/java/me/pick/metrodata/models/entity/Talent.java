@@ -27,8 +27,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(indexes = {
-    @Index(name = "idx_talent_name", columnList = "name"),
-    @Index(name = "idx_talent_nik", columnList = "nik")})
+        @Index(name = "idx_talent_name", columnList = "name"),
+        @Index(name = "idx_talent_nik", columnList = "nik") })
 public class Talent {
 
     @PrePersist

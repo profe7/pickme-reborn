@@ -8,6 +8,7 @@ import me.pick.metrodata.enums.StatusCV;
 import me.pick.metrodata.models.dto.requests.TalentDataCompletionRequest;
 import me.pick.metrodata.models.dto.requests.TalentFromVacancyRequest;
 import me.pick.metrodata.models.dto.responses.TalentAvailableForVacancyResponse;
+import me.pick.metrodata.models.dto.responses.TalentInterviewScheduleHistory;
 import me.pick.metrodata.models.dto.responses.TalentResponse;
 import me.pick.metrodata.models.entity.Talent;
 
@@ -33,4 +34,6 @@ public interface TalentService {
         Page<Talent> getAll(Integer page, Integer size, String search, Long institute, Long baseSalary,
                         Long limitSalary,
                         Boolean active, String job, String skill, Boolean idle);
+
+        List<TalentInterviewScheduleHistory> getTalentInterviewScheduleHistories(String talentId);
 }

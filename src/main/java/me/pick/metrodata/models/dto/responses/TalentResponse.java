@@ -19,4 +19,9 @@ public class TalentResponse {
 
     private String instituteName;
 
+    private Boolean Disabled;
+
+    private String currentWorkAssigment;
+
+    private Integer salary;
 }

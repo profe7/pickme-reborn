@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -52,5 +53,18 @@ public class AdminTalentController {
         response.put("talents", talentPage.getContent());
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/detail/{id}")
+    // @PreAuthorize("hasAnyAuthority('READ_INTERVIEW')")
+    public String detail(@PathVariable String id, Model model, HttpServletRequest request) {
+
+        User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
+
+        model.addAttribute("logged", loggedUser);
+        model.addAttribute("talent", talentService.getById(id));
+        model.addAttribute("histories", talentService.getTalentInterviewScheduleHistories(id));
+
+        return "talent-admin/detail";
     }
 }
