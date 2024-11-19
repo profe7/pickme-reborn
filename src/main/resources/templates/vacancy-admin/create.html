@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="upgrade-insecure-requests"
+    />
+    <div th:insert="~{components-admin/plugin :: css}"></div>
+    <title>Lowongan</title>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <div th:insert="~{components-admin/navbar :: navbar}"></div>
+      <div th:insert="~{components-admin/sidebar :: sidebar}"></div>
+
+      <div class="content-wrapper">
+        <div class="content-header">
+          <div class="container-fluid">
+            <div class="m-2">
+              <ol class="breadcrumb">
+                <li
+                  class="breadcrumb-item d-flex align-items-center text-muted"
+                >
+                  <i class="nav-icon fa fa-home me-2"></i>
+                  <a class="text-muted" href="/admin">Beranda</a>
+                </li>
+                <li
+                  class="breadcrumb-item active d-flex align-items-center"
+                  style="color: #0066cc"
+                >
+                  <i class="nav-icon fa fa-file-contract me-2"></i>Lowongan
+                </li>
+              </ol>
+              <h1 class="mt-2"><strong>Tambah Lowongan Baru</strong></h1>
+            </div>
+          </div>
+        </div>
+
+        <section class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="fw-bold mb-3">Formulir Lowongan</h4>
+                    <div class="mb-3 col-12">
+                      <label for="title" class="required">Judul</label>
+                      <input type="text" class="form-control" id="title" />
+                      <div class="invalid-feedback">Kolom ini harus diisi</div>
+                    </div>
+                    <div class="container row">
+                      <div class="mb-3 col-6">
+                        <label for="position" class="form-label required"
+                          >Posisi</label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="position"
+                          placeholder="Pilih posisi"
+                        />
+                        <div class="invalid-feedback">
+                          Kolom ini harus diisi
+                        </div>
+                      </div>
+                      <div class="mb-3 col-6">
+                        <label for="position" class="form-label required"
+                          >Status</label
+                        >
+                        <select
+                          id="status"
+                          class="form-control select2"
+                          title="status"
+                        >
+                          <option value="">Pilih Status</option>
+                          <option
+                            th:each="status : ${jobStatus}"
+                            th:value="${status.name()}"
+                            th:text="${status.name()}"
+                          ></option>
+                        </select>
+                        <div class="invalid-feedback">
+                          Kolom ini harus diisi
+                        </div>
+                      </div>
+                    </div>
+                    <div class="container row">
+                      <div class="mb-3 col-6">
+                        <label for="expiredDate" class="form-label required"
+                          >Tanggal Berakhir</label
+                        >
+                        <input
+                          type="date"
+                          class="form-control"
+                          id="expiredDate"
+                          th:min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
+                        />
+                        <div class="invalid-feedback">
+                          Kolom ini harus diisi
+                        </div>
+                      </div>
+                      <div class="mb-3 col-6">
+                        <label for="title" class="required"
+                          >Jumlah Kebutuhan</label
+                        >
+                        <input
+                          type="number"
+                          class="form-control"
+                          id="required-positions"
+                          title="title"
+                        />
+                        <div class="invalid-feedback" id="invalid-required">
+                          Kolom ini harus diisi
+                        </div>
+                      </div>
+                    </div>
+                    <div class="mb-3 col-12">
+                      <label for="description" class="required"
+                        >Deskripsi</label
+                      >
+                      <textarea
+                        class="form-control"
+                        id="editor"
+                        rows="3"
+                        title="editor"
+                      ></textarea>
+                      <div class="invalid-feedback">Kolom ini harus diisi</div>
+                    </div>
+                    <div class="container d-flex justify-content-end">
+                      <a
+                        th:href="@{/admin/vacancy}"
+                        class="btn btn-outline-primary btn-block me-2"
+                        onclick="return confirmBack()"
+                        >Batal</a
+                      >
+                      <button
+                        type="button"
+                        class="btn btn-primary btn-block"
+                        onclick="submit()"
+                      >
+                        Simpan
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- JS Local -->
+    <div layout:fragment="script">
+      <script th:src="@{/js/vacancy-admin/create.js}"></script>
+    </div>
+  </body>
+</html>

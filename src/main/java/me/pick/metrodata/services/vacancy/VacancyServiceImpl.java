@@ -42,19 +42,24 @@ public class VacancyServiceImpl implements VacancyService {
     private final ClientRepository clientRepository;
 
     @Override
-    public Page<Vacancy> getOpenVacancies(Integer page, Integer size, String expiredDate, String updatedAt, String title, String position) {
-        Specification<Vacancy> spec = VacancySpecification.searchSpecification(title, position, expiredDate, updatedAt, null);
+    public Page<Vacancy> getOpenVacancies(Integer page, Integer size, String expiredDate, String updatedAt,
+            String title, String position) {
+        Specification<Vacancy> spec = VacancySpecification.searchSpecification(title, position, expiredDate, updatedAt,
+                null);
         List<Vacancy> vacancies = vacancyRepository.findOpenVacancies(spec);
         return vacancyPaginationHelper(page, size, vacancies);
     }
 
     @Override
-    public Page<Vacancy> getAllRm(String title, String position, String expiredDate, String updatedAt, String timeInterval, Integer page, Integer size, Long clientId) {
+    public Page<Vacancy> getAllRm(String title, String position, String expiredDate, String updatedAt,
+            String timeInterval, Integer page, Integer size, Long clientId) {
         if (clientId == null) {
             throw new ClientDoesNotExistException(0L);
         }
-        Client client = clientRepository.findClientById(clientId).orElseThrow(() -> new ClientDoesNotExistException(clientId));
-        Specification<Vacancy> spec = VacancySpecification.combinedSpecification(title, position, expiredDate, updatedAt, timeInterval, client);
+        Client client = clientRepository.findClientById(clientId)
+                .orElseThrow(() -> new ClientDoesNotExistException(clientId));
+        Specification<Vacancy> spec = VacancySpecification.combinedSpecification(title, position, expiredDate,
+                updatedAt, timeInterval, client);
         List<Vacancy> vacancies = vacancyRepository.findAll(spec);
         return vacancyPaginationHelper(page, size, vacancies);
     }
@@ -64,35 +69,33 @@ public class VacancyServiceImpl implements VacancyService {
         return vacancyRepository.findDistinctPositions();
     }
 
-
     @Override
-    public Optional<Vacancy> getVacancyById(Long id) {
-        return vacancyRepository.findById(id);
+    public Vacancy getVacancyById(Long id) {
+        return vacancyRepository.findById(id).orElse(null);
     }
 
     @Override
-    public ReadVacancyDetailResponse getVacancyDetailWithApplicants(Long vacancyId, Long mitraId){
-        Optional<Vacancy> vacancyOptional = getVacancyById(vacancyId);
+    public ReadVacancyDetailResponse getVacancyDetailWithApplicants(Long vacancyId, Long mitraId) {
+        Optional<Vacancy> vacancyOptional = vacancyRepository.findById(vacancyId);
 
-        if (vacancyOptional.isPresent()){
+        if (vacancyOptional.isPresent()) {
             Vacancy vacancy = vacancyOptional.get();
             List<Applicant> applicants = applicantRepository.findApplicantsByVacancyIdAndMitraId(vacancyId, mitraId);
 
             List<Applicant> filtered = applicants.stream()
-                .filter(applicant -> applicant.getTalent().getApplicants().stream(
-                    ).noneMatch(applicant1 -> applicant1.getStatus() == ApplicantStatus.ACCEPTED)
-                ).toList();
+                    .filter(applicant -> applicant.getTalent().getApplicants().stream()
+                            .noneMatch(applicant1 -> applicant1.getStatus() == ApplicantStatus.ACCEPTED))
+                    .toList();
 
             List<ReadApplicantResponse> applicantResponses = filtered.stream()
-                .map(applicant -> {
-                    Talent talent = applicant.getTalent();
-                    Mitra mitra = talent.getMitra();
-                    return new ReadApplicantResponse(
-                        mitra != null ? mitra.getId() : null,
-                        talent != null ? talent.getName() : null,
-                        talent != null ? talent.getStatusCV().toString() : null
-                    );
-                }).toList();
+                    .map(applicant -> {
+                        Talent talent = applicant.getTalent();
+                        Mitra mitra = talent.getMitra();
+                        return new ReadApplicantResponse(
+                                mitra != null ? mitra.getId() : null,
+                                talent != null ? talent.getName() : null,
+                                talent != null ? talent.getStatusCV().toString() : null);
+                    }).toList();
 
             ReadVacancyDetailResponse vacancyResponse = new ReadVacancyDetailResponse();
             vacancyResponse.setVacancyId(vacancyId);
@@ -112,7 +115,8 @@ public class VacancyServiceImpl implements VacancyService {
 
     @Override
     public void createVacancy(VacancyCreationRequest request) {
-        User user = userRepository.findUserById(request.getClientUserId()).orElseThrow(() -> new UserDoesNotExistException(request.getClientUserId().toString()));
+        User user = userRepository.findUserById(request.getClientUserId())
+                .orElseThrow(() -> new UserDoesNotExistException(request.getClientUserId().toString()));
         try {
             VacancyStatus.valueOf(request.getVacancyStatus());
         } catch (IllegalArgumentException e) {
@@ -143,11 +147,12 @@ public class VacancyServiceImpl implements VacancyService {
     }
 
     @Override
-    public Page<Vacancy> getFilteredVacancy(String searchTitle, String searchPosition, LocalDate date, VacancyStatus status, Integer page, Integer size) {
+    public Page<Vacancy> getFilteredVacancy(String searchTitle, String searchPosition, LocalDate date,
+            VacancyStatus status, Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size);
-        return vacancyRepository.findAllWithFilters(searchTitle, searchPosition, date, status, pageable);  
+        return vacancyRepository.findAllWithFilters(searchTitle, searchPosition, date, status, pageable);
     }
-  
+
     @Override
     public void editVacancy(VacancyCreationRequest request, Long id) {
         try {

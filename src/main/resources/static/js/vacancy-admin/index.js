@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <a class="btn btn-success">
           <i class="bi bi-people-fill text-white"></i>
         </a>
-        <a class="btn btn-primary">
+        <a href="/admin/vacancy/update/${vacancy.id}" class="btn btn-primary">
           <i class="bi bi-pencil-square text-white"></i>
         </a>
         <a class="btn btn-danger">
