@@ -21,8 +21,10 @@ import me.pick.metrodata.enums.InterviewType;
 import me.pick.metrodata.models.dto.responses.InterviewScheduleResponse;
 import me.pick.metrodata.models.entity.InterviewSchedule;
 import me.pick.metrodata.models.entity.User;
+import me.pick.metrodata.services.client.ClientService;
 import me.pick.metrodata.services.interview.InterviewScheduleService;
 import me.pick.metrodata.services.interviewhistory.InterviewScheduleHistoryService;
+import me.pick.metrodata.services.talent.TalentService;
 import me.pick.metrodata.services.user.UserService;
 
 @Controller
@@ -33,6 +35,8 @@ public class AdminInterviewScheduleController {
     private final InterviewScheduleService interviewScheduleService;
     private final InterviewScheduleHistoryService interviewScheduleHistoryService;
     private final UserService userService;
+    private final TalentService talentService;
+    private final ClientService clientService;
 
     @GetMapping
     // @PreAuthorize("hasAnyAuthority('READ_INTERVIEW')")
@@ -83,5 +87,17 @@ public class AdminInterviewScheduleController {
         model.addAttribute("talent", talent);
 
         return "interview-schedule-admin/history";
+    }
+
+    @GetMapping("/create")
+    public String createForm(Model model, HttpServletRequest request) {
+
+        User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
+
+        model.addAttribute("logged", loggedUser);
+        model.addAttribute("talents", talentService.getTalents());
+        model.addAttribute("clients", clientService.getClients());
+
+        return "interview-schedule-admin/create";
     }
 }
