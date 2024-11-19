@@ -46,7 +46,10 @@ function closeTalentModal() {
     $("#talentModal").modal("hide");
 }
 
-function validateForm() {
+function validateForm(event) {
+    // Prevent the default form submission
+    event.preventDefault();
+
     // Reset pesan error
     document.getElementById('namaLengkapError').innerText = "";
     document.getElementById('emailError').innerText = "";
@@ -56,6 +59,8 @@ function validateForm() {
     const namaLengkap = document.getElementById('namaLengkap').value.trim();
     const email = document.getElementById('email').value.trim();
     const nomorKTP = document.getElementById('nomorKTP').value.trim();
+    const mitraId = document.querySelector('button[form="talentForm"]').getAttribute('data-mitra-id');
+    const vacancyId = document.querySelector('button[form="talentForm"]').getAttribute('data-vacancy-id');
 
     let isValid = true;
 
@@ -83,5 +88,42 @@ function validateForm() {
         isValid = false;
     }
 
-    return isValid;
+    if (isValid) {
+        const requestData = {
+            talentName: namaLengkap,
+            talentEmail: email,
+            talentNik: nomorKTP,
+            talentMitraId: mitraId,
+            vacancyId: vacancyId
+        };
+
+        $.ajax({
+            url: "/vacancies/applyNewTalent",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(requestData),
+            complete: function (xhr) {
+                if (xhr.status === 200) {
+                    Swal.fire({
+                        title: 'Success',
+                        text: xhr.responseText,
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        window.location.href = "/vacancies/" + vacancyId;
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: xhr.responseText,
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            }
+        });
+    }
 }
+
+// Attach the validateForm function to the form submit event
+document.getElementById('talentForm').addEventListener('submit', validateForm);
