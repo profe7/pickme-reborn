@@ -59,20 +59,19 @@
 
                     <hr><br>
                     <span style="font-size: 16px;">
-                        <strong>Pilih Talent:</strong>
+                         <strong>Pilih Talent:</strong>
                     </span>
-
+                    <div id="selectedTalents"></div>
                     <div>
                         <br>
                         <button type="button" class="btn btn-outline-secondary mb-3 w-100"
-                            onclick="openTalentModal(this)"
-                            th:attr="data-mitra-id=${mitraId}, data-vacancy-id=${vacancyId}">
+                                onclick="openTalentModal(this)"
+                                th:attr="data-mitra-id=${mitraId}, data-vacancy-id=${vacancyId}">
                             <span class="me-2">+</span> Tambahkan Talent
                         </button>
-
                         <br>
                         <button type="button" class="btn w-100"
-                            style="background-color: #006683; color: antiquewhite;">Daftar</button>
+                                style="background-color: #006683; color: antiquewhite;">Daftar</button>
                     </div>
                 </div>
             </div>

@@ -1,10 +1,9 @@
+// Array to store selected talent IDs
+let selectedTalentIds = [];
+
 function openTalentModal(button) {
     const mitraId = $(button).data("mitra-id");
     const vacancyId = $(button).data("vacancy-id");
-
-     // Lakukan sesuatu dengan mitraId dan vacancyId
-    console.log('Mitra ID:', mitraId);
-    console.log('Vacancy ID:', vacancyId);
 
     if (!mitraId || !vacancyId) {
         console.error("mitraId atau vacancyId tidak ditemukan");
@@ -29,16 +28,71 @@ function openTalentModal(button) {
                     CV
                     </button>
 
-                    <button class="btn btn-sm" style="background-color: #106AFC; color: white;">Pilih</button>
+                    <button class="btn btn-sm pilih-btn" style="background-color: #106AFC; color: white;" data-talent-id="${talent.talentId}" data-talent-name="${talent.talentName}">Pilih</button>
                 </td>
             </tr>`;
             });
             $('#talentList').html(talentRows);
             $('#talentModal').modal('show');
+
+            // Add event listener to "Pilih" buttons
+            $('.pilih-btn').on('click', function() {
+                const talentId = $(this).data('talent-id');
+                const talentName = $(this).data('talent-name');
+                const miniCard = `<div class="mini-card" data-talent-id="${talentId}">${talentName} <button class="remove-btn">X</button></div>`;
+                $('#selectedTalents').append(miniCard);
+
+                // Add talent ID to the array
+                selectedTalentIds.push(talentId);
+
+                // Disable and grey out the "Pilih" button
+                $(this).prop('disabled', true).addClass('disabled-btn');
+
+                // Add event listener to "X" button
+                $('.remove-btn').on('click', function() {
+                    const talentId = $(this).parent().data('talent-id');
+                    $(this).parent().remove();
+
+                    // Remove talent ID from the array
+                    selectedTalentIds = selectedTalentIds.filter(id => id !== talentId);
+                });
+            });
         },
         error: function (err) {
             $("#talentList").html("<tr><td colspan='4'>Failed to load talent data.</td></tr>");
         }
+    });
+
+    document.querySelector('.btn.w-100[style*="background-color: #006683"]').addEventListener('click', function() {
+        const requestData = {
+            vacancyId: vacancyId,
+            talentIds: selectedTalentIds
+        };
+
+        $.ajax({
+            url: "/api/v1/applicant/apply-multiple-talents",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(requestData),
+            success: function(response) {
+                Swal.fire({
+                    title: 'Success',
+                    text: 'Applicants created successfully',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    window.location.reload();
+                });
+            },
+            error: function(xhr) {
+                Swal.fire({
+                    title: 'Error',
+                    text: xhr.responseText,
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
     });
 }
 

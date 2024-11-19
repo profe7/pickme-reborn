@@ -3,6 +3,30 @@
   --color: #013c5e;
 }
 
+.mini-card {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.disabled-btn {
+  background-color: grey !important;
+  cursor: not-allowed;
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  margin-left: 10px;
+}
+
 body {
   font-family: "Poppins", sans-serif;
 }
@@ -835,7 +859,6 @@ a:focus {
   -webkit-transition: all 0.3s;
   transition: all 0.3s;
 }
-*/
 
 /* .custom_nav-container .navbar-toggler span {
   display: block;
