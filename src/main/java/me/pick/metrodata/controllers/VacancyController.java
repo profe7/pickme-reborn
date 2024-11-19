@@ -1,7 +1,9 @@
 package me.pick.metrodata.controllers;
 
+import me.pick.metrodata.enums.StatusCV;
 import me.pick.metrodata.models.dto.responses.ReadVacancyDetailResponse;
 import me.pick.metrodata.models.dto.responses.TalentAvailableForVacancyResponse;
+import me.pick.metrodata.models.dto.responses.TalentResponse;
 import me.pick.metrodata.models.entity.Vacancy;
 import me.pick.metrodata.services.talent.TalentService;
 import me.pick.metrodata.services.vacancy.VacancyService;
@@ -46,7 +48,7 @@ public class VacancyController {
         model.addAttribute("title", title);
         model.addAttribute("position", position);
 
-        return "vacancy/vacancies";
+        return "mitra/vacancies-mitra";
 
     }
 
@@ -57,17 +59,22 @@ public class VacancyController {
 
         if (vacancyDetail != null) {
             model.addAttribute("detailVacancy", vacancyDetail);
+            model.addAttribute("mitraId", mitraId);
+            model.addAttribute("vacancyId", vacancyId);
+
         }
 
-        return "vacancy/vacancy-detail";
+        return "mitra/vacancy-detail-mitra";
     }
 
-    @GetMapping("/{vacancyId}/talent")
+    @GetMapping("/{mitraId}/{vacancyId}/talent")
     public ResponseEntity<TalentAvailableForVacancyResponse> getCompleteTalentListByMitra(@PathVariable("vacancyId") Long vacancyId, HttpSession httpSession) 
     {
         Long mitraId = (Long) httpSession.getAttribute("mitraId");
         TalentAvailableForVacancyResponse listTalentComplete = talentService.availableForVacancy(vacancyId, mitraId);
         return ResponseEntity.ok(listTalentComplete);
     }
+
+   
 
 }
