@@ -17,6 +17,7 @@ import lombok.AllArgsConstructor;
 import me.pick.metrodata.models.dto.responses.AccountResponse;
 import me.pick.metrodata.models.entity.User;
 import me.pick.metrodata.services.account.AccountService;
+import me.pick.metrodata.services.role.RoleService;
 import me.pick.metrodata.services.user.UserService;
 
 @Controller
@@ -26,6 +27,7 @@ public class AdminAccountController {
 
     private final AccountService accountService;
     private final UserService userService;
+    private final RoleService roleService;
 
     @GetMapping
     public String index(Model model, HttpServletRequest request) {
@@ -34,6 +36,7 @@ public class AdminAccountController {
 
         model.addAttribute("logged", loggedUser);
         model.addAttribute("isActive", "account");
+        model.addAttribute("roles", roleService.getRoles());
         return "account-admin/index";
     }
 
@@ -41,7 +44,7 @@ public class AdminAccountController {
     // @PreAuthorize("hasAnyAuthority('READ_TALENT')")
     public ResponseEntity<Map<String, Object>> getTalents(
             @RequestParam(value = "searchUsername", required = false) String searchUsername,
-            @RequestParam(value = "role", required = false) String role,
+            @RequestParam(value = "role", required = false) Long role,
             @RequestParam(value = "status", required = false) String status,
             @RequestParam(value = "page", required = false) Integer page,
             @RequestParam(defaultValue = "10", required = false) Integer size) {

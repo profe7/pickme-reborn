@@ -105,6 +105,11 @@
                               onchange="applyFilter()"
                             >
                               <option value="">Status</option>
+                              <option
+                                th:each="status : ${statuses}"
+                                th:value="${status.name()}"
+                                th:text="${status.name()}"
+                              ></option>
                             </select>
                           </div>
                         </div>

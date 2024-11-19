@@ -80,4 +80,9 @@ public class RoleServiceImpl implements RoleService {
         return roleRepository.findAllWithFilters(pageable).map(role -> modelMapper.map(role,
                 RoleResponse.class));
     }
+
+    @Override
+    public List<Role> getRoles() {
+        return roleRepository.findAll();
+    }
 }

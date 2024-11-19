@@ -7,7 +7,6 @@ import java.util.Map;
 import me.pick.metrodata.utils.Response;
 import me.pick.metrodata.utils.ResponseHandler;
 
-import org.springframework.boot.autoconfigure.batch.BatchProperties.Job;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -45,6 +44,7 @@ public class AdminVacancyController {
 
         model.addAttribute("logged", loggedUser);
         model.addAttribute("isActive", "vacancy");
+        model.addAttribute("statuses", VacancyStatus.values());
         return "vacancy-admin/index";
     }
 

@@ -8,7 +8,6 @@ import me.pick.metrodata.models.dto.responses.InterviewScheduleResponse;
 import me.pick.metrodata.models.dto.responses.InterviewHistoryResponse;
 import me.pick.metrodata.models.dto.responses.InterviewScheduleCalendarResponse;
 import me.pick.metrodata.models.entity.InterviewSchedule;
-import me.pick.metrodata.models.entity.InterviewScheduleHistory;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 

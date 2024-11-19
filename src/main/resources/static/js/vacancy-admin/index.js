@@ -1,13 +1,4 @@
-const vacancyStatuses = ["LOW", "MEDIUM", "HIGH", "CLOSED"];
-
 document.addEventListener("DOMContentLoaded", function () {
-  const statusSelect = document.getElementById("status");
-  vacancyStatuses.forEach(function (status) {
-    const option = document.createElement("option");
-    option.value = status;
-    option.textContent = status;
-    statusSelect.appendChild(option);
-  });
   document
     .getElementById("searchTitle")
     .addEventListener("input", () => fetchSchedules());

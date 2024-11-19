@@ -1,11 +1,3 @@
-const accountRoles = [
-  "ADMIN",
-  "CLIENT",
-  "MITRA",
-  "RM",
-  "SUPER ADMIN",
-  "TALENT",
-];
 const accountStatuses = ["AKTIF", "TIDAK AKTIF"];
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -15,13 +7,6 @@ document.addEventListener("DOMContentLoaded", function () {
     option.value = status;
     option.textContent = status;
     statusSelect.appendChild(option);
-  });
-  const roleSelect = document.getElementById("role");
-  accountRoles.forEach(function (role) {
-    const option = document.createElement("option");
-    option.value = role;
-    option.textContent = role;
-    roleSelect.appendChild(option);
   });
   document
     .getElementById("searchUsername")

@@ -21,6 +21,6 @@ public interface AccountService {
                         Long baseBudget,
                         Long limitBudget);
 
-        Page<AccountResponse> getFilteredAccount(String searchUsername, String role, String status, Integer page,
+        Page<AccountResponse> getFilteredAccount(String searchUsername, Long role, String status, Integer page,
                         Integer size);
 }

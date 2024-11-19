@@ -131,7 +131,7 @@ public class AccountServiceImpl implements AccountService {
         }
 
         @Override
-        public Page<AccountResponse> getFilteredAccount(String searchUsername, String role, String status, Integer page,
+        public Page<AccountResponse> getFilteredAccount(String searchUsername, Long role, String status, Integer page,
                         Integer size) {
                 Pageable pageable = PageRequest.of(page, size);
                 boolean isEnabled = "AKTIF".equals(status);

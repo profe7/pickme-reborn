@@ -13,7 +13,6 @@ import me.pick.metrodata.repositories.RecommendationApplicantRepository;
 import me.pick.metrodata.repositories.RecommendationRepository;
 import me.pick.metrodata.repositories.specifications.RecommendationSpecification;
 import me.pick.metrodata.services.talent.TalentService;
-import me.pick.metrodata.utils.AuthUtil;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Base64;
 
 @RequiredArgsConstructor
@@ -58,7 +56,8 @@ public class RecommendationServiceImpl implements RecommendationService {
 	}
 
 	@Override
-	public Page<RecommendationGroupedResponse> getRecommendationClientPaged(Integer page, Integer size, Long clientId, String talentName, String position) {
+	public Page<RecommendationGroupedResponse> getRecommendationClientPaged(Integer page, Integer size, Long clientId,
+			String talentName, String position) {
 		return recommendationPaginationHelper(page, size, fetchClientRecommendation(clientId, talentName, position));
 	}
 
@@ -72,7 +71,8 @@ public class RecommendationServiceImpl implements RecommendationService {
 		recommendationApplicantRepository.deleteByRecommendation_Id(id);
 	}
 
-	private Page<RecommendationGroupedResponse> recommendationPaginationHelper(Integer page, Integer size, List<RecommendationGroupedResponse> recommendations) {
+	private Page<RecommendationGroupedResponse> recommendationPaginationHelper(Integer page, Integer size,
+			List<RecommendationGroupedResponse> recommendations) {
 		Pageable pageable = PageRequest.of(page, size);
 		int start = (int) pageable.getOffset();
 		int end = Math.min((start + pageable.getPageSize()), recommendations.size());
@@ -80,7 +80,8 @@ public class RecommendationServiceImpl implements RecommendationService {
 		return new PageImpl<>(recommendations.subList(start, end), pageable, recommendations.size());
 	}
 
-	private List<RecommendationGroupedResponse> fetchClientRecommendation(Long clientId, String talentName, String position) {
+	private List<RecommendationGroupedResponse> fetchClientRecommendation(Long clientId, String talentName,
+			String position) {
 		var groupedResponses = new HashMap<String, RecommendationGroupedResponse>();
 		var specification = RecommendationSpecification.filterByTalentNameAndPosition(talentName, position)
 				.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("clients").get("id"), clientId));
@@ -92,18 +93,20 @@ public class RecommendationServiceImpl implements RecommendationService {
 
 			String vacancyPosition = vacancy.getPosition();
 			Long vacancyId = vacancy.getId();
-	
+
 			RecommendationGroupedResponse groupedResponse = groupedResponses
 					.getOrDefault(vacancyPosition,
-							new RecommendationGroupedResponse(recommendationId, vacancyPosition, vacancyId, new ArrayList<>()));
+							new RecommendationGroupedResponse(recommendationId, vacancyPosition, vacancyId,
+									new ArrayList<>()));
 
 			List<RecommendationApplicant> applicants = recommendation.getRecommendationApplicants();
-	
+
 			if (applicants != null) {
 				for (RecommendationApplicant applicant : applicants) {
 					Talent talent = applicant.getApplicant().getTalent();
-					if (talent == null) continue;
-	
+					if (talent == null)
+						continue;
+
 					TalentResponse talentResponse = talentService.getById(talent.getId());
 					if (talent.getPhoto() != null) {
 						talentResponse.setPhoto(Base64.getEncoder().encodeToString(talent.getPhoto()));
@@ -116,5 +119,5 @@ public class RecommendationServiceImpl implements RecommendationService {
 		}
 		return new ArrayList<>(groupedResponses.values());
 	}
-	
+
 }

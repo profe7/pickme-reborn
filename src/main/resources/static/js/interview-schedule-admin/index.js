@@ -1,29 +1,4 @@
-const interviewTypes = ["ONLINE", "OFFLINE"];
-const interviewStatuses = [
-  "ON_PROCESS",
-  "RESCHEDULED",
-  "CANCELLED",
-  "ACCEPTED",
-  "REJECTED",
-  "INACTIVE",
-];
-
 document.addEventListener("DOMContentLoaded", function () {
-  const typeSelect = document.getElementById("type");
-  interviewTypes.forEach(function (type) {
-    const option = document.createElement("option");
-    option.value = type;
-    option.textContent = type;
-    typeSelect.appendChild(option);
-  });
-
-  const statusSelect = document.getElementById("status");
-  interviewStatuses.forEach(function (status) {
-    const option = document.createElement("option");
-    option.value = status;
-    option.textContent = status;
-    statusSelect.appendChild(option);
-  });
   document
     .getElementById("searchRecruiter")
     .addEventListener("input", () => fetchSchedules());
