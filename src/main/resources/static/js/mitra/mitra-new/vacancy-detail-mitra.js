@@ -1,14 +1,8 @@
-// Array to store selected talent IDs
 let selectedTalentIds = [];
 
 function openTalentModal(button) {
     const mitraId = $(button).data("mitra-id");
     const vacancyId = $(button).data("vacancy-id");
-
-    if (!mitraId || !vacancyId) {
-        console.error("mitraId atau vacancyId tidak ditemukan");
-        return;
-    }
 
     $.ajax({
         url: `/vacancies/${mitraId}/${vacancyId}/talent`,
@@ -35,25 +29,20 @@ function openTalentModal(button) {
             $('#talentList').html(talentRows);
             $('#talentModal').modal('show');
 
-            // Add event listener to "Pilih" buttons
             $('.pilih-btn').on('click', function() {
                 const talentId = $(this).data('talent-id');
                 const talentName = $(this).data('talent-name');
                 const miniCard = `<div class="mini-card" data-talent-id="${talentId}">${talentName} <button class="remove-btn">X</button></div>`;
                 $('#selectedTalents').append(miniCard);
 
-                // Add talent ID to the array
                 selectedTalentIds.push(talentId);
 
-                // Disable and grey out the "Pilih" button
                 $(this).prop('disabled', true).addClass('disabled-btn');
 
-                // Add event listener to "X" button
                 $('.remove-btn').on('click', function() {
                     const talentId = $(this).parent().data('talent-id');
                     $(this).parent().remove();
 
-                    // Remove talent ID from the array
                     selectedTalentIds = selectedTalentIds.filter(id => id !== talentId);
                 });
             });
@@ -64,6 +53,16 @@ function openTalentModal(button) {
     });
 
     document.querySelector('.btn.w-100[style*="background-color: #006683"]').addEventListener('click', function() {
+        if (selectedTalentIds.length === 0) {
+            Swal.fire({
+                title: 'Error',
+                text: 'No talent selected',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
         const requestData = {
             vacancyId: vacancyId,
             talentIds: selectedTalentIds
@@ -81,6 +80,7 @@ function openTalentModal(button) {
                     icon: 'success',
                     confirmButtonText: 'OK'
                 }).then(() => {
+                    selectedTalentIds = [];
                     window.location.reload();
                 });
             },
@@ -101,15 +101,12 @@ function closeTalentModal() {
 }
 
 function validateForm(event) {
-    // Prevent the default form submission
     event.preventDefault();
 
-    // Reset pesan error
     document.getElementById('namaLengkapError').innerText = "";
     document.getElementById('emailError').innerText = "";
     document.getElementById('nomorKTPError').innerText = "";
 
-    // Mendapatkan nilai input
     const namaLengkap = document.getElementById('namaLengkap').value.trim();
     const email = document.getElementById('email').value.trim();
     const nomorKTP = document.getElementById('nomorKTP').value.trim();
@@ -118,13 +115,11 @@ function validateForm(event) {
 
     let isValid = true;
 
-    // Validasi Nama Lengkap
     if (namaLengkap === "") {
         document.getElementById('namaLengkapError').innerText = "Nama Lengkap wajib diisi.";
         isValid = false;
     }
 
-    // Validasi Email
     if (email === "") {
         document.getElementById('emailError').innerText = "Email wajib diisi.";
         isValid = false;
@@ -133,7 +128,6 @@ function validateForm(event) {
         isValid = false;
     }
 
-    // Validasi Nomor KTP
     if (nomorKTP === "") {
         document.getElementById('nomorKTPError').innerText = "Nomor KTP wajib diisi.";
         isValid = false;
@@ -179,5 +173,4 @@ function validateForm(event) {
     }
 }
 
-// Attach the validateForm function to the form submit event
 document.getElementById('talentForm').addEventListener('submit', validateForm);

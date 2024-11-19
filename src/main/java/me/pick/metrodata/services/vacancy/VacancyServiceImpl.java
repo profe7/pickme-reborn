@@ -1,5 +1,6 @@
 package me.pick.metrodata.services.vacancy;
 
+import me.pick.metrodata.enums.ApplicantStatus;
 import me.pick.metrodata.models.dto.responses.ReadApplicantResponse;
 import me.pick.metrodata.models.dto.responses.ReadVacancyDetailResponse;
 import me.pick.metrodata.models.entity.Applicant;
@@ -77,7 +78,12 @@ public class VacancyServiceImpl implements VacancyService {
             Vacancy vacancy = vacancyOptional.get();
             List<Applicant> applicants = applicantRepository.findApplicantsByVacancyIdAndMitraId(vacancyId, mitraId);
 
-            List<ReadApplicantResponse> applicantResponses = applicants.stream()
+            List<Applicant> filtered = applicants.stream()
+                .filter(applicant -> applicant.getTalent().getApplicants().stream(
+                    ).noneMatch(applicant1 -> applicant1.getStatus() == ApplicantStatus.ACCEPTED)
+                ).toList();
+
+            List<ReadApplicantResponse> applicantResponses = filtered.stream()
                 .map(applicant -> {
                     Talent talent = applicant.getTalent();
                     Mitra mitra = talent.getMitra();
@@ -86,7 +92,7 @@ public class VacancyServiceImpl implements VacancyService {
                         talent != null ? talent.getName() : null,
                         talent != null ? talent.getStatusCV().toString() : null
                     );
-                }).collect(Collectors.toList());
+                }).toList();
 
             ReadVacancyDetailResponse vacancyResponse = new ReadVacancyDetailResponse();
             vacancyResponse.setVacancyId(vacancyId);
