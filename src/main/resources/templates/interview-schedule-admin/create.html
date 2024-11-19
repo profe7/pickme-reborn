@@ -211,20 +211,21 @@
                       <div class="invalid-feedback">Kolom ini harus diisi</div>
                     </div>
                     <div class="container d-flex justify-content-end">
-                      <a
+                      <button
                         type="button"
-                        th:href="@{/admin/interview-schedule}"
                         class="btn btn-outline-primary btn-block me-2"
-                        >Batal</a
+                        onclick="return confirmBack()"
                       >
-                      <a
+                        Batal
+                      </button>
+                      <button
                         type="button"
                         class="btn btn-primary btn-block"
                         onclick="submit()"
                       >
                         <i class="nav-icon fa fa-envelope me-2"></i>Undang
                         Wawancara
-                      </a>
+                      </button>
                     </div>
                   </div>
                 </div>

@@ -135,3 +135,18 @@ function create(data) {
     },
   });
 }
+
+function confirmBack() {
+  Swal.fire({
+    title: "Apakah anda yakin ingin kembali?",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonText: "Ya",
+    cancelButtonText: "Tidak",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = "/admin/interview-schedule";
+    }
+  });
+  return false;
+}

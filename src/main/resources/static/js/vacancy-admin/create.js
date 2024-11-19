@@ -89,7 +89,7 @@ function submit() {
             // Handle success response
             showSuccessAlert("Lowongan berhasil dibuat", function () {
               // Redirect or reload the page after successful submission
-              window.location.href = "/job";
+              window.location.href = "/admin/vacancy";
             });
           },
           error: function (error) {
@@ -140,7 +140,6 @@ function showConfirmAlert(message, callback) {
     confirmButtonText: "Ya",
     cancelButtonText: `Tidak`,
   }).then((result) => {
-    // Read more about isConfirmed, isDenied below
     if (result.isConfirmed && typeof callback === "function") {
       callback(true);
     } else {
@@ -158,8 +157,7 @@ function confirmBack() {
     cancelButtonText: "Tidak",
   }).then((result) => {
     if (result.isConfirmed) {
-      // Jika pengguna memilih "Ya", maka arahkan kembali ke halaman job
-      window.location.href = "/job";
+      window.location.href = "/admin/vacancy";
     }
   });
   return false;
