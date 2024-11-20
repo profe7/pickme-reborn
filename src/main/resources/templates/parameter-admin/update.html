@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="upgrade-insecure-requests"
+    />
+    <div th:insert="~{components-admin/plugin :: css}"></div>
+    <title>Parameter</title>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <div th:insert="~{components-admin/navbar :: navbar}"></div>
+      <div th:insert="~{components-admin/sidebar :: sidebar}"></div>
+
+      <div class="content-wrapper">
+        <div class="content-header">
+          <div class="container-fluid">
+            <div class="m-2">
+              <ol class="breadcrumb">
+                <li
+                  class="breadcrumb-item d-flex align-items-center text-muted"
+                >
+                  <i class="nav-icon fa fa-cog me-2"></i>Pengaturan
+                </li>
+                <li
+                  class="breadcrumb-item active d-flex align-items-center"
+                  style="color: #0066cc"
+                >
+                  <i class="nav-icon fa fa-cogs me-2"></i>Parameter
+                </li>
+              </ol>
+              <h1 class="mt-2"><strong>Perbarui Parameter</strong></h1>
+            </div>
+          </div>
+        </div>
+
+        <section class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="fw-bold mb-3">Formulir Parameter</h4>
+                    <div class="mb-3 col-12">
+                      <label for="param1" class="required"
+                        >Nama Parameter 1</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="param1"
+                        th:value="${parameter.reference_group1}"
+                      />
+                      <div class="invalid-feedback">Kolom ini harus diisi</div>
+                    </div>
+                    <div class="mb-3 col-12">
+                      <label for="param2" class="required"
+                        >Nama Parameter 2</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="param2"
+                        th:value="${parameter.reference_group2}"
+                      />
+                      <div class="invalid-feedback">Kolom ini harus diisi</div>
+                    </div>
+                    <div class="mb-3 col-12">
+                      <label for="value-param" class="required"
+                        >Isi Parameter</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="value-param"
+                        th:value="${parameter.reference_name}"
+                      />
+                      <div class="invalid-feedback">Kolom ini harus diisi</div>
+                      <input
+                        type="hidden"
+                        id="parameterId"
+                        th:value="${parameter.id}"
+                      />
+                    </div>
+                    <div class="container d-flex justify-content-end">
+                      <a
+                        th:href="@{/admin/parameter}"
+                        class="btn btn-outline-primary btn-block me-2"
+                        onclick="return confirmBack()"
+                      >
+                        Batal
+                      </a>
+                      <button
+                        type="button"
+                        class="btn btn-primary btn-block"
+                        onclick="submit()"
+                      >
+                        Simpan
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- JS Local -->
+    <div layout:fragment="script">
+      <script th:src="@{/js/parameter-admin/create.js}"></script>
+    </div>
+  </body>
+</html>

@@ -1,13 +1,4 @@
-const vacancyStatuses = ["LOW", "MEDIUM", "HIGH", "CLOSED"];
-
 document.addEventListener("DOMContentLoaded", function () {
-  const statusSelect = document.getElementById("status");
-  vacancyStatuses.forEach(function (status) {
-    const option = document.createElement("option");
-    option.value = status;
-    option.textContent = status;
-    statusSelect.appendChild(option);
-  });
   document
     .getElementById("searchTitle")
     .addEventListener("input", () => fetchSchedules());
@@ -68,6 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
         : "";
 
       const row = document.createElement("tr");
+      row.style.textAlign = "center";
       row.innerHTML = `
       <td>${rowNumber}</td>
       <td>${vacancy.title || ""}</td>
@@ -82,7 +74,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <a class="btn btn-success">
           <i class="bi bi-people-fill text-white"></i>
         </a>
-        <a class="btn btn-primary">
+        <a href="/admin/vacancy/update/${vacancy.id}" class="btn btn-primary">
           <i class="bi bi-pencil-square text-white"></i>
         </a>
         <a class="btn btn-danger">

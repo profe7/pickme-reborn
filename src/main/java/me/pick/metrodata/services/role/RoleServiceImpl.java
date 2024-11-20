@@ -60,7 +60,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role getRoleById(Long id) {
-        return roleRepository.findById(id).orElseThrow(() -> new RoleDoesNotExistException(id));
+        return roleRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -79,5 +79,10 @@ public class RoleServiceImpl implements RoleService {
         Pageable pageable = PageRequest.of(page, size);
         return roleRepository.findAllWithFilters(pageable).map(role -> modelMapper.map(role,
                 RoleResponse.class));
+    }
+
+    @Override
+    public List<Role> getRoles() {
+        return roleRepository.findAll();
     }
 }

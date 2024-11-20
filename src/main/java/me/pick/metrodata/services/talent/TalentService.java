@@ -36,4 +36,6 @@ public interface TalentService {
                         Boolean active, String job, String skill, Boolean idle);
 
         List<TalentInterviewScheduleHistory> getTalentInterviewScheduleHistories(String talentId);
+
+        List<TalentResponse> getTalents();
 }

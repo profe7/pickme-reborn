@@ -22,4 +22,9 @@ public class HolidayServiceImpl implements HolidayService {
         Pageable pageable = PageRequest.of(page, size);
         return holidayRepository.findAllWithFilters(searchName, date, pageable);
     }
+
+    @Override
+    public Holiday getHolidayById(Long id) {
+        return holidayRepository.findById(id).orElse(null);
+    }
 }

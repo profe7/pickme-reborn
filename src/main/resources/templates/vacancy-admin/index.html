@@ -49,7 +49,7 @@
                       <div class="col-4 text-start mb-3 mt-2 ml-3">
                         <a
                           class="btn bi bi-plus"
-                          href="/admin/job/create"
+                          href="/admin/vacancy/create"
                           style="
                             background-color: #006699;
                             color: white;
@@ -73,8 +73,8 @@
                               id="searchTitle"
                               class="form-control"
                               type="search"
-                              placeholder="Cari Judul"
-                              aria-label="Cari Judul"
+                              placeholder="Cari berdasarkan judul"
+                              aria-label="Cari berdasarkan judul"
                               onchange="applyFilter()"
                             />
                           </div>
@@ -83,8 +83,8 @@
                               id="searchPosition"
                               class="form-control"
                               type="search"
-                              placeholder="Cari Posisi"
-                              aria-label="Cari Posisi"
+                              placeholder="Cari berdasarkan posisi"
+                              aria-label="Cari berdasarkan posisi"
                               onchange="applyFilter()"
                             />
                           </div>
@@ -105,6 +105,11 @@
                               onchange="applyFilter()"
                             >
                               <option value="">Status</option>
+                              <option
+                                th:each="status : ${statuses}"
+                                th:value="${status.name()}"
+                                th:text="${status.name()}"
+                              ></option>
                             </select>
                           </div>
                         </div>

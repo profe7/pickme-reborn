@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="upgrade-insecure-requests"
+    />
+    <div th:insert="~{components-admin/plugin :: css}"></div>
+    <title>Akun</title>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <div th:insert="~{components-admin/navbar :: navbar}"></div>
+      <div th:insert="~{components-admin/sidebar :: sidebar}"></div>
+
+      <div class="content-wrapper">
+        <div class="content-header">
+          <div class="container-fluid">
+            <div class="m-2">
+              <ol class="breadcrumb">
+                <li
+                  class="breadcrumb-item d-flex align-items-center text-muted"
+                >
+                  <i class="nav-icon fa fa-cog me-2"></i>Pengaturan
+                </li>
+                <li
+                  class="breadcrumb-item active d-flex align-items-center"
+                  style="color: #0066cc"
+                >
+                  <i class="nav-icon fa fa-user me-2"></i>Akun
+                </li>
+              </ol>
+              <h1 class="mt-2"><strong>Akun Baru</strong></h1>
+            </div>
+          </div>
+        </div>
+
+        <section class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="fw-bold mb-3">Formulir Akun Baru</h4>
+                    <div class="mb-3 col-12">
+                      <label
+                        for="username"
+                        autocomplete="off"
+                        class="form-label required"
+                        >Username</label
+                      >
+                      <input
+                        type="text"
+                        autocomplete="off"
+                        class="form-control"
+                        id="username"
+                        placeholder="Masukkan username"
+                      />
+                      <div class="invalid-feedback">Kolom ini harus diisi</div>
+                    </div>
+                    <div class="mb-3 col-12">
+                      <label for="password" class="form-label required"
+                        >Kata sandi</label
+                      >
+                      <input
+                        type="password"
+                        class="form-control"
+                        id="password"
+                        placeholder="Masukkan kata sandi"
+                      />
+                      <div class="invalid-feedback">Kolom ini harus diisi</div>
+                    </div>
+                    <div class="mb-3 col-12">
+                      <label for="firstName" class="form-label required"
+                        >Nama Depan</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="firstName"
+                        placeholder="Masukkan nama depan"
+                      />
+                      <div class="invalid-feedback">Kolom ini harus diisi</div>
+                    </div>
+                    <div class="mb-3 col-12">
+                      <label for="username" class="form-label"
+                        >Nama Belakang</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="lastName"
+                        placeholder="Masukkan nama belakang"
+                      />
+                    </div>
+                    <div class="mb-3 col-12">
+                      <label for="email" class="form-label required"
+                        >Email</label
+                      >
+                      <input
+                        type="email"
+                        class="form-control"
+                        id="email"
+                        placeholder="Masukkan email"
+                      />
+                      <div class="invalid-feedback">Kolom ini harus diisi</div>
+                    </div>
+                    <div class="mb-3 col-12">
+                      <label for="phone" class="form-label">No. Telp</label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="phone"
+                        placeholder="Masukkan no. telp"
+                      />
+                    </div>
+                    <div class="mb-3 col-12">
+                      <label for="Budget" class="form-label">Anggaran</label>
+                      <div class="row">
+                        <div class="col-6">
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="baseBudget"
+                            placeholder="Base Budget"
+                          />
+                        </div>
+                        <div class="col-6">
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="limitBudget"
+                            placeholder="Limit Budget"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="container row">
+                      <div class="mb-3 col-6">
+                        <label for="roleId" class="form-label required"
+                          >Role</label
+                        >
+                        <select class="form-select" id="roleId">
+                          <option value="">Pilih Peran</option>
+                          <option
+                            th:each="role : ${roles}"
+                            th:value="${role.id}"
+                            th:text="${role.name}"
+                          ></option>
+                        </select>
+                        <div class="invalid-feedback">
+                          Kolom ini harus diisi
+                        </div>
+                      </div>
+                      <div class="mb-3 col-6">
+                        <label for="instituteId" class="form-label required"
+                          >Instansi</label
+                        >
+                        <select class="form-select" id="instituteId">
+                          <option value="">Pilih Instansi</option>
+                          <option
+                            th:each="institute : ${institutes}"
+                            th:value="${institute.id}"
+                            th:text="${institute.instituteName}"
+                          ></option>
+                        </select>
+                        <div class="invalid-feedback">
+                          Kolom ini harus diisi
+                        </div>
+                      </div>
+                    </div>
+                    <div class="container d-flex justify-content-end">
+                      <a
+                        th:href="@{/admin/account}"
+                        class="btn btn-outline-primary btn-block me-2"
+                        onclick="return confirmBack()"
+                      >
+                        Batal
+                      </a>
+                      <button
+                        type="button"
+                        class="btn btn-primary btn-block"
+                        onclick="submit()"
+                      >
+                        Simpan
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- JS Local -->
+    <div layout:fragment="script">
+      <script th:src="@{/js/account-admin/create.js}"></script>
+    </div>
+  </body>
+</html>

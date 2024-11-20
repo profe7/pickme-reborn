@@ -1,14 +1,4 @@
-const instituteTypes = ["INTERNAL", "MITRA", "CLIENT"];
-
 document.addEventListener("DOMContentLoaded", function () {
-  const instituteTypeSelect = document.getElementById("searchType");
-  instituteTypes.forEach(function (type) {
-    const option = document.createElement("option");
-    option.value = type;
-    option.textContent = type;
-    instituteTypeSelect.appendChild(option);
-  });
-
   document
     .getElementById("searchName")
     .addEventListener("input", () => fetchSchedules());
@@ -45,12 +35,15 @@ document.addEventListener("DOMContentLoaded", function () {
       const rowNumber = startNumber + index + 1;
 
       const row = document.createElement("tr");
+      row.style.textAlign = "center";
       row.innerHTML = `
       <td>${rowNumber}</td>
       <td>${institute.instituteName || ""}</td>
       <td>${institute.instituteType || ""}</td>
       <td>
-        <a class="btn btn-primary">
+        <a href="/admin/institute/update/${
+          institute.id
+        }" class="btn btn-primary">
           <i class="bi bi-pencil-square text-white"></i>
         </a>
       </td>

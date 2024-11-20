@@ -62,6 +62,7 @@ public class AdminTalentController {
         User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
 
         model.addAttribute("logged", loggedUser);
+        model.addAttribute("isActive", "talent");
         model.addAttribute("talent", talentService.getById(id));
         model.addAttribute("histories", talentService.getTalentInterviewScheduleHistories(id));
 
