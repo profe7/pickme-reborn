@@ -93,6 +93,7 @@ public class AdminVacancyController {
         User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
 
         model.addAttribute("logged", loggedUser);
+        model.addAttribute("isActive", "vacancy");
         model.addAttribute("jobStatus", VacancyStatus.values());
 
         return "vacancy-admin/create";
@@ -109,6 +110,7 @@ public class AdminVacancyController {
         model.addAttribute("logged", loggedUser);
         model.addAttribute("job", vacancy);
         model.addAttribute("currentStatus", vacancy.getStatus() != null ? vacancy.getStatus().toString() : null);
+        model.addAttribute("isActive", "vacancy");
         model.addAttribute("jobStatus", VacancyStatus.values());
 
         return "vacancy-admin/update";

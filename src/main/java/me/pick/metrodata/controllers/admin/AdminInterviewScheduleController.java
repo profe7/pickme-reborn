@@ -86,6 +86,7 @@ public class AdminInterviewScheduleController {
         model.addAttribute("logged", loggedUser);
         model.addAttribute("histories", interviewScheduleHistoryService.getByInterviewScheduleId(id));
         model.addAttribute("recruiter", recruiter);
+        model.addAttribute("isActive", "schedule");
         model.addAttribute("talent", talent);
 
         return "interview-schedule-admin/history";
@@ -98,6 +99,7 @@ public class AdminInterviewScheduleController {
 
         model.addAttribute("logged", loggedUser);
         model.addAttribute("talents", talentService.getTalents());
+        model.addAttribute("isActive", "schedule");
         model.addAttribute("clients", clientService.getClients());
 
         return "interview-schedule-admin/create";

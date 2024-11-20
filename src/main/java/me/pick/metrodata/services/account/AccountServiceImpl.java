@@ -96,6 +96,8 @@ public class AccountServiceImpl implements AccountService {
                         accountResponse.setEmail(account.getUser().getEmail());
                         accountResponse.setInstituteName(account.getUser().getInstitute().getInstituteName());
                         accountResponse.setRoleName(account.getRole().getName());
+                        accountResponse.setInstituteId(account.getUser().getInstitute().getId());
+                        accountResponse.setRoleId(account.getRole().getId());
                         return accountResponse;
                 }).orElse(null);
         }
@@ -135,7 +137,7 @@ public class AccountServiceImpl implements AccountService {
                         Integer size) {
                 Pageable pageable = PageRequest.of(page, size);
                 boolean isEnabled = "AKTIF".equals(status);
-                Page<Account> accounts = status != ""
+                Page<Account> accounts = !"".equals(status)
                                 ? accountRepository.findAllWithFiltersWithStatus(searchUsername, role, isEnabled,
                                                 pageable)
                                 : accountRepository

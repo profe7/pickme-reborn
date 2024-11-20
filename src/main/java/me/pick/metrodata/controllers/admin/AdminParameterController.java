@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -64,6 +63,7 @@ public class AdminParameterController {
 
         model.addAttribute("logged", loggedUser);
         model.addAttribute("isActive", "parameter");
+        model.addAttribute("isActive", "parameter");
 
         return "parameter-admin/create";
     }
@@ -75,6 +75,7 @@ public class AdminParameterController {
         User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
 
         model.addAttribute("logged", loggedUser);
+        model.addAttribute("isActive", "parameter");
         model.addAttribute("parameter", referenceService.getReferenceById(id));
 
         return "parameter-admin/update";
