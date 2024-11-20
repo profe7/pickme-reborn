@@ -7,4 +7,6 @@ import me.pick.metrodata.models.entity.MessageTemplate;
 public interface MessageTemplateService {
 
     Page<MessageTemplate> getFilteredMessageTemplate(Integer page, Integer size);
+
+    MessageTemplate getMessageTemplateById(Long id);
 }
