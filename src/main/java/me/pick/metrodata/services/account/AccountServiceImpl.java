@@ -153,4 +153,9 @@ public class AccountServiceImpl implements AccountService {
                         return accountResponse;
                 });
         }
+
+        @Override
+        public List<Account> getAll() {
+                return accountRepository.findAll();
+        }
 }

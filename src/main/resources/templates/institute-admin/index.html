@@ -44,6 +44,20 @@
               <div class="col-12">
                 <div class="card">
                   <div class="col-12 mt-3">
+                    <div class="row justify-content-between">
+                      <div class="col-4 text-start mb-3 mt-2 ml-3">
+                        <a
+                          class="btn bi bi-plus"
+                          href="/admin/institute/create"
+                          style="
+                            background-color: #006699;
+                            color: white;
+                            border: none;
+                          "
+                          >&nbsp;&nbsp;Tambah Instansi</a
+                        >
+                      </div>
+                    </div>
                     <form
                       th:action="@{/admin/institute}"
                       method="get"
@@ -71,6 +85,11 @@
                               onchange="applyFilter()"
                             >
                               <option value="">Tipe</option>
+                              <option
+                                th:each="type : ${instituteTypes}"
+                                th:value="${type.name()}"
+                                th:text="${type.name()}"
+                              ></option>
                             </select>
                           </div>
                         </div>

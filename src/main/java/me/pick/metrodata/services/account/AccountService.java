@@ -1,8 +1,11 @@
 package me.pick.metrodata.services.account;
 
+import java.util.List;
+
 import me.pick.metrodata.models.dto.requests.AccountRequest;
 import me.pick.metrodata.models.dto.responses.AccountResponse;
 import me.pick.metrodata.models.entity.Account;
+
 import org.springframework.data.domain.Page;
 
 public interface AccountService {
@@ -23,4 +26,6 @@ public interface AccountService {
 
         Page<AccountResponse> getFilteredAccount(String searchUsername, Long role, String status, Integer page,
                         Integer size);
+
+        List<Account> getAll();
 }
