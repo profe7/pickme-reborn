@@ -1,6 +1,6 @@
 package me.pick.metrodata.models.dto.responses;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,7 +19,7 @@ public class RecommendationResponse {
 
     private Integer totalTalents;
 
-    private LocalDateTime assignDate;
+    private LocalDate assignDate;
 
     private String description;
 

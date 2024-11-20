@@ -45,6 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {
         : "";
 
       const row = document.createElement("tr");
+      row.style.textAlign = "center";
       row.innerHTML = `
       <td>${rowNumber}</td>
       <td>${holiday.name || ""}</td>

@@ -57,6 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const statusColor = statusColors[status] || "#ccc";
 
       const row = document.createElement("tr");
+      row.style.textAlign = "center";
       row.innerHTML = `
       <td>${rowNumber}</td>
       <td>${account.username || ""}</td>

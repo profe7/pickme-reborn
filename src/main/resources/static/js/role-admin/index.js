@@ -23,11 +23,12 @@ document.addEventListener("DOMContentLoaded", function () {
       const rowNumber = startNumber + index + 1;
 
       const row = document.createElement("tr");
+      row.style.textAlign = "center";
       row.innerHTML = `
       <td>${rowNumber}</td>
       <td>${role.name || ""}</td>
       <td>
-        <a class="btn btn-primary">
+        <a href="/admin/role/update/${role.id}" class="btn btn-primary">
           <i class="bi bi-pencil-square text-white"></i>
         </a>
       </td>

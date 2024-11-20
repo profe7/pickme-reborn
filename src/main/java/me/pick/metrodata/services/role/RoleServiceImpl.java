@@ -60,7 +60,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role getRoleById(Long id) {
-        return roleRepository.findById(id).orElseThrow(() -> new RoleDoesNotExistException(id));
+        return roleRepository.findById(id).orElse(null);
     }
 
     @Override

@@ -43,7 +43,7 @@ public class RecommendationServiceImpl implements RecommendationService {
 			recommendationResponse
 					.setAssignInstitute(
 							recommendation.getVacancy().getClient().getUser().getInstitute().getInstituteName());
-			recommendationResponse.setAssignDate(recommendation.getCreatedAt());
+			recommendationResponse.setAssignDate(recommendation.getCreatedAt().toLocalDate());
 			recommendationResponse.setTotalTalents(recommendation.getTotalTalents());
 			recommendationResponse
 					.setPosition(recommendationApplicantRepository.findByRecommendationId(recommendation.getId())
