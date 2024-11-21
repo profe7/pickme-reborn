@@ -84,7 +84,7 @@
                               name="searchType"
                               onchange="applyFilter()"
                             >
-                              <option value="">Tipe</option>
+                              <option value="" disabled selected>Tipe</option>
                               <option
                                 th:each="type : ${instituteTypes}"
                                 th:value="${type.name()}"
@@ -131,10 +131,11 @@
           </div>
         </section>
       </div>
+      <div th:insert="~{components-admin/plugin :: js}"></div>
     </div>
 
     <!-- JS Local -->
-    <div layout:fragment="script">
+    <div>
       <script th:src="@{/js/institute-admin/index.js}"></script>
     </div>
   </body>

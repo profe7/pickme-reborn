@@ -76,7 +76,7 @@
                           >Status</label
                         >
                         <select
-                          id="status"
+                          id="job-status"
                           class="form-control select2"
                           title="status"
                         >
@@ -161,10 +161,11 @@
           </div>
         </section>
       </div>
+      <div th:insert="~{components-admin/plugin :: js}"></div>
     </div>
 
     <!-- JS Local -->
-    <div layout:fragment="script">
+    <div>
       <script th:src="@{/js/vacancy-admin/update.js}"></script>
     </div>
   </body>

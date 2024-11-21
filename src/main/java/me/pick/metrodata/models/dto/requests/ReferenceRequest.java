@@ -7,10 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoleRequest {
+public class ReferenceRequest {
 
-    private String name;
+    private String reference_name;
 
-    private Long[] privilegeIds;
+    private String reference_group1;
 
+    private Integer reference_group2;
 }

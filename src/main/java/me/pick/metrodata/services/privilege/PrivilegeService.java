@@ -10,4 +10,6 @@ public interface PrivilegeService {
     List<Privilege> getAll();
 
     Map<String, List<Privilege>> getAllStructuredPrivilegeResponses();
+
+    Privilege getPrivilegeById(Long id);
 }

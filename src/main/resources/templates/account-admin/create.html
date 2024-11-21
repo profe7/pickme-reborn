@@ -144,7 +144,7 @@
                           >Role</label
                         >
                         <select class="form-select" id="roleId">
-                          <option value="">Pilih Peran</option>
+                          <option value="" disable selected>Pilih Peran</option>
                           <option
                             th:each="role : ${roles}"
                             th:value="${role.id}"
@@ -195,10 +195,11 @@
           </div>
         </section>
       </div>
+      <div th:insert="~{components-admin/plugin :: js}"></div>
     </div>
 
     <!-- JS Local -->
-    <div layout:fragment="script">
+    <div>
       <script th:src="@{/js/account-admin/create.js}"></script>
     </div>
   </body>

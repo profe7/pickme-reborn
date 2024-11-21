@@ -127,10 +127,11 @@
           </div>
         </section>
       </div>
+      <div th:insert="~{components-admin/plugin :: js}"></div>
     </div>
 
     <!-- JS Local -->
-    <div layout:fragment="script">
+    <div>
       <script th:src="@{/js/parameter-admin/index.js}"></script>
     </div>
   </body>

@@ -76,7 +76,9 @@
                           >Perekrut</label
                         >
                         <select class="form-select select2" id="recruiterId">
-                          <option value="">Pilih Perekrut/Klien</option>
+                          <option value="" disabled selected>
+                            Pilih Perekrut/Klien
+                          </option>
                           <option
                             th:each="client : ${clients}"
                             th:value="${client.id}"
@@ -96,7 +98,9 @@
                           class="form-control select2"
                           title="talentId"
                         >
-                          <option value="">Pilih Talent</option>
+                          <option value="" disabled selected>
+                            Pilih Talent
+                          </option>
                           <option
                             th:each="talent : ${talents}"
                             th:value="${talent.id}"
@@ -118,7 +122,9 @@
                           id="selectIsOffline"
                           title="onlineOrOffline"
                         >
-                          <option value="">Online/Offline</option>
+                          <option value="" disabled selected>
+                            Online/Offline
+                          </option>
                           <option value="true">Offline</option>
                           <option value="false">Online</option>
                         </select>
@@ -234,10 +240,11 @@
           </div>
         </section>
       </div>
+      <div th:insert="~{components-admin/plugin :: js}"></div>
     </div>
 
     <!-- JS Local -->
-    <div layout:fragment="script">
+    <div>
       <script th:src="@{/js/interview-schedule-admin/create.js}"></script>
     </div>
   </body>

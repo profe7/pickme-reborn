@@ -1,37 +1,33 @@
 $(document).ready(function () {});
 
 function submit() {
-  // Menghapus pesan invalid sebelum validasi
   $(".is-invalid").removeClass("is-invalid");
 
-  var type1 = $("#param1").val();
-  var type2 = $("#param2").val();
-  var value = $("#value-param").val();
+  var reference_group1 = $("#param1").val();
+  var reference_group2 = $("#param2").val();
+  var reference_name = $("#value-param").val();
 
-  // Validasi sederhana untuk kolom yang wajib diisi
-  if (!type1 || !type2 || !value) {
+  if (!reference_group1 || !reference_name) {
     Swal.fire({
       icon: "error",
       title: "Error",
       text: "Semua kolom dengan label required harus diisi",
     });
 
-    // Menandai kolom yang tidak diisi dengan kelas is-invalid
-    if (!type1) $("#param1").addClass("is-invalid");
-    if (!type2) $("#param2").addClass("is-invalid");
-    if (!value) $("#value-param").addClass("is-invalid");
+    if (!reference_group1) $("#param1").addClass("is-invalid");
+    if (!reference_name) $("#value-param").addClass("is-invalid");
 
     return;
   }
 
   var data = JSON.stringify({
-    type1: type1,
-    type2: type2,
-    value: value,
+    reference_group1: reference_group1,
+    reference_group2: reference_group2,
+    reference_name: reference_name,
   });
 
   Swal.fire({
-    title: "Apakah anda ingin membuat parameter ini?",
+    title: "Apakah Anda yakin ingin membuat 'Parameter' ini?",
     showCancelButton: true,
     confirmButtonText: "Ya",
     cancelButtonText: `Tidak`,
@@ -45,34 +41,28 @@ function submit() {
 
 function create(data) {
   $.ajax({
-    url: `/api/parameter`,
+    url: `/admin/parameter/create`,
     method: "POST",
     dataType: "JSON",
-    beforeSend: addCsrfToken(),
     contentType: "application/json",
     data: data,
     success: (result) => {
-      // Menyembunyikan overlay loading
       $.LoadingOverlay("hide");
-
       Swal.fire({
         position: "center",
         icon: "success",
-        title: "Parameter berhasil dibuat",
+        title: "Parameter baru berhasil ditambahkan",
         showConfirmButton: true,
       }).then(() => {
-        // Memuat ulang halaman
         window.location.href = "/admin/parameter";
       });
     },
     error: (e) => {
-      // Menyembunyikan overlay loading
       $.LoadingOverlay("hide");
-
       Swal.fire({
         position: "center",
         icon: "error",
-        title: "Parameter gagal dibuat",
+        title: "Parameter baru gagal ditambahkan",
         showConfirmButton: true,
       });
     },
@@ -81,7 +71,7 @@ function create(data) {
 
 function confirmBack() {
   Swal.fire({
-    title: "Apakah anda yakin ingin kembali?",
+    title: "Apakah Anda yakin ingin kembali?",
     icon: "question",
     showCancelButton: true,
     confirmButtonText: "Ya",

@@ -14,14 +14,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import me.pick.metrodata.enums.VacancyStatus;
+import me.pick.metrodata.models.dto.requests.VacancyRequest;
 import me.pick.metrodata.models.entity.User;
 import me.pick.metrodata.models.entity.Vacancy;
 import me.pick.metrodata.services.user.UserService;
@@ -114,5 +119,42 @@ public class AdminVacancyController {
         model.addAttribute("jobStatus", VacancyStatus.values());
 
         return "vacancy-admin/update";
+    }
+
+    @PostMapping("/create")
+    // @PreAuthorize("hasAnyAuthority('CREATE_JOB')")
+    public ResponseEntity<Void> create(@RequestBody VacancyRequest vacancyRequest, HttpServletRequest request) {
+
+        try {
+            User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
+            vacancyService.create(loggedUser.getId(), vacancyRequest);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PutMapping("/update/{id}")
+    // @PreAuthorize("hasAnyAuthority('CREATE_JOB')")
+    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody VacancyRequest vacancyRequest) {
+
+        try {
+            vacancyService.update(id, vacancyRequest);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @DeleteMapping("/delete/{id}")
+    // @PreAuthorize("hasAnyAuthority('CREATE_JOB')")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+
+        try {
+            vacancyService.delete(id);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }
