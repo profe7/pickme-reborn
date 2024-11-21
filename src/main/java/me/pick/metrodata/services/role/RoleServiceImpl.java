@@ -3,12 +3,14 @@ package me.pick.metrodata.services.role;
 import lombok.RequiredArgsConstructor;
 import me.pick.metrodata.exceptions.privilege.PrivilegeDoesNotExistException;
 import me.pick.metrodata.exceptions.role.RoleDoesNotExistException;
+import me.pick.metrodata.models.dto.requests.RoleRequest;
 import me.pick.metrodata.models.dto.requests.RoleUpdateRequest;
 import me.pick.metrodata.models.dto.responses.RolePaginationResponse;
 import me.pick.metrodata.models.dto.responses.RoleResponse;
 import me.pick.metrodata.models.entity.Role;
 import me.pick.metrodata.repositories.PrivilegeRepository;
 import me.pick.metrodata.repositories.RoleRepository;
+import me.pick.metrodata.services.privilege.PrivilegeService;
 import me.pick.metrodata.utils.AnyUtil;
 import me.pick.metrodata.utils.PageData;
 
@@ -28,6 +30,7 @@ public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
     private final PrivilegeRepository privilegeRepository;
     private final ModelMapper modelMapper;
+    private final PrivilegeService privilegeService;
 
     @Override
     public RolePaginationResponse getAll(String name, Integer currentPage, Integer perPage) {
@@ -85,4 +88,31 @@ public class RoleServiceImpl implements RoleService {
     public List<Role> getRoles() {
         return roleRepository.findAll();
     }
+
+    @Override
+    public void create(RoleRequest roleRequest) {
+        Role role = modelMapper.map(roleRequest, Role.class);
+        for (Long privilegeId : roleRequest.getPrivilegeIds()) {
+            role.getPrivileges().add(privilegeService.getPrivilegeById(privilegeId));
+        }
+
+        roleRepository.save(role);
+    }
+
+    @Override
+    public void update(Long id, RoleRequest roleRequest) {
+        Role role = modelMapper.map(roleRequest, Role.class);
+        role.setId(id);
+        for (Long privilegeId : roleRequest.getPrivilegeIds()) {
+            role.getPrivileges().add(privilegeService.getPrivilegeById(privilegeId));
+        }
+
+        roleRepository.save(role);
+    }
+
+    @Override
+    public void delete(Long id) {
+        roleRepository.delete(getRoleById(id));
+    }
+
 }

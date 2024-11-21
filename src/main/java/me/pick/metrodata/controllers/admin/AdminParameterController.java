@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import me.pick.metrodata.models.dto.requests.ReferenceRequest;
-import me.pick.metrodata.models.dto.requests.VacancyRequest;
 import me.pick.metrodata.models.dto.responses.ReferenceResponse;
 import me.pick.metrodata.models.entity.User;
 import me.pick.metrodata.services.reference.ReferenceService;
@@ -93,8 +92,7 @@ public class AdminParameterController {
     public ResponseEntity<Void> create(@RequestBody ReferenceRequest referenceRequest, HttpServletRequest request) {
 
         try {
-            User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
-            referenceService.create(loggedUser.getId(), referenceRequest);
+            referenceService.create(referenceRequest);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

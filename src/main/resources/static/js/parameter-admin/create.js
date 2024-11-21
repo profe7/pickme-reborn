@@ -62,7 +62,7 @@ function create(data) {
       Swal.fire({
         position: "center",
         icon: "error",
-        title: "Parameter gagal ditambahkan",
+        title: "Parameter baru gagal ditambahkan",
         showConfirmButton: true,
       });
     },

@@ -109,8 +109,8 @@ function showSuccessAlert(message, callback) {
 function showErrorAlert(message) {
   Swal.fire({
     icon: "error",
-    title: "Gagal",
-    text: message,
+    title: message,
+    showConfirmButton: true,
   });
 }
 

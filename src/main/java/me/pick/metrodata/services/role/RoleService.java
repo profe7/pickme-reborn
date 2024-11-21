@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 
+import me.pick.metrodata.models.dto.requests.RoleRequest;
 import me.pick.metrodata.models.dto.requests.RoleUpdateRequest;
 import me.pick.metrodata.models.dto.responses.RolePaginationResponse;
 import me.pick.metrodata.models.dto.responses.RoleResponse;
@@ -21,4 +22,11 @@ public interface RoleService {
     Page<RoleResponse> getFilteredRole(Integer page, Integer size);
 
     List<Role> getRoles();
+
+    void create(RoleRequest roleRequest);
+
+    void update(Long id, RoleRequest roleRequest);
+
+    void delete(Long id);
+
 }

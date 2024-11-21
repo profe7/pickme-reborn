@@ -13,7 +13,7 @@ public interface ReferenceService {
     Page<ReferenceResponse> getFilteredReference(String searchParameterName, String searchParameterValue, Integer page,
             Integer size);
 
-    void create(Long userId, ReferenceRequest referenceRequest);
+    void create(ReferenceRequest referenceRequest);
 
     void update(Long id, ReferenceRequest referenceRequest);
 

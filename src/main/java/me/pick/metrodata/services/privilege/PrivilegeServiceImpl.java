@@ -27,4 +27,9 @@ public class PrivilegeServiceImpl implements PrivilegeService {
                 .collect(Collectors.groupingBy(Privilege::getType));
         return groupedPrivileges;
     }
+
+    @Override
+    public Privilege getPrivilegeById(Long id) {
+        return privilegeRepository.findById(id).orElse(null);
+    }
 }

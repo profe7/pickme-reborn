@@ -42,7 +42,7 @@ public class ReferenceServiceImpl implements ReferenceService {
     }
 
     @Override
-    public void create(Long userId, ReferenceRequest referenceRequest) {
+    public void create(ReferenceRequest referenceRequest) {
         References references = modelMapper.map(referenceRequest, References.class);
         references.setCreated_by(1);
         references.setIs_active(Boolean.TRUE);

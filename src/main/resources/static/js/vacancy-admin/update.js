@@ -90,7 +90,7 @@ function submit() {
     title: "Apakah anda yakin ingin memperbarui 'Lowongan' ini?",
     showCancelButton: true,
     confirmButtonText: "Simpan",
-    cancelButtonText: `Batal`,
+    cancelButtonText: "Batal",
   }).then((result) => {
     if (result.isConfirmed) {
       $.LoadingOverlay("show");
@@ -108,7 +108,6 @@ function update(id, data) {
     data: data,
     success: (result) => {
       $.LoadingOverlay("hide");
-
       Swal.fire({
         position: "center",
         icon: "success",
@@ -120,7 +119,6 @@ function update(id, data) {
     },
     error: (e) => {
       $.LoadingOverlay("hide");
-
       Swal.fire({
         position: "center",
         icon: "error",
