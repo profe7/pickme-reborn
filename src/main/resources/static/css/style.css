@@ -3,6 +3,11 @@
   --color: #013c5e;
 }
 
+.scrollable-container {
+  max-height: 150px;
+  overflow-y: auto;
+}
+
 .mini-card {
   background-color: #f0f0f0;
   border: 1px solid #ccc;

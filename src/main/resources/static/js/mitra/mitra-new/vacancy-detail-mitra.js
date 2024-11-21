@@ -29,6 +29,8 @@ function openTalentModal(button) {
             $('#talentList').html(talentRows);
             $('#talentModal').modal('show');
 
+            $('#selectedTalents').addClass('scrollable-container');
+
             $('.pilih-btn').on('click', function() {
                 const talentId = $(this).data('talent-id');
                 const talentName = $(this).data('talent-name');
