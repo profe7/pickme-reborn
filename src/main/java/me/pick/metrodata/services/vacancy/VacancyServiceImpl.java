@@ -16,6 +16,7 @@ import me.pick.metrodata.exceptions.vacancy.IncompleteVacancyRequestException;
 import me.pick.metrodata.exceptions.vacancy.VacancyNotExistException;
 import me.pick.metrodata.exceptions.vacancy.VacancyStatusDoesNotExistException;
 import me.pick.metrodata.models.dto.requests.VacancyCreationRequest;
+import me.pick.metrodata.models.dto.requests.VacancyRequest;
 import me.pick.metrodata.models.entity.Client;
 import me.pick.metrodata.models.entity.Mitra;
 import me.pick.metrodata.models.entity.User;
@@ -24,13 +25,16 @@ import me.pick.metrodata.repositories.UserRepository;
 
 import me.pick.metrodata.repositories.ClientRepository;
 import me.pick.metrodata.repositories.specifications.VacancySpecification;
+import me.pick.metrodata.utils.DateTimeUtil;
+
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.time.LocalDate;
 import java.util.List;
+import org.modelmapper.ModelMapper;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +44,7 @@ public class VacancyServiceImpl implements VacancyService {
     private final UserRepository userRepository;
     private final ApplicantRepository applicantRepository;
     private final ClientRepository clientRepository;
+    private final ModelMapper modelMapper;
 
     @Override
     public Page<Vacancy> getOpenVacancies(Integer page, Integer size, String expiredDate, String updatedAt,
@@ -182,5 +187,33 @@ public class VacancyServiceImpl implements VacancyService {
         int end = Math.min((start + pageable.getPageSize()), vacancies.size());
 
         return new PageImpl<>(vacancies.subList(start, end), pageable, vacancies.size());
+    }
+
+    @Override
+    public void create(Long userId, VacancyRequest vacancyRequest) {
+        Vacancy vacancy = modelMapper.map(vacancyRequest, Vacancy.class);
+        vacancy.setExpiredDate(DateTimeUtil.stringToLocalDate(vacancyRequest.getExpiredDate()));
+        vacancy.setStatus(VacancyStatus.valueOf(vacancyRequest.getStatus()));
+        vacancy.setClient(clientRepository.findByUserId(userId));
+
+        vacancyRepository.save(vacancy);
+    }
+
+    @Override
+    public void update(Long id, VacancyRequest vacancyRequest) {
+        Vacancy vacancyOld = getVacancyById(id);
+        Vacancy vacancy = modelMapper.map(vacancyRequest, Vacancy.class);
+        vacancy.setId(id);
+        vacancy.setExpiredDate(DateTimeUtil.stringToLocalDate(vacancyRequest.getExpiredDate()));
+        vacancy.setStatus(VacancyStatus.valueOf(vacancyRequest.getStatus()));
+        vacancy.setClient(vacancyOld.getClient());
+        vacancy.setCreatedAt(vacancyOld.getCreatedAt());
+
+        vacancyRepository.save(vacancy);
+    }
+
+    @Override
+    public void delete(Long id) {
+        vacancyRepository.delete(getVacancyById(id));
     }
 }

@@ -1,8 +1,9 @@
+var editorInstance;
+
 $(document).ready(function () {
-  ClassicEditor.create(document.querySelector("#description"))
+  ClassicEditor.create(document.querySelector("#editor"))
     .then((editor) => {
-      editorInstance = editor; // Store the CKEditor instance
-      // editor.setData(''); // Set initial content (optional)
+      editorInstance = editor;
     })
     .catch((error) => {
       console.error(error);
@@ -10,6 +11,7 @@ $(document).ready(function () {
 
   $(".select2").select2();
 });
+
 function submit() {
   var today = new Date();
   var selectedDate = new Date($("#expiredDate").val());
@@ -26,10 +28,8 @@ function submit() {
     $("#expiredDate").removeClass("is-invalid");
   }
 
-  // Menghapus pesan invalid sebelum validasi
   $(".is-invalid").removeClass("is-invalid");
 
-  // Check if editor instance is available
   if (!editorInstance) {
     console.error(
       "CKEditor instance not found. Please ensure it is initialized properly."
@@ -43,7 +43,7 @@ function submit() {
   var title = $("#title").val();
   var position = $("#position").val();
   var expiredDate = $("#expiredDate").val();
-  var status = $("#status").val();
+  var status = $("#job-status").val();
   var requiredPositions = $("#required-positions").val();
 
   if (requiredPositions <= 0) {
@@ -53,7 +53,6 @@ function submit() {
     return;
   }
 
-  // Validasi sederhana untuk kolom yang wajib diisi
   if (
     !title ||
     !description ||
@@ -68,12 +67,11 @@ function submit() {
       text: "Semua kolom dengan label required harus diisi",
     });
 
-    // Menandai kolom yang tidak diisi dengan kelas is-invalid
     if (!title) $("#title").addClass("is-invalid");
     if (!description) $("#description").addClass("is-invalid");
     if (!position) $("#position").addClass("is-invalid");
     if (!expiredDate) $("#expiredDate").addClass("is-invalid");
-    if (!status) $("#status").addClass("is-invalid");
+    if (!status) $("#job-status").addClass("is-invalid");
     if (!requiredPositions) $("#required-positions").addClass("is-invalid");
 
     return;
@@ -89,12 +87,11 @@ function submit() {
   });
 
   Swal.fire({
-    title: "Apakah anda ingin menyimpan perubahan ini?",
+    title: "Apakah anda yakin ingin memperbarui 'Lowongan' ini?",
     showCancelButton: true,
     confirmButtonText: "Simpan",
     cancelButtonText: `Batal`,
   }).then((result) => {
-    /* Read more about isConfirmed, isDenied below */
     if (result.isConfirmed) {
       $.LoadingOverlay("show");
       update(jobId, data);
@@ -104,14 +101,12 @@ function submit() {
 
 function update(id, data) {
   $.ajax({
-    url: `/api/job/${id}`,
+    url: `/admin/vacancy/update/${id}`,
     method: "PUT",
     dataType: "JSON",
-    beforeSend: addCsrfToken(),
     contentType: "application/json",
     data: data,
     success: (result) => {
-      // Menyembunyikan overlay loading
       $.LoadingOverlay("hide");
 
       Swal.fire({
@@ -120,12 +115,10 @@ function update(id, data) {
         title: "Lowongan berhasil diperbarui",
         showConfirmButton: true,
       }).then(() => {
-        // Memuat ulang halaman
-        window.location.href = "/job";
+        window.location.href = "/admin/vacancy";
       });
     },
     error: (e) => {
-      // Menyembunyikan overlay loading
       $.LoadingOverlay("hide");
 
       Swal.fire({

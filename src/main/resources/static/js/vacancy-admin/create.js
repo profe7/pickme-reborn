@@ -1,11 +1,10 @@
-var editorInstance; // Variable to store CKEditor instance
+var editorInstance;
 
 $(document).ready(function () {
-  // Initialize CKEditor for the "description" textarea
   ClassicEditor.create(document.querySelector("#editor"))
     .then((editor) => {
-      editorInstance = editor; // Store the CKEditor instance
-      editor.setData(""); // Set initial content (optional)
+      editorInstance = editor;
+      editor.setData("");
     })
     .catch((error) => {
       console.error(error);
@@ -15,14 +14,12 @@ $(document).ready(function () {
 });
 
 function submit() {
-  // Validate form fields
   var title = $("#title").val();
   var position = $("#position").val();
-  var status = $("#status").val();
+  var status = $("#job-status").val();
   var expiredDate = $("#expiredDate").val();
   var requiredPositions = $("#required-positions").val();
 
-  // Check if editor instance is available
   if (!editorInstance) {
     console.error(
       "CKEditor instance not found. Please ensure it is initialized properly."
@@ -32,7 +29,6 @@ function submit() {
 
   var description = editorInstance.getData();
 
-  // Clear previous validation messages
   $(".is-invalid").removeClass("is-invalid");
 
   if (requiredPositions <= 0) {
@@ -51,17 +47,15 @@ function submit() {
     !requiredPositions
   ) {
     showErrorAlert("Semua kolom dengan label required harus diisi");
-    // Add "is-invalid" class to the fields that are not filled
     if (!title) $("#title").addClass("is-invalid");
     if (!position) $("#position").addClass("is-invalid");
     if (!requiredPositions) $("#required-positions").addClass("is-invalid");
-    if (!status) $("#status").addClass("is-invalid");
+    if (!status) $("#job-status").addClass("is-invalid");
     if (!expiredDate) $("#expiredDate").addClass("is-invalid");
     if (!description) $("#editor").addClass("is-invalid");
     return;
   }
 
-  // Prepare data for submission
   let data = {
     title: title,
     position: position,
@@ -69,47 +63,37 @@ function submit() {
     requiredPositions: requiredPositions,
     expiredDate: expiredDate,
     description: description,
-    // jobId: jobId
   };
 
-  // Confirm submission with SweetAlert
   showConfirmAlert(
-    "Apakah Anda yakin ingin membuat lowongan ini?",
+    "Apakah Anda yakin ingin membuat 'Lowongan' ini?",
     function (isConfirmed) {
       if (isConfirmed) {
-        // Perform AJAX request to submit the form data
         $.ajax({
-          url: "/api/job",
+          url: "/admin/vacancy/create",
           method: "POST",
           dataType: "JSON",
           contentType: "application/json",
           data: JSON.stringify(data),
-          beforeSend: addCsrfToken(),
           success: function (result) {
-            // Handle success response
-            showSuccessAlert("Lowongan berhasil dibuat", function () {
-              // Redirect or reload the page after successful submission
+            showSuccessAlert("Lowongan berhasil ditambahkan", function () {
               window.location.href = "/admin/vacancy";
             });
           },
           error: function (error) {
-            // Handle error response
-            showErrorAlert("Lowongan gagal dibuat");
+            showErrorAlert("Lowongan gagal ditambahkan");
           },
           complete: function () {
-            // Hide loading overlay or perform any cleanup
             $.LoadingOverlay("hide");
           },
         });
 
-        // Show loading overlay during the AJAX request
         $.LoadingOverlay("show");
       }
     }
   );
 }
 
-// Function to show success alert
 function showSuccessAlert(message, callback) {
   Swal.fire({
     position: "center",
@@ -123,22 +107,20 @@ function showSuccessAlert(message, callback) {
   });
 }
 
-// Function to show error alert
 function showErrorAlert(message) {
   Swal.fire({
     icon: "error",
-    title: "Error",
+    title: "Gagal",
     text: message,
   });
 }
 
-// Function to show confirmation alert
 function showConfirmAlert(message, callback) {
   Swal.fire({
     title: message,
     showCancelButton: true,
     confirmButtonText: "Ya",
-    cancelButtonText: `Tidak`,
+    cancelButtonText: "Tidak",
   }).then((result) => {
     if (result.isConfirmed && typeof callback === "function") {
       callback(true);
