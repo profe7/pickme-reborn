@@ -113,7 +113,9 @@
                               name="type"
                               onchange="applyFilter()"
                             >
-                              <option value="">Tipe Wawancara</option>
+                              <option value="" disabled selected>
+                                Tipe Wawancara
+                              </option>
                               <option
                                 th:each="type : ${types}"
                                 th:value="${type.name()}"
@@ -139,7 +141,7 @@
                               name="status"
                               onchange="applyFilter()"
                             >
-                              <option value="">Status</option>
+                              <option value="" disabled selected>Status</option>
                               <option
                                 th:each="status : ${statuses}"
                                 th:value="${status.name()}"
@@ -187,10 +189,11 @@
           </div>
         </section>
       </div>
+      <div th:insert="~{components-admin/plugin :: js}"></div>
     </div>
 
     <!-- JS Local -->
-    <div layout:fragment="script">
+    <div>
       <script th:src="@{/js/interview-schedule-admin/index.js}"></script>
     </div>
   </body>

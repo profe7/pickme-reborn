@@ -61,7 +61,7 @@
                           >Tipe Instansi</label
                         >
                         <select class="form-select" id="instituteTypeId">
-                          <option value="">Pilih Tipe</option>
+                          <option value="" disabled selected>Pilih Tipe</option>
                           <option
                             th:each="instituteType : ${instituteTypes}"
                             th:value="${instituteType.name()}"
@@ -77,7 +77,7 @@
                           >Manajer</label
                         >
                         <select class="form-select" id="rmId">
-                          <option value="">Pilih RM</option>
+                          <option value="" disabled selected>Pilih RM</option>
                           <option
                             th:each="rm : ${rms}"
                             th:value="${rm.id}"
@@ -118,10 +118,11 @@
           </div>
         </section>
       </div>
+      <div th:insert="~{components-admin/plugin :: js}"></div>
     </div>
 
     <!-- JS Local -->
-    <div layout:fragment="script">
+    <div>
       <script th:src="@{/js/institute-admin/create.js}"></script>
     </div>
   </body>

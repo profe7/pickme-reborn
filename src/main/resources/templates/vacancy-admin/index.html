@@ -104,7 +104,7 @@
                               name="status"
                               onchange="applyFilter()"
                             >
-                              <option value="">Status</option>
+                              <option value="" disabled selected>Status</option>
                               <option
                                 th:each="status : ${statuses}"
                                 th:value="${status.name()}"

@@ -64,10 +64,9 @@
                         id="message"
                         rows="3"
                         th:text="${message.message}"
-                        required
                       ></textarea>
                       <div class="invalid-feedback">Kolom ini harus diisi</div>
-                      <p class="text-gray text-xs">
+                      <p class="text-gray text-xs"></br> 
                         <b>Note :</b></br> 
                         <b>{talent}</b> untuk nama talentnya</br>
                         <b>{date}</b> untuk tanggalnya</br>
@@ -105,10 +104,11 @@
           </div>
         </section>
       </div>
+      <div th:insert="~{components-admin/plugin :: js}"></div>
     </div>
 
     <!-- JS Local -->
-    <div layout:fragment="script">
+    <div>
       <script th:src="@{/js/message-template-admin/update.js}"></script>
     </div>
   </body>

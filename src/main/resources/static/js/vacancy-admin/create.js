@@ -87,7 +87,6 @@ function submit() {
             $.LoadingOverlay("hide");
           },
         });
-
         $.LoadingOverlay("show");
       }
     }
@@ -132,7 +131,7 @@ function showConfirmAlert(message, callback) {
 
 function confirmBack() {
   Swal.fire({
-    title: "Apakah anda yakin ingin kembali?",
+    title: "Apakah Anda yakin ingin kembali?",
     icon: "question",
     showCancelButton: true,
     confirmButtonText: "Ya",

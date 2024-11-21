@@ -58,16 +58,13 @@
                       <div class="invalid-feedback">Kolom ini harus diisi</div>
                     </div>
                     <div class="mb-3 col-12">
-                      <label for="title" class="required"
-                        >Nama Parameter 2</label
-                      >
+                      <label for="title">Nama Parameter 2</label>
                       <input
-                        type="text"
+                        type="number"
                         class="form-control"
                         id="param2"
                         placeholder="Masukkan nama parameter"
                       />
-                      <div class="invalid-feedback">Kolom ini harus diisi</div>
                     </div>
                     <div class="mb-3 col-12">
                       <label for="title" class="required">Isi Parameter</label>
@@ -102,10 +99,11 @@
           </div>
         </section>
       </div>
+      <div th:insert="~{components-admin/plugin :: js}"></div>
     </div>
 
     <!-- JS Local -->
-    <div layout:fragment="script">
+    <div>
       <script th:src="@{/js/parameter-admin/create.js}"></script>
     </div>
   </body>

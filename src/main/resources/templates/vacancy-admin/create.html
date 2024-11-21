@@ -81,7 +81,9 @@
                           class="form-control select2"
                           title="status"
                         >
-                          <option value="">Pilih Status</option>
+                          <option value="" disabled selected>
+                            Pilih Status
+                          </option>
                           <option
                             th:each="status : ${jobStatus}"
                             th:value="${status.name()}"
