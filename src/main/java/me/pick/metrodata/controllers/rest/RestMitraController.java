@@ -1,6 +1,7 @@
 package me.pick.metrodata.controllers.rest;
 
 import lombok.AllArgsConstructor;
+import me.pick.metrodata.enums.InterviewStatus;
 import me.pick.metrodata.services.mitra.MitraService;
 import me.pick.metrodata.utils.Response;
 import me.pick.metrodata.utils.ResponseHandler;
@@ -39,6 +40,17 @@ public class RestMitraController {
     public ResponseEntity<Object> getDashboardTelemetry(@PathVariable Long mitraId) {
         return ResponseHandler.generateResponse(new Response(
                 "Dashboard telemetry", HttpStatus.OK, SUCCESS, mitraService.getMitraDashboardTelemetry(mitraId)
+        ));
+    }
+
+    @GetMapping("/talent-interview-statistics")
+    @PreAuthorize("hasAnyAuthority('CREATE_TALENT')")
+    public ResponseEntity<Object> getTalentInterviewStatistics(
+            @RequestParam Long mitraId,
+            @RequestParam InterviewStatus status
+            ) {
+        return ResponseHandler.generateResponse(new Response(
+                "Talent interview statistics", HttpStatus.OK, SUCCESS, mitraService.getMitraTalentInterviewStatistics(mitraId, status)
         ));
     }
 

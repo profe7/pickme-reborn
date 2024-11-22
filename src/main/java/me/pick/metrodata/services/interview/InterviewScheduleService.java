@@ -23,11 +23,11 @@ public interface InterviewScheduleService {
 
         Page<InterviewSchedule> getAll(String search, Long clientId, InterviewType type, String startDate,
                         String endDate,
-                        InterviewStatus status, int page, int size);
+                        InterviewStatus status, Long mitraId, int page, int size);
 
         Page<InterviewSchedule> getByRm(String search, Long clientId, InterviewType type, String startDate,
                         String endDate,
-                        InterviewStatus status, int page, int size);
+                        InterviewStatus status, Long mitraId, int page, int size);
 
         List<InterviewHistoryResponse> getTalentInterviewHistory(Long interviewId);
 
