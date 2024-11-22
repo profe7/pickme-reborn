@@ -121,7 +121,7 @@ public class AdminAccountController {
 
     @PostMapping("/create")
     // @PreAuthorize("hasAnyAuthority('CREATE_PARAMETER')")
-    public ResponseEntity<Void> create(@RequestBody AccountRequest accountRequest, HttpServletRequest request) {
+    public ResponseEntity<Void> create(@RequestBody AccountRequest accountRequest) {
 
         try {
             accountService.create(accountRequest);

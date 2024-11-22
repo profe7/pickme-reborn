@@ -151,6 +151,7 @@ function confirmUpdateAccess(accountId) {
     cancelButtonText: "Tidak",
   }).then((result) => {
     if (result.isConfirmed) {
+      $.LoadingOverlay("show");
       updateAccess(accountId);
     }
   });
@@ -163,12 +164,15 @@ async function updateAccess(accountId) {
     });
 
     if (response.ok) {
+      $.LoadingOverlay("hide");
       Swal.fire("Akses diperbarui!", "Akses berhasil diperbarui.", "success");
       fetchSchedules();
     } else {
+      $.LoadingOverlay("hide");
       Swal.fire("Gagal!", "Terjadi kesalahan saat memperbarui akses.", "error");
     }
   } catch (error) {
+    $.LoadingOverlay("hide");
     console.error("Error deleting vacancy:", error);
     Swal.fire("Gagal!", "Terjadi kesalahan saat memperbarui akses.", "error");
   }

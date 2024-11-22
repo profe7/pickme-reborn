@@ -12,14 +12,11 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface InstituteRepository extends JpaRepository<Institute, Long>, JpaSpecificationExecutor<Institute> {
 
         List<Institute> findInstitutesByInstituteType(InstituteType instituteType);
-
-        Optional<Institute> findInstituteById(Long id);
 
         @Query("SELECT i FROM Institute i WHERE "
                         + "(:searchName IS NULL OR i.instituteName LIKE %:searchName%) AND "

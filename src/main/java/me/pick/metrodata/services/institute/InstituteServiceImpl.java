@@ -8,6 +8,7 @@ import me.pick.metrodata.models.dto.requests.InstituteUpdateRequest;
 import me.pick.metrodata.models.dto.responses.InstituteResponse;
 import me.pick.metrodata.models.entity.Institute;
 import me.pick.metrodata.repositories.InstituteRepository;
+import me.pick.metrodata.repositories.UserRepository;
 import me.pick.metrodata.repositories.specifications.InstituteSpecification;
 
 import org.modelmapper.ModelMapper;
@@ -20,16 +21,19 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import me.pick.metrodata.models.dto.requests.InstituteRequest;
+
 @Service
 @RequiredArgsConstructor
 public class InstituteServiceImpl implements InstituteService {
 
     private final InstituteRepository instituteRepository;
     private final ModelMapper modelMapper;
+    private final UserRepository userRepository;
 
     @Override
     public Institute getInstituteById(Long id) {
-        return instituteRepository.findInstituteById(id).orElseThrow(() -> new InstituteDoesNotExistException(id));
+        return instituteRepository.findById(id).orElseThrow(() -> new InstituteDoesNotExistException(id));
     }
 
     @Override
@@ -76,4 +80,24 @@ public class InstituteServiceImpl implements InstituteService {
                     return instituteResponse;
                 });
     }
+
+    @Override
+    public void create(InstituteRequest instituteRequest) {
+        Institute institute = modelMapper.map(instituteRequest, Institute.class);
+        institute.setInstituteType(InstituteType.valueOf(instituteRequest.getInstituteType()));
+        institute.setRmUser(userRepository.findById(instituteRequest.getRmId()).orElse(null));
+
+        instituteRepository.save(institute);
+    }
+
+    @Override
+    public void update(Long id, InstituteRequest instituteRequest) {
+        Institute institute = getInstituteById(id);
+        institute.setInstituteName(instituteRequest.getInstituteName());
+        institute.setInstituteType(InstituteType.valueOf(instituteRequest.getInstituteType()));
+        institute.setRmUser(userRepository.findById(instituteRequest.getRmId()).orElse(null));
+
+        instituteRepository.save(institute);
+    }
+
 }

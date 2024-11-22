@@ -30,8 +30,8 @@ function submit() {
   Swal.fire({
     title: "Apakah Anda yakin ingin memperbarui 'Parameter' ini?",
     showCancelButton: true,
-    confirmButtonText: "Simpan",
-    cancelButtonText: `Batal`,
+    confirmButtonText: "Ya",
+    cancelButtonText: `Tidak`,
   }).then((result) => {
     if (result.isConfirmed) {
       $.LoadingOverlay("show");

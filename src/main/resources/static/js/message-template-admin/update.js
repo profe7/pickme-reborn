@@ -31,8 +31,8 @@ function submit() {
   Swal.fire({
     title: "Apakah anda ingin menyimpan perubahan ini?",
     showCancelButton: true,
-    confirmButtonText: "Simpan",
-    cancelButtonText: `Batal`,
+    confirmButtonText: "Ya",
+    cancelButtonText: `Tidak`,
   }).then((result) => {
     /* Read more about isConfirmed, isDenied below */
     if (result.isConfirmed) {

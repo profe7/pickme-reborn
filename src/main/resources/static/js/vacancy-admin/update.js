@@ -89,8 +89,8 @@ function submit() {
   Swal.fire({
     title: "Apakah anda yakin ingin memperbarui 'Lowongan' ini?",
     showCancelButton: true,
-    confirmButtonText: "Simpan",
-    cancelButtonText: "Batal",
+    confirmButtonText: "Ya",
+    cancelButtonText: "Tidak",
   }).then((result) => {
     if (result.isConfirmed) {
       $.LoadingOverlay("show");
@@ -131,7 +131,7 @@ function update(id, data) {
 
 function confirmBack() {
   Swal.fire({
-    title: "Apakah anda yakin ingin kembali?",
+    title: "Apakah Anda yakin ingin kembali?",
     icon: "question",
     showCancelButton: true,
     confirmButtonText: "Ya",
