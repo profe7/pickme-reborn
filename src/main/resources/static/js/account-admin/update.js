@@ -1,7 +1,6 @@
 $(document).ready(function () {});
 
 function submit() {
-  // Menghapus pesan invalid sebelum validasi
   $(".is-invalid").removeClass("is-invalid");
 
   var accountId = $("#accountId").val();
@@ -15,10 +14,8 @@ function submit() {
   var phone = $("#phone").val();
   var baseBudget = $("#baseBudget").val();
   var limitBudget = $("#limitBudget").val();
-
   var instituteId = $("#instituteId").val();
 
-  // Validasi sederhana untuk kolom yang wajib diisi
   if (
     !username ||
     !password ||
@@ -33,7 +30,6 @@ function submit() {
       text: "Semua kolom dengan label required harus diisi",
     });
 
-    // Menandai kolom yang tidak diisi dengan kelas is-invalid
     if (!username) $("#username").addClass("is-invalid");
     if (!password) $("#password").addClass("is-invalid");
     if (!firstName) $("#firstName").addClass("is-invalid");
@@ -58,12 +54,11 @@ function submit() {
   });
 
   Swal.fire({
-    title: "Apakah anda ingin menyimpan perubahan ini?",
+    title: "Apakah Anda yakin ingin memperbarui 'Akun' ini?",
     showCancelButton: true,
     confirmButtonText: "Simpan",
     cancelButtonText: `Batal`,
   }).then((result) => {
-    /* Read more about isConfirmed, isDenied below */
     if (result.isConfirmed) {
       $.LoadingOverlay("show");
       update(accountId, data);
@@ -73,30 +68,24 @@ function submit() {
 
 function update(id, data) {
   $.ajax({
-    url: `/api/account/${id}`,
+    url: `/admin/account/update/${id}`,
     method: "PUT",
     dataType: "JSON",
-    beforeSend: addCsrfToken(),
     contentType: "application/json",
     data: data,
     success: (result) => {
-      // Menyembunyikan overlay loading
       $.LoadingOverlay("hide");
-
       Swal.fire({
         position: "center",
         icon: "success",
         title: "Akun berhasil diperbarui",
         showConfirmButton: true,
       }).then(() => {
-        // Memuat ulang halaman
-        window.location.href = "/account/";
+        window.location.href = "/admin/account";
       });
     },
     error: (e) => {
-      // Menyembunyikan overlay loading
       $.LoadingOverlay("hide");
-
       Swal.fire({
         position: "center",
         icon: "error",
@@ -109,14 +98,14 @@ function update(id, data) {
 
 function confirmBack() {
   Swal.fire({
-    title: "Apakah anda yakin ingin kembali?",
+    title: "Apakah Anda yakin ingin kembali?",
     icon: "question",
     showCancelButton: true,
     confirmButtonText: "Ya",
     cancelButtonText: "Tidak",
   }).then((result) => {
     if (result.isConfirmed) {
-      window.location.href = "/admin/parameter";
+      window.location.href = "/admin/account";
     }
   });
   return false;
