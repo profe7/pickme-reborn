@@ -106,6 +106,8 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
         } else if (request.getStatus() == InterviewStatus.REJECTED) {
             interviewSaveHelper(interviewSchedule, request);
             emailService.sendInterviewReject(interviewSchedule, request.getFeedback());
+        } else if (request.getStatus() == InterviewStatus.ON_PROCESS) {
+            interviewSaveHelper(interviewSchedule, request);
         }
     }
 
@@ -159,6 +161,7 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
                 applicant.setStatus(ApplicantStatus.REJECTED);
             }
             interviewSchedule.getApplicant().setStatus(ApplicantStatus.ACCEPTED);
+            interviewSchedule.setOnBoardDate(request.getOnboarDate());
             for (InterviewSchedule interview : interviewSchedule.getApplicant().getInterviewSchedules()) {
                 if (!Objects.equals(interview.getId(), interviewSchedule.getId())) {
                     interview.setStatus(InterviewStatus.REJECTED);

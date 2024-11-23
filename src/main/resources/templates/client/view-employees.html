@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employees</title>
+    <div th:replace="~{components/plugin :: css}"></div>
+    <div th:replace="~{components/plugin :: js}"></div>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
+    <!-- Custom CSS -->
+    <style>
+
+    .dashboard-container {
+        display: grid;
+        grid-template-columns: 1fr 3fr; /* 1:3 ratio for summary and table */
+        gap: 20px; /* Space between grid items */
+        padding: 20px;
+    }
+
+    .summary-box {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        background-color: #cce7f7;
+        padding: 20px;
+        border-radius: 8px;
+        width: 100%; /* Adjust to take full column width */
+    }
+
+    .summary-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: #00212D;
+        color: white;
+        border-radius: 8px;
+        padding: 15px;
+        width: 100%;
+    }
+
+    .summary-header h2 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: bold;
+    }
+
+    .summary-header .total-number {
+        font-size: 36px;
+        font-weight: bold;
+    }
+
+    .summary-list {
+        list-style: none;
+        padding: 0;
+        margin: 20px 0 0;
+        width: 100%;
+    }
+
+    .summary-list li {
+        display: flex;
+        justify-content: space-between;
+        font-size: 20px;
+        font-weight: 400px;
+        color: #00212D;
+        margin-bottom: 10px;
+        padding: 0 10px;
+    }
+
+    .table-container {
+        overflow-x: auto; /* Ensure responsiveness */
+        width: 100%; /* Ensure table spans full width */
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: left;
+    }
+
+    #employeesTable_filter {
+        float: left;
+    }
+
+    .dataTables_filter {
+        width: 100%; /* Ensure it spans the full width */
+        margin-bottom: 15px; /* Add some space below */
+        text-align: left; /* Align search bar to the left */
+    }
+
+    .dataTables_filter input {
+        width: 100%; /* Make sure the width spans the container initially */
+        padding: 8px; /* Optional: Add padding for better UX */
+        border: 1px solid #ccc; /* Optional: Styling for border */
+        border-radius: 4px; /* Optional: Rounded corners */
+        font-size: 14px; /* Optional: Adjust font size */
+    }
+
+
+    </style>
+</head>
+<body>
+    <!-- Main Dashboard Container -->
+    <div class="dashboard-container">
+        <!-- Summary Box -->
+        <div class="summary-box">
+            <div class="summary-header">
+                <h2>Total Pegawai</h2>
+                <p>
+                <h2 class="total-number"><span th:text="${employeeSummary.totalEmployees}"></span></h2>
+            </div>
+            <ul class="summary-list">
+                <li th:each="position : ${employeeSummary.totalEmployeesByPosition}">
+                    <span th:text="${position.positionName}"></span>
+                    <span th:text="${position.totalEmployees}"></span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Table Container -->
+        <div class="table-container">
+            <table id="employeesTable" class="display">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama</th>
+                        <th>Posisi</th>
+                        <th>Tanggal Onboard</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="employee, iterStat : ${employees}">
+                        <td th:text="${iterStat.index + 1}"></td>
+                        <td th:text="${employee.employeeName}"></td>
+                        <td th:text="${employee.position}"></td>
+                        <td th:text="${#temporals.format(employee.onboardDate, 'dd-MM-yyyy')}"></td>
+                        <td>
+                            <!-- Tombol Edit -->
+                            <button 
+                                style="background-color: #0067AC; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; 
+                                    font-size: 14px; display: inline-flex; align-items: center; gap: 5px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" style="fill: white;">
+                                    <path d="M11.962 20q-3.046 0-5.311-1.99q-2.264-1.989-2.62-5.01h1.011q.408 2.58 2.351 4.29T11.962 19q2.925 0 4.962-2.037T18.962 
+                                    12t-2.038-4.963T11.962 5q-1.553 0-2.918.656q-1.365.655-2.41 1.805h2.481v1H4.962V4.309h1v2.388q1.16-1.273 2.718-1.984T11.962 
+                                    4q1.663 0 3.118.626t2.542 1.714t1.714 2.542t.626 3.118t-.626 3.118t-1.714 2.542t-2.542 
+                                    1.714t-3.118.626m3.204-4.146l-3.647-3.646V7h1v4.792l3.354 3.354z"/>
+                                </svg>
+                            </button>
+                        
+                            <!-- Tombol Delete -->
+                            <button 
+                                style="background-color: #DC3545; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; 
+                                    font-size: 14px; display: inline-flex; align-items: center; gap: 5px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                     style="width: 1.2em; height: 1.2em; stroke: white;">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 
+                                    1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 
+                                    0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 
+                                    0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                </svg>
+                            </button>
+                        </td>                                          
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Include jQuery and DataTables JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var table = $('#employeesTable').DataTable({
+                searching: true, // Enable search bar
+                paging: true, // Enable pagination
+                ordering: true, // Enable column sorting
+                info: false, // Hide table info
+                dom: '<"top"f>rt<"bottom"p>', // Place search bar on top and pagination on bottom
+                language: {
+                    search: '', // Remove default "Search" label
+                    searchPlaceholder: 'Cari berdasarkan nama, posisi, atau tanggal onboard' // Add placeholder
+                },
+                initComplete: function () {
+                    // Adjust the width of the search input to match the table's container
+                    const tableWidth = $('#employeesTable').outerWidth(); // Get table width
+                    $('.dataTables_filter input').css({
+                        width: `${tableWidth}px`, // Set width equal to the table
+                        'box-sizing': 'border-box', // Include padding/border in width
+                    });
+                }
+            });
+
+            // Dynamically adjust search bar width on window resize
+            $(window).on('resize', function () {
+                const tableWidth = $('#employeesTable').outerWidth(); // Get table width
+                $('.dataTables_filter input').css({
+                    width: `${tableWidth}px`, // Set width equal to the table
+                });
+            });
+        });
+
+
+    </script>
+    <div th:insert="~{components/footer :: footer}"></div>
+</body>
+</html>

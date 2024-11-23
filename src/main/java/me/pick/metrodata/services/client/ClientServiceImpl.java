@@ -7,6 +7,7 @@ import me.pick.metrodata.exceptions.applicant.ApplicantDoesNotExistException;
 import me.pick.metrodata.exceptions.client.ClientDoesNotExistException;
 import me.pick.metrodata.exceptions.interviewschedule.InterviewScheduleDoesNotExistException;
 import me.pick.metrodata.models.dto.responses.ClientDashboardTelemetryResponse;
+import me.pick.metrodata.models.dto.responses.ClientEmployeeResponse;
 import me.pick.metrodata.models.dto.responses.PositionTelemetryResponse;
 import me.pick.metrodata.models.entity.Applicant;
 import me.pick.metrodata.models.entity.InterviewSchedule;
@@ -18,6 +19,7 @@ import me.pick.metrodata.repositories.InterviewScheduleRepository;
 import me.pick.metrodata.models.entity.Talent;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,14 +31,30 @@ public class ClientServiceImpl implements ClientService {
     private final ApplicantRepository applicantRepository;
     private final InterviewScheduleHistoryRepository interviewScheduleHistoryRepository;
 
+    // @Override
+    // public List<Talent> getClientEmployees(Long clientId) {
+    //     clientRepository.findById(clientId).orElseThrow(() -> new ClientDoesNotExistException(clientId));
+    //     return interviewScheduleRepository.findInterviewScheduleByClientIdAndStatus(clientId, InterviewStatus.ACCEPTED)
+    //             .stream()
+    //             .map(interviewSchedule -> interviewSchedule.getApplicant().getTalent())
+    //             .toList();
+    // }
+
     @Override
-    public List<Talent> getClientEmployees(Long clientId) {
+    public List<ClientEmployeeResponse> getClientEmployees(Long clientId) {
         clientRepository.findById(clientId).orElseThrow(() -> new ClientDoesNotExistException(clientId));
+
         return interviewScheduleRepository.findInterviewScheduleByClientIdAndStatus(clientId, InterviewStatus.ACCEPTED)
-                .stream()
-                .map(interviewSchedule -> interviewSchedule.getApplicant().getTalent())
-                .toList();
+            .stream()
+            .map(interviewSchedule -> {
+                Talent talent = interviewSchedule.getApplicant().getTalent();
+                String position = interviewSchedule.getPosition();
+                LocalDate onboardDate = interviewSchedule.getOnBoardDate();
+                return new ClientEmployeeResponse(talent.getName(), position, onboardDate);
+            })
+            .toList();
     }
+
 
     @Override
     public void deleteClientEmployee(Long clientId, String talentId) {
