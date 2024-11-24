@@ -44,7 +44,7 @@ public class TalentController {
     private final TalentService talentService;
 
     @GetMapping("/data-completion/{talentId}")
-    public String formAddCompletedTalentData(HttpSession session, @PathVariable("talentId") UUID talentId, Model model){
+    public String formAddCompletedTalentData(HttpSession session, @PathVariable("talentId") String talentId, Model model){
         Long mitraId = (long) session.getAttribute("mitraId");
 
         var talentDTO = new TalentDataCompletionRequest();
@@ -112,13 +112,11 @@ public class TalentController {
 
     }
     
-    @PostMapping("/data-completion")
-    public RedirectView talentDataCompletion(@ModelAttribute TalentDataCompletionRequest talentDTO,
-        BindingResult bindingResult, RedirectAttributes redirectAttributes, HttpSession session){
+    @PostMapping("/data-completion/{talentId}")
+    public RedirectView talentDataCompletion(@ModelAttribute TalentDataCompletionRequest talentDTO, 
+        @PathVariable("talentId") String talentId, BindingResult bindingResult, RedirectAttributes redirectAttributes, HttpSession session){
         
         List<String> errorMessages = new ArrayList<>();
-
-        String talentId = talentDTO.getTalentId();
 
         if (bindingResult.hasErrors()) {
             List<FieldError> fieldErrors = bindingResult.getFieldErrors();
