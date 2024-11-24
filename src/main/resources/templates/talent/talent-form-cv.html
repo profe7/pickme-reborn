@@ -1,0 +1,520 @@
+<!-- <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/main}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form CV</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/responsive.css}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div th:replace="~{components/navbar :: navbar}"></div>
+    <div class="content-wrapper custom-container" layout:fragment="content">
+        <div class="hero_area">
+            <div class="hero_bg_box">
+                <div class="bg_img_box">
+                </div>
+            </div>
+
+            <div class="container mt-5">
+                <form>
+                    <h5 class="mb-3">Data Pribadi <span class="text-danger">*</span></h5>
+                    <p class="text-muted">Catatan: Harap lengkapi sesuai dengan data Anda saat ini</p>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="namaLengkap" class="form-label">Nama Lengkap <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="namaLengkap"
+                                placeholder="Masukkan nama lengkap">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="pasFoto" class="form-label">Pas Foto <span class="text-danger">*</span></label>
+                            <div class="d-flex align-items-center">
+                                <div class="me-3">
+                                    <div class="border p-2 rounded"
+                                        style="width: 80px; height: 80px; display: flex; justify-content: center; align-items: center;">
+                                        <span class="text-muted">Klik untuk upload foto</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <button type="button" class="btn btn-primary btn-sm mb-1">Ubah Foto</button><br>
+                                    <button type="button" class="btn btn-danger btn-sm">Hapus Foto</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="nomorKTP" class="form-label">Nomor KTP <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="nomorKTP" placeholder="Masukkan nomor KTP">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="tempatLahir" class="form-label">Tempat Lahir <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="tempatLahir"
+                                placeholder="Masukkan tempat lahir">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="tanggalLahir" class="form-label">Tanggal Lahir <span
+                                    class="text-danger">*</span></label>
+                            <input type="date" class="form-control" id="tanggalLahir">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="kewarganegaraan" class="form-label">Kewarganegaraan <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="kewarganegaraan"
+                                placeholder="Masukkan kewarganegaraan">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="jenisKelamin" class="form-label">Jenis Kelamin <span
+                                    class="text-danger">*</span></label>
+                            <select class="form-select" id="jenisKelamin">
+                                <option value="">--Pilih--</option>
+                                <option value="L">Laki-Laki</option>
+                                <option value="P">Perempuan</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
+                            <select class="form-select" id="status">
+                                <option value="">--Pilih--</option>
+                                <option value="single">Belum Menikah</option>
+                                <option value="married">Menikah</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="agama" class="form-label">Agama <span class="text-danger">*</span></label>
+                            <select class="form-select" id="agama">
+                                <option value="">--Pilih--</option>
+                                <option value="islam">Islam</option>
+                                <option value="kristen">Kristen</option>
+                                <option value="hindu">Hindu</option>
+                                <option value="buddha">Buddha</option>
+                                <option value="lainnya">Lainnya</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control" id="email" placeholder="Masukkan email">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="noTelepon" class="form-label">No Telepon <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="noTelepon" placeholder="Masukkan nomor telepon">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="alamat" class="form-label">Alamat <span class="text-danger">*</span></label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" id="provinsi" placeholder="Provinsi">
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" id="kota" placeholder="Kota">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="alamatLengkap" class="form-label">Alamat Lengkap</label>
+                        <textarea class="form-control" id="alamatLengkap" rows="3"
+                            placeholder="Masukkan alamat lengkap"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    </div>
+    </div>
+    <div th:insert="~{components/footer :: footer}"></div>
+</body>
+
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Data Pribadi</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <!-- Button untuk membuka/menutup form -->
+        <div class=" card card-body">
+            <button class="btn btn-primary mb-3" type="button" data-bs-toggle="collapse"
+                data-bs-target="#dataPribadiForm" aria-expanded="false" aria-controls="dataPribadiForm"
+                style="height: 9; width: 30px;">
+            </button>
+            <h5 class="mb-3">Data Pribadi <span class="text-danger">*</span></h5>
+        </div>
+
+        <!-- Form yang bisa dibuka/tutup -->
+        <div class="collapse" id="dataPribadiForm">
+            <form>
+                <div class="card card-body">
+                    <!-- <h5 class="mb-3">Data Pribadi <span class="text-danger">*</span></h5> -->
+                    <p class="text-muted">Catatan: Harap lengkapi sesuai dengan data Anda saat ini</p>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="namaLengkap" class="form-label">Nama Lengkap <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="namaLengkap"
+                                placeholder="Masukkan nama lengkap">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="pasFoto" class="form-label">Pas Foto <span class="text-danger">*</span></label>
+                            <div class="d-flex align-items-center">
+                                <div class="me-3">
+                                    <div class="border p-2 rounded"
+                                        style="width: 80px; height: 80px; display: flex; justify-content: center; align-items: center;">
+                                        <span class="text-muted">Klik untuk upload foto</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <button type="button" class="btn btn-primary btn-sm mb-1">Ubah Foto</button><br>
+                                    <button type="button" class="btn btn-danger btn-sm">Hapus Foto</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="nomorKTP" class="form-label">Nomor KTP <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="nomorKTP" placeholder="Masukkan nomor KTP">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="tempatLahir" class="form-label">Tempat Lahir <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="tempatLahir"
+                                placeholder="Masukkan tempat lahir">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="tanggalLahir" class="form-label">Tanggal Lahir <span
+                                    class="text-danger">*</span></label>
+                            <input type="date" class="form-control" id="tanggalLahir">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="kewarganegaraan" class="form-label">Kewarganegaraan <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="kewarganegaraan"
+                                placeholder="Masukkan kewarganegaraan">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="jenisKelamin" class="form-label">Jenis Kelamin <span
+                                    class="text-danger">*</span></label>
+                            <select class="form-select" id="jenisKelamin">
+                                <option value="">--Pilih--</option>
+                                <option value="L">Laki-Laki</option>
+                                <option value="P">Perempuan</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
+                            <select class="form-select" id="status">
+                                <option value="">--Pilih--</option>
+                                <option value="single">Belum Menikah</option>
+                                <option value="married">Menikah</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="agama" class="form-label">Agama <span class="text-danger">*</span></label>
+                            <select class="form-select" id="agama">
+                                <option value="">--Pilih--</option>
+                                <option value="islam">Islam</option>
+                                <option value="kristen">Kristen</option>
+                                <option value="hindu">Hindu</option>
+                                <option value="buddha">Buddha</option>
+                                <option value="lainnya">Lainnya</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control" id="email" placeholder="Masukkan email">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="noTelepon" class="form-label">No Telepon <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="noTelepon" placeholder="Masukkan nomor telepon">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="alamat" class="form-label">Alamat <span class="text-danger">*</span></label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" id="provinsi" placeholder="Provinsi">
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" id="kota" placeholder="Kota">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="alamatLengkap" class="form-label">Alamat Lengkap</label>
+                        <textarea class="form-control" id="alamatLengkap" rows="3"
+                            placeholder="Masukkan alamat lengkap"></textarea>
+                    </div>
+                    <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Kemampuan Bahasa -->
+    <div class="container mt-5">
+        <div class=" card card-body">
+            <button class="btn btn-primary mb-3" type="button" data-bs-toggle="collapse"
+                data-bs-target="#dataKemampuanBahasa" aria-expanded="false" aria-controls="dataKemampuanBahasa"
+                style="height: 9; width: 30px;">
+            </button>
+            <h5 class="mb-3">Kemampuan Bahasa <span class="text-danger">*</span></h5>
+        </div>
+        <div class="collapse" id="dataKemampuanBahasa">
+            <form>
+                <div class="card card-body">
+                    <label for="language" class="form-label fw-bold">Bahasa</label>
+                    <select id="language" name="language" class="form-select">
+                        <option value="">-- Pilih --</option>
+                        <option value="indonesia">Indonesia</option>
+                        <option value="english">English</option>
+                        <option value="japanese">Japanese</option>
+                    </select>
+
+                    <!-- Writing -->
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-md-6">
+                            <label for="writing" class="form-label fw-bold">Kemampuan</label>
+                            <input type="text" id="writing" class="form-control" value="Writing" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="writing-level" class="form-label fw-bold">Tingkat</label>
+                            <select id="writing-level" name="writing-level" class="form-select">
+                                <option value="">-- Pilih --</option>
+                                <option value="beginner">Beginner</option>
+                                <option value="intermediate">Intermediate</option>
+                                <option value="advanced">Advanced</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Reading -->
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-md-6">
+                            <label for="reading" class="form-label fw-bold">Kemampuan</label>
+                            <input type="text" id="reading" class="form-control" value="Reading" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="reading-level" class="form-label fw-bold">Tingkat</label>
+                            <select id="reading-level" name="reading-level" class="form-select">
+                                <option value="">-- Pilih --</option>
+                                <option value="beginner">Beginner</option>
+                                <option value="intermediate">Intermediate</option>
+                                <option value="advanced">Advanced</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Speaking -->
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-md-6">
+                            <label for="speaking" class="form-label fw-bold">Kemampuan</label>
+                            <input type="text" id="speaking" class="form-control" value="Speaking" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="speaking-level" class="form-label fw-bold">Tingkat</label>
+                            <select id="speaking-level" name="speaking-level" class="form-select">
+                                <option value="">-- Pilih --</option>
+                                <option value="beginner">Beginner</option>
+                                <option value="intermediate">Intermediate</option>
+                                <option value="advanced">Advanced</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Pendidikan -->
+    <div class="container mt-5">
+        <div class=" card card-body">
+            <button class="btn btn-primary mb-3" type="button" data-bs-toggle="collapse"
+                data-bs-target="#dataPendidikan" aria-expanded="false" aria-controls="dataPendidikan"
+                style="height: 9; width: 30px;">
+            </button>
+            <h5 class="mb-3">Pendidikan <span class="text-danger">*</span></h5>
+        </div>
+        <div class="collapse" id="dataPendidikan">
+            <form>
+                <div class="card card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="school" class="form-label fw-bold">Universitas / Sekolah</label>
+                            <input type="text" id="school" name="school" class="form-control"
+                                placeholder="Masukkan nama universitas/sekolah">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="level" class="form-label fw-bold">Jenjang</label>
+                            <select id="level" name="level" class="form-select">
+                                <option value="">-- Pilih --</option>
+                                <option value="sd">SD</option>
+                                <option value="smp">SMP</option>
+                                <option value="sma">SMA</option>
+                                <option value="diploma">Diploma</option>
+                                <option value="sarjana">Sarjana</option>
+                                <option value="magister">Magister</option>
+                                <option value="doktor">Doktor</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="start-date" class="form-label fw-bold">Dimulai dari</label>
+                            <input type="date" id="start-date" name="start-date" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="end-date" class="form-label fw-bold">Berakhir pada</label>
+                            <input type="date" id="end-date" name="end-date" class="form-control">
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Checkbox -->
+                <!-- <div class="form-check mb-3">
+                    <input type="checkbox" class="form-check-input" id="current-study">
+                    <label class="form-check-label" for="current-study">Saya masih bersekolah di sini</label>
+                </div> -->
+
+                <!-- Tanggal Mulai dan Berakhir -->
+
+            </form>
+        </div>
+    </div>
+
+    <!-- Keterampilan  -->
+    <div class="container mt-5">
+        <div class=" card card-body">
+            <button class="btn btn-primary mb-3" type="button" data-bs-toggle="collapse"
+                data-bs-target="#dataKeterampilan" aria-expanded="false" aria-controls="dataKeterampilan"
+                style="height: 9; width: 30px;">
+            </button>
+            <h5 class="mb-3">Keterampilan <span class="text-danger">*</span></h5>
+        </div>
+        <div class="collapse" id="dataKeterampilan">
+            <form>
+                <div class="card card-body">
+                    <label for="skill" class="form-label fw-bold">Keterampilan</label>
+                    <select id="skill" name="skill" class="form-select">
+                        <option value="">-- Pilih --</option>
+                        <option value="HTML">HTML</option>
+                        <option value="REACT">REACT</option>
+                        <option value="JAVA">JAVA</option>
+                    </select>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="level" class="form-label fw-bold">Tingkat</label>
+                            <select id="level" name="level" class="form-select">
+                                <option value="">-- Pilih --</option>
+                                <option value="Beginner">Beginner</option>
+                                <option value="Intermediate">Intermediate</option>
+                                <option value="Advanced">Advanced</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="category" class="form-label fw-bold">Kategori</label>
+                            <select id="category" name="category" class="form-select">
+                                <option value="">-- Pilih --</option>
+                                <option value="hard_skill">Hard Skill</option>
+                                <option value="soft_skill">Soft Skill</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Keterampilan  -->
+    <div class="container mt-5">
+        <div class=" card card-body">
+            <button class="btn btn-primary mb-3" type="button" data-bs-toggle="collapse"
+                data-bs-target="#dataRiwayatPekerjaan" aria-expanded="false" aria-controls="dataRiwayatPekerjaan"
+                style="height: 9; width: 30px;">
+            </button>
+            <h5 class="mb-3">Riwayat Pekerjaan <span class="text-danger">*</span></h5>
+        </div>
+        <div class="collapse" id="dataRiwayatPekerjaan">
+            <form>
+                <div class="card card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="company_name" class="form-label fw-bold">Perusahaan</label>
+                            <input type="text" id="company_name" name="company_name" class="form-control"
+                            placeholder="Masukkan nama perusahaan">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="contract_status" class="form-label fw-bold">Status Contract</label>
+                            <select id="contract_status" name="contract_status" class="form-select">
+                                <option value="" disabled selected>-- Pilih --</option>
+                                <option value="INTERNSHIP">Internship</option>
+                                <option value="CONTRACT">Contract</option>
+                                <option value="PART_TIME">Part Time</option>
+                                <option value="FULL_TIME">Full Time</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
