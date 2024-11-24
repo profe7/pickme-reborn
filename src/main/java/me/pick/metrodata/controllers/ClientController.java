@@ -64,11 +64,12 @@ public class ClientController {
             @RequestParam(required = false) InterviewType type,
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate,
-            @RequestParam(required = false) InterviewStatus status) {
+            @RequestParam(required = false) InterviewStatus status,
+            @RequestParam(required = false) Long mitraId) {
 
         Long clientId = (Long) session.getAttribute("clientId");
 
-        Page<InterviewSchedule> schedules = interviewScheduleService.getAll(search, clientId, type, startDate, endDate, status, page, size);
+        Page<InterviewSchedule> schedules = interviewScheduleService.getAll(search, clientId, type, startDate, endDate, status, mitraId, page, size);
         
         model.addAttribute("interviewSchedules", schedules);
         model.addAttribute("pageNumbers", IntStream.range(0, schedules.getTotalPages()).boxed().collect(Collectors.toList())); 

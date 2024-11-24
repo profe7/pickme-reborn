@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="upgrade-insecure-requests"
+    />
+    <div th:insert="~{components-admin/plugin :: css}"></div>
+    <title>Role</title>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <div th:insert="~{components-admin/navbar :: navbar}"></div>
+      <div th:insert="~{components-admin/sidebar :: sidebar}"></div>
+
+      <div class="content-wrapper">
+        <div class="content-header">
+          <div class="container-fluid">
+            <div class="m-2">
+              <ol class="breadcrumb">
+                <li
+                  class="breadcrumb-item d-flex align-items-center text-muted"
+                >
+                  <i class="nav-icon fa fa-cog me-2"></i>Pengaturan
+                </li>
+                <li
+                  class="breadcrumb-item active d-flex align-items-center"
+                  style="color: #0066cc"
+                >
+                  <i class="nav-icon fa fa-user-shield me-2"></i>Role
+                </li>
+              </ol>
+              <h1 class="mt-2"><strong>Perbarui Role</strong></h1>
+            </div>
+          </div>
+        </div>
+
+        <section class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="fw-bold mb-3">Formulir Role</h4>
+                    <div class="mb-3 col-12">
+                      <label for="name" class="form-label required">Nama</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="name"
+                        th:value="${role.name}"
+                      />
+                      <div class="invalid-feedback">Kolom ini harus diisi</div>
+                      <input type="hidden" id="roleId" th:value="${role.id}" />
+                    </div>
+                    <div class="mb-3 col-12">
+                      <div class="row" th:each="group : ${groups}">
+                        <label th:text="${group.key}"></label>
+                        <br />
+                        <div
+                          class="col-6 form-check mb-2"
+                          th:each="privilege : ${group.value}"
+                        >
+                          <input
+                            class="form-check-input privilegeCheckbox"
+                            type="checkbox"
+                            th:value="${privilege.id}"
+                            th:checked="${#lists.contains(role.privileges, privilege)}"
+                          />
+                          <label
+                            class="form-check-label"
+                            th:text="${privilege.func}"
+                          ></label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="container d-flex justify-content-end">
+                      <a
+                        th:href="@{/admin/role}"
+                        class="btn btn-outline-primary btn-block me-2"
+                        onclick="return confirmBack()"
+                      >
+                        Batal
+                      </a>
+                      <button
+                        type="button"
+                        class="btn btn-primary btn-block"
+                        onclick="submit()"
+                      >
+                        Perbarui
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div th:insert="~{components-admin/plugin :: js}"></div>
+    </div>
+
+    <!-- JS Local -->
+    <div>
+      <script th:src="@{/js/role-admin/update.js}"></script>
+    </div>
+  </body>
+</html>

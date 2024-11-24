@@ -242,8 +242,8 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
 
     @Override
     public Page<InterviewSchedule> getAll(String search, Long clientId, InterviewType type, String startDate,
-            String endDate, InterviewStatus status, int page, int size) {
-        return interviewRetrievalHelper(search, null, type, startDate, endDate, status, page, size);
+            String endDate, InterviewStatus status, Long mitraId, int page, int size) {
+        return interviewRetrievalHelper(search, null, type, startDate, endDate, status, mitraId, page, size);
     }
 
     @Override
@@ -265,38 +265,35 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
 
     @Override
     public Page<InterviewSchedule> getByRm(String search, Long clientId, InterviewType type, String startDate,
-            String endDate, InterviewStatus status, int page, int size) {
+            String endDate, InterviewStatus status, Long mitraId, int page, int size) {
         if (clientId == null) {
             throw new ClientDoesNotExistException(clientId);
         }
 
-        return interviewRetrievalHelper(search, clientId, type, startDate, endDate, status, page, size);
+        return interviewRetrievalHelper(search, clientId, type, startDate, endDate, status, mitraId, page, size);
     }
 
     @Override
     public List<InterviewHistoryResponse> getTalentInterviewHistory(Long interviewId) {
-        // Fetch the InterviewSchedule by ID or throw an exception if it does not exist
         InterviewSchedule interviewSchedule = interviewScheduleRepository.findInterviewScheduleById(interviewId)
                 .orElseThrow(() -> new InterviewScheduleDoesNotExistException(interviewId));
 
-        // Fetch the history entries for the given InterviewSchedule
         List<InterviewScheduleHistory> histories = interviewScheduleHistoryRepository
                 .findInterviewScheduleHistoriesByInterviewSchedule(interviewSchedule);
 
-        // Map each history entry to an InterviewHistoryResponse DTO
         return histories.stream()
                 .map(history -> new InterviewHistoryResponse(
-                        interviewSchedule.getApplicant().getTalent().getName(), // Get the name of the talent
-                        history.getStatus().toString(), // Get the status of the history
-                        history.getCreated_at() // Get the date changes
+                        interviewSchedule.getApplicant().getTalent().getName(),
+                        history.getStatus().toString(),
+                        history.getCreated_at()
                 ))
                 .collect(Collectors.toList());
     }
 
     private Page<InterviewSchedule> interviewRetrievalHelper(String search, Long clientId, InterviewType type,
-            String startDate, String endDate, InterviewStatus status, int page, int size) {
+            String startDate, String endDate, InterviewStatus status, Long mitraId, int page, int size) {
         Specification<InterviewSchedule> spec = InterviewScheduleSpecification.searchSpecification(search, clientId,
-                type, startDate, endDate, status);
+                type, startDate, endDate, status, mitraId);
         List<InterviewSchedule> schedules = interviewScheduleRepository.findAll(spec);
         Pageable pageable = PageRequest.of(page, size);
 

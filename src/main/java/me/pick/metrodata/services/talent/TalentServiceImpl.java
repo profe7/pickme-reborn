@@ -435,4 +435,11 @@ public class TalentServiceImpl implements TalentService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<TalentResponse> getTalents() {
+        return talentRepository.findAll().stream()
+                .map(talent -> modelMapper.map(talent, TalentResponse.class))
+                .collect(Collectors.toList());
+    }
+
 }

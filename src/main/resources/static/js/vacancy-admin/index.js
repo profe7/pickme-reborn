@@ -1,13 +1,4 @@
-const vacancyStatuses = ["LOW", "MEDIUM", "HIGH", "CLOSED"];
-
 document.addEventListener("DOMContentLoaded", function () {
-  const statusSelect = document.getElementById("status");
-  vacancyStatuses.forEach(function (status) {
-    const option = document.createElement("option");
-    option.value = status;
-    option.textContent = status;
-    statusSelect.appendChild(option);
-  });
   document
     .getElementById("searchTitle")
     .addEventListener("input", () => fetchSchedules());
@@ -68,6 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
         : "";
 
       const row = document.createElement("tr");
+      row.style.textAlign = "center";
       row.innerHTML = `
       <td>${rowNumber}</td>
       <td>${vacancy.title || ""}</td>
@@ -79,13 +71,15 @@ document.addEventListener("DOMContentLoaded", function () {
       <td>${formattedDate}</td>
       <td><span class="badge" style="background-color:${statusColor}">${status}</span></td>
       <td>
-        <a class="btn btn-success">
+        <a href="/admin/vacancy/${vacancy.id}" class="btn btn-success">
           <i class="bi bi-people-fill text-white"></i>
         </a>
-        <a class="btn btn-primary">
+        <a href="/admin/vacancy/update/${vacancy.id}" class="btn btn-primary">
           <i class="bi bi-pencil-square text-white"></i>
         </a>
-        <a class="btn btn-danger">
+        <a href="#" class="btn btn-danger" onclick="confirmDelete('${
+          vacancy.id
+        }')">
           <i class="bi bi-trash3-fill text-white"></i>
         </a>
       </td>
@@ -150,3 +144,37 @@ document.addEventListener("DOMContentLoaded", function () {
 
   fetchSchedules();
 });
+
+function confirmDelete(vacancyId) {
+  Swal.fire({
+    title: "Apakah Anda yakin ingin menghapus 'Lowongan' ini?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "Ya",
+    cancelButtonText: "Tidak",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      deleteVacancy(vacancyId);
+    }
+  });
+}
+
+async function deleteVacancy(vacancyId) {
+  try {
+    const response = await fetch(`/admin/vacancy/delete/${vacancyId}`, {
+      method: "DELETE",
+    });
+
+    if (response.ok) {
+      Swal.fire("Dihapus!", "Data berhasil dihapus.", "success");
+      fetchSchedules();
+    } else {
+      Swal.fire("Gagal!", "Terjadi kesalahan saat menghapus data.", "error");
+    }
+  } catch (error) {
+    console.error("Error deleting vacancy:", error);
+    Swal.fire("Gagal!", "Terjadi kesalahan saat menghapus data.", "error");
+  }
+}

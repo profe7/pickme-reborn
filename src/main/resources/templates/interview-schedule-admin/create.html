@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="upgrade-insecure-requests"
+    />
+    <div th:insert="~{components-admin/plugin :: css}"></div>
+    <title>Jadwal Wawancara</title>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <div th:insert="~{components-admin/navbar :: navbar}"></div>
+      <div th:insert="~{components-admin/sidebar :: sidebar}"></div>
+
+      <div class="content-wrapper">
+        <div class="content-header">
+          <div class="container-fluid">
+            <div class="m-2">
+              <ol class="breadcrumb">
+                <li
+                  class="breadcrumb-item d-flex align-items-center text-muted"
+                >
+                  <i class="nav-icon fa fa-home me-2"></i>
+                  <a class="text-muted" href="/admin">Beranda</a>
+                </li>
+                <li
+                  class="breadcrumb-item active d-flex align-items-center"
+                  style="color: #0066cc"
+                >
+                  <i class="nav-icon fa fa-calendar-check me-2"></i>Jadwal
+                  Wawancara
+                </li>
+              </ol>
+              <h1 class="mt-2"><strong>Tambah Jadwal Wawancara</strong></h1>
+            </div>
+          </div>
+        </div>
+
+        <section class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="fw-bold mb-3">Formulir Wawancara</h4>
+                    <div class="mb-3 col-12">
+                      <label for="ccSelect">CC:</label>
+                      <!-- <select
+                        class="form-select select2"
+                        id="ccSelect"
+                        multiple="multiple"
+                      ></select> -->
+                      <input
+                        type="text"
+                        class="form-control select2"
+                        id="ccSelect"
+                      />
+                    </div>
+                    <div class="mb-3 col-12">
+                      <label for="position" class="required">Posisi</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="position"
+                        placeholder="Pilih posisi"
+                      />
+                      <div class="invalid-feedback">Kolom ini harus diisi</div>
+                    </div>
+                    <div class="container row">
+                      <div class="mb-3 col-6">
+                        <label for="recruiterId" class="form-label required"
+                          >Perekrut</label
+                        >
+                        <select class="form-select select2" id="recruiterId">
+                          <option value="" disabled selected>
+                            Pilih Perekrut/Klien
+                          </option>
+                          <option
+                            th:each="client : ${clients}"
+                            th:value="${client.id}"
+                            th:text="${client.clientName}"
+                          ></option>
+                        </select>
+                        <div class="invalid-feedback">
+                          Kolom ini harus diisi
+                        </div>
+                      </div>
+                      <div class="mb-3 col-6">
+                        <label for="talentId" class="form-label required"
+                          >Talent</label
+                        >
+                        <select
+                          id="talentId"
+                          class="form-control select2"
+                          title="talentId"
+                        >
+                          <option value="" disabled selected>
+                            Pilih Talent
+                          </option>
+                          <option
+                            th:each="talent : ${talents}"
+                            th:value="${talent.id}"
+                            th:text="${talent.name} "
+                          ></option>
+                        </select>
+                        <div class="invalid-feedback">
+                          Kolom ini harus diisi
+                        </div>
+                      </div>
+                    </div>
+                    <div class="container row">
+                      <div class="mb-3 col-4">
+                        <label for="selectIsOffline" class="form-label required"
+                          >Tipe Wawancara</label
+                        >
+                        <select
+                          class="form-select select2"
+                          id="selectIsOffline"
+                          title="onlineOrOffline"
+                        >
+                          <option value="" disabled selected>
+                            Online/Offline
+                          </option>
+                          <option value="true">Offline</option>
+                          <option value="false">Online</option>
+                        </select>
+                        <div class="invalid-feedback">
+                          Kolom ini harus diisi
+                        </div>
+                      </div>
+                      <div class="mb-3 col-4" id="isOffline">
+                        <label for="locationAddress">Alamat</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="locationAddress"
+                          placeholder="Alamat"
+                        />
+                        <div class="invalid-feedback">
+                          Kolom ini harus diisi
+                        </div>
+                      </div>
+                      <div class="mb-3 col-4" id="isOnline">
+                        <label for="interviewLink">Link Interview</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="interviewLink"
+                          placeholder="Link interview"
+                        />
+                        <div class="invalid-feedback">
+                          Kolom ini harus diisi
+                        </div>
+                      </div>
+                    </div>
+                    <div class="container row">
+                      <div class="mb-3 col-4">
+                        <label for="date" class="form-label required"
+                          >Tanggal</label
+                        >
+                        <input
+                          type="date"
+                          class="form-control"
+                          id="date"
+                          th:min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
+                        />
+                        <div class="invalid-feedback">
+                          Kolom ini harus diisi
+                        </div>
+                      </div>
+                      <div class="mb-3 col-4">
+                        <label for="startTime" class="form-label required"
+                          >Start Time</label
+                        >
+                        <input
+                          type="time"
+                          class="form-control"
+                          id="startTime"
+                          min="08:00"
+                          max="17:00"
+                        />
+                        <div class="invalid-feedback">
+                          Kolom ini harus diisi
+                        </div>
+                      </div>
+                      <div class="mb-3 col-4">
+                        <label for="endTime" class="form-label required"
+                          >End Time</label
+                        >
+                        <input
+                          type="time"
+                          class="form-control"
+                          id="endTime"
+                          min="08:00"
+                          max="17:00"
+                        />
+                        <div class="invalid-feedback">
+                          Kolom ini harus diisi
+                        </div>
+                      </div>
+                    </div>
+                    <div class="mb-3 col-12">
+                      <label for="message" class="form-label required"
+                        >Pesan</label
+                      >
+                      <textarea
+                        class="form-control"
+                        id="message"
+                        rows="3"
+                        title="message"
+                        placeholder="Masukan pesan"
+                      ></textarea>
+                      <div class="invalid-feedback">Kolom ini harus diisi</div>
+                    </div>
+                    <div class="container d-flex justify-content-end">
+                      <a
+                        th:href="@{/admin/interview-schedule}"
+                        class="btn btn-outline-primary btn-block me-2"
+                        onclick="return confirmBack()"
+                      >
+                        Batal
+                      </a>
+                      <button
+                        type="button"
+                        class="btn btn-primary btn-block"
+                        onclick="submit()"
+                      >
+                        <i class="nav-icon fa fa-envelope me-2"></i>Undang
+                        Wawancara
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div th:insert="~{components-admin/plugin :: js}"></div>
+    </div>
+
+    <!-- JS Local -->
+    <div>
+      <script th:src="@{/js/interview-schedule-admin/create.js}"></script>
+    </div>
+  </body>
+</html>

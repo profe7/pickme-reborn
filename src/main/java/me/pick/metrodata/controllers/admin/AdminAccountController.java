@@ -17,6 +17,8 @@ import lombok.AllArgsConstructor;
 import me.pick.metrodata.models.dto.responses.AccountResponse;
 import me.pick.metrodata.models.entity.User;
 import me.pick.metrodata.services.account.AccountService;
+import me.pick.metrodata.services.institute.InstituteService;
+import me.pick.metrodata.services.role.RoleService;
 import me.pick.metrodata.services.user.UserService;
 
 @Controller
@@ -26,6 +28,8 @@ public class AdminAccountController {
 
     private final AccountService accountService;
     private final UserService userService;
+    private final RoleService roleService;
+    private final InstituteService instituteService;
 
     @GetMapping
     public String index(Model model, HttpServletRequest request) {
@@ -34,6 +38,7 @@ public class AdminAccountController {
 
         model.addAttribute("logged", loggedUser);
         model.addAttribute("isActive", "account");
+        model.addAttribute("roles", roleService.getRoles());
         return "account-admin/index";
     }
 
@@ -41,7 +46,7 @@ public class AdminAccountController {
     // @PreAuthorize("hasAnyAuthority('READ_TALENT')")
     public ResponseEntity<Map<String, Object>> getTalents(
             @RequestParam(value = "searchUsername", required = false) String searchUsername,
-            @RequestParam(value = "role", required = false) String role,
+            @RequestParam(value = "role", required = false) Long role,
             @RequestParam(value = "status", required = false) String status,
             @RequestParam(value = "page", required = false) Integer page,
             @RequestParam(defaultValue = "10", required = false) Integer size) {
@@ -62,8 +67,48 @@ public class AdminAccountController {
         User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
 
         model.addAttribute("logged", loggedUser);
+        model.addAttribute("isActive", "account");
         model.addAttribute("account", accountService.getAccountById(id));
 
         return "account-admin/detail";
+    }
+
+    @GetMapping("/create")
+    public String createForm(Model model, HttpServletRequest request) {
+
+        User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
+
+        model.addAttribute("logged", loggedUser);
+        model.addAttribute("institutes", instituteService.getAll());
+        model.addAttribute("isActive", "account");
+        model.addAttribute("roles", roleService.getRoles());
+
+        return "account-admin/create";
+    }
+
+    @GetMapping("/update/{id}")
+    public String updateForm(@PathVariable Long id, Model model, HttpServletRequest request) {
+
+        User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
+
+        model.addAttribute("logged", loggedUser);
+        model.addAttribute("institutes", instituteService.getAll());
+        model.addAttribute("account", accountService.getAccountById(id));
+        model.addAttribute("isActive", "account");
+        model.addAttribute("roles", roleService.getRoles());
+
+        return "account-admin/update";
+    }
+
+    @GetMapping("/update-profile")
+    // @PreAuthorize("hasAnyAuthority('UPDATE_PROFILE')")
+    public String updateProfileForm(Model model, HttpServletRequest request) {
+
+        User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
+
+        model.addAttribute("isActive", "home");
+        model.addAttribute("logged", loggedUser);
+        model.addAttribute("account", accountService.getAccountById(loggedUser.getId()));
+        return "account-admin/update-profile";
     }
 }

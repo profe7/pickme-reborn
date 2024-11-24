@@ -8,6 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/responsive.css}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
@@ -58,20 +59,19 @@
 
                     <hr><br>
                     <span style="font-size: 16px;">
-                        <strong>Pilih Talent:</strong>
+                         <strong>Pilih Talent:</strong>
                     </span>
-
+                    <div id="selectedTalents"></div>
                     <div>
                         <br>
                         <button type="button" class="btn btn-outline-secondary mb-3 w-100"
-                            onclick="openTalentModal(this)"
-                            th:attr="data-mitra-id=${mitraId}, data-vacancy-id=${vacancyId}">
+                                onclick="openTalentModal(this)"
+                                th:attr="data-mitra-id=${mitraId}, data-vacancy-id=${vacancyId}">
                             <span class="me-2">+</span> Tambahkan Talent
                         </button>
-
                         <br>
                         <button type="button" class="btn w-100"
-                            style="background-color: #006683; color: antiquewhite;">Daftar</button>
+                                style="background-color: #006683; color: antiquewhite;">Daftar</button>
                     </div>
                 </div>
             </div>
@@ -249,7 +249,7 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" form="talentForm" class="btn btn-primary w-100"
+                    <button type="submit" form="talentForm" class="btn btn-primary w-100" th:attr="data-mitra-id=${mitraId}, data-vacancy-id=${vacancyId}"
                         style="background-color: #006580; border-radius: 10px; border: none; padding: 10px; font-weight: bold;">
                         Simpan
                     </button>

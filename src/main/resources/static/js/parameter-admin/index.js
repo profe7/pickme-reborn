@@ -39,13 +39,16 @@ document.addEventListener("DOMContentLoaded", function () {
       const rowNumber = startNumber + index + 1;
 
       const row = document.createElement("tr");
+      row.style.textAlign = "center";
       row.innerHTML = `
       <td>${rowNumber}</td>
       <td>${parameter.reference_group1 || ""}</td>
       <td>${parameter.reference_group2 || ""}</td>
       <td>${parameter.reference_name || ""}</td>
       <td>
-        <a class="btn btn-primary">
+        <a href="/admin/parameter/update/${
+          parameter.id
+        }" class="btn btn-primary">
           <i class="bi bi-pencil-square text-white"></i>
         </a>
         <a class="btn btn-danger">

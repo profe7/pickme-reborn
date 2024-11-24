@@ -47,7 +47,7 @@
                 <div class="card">
                   <div class="col-12 mt-3">
                     <div class="row justify-content-between">
-                      <div class="col-4 text-start mb-2 mt-2 ml-3">
+                      <div class="col-4 text-start ml-3">
                         <a
                           class="btn bi bi-plus"
                           href="/admin/recommendation/create"
@@ -94,10 +94,11 @@
           </div>
         </section>
       </div>
+      <div th:insert="~{components-admin/plugin :: js}"></div>
     </div>
 
     <!-- JS Local -->
-    <div layout:fragment="script">
+    <div>
       <script th:src="@{/js/recommendation-admin/index.js}"></script>
     </div>
   </body>

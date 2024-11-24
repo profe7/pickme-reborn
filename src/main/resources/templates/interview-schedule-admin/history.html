@@ -11,7 +11,7 @@
     <title>Jadwal Wawancara</title>
   </head>
 
-  <body class="hold-transition sidebar-mini">
+  <body>
     <div class="wrapper">
       <div th:insert="~{components-admin/navbar :: navbar}"></div>
       <div th:insert="~{components-admin/sidebar :: sidebar}"></div>
@@ -109,10 +109,11 @@
           </div>
         </section>
       </div>
+      <div th:insert="~{components-admin/plugin :: js}"></div>
     </div>
 
     <!-- JS Local -->
-    <div layout:fragment="script">
+    <div>
       <script th:src="@{/js/interview-schedule-admin/history.js}"></script>
     </div>
   </body>

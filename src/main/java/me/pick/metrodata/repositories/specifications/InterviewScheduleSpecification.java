@@ -13,7 +13,7 @@ public class InterviewScheduleSpecification {
 
     private InterviewScheduleSpecification() {}
 
-    public static Specification<InterviewSchedule> searchSpecification(String search, Long clientId, InterviewType type, String startDate, String endDate, InterviewStatus status) {
+    public static Specification<InterviewSchedule> searchSpecification(String search, Long clientId, InterviewType type, String startDate, String endDate, InterviewStatus status, Long mitraId) {
         return (root, query, criteriaBuilder) -> {
             Predicate predicate = criteriaBuilder.conjunction();
 
@@ -55,6 +55,14 @@ public class InterviewScheduleSpecification {
                 predicate = criteriaBuilder.and(
                         predicate,
                         criteriaBuilder.equal(root.get("status"), status));
+            }
+
+            if (mitraId != null) {
+                Join<Object, Object> applicantJoin = root.join("applicant");
+                Join<Object, Object> talentJoin = applicantJoin.join("talent");
+                predicate = criteriaBuilder.and(
+                        predicate,
+                        criteriaBuilder.equal(talentJoin.get("mitra").get("id"), mitraId));
             }
 
             return predicate;

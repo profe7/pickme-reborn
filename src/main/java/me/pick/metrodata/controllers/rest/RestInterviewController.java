@@ -43,10 +43,11 @@ public class RestInterviewController {
             @RequestParam(required = false) InterviewType type,
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate,
-            @RequestParam(required = false) InterviewStatus status
+            @RequestParam(required = false) InterviewStatus status,
+            @RequestParam(required = false) Long mitraId
     ) {
         return ResponseHandler.generateResponse(new Response(
-                INTERVIEWS, HttpStatus.OK, SUCCESS, interviewScheduleService.getAll(search, clientId, type, startDate, endDate, status, page, size)
+                INTERVIEWS, HttpStatus.OK, SUCCESS, interviewScheduleService.getAll(search, clientId, type, startDate, endDate, status, mitraId, page, size)
         ));
     }
 
@@ -60,10 +61,11 @@ public class RestInterviewController {
             @RequestParam(required = false) InterviewType type,
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate,
-            @RequestParam(required = false) InterviewStatus status
+            @RequestParam(required = false) InterviewStatus status,
+            @RequestParam(required = false) Long mitraId
     ) {
         return ResponseHandler.generateResponse(new Response(
-                INTERVIEWS, HttpStatus.OK, SUCCESS, interviewScheduleService.getByRm(search, clientId, type, startDate, endDate, status, page, size)
+                INTERVIEWS, HttpStatus.OK, SUCCESS, interviewScheduleService.getByRm(search, clientId, type, startDate, endDate, status, mitraId, page, size)
         ));
     }
 

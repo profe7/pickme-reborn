@@ -1,15 +1,8 @@
+let selectedTalentIds = [];
+
 function openTalentModal(button) {
     const mitraId = $(button).data("mitra-id");
     const vacancyId = $(button).data("vacancy-id");
-
-     // Lakukan sesuatu dengan mitraId dan vacancyId
-    console.log('Mitra ID:', mitraId);
-    console.log('Vacancy ID:', vacancyId);
-
-    if (!mitraId || !vacancyId) {
-        console.error("mitraId atau vacancyId tidak ditemukan");
-        return;
-    }
 
     $.ajax({
         url: `/vacancies/${mitraId}/${vacancyId}/talent`,
@@ -29,16 +22,79 @@ function openTalentModal(button) {
                     CV
                     </button>
 
-                    <button class="btn btn-sm" style="background-color: #106AFC; color: white;">Pilih</button>
+                    <button class="btn btn-sm pilih-btn" style="background-color: #106AFC; color: white;" data-talent-id="${talent.talentId}" data-talent-name="${talent.talentName}">Pilih</button>
                 </td>
             </tr>`;
             });
             $('#talentList').html(talentRows);
             $('#talentModal').modal('show');
+
+            $('#selectedTalents').addClass('scrollable-container');
+
+            $('.pilih-btn').on('click', function() {
+                const talentId = $(this).data('talent-id');
+                const talentName = $(this).data('talent-name');
+                const miniCard = `<div class="mini-card" data-talent-id="${talentId}">${talentName} <button class="remove-btn">X</button></div>`;
+                $('#selectedTalents').append(miniCard);
+
+                selectedTalentIds.push(talentId);
+
+                $(this).prop('disabled', true).addClass('disabled-btn');
+
+                $('.remove-btn').on('click', function() {
+                    const talentId = $(this).parent().data('talent-id');
+                    $(this).parent().remove();
+
+                    selectedTalentIds = selectedTalentIds.filter(id => id !== talentId);
+                });
+            });
         },
         error: function (err) {
             $("#talentList").html("<tr><td colspan='4'>Failed to load talent data.</td></tr>");
         }
+    });
+
+    document.querySelector('.btn.w-100[style*="background-color: #006683"]').addEventListener('click', function() {
+        if (selectedTalentIds.length === 0) {
+            Swal.fire({
+                title: 'Error',
+                text: 'No talent selected',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
+        const requestData = {
+            vacancyId: vacancyId,
+            talentIds: selectedTalentIds
+        };
+
+        $.ajax({
+            url: "/api/v1/applicant/apply-multiple-talents",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(requestData),
+            success: function(response) {
+                Swal.fire({
+                    title: 'Success',
+                    text: 'Applicants created successfully',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    selectedTalentIds = [];
+                    window.location.reload();
+                });
+            },
+            error: function(xhr) {
+                Swal.fire({
+                    title: 'Error',
+                    text: xhr.responseText,
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
     });
 }
 
@@ -46,26 +102,26 @@ function closeTalentModal() {
     $("#talentModal").modal("hide");
 }
 
-function validateForm() {
-    // Reset pesan error
+function validateForm(event) {
+    event.preventDefault();
+
     document.getElementById('namaLengkapError').innerText = "";
     document.getElementById('emailError').innerText = "";
     document.getElementById('nomorKTPError').innerText = "";
 
-    // Mendapatkan nilai input
     const namaLengkap = document.getElementById('namaLengkap').value.trim();
     const email = document.getElementById('email').value.trim();
     const nomorKTP = document.getElementById('nomorKTP').value.trim();
+    const mitraId = document.querySelector('button[form="talentForm"]').getAttribute('data-mitra-id');
+    const vacancyId = document.querySelector('button[form="talentForm"]').getAttribute('data-vacancy-id');
 
     let isValid = true;
 
-    // Validasi Nama Lengkap
     if (namaLengkap === "") {
         document.getElementById('namaLengkapError').innerText = "Nama Lengkap wajib diisi.";
         isValid = false;
     }
 
-    // Validasi Email
     if (email === "") {
         document.getElementById('emailError').innerText = "Email wajib diisi.";
         isValid = false;
@@ -74,7 +130,6 @@ function validateForm() {
         isValid = false;
     }
 
-    // Validasi Nomor KTP
     if (nomorKTP === "") {
         document.getElementById('nomorKTPError').innerText = "Nomor KTP wajib diisi.";
         isValid = false;
@@ -83,5 +138,41 @@ function validateForm() {
         isValid = false;
     }
 
-    return isValid;
+    if (isValid) {
+        const requestData = {
+            talentName: namaLengkap,
+            talentEmail: email,
+            talentNik: nomorKTP,
+            talentMitraId: mitraId,
+            vacancyId: vacancyId
+        };
+
+        $.ajax({
+            url: "/vacancies/applyNewTalent",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(requestData),
+            complete: function (xhr) {
+                if (xhr.status === 200) {
+                    Swal.fire({
+                        title: 'Success',
+                        text: xhr.responseText,
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        window.location.href = "/vacancies/" + vacancyId;
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: xhr.responseText,
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            }
+        });
+    }
 }
+
+document.getElementById('talentForm').addEventListener('submit', validateForm);

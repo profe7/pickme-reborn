@@ -96,6 +96,8 @@ public class AccountServiceImpl implements AccountService {
                         accountResponse.setEmail(account.getUser().getEmail());
                         accountResponse.setInstituteName(account.getUser().getInstitute().getInstituteName());
                         accountResponse.setRoleName(account.getRole().getName());
+                        accountResponse.setInstituteId(account.getUser().getInstitute().getId());
+                        accountResponse.setRoleId(account.getRole().getId());
                         return accountResponse;
                 }).orElse(null);
         }
@@ -131,11 +133,11 @@ public class AccountServiceImpl implements AccountService {
         }
 
         @Override
-        public Page<AccountResponse> getFilteredAccount(String searchUsername, String role, String status, Integer page,
+        public Page<AccountResponse> getFilteredAccount(String searchUsername, Long role, String status, Integer page,
                         Integer size) {
                 Pageable pageable = PageRequest.of(page, size);
                 boolean isEnabled = "AKTIF".equals(status);
-                Page<Account> accounts = status != ""
+                Page<Account> accounts = !"".equals(status)
                                 ? accountRepository.findAllWithFiltersWithStatus(searchUsername, role, isEnabled,
                                                 pageable)
                                 : accountRepository
@@ -150,5 +152,10 @@ public class AccountServiceImpl implements AccountService {
                         accountResponse.setStatus(account.isEnabled());
                         return accountResponse;
                 });
+        }
+
+        @Override
+        public List<Account> getAll() {
+                return accountRepository.findAll();
         }
 }

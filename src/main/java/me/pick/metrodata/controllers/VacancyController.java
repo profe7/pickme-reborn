@@ -1,6 +1,7 @@
 package me.pick.metrodata.controllers;
 
 import me.pick.metrodata.enums.StatusCV;
+import me.pick.metrodata.models.dto.requests.TalentFromVacancyRequest;
 import me.pick.metrodata.models.dto.responses.ReadVacancyDetailResponse;
 import me.pick.metrodata.models.dto.responses.TalentAvailableForVacancyResponse;
 import me.pick.metrodata.models.dto.responses.TalentResponse;
@@ -9,17 +10,17 @@ import me.pick.metrodata.services.talent.TalentService;
 import me.pick.metrodata.services.vacancy.VacancyService;
 
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
 @RequestMapping("/vacancies")
@@ -73,6 +74,16 @@ public class VacancyController {
         Long mitraId = (Long) httpSession.getAttribute("mitraId");
         TalentAvailableForVacancyResponse listTalentComplete = talentService.availableForVacancy(vacancyId, mitraId);
         return ResponseEntity.ok(listTalentComplete);
+    }
+
+    @PostMapping("/applyNewTalent")
+    public ResponseEntity<String> applyNewTalent(@RequestBody TalentFromVacancyRequest request) {
+        try {
+            talentService.createViaVacancy(request);
+            return ResponseEntity.ok("Talent successfully applied");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Terjadi kesalahan saat mendaftarkan talent");
+        }
     }
 
    

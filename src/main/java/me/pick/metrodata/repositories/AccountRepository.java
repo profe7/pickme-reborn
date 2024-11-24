@@ -21,19 +21,19 @@ public interface AccountRepository extends JpaRepository<Account, Long>, JpaSpec
 
         @Query("SELECT a FROM Account a WHERE "
                         + "(:searchUsername IS NULL OR a.username LIKE %:searchUsername%) AND "
-                        + "(:role IS NULL OR a.role.name LIKE %:role%)")
+                        + "(:role IS NULL OR a.role.id = :role)")
         Page<Account> findAllWithFilters(
                         @Param("searchUsername") String searchUsername,
-                        @Param("role") String role,
+                        @Param("role") Long role,
                         Pageable pageable);
 
         @Query("SELECT a FROM Account a WHERE "
                         + "(:searchUsername IS NULL OR a.username LIKE %:searchUsername%) AND "
-                        + "(:role IS NULL OR a.role.name LIKE %:role%) AND "
+                        + "(:role IS NULL OR a.role.id = :role) AND "
                         + "(:isEnabled IS NULL OR a.isEnabled = :isEnabled)")
         Page<Account> findAllWithFiltersWithStatus(
                         @Param("searchUsername") String searchUsername,
-                        @Param("role") String role,
+                        @Param("role") Long role,
                         @Param("isEnabled") boolean isEnabled,
                         Pageable pageable);
 }
