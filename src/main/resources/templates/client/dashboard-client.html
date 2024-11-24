@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/main}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Client</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/responsive.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+</head>
+
+<body>
+    <input type="hidden" id="clientId" th:value="${clientId}">
+    <!-- <div th:replace="~{components/navbar :: navbar}"></div> -->
+
+    <div class="content-wrapper" layout:fragment="content">
+        <section class="main-custom-container" style="background-color: #C0DFED;">
+            <div class="container py-2">
+                <div class="row align-items-center">
+                    <div class="col-12 col-md-6">
+                        <div class="detail-box">
+                            <h1 class="fw-bold" style="color: black;">Selamat Datang di Pick-Me!</h1>
+                            <h1 class="fw-bold" style="color: black;">nama client</h1>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="img-dashboard text-md-end text-center">
+                            <img th:src="@{img/icon.png}" alt="animate-bg" class="img-fluid" style="max-width: 320px; height: 320px;"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <br>
+        <div class="container py-5">
+            <div class="row">
+                <!-- Card Total Pegawai -->
+                <div class="col-md-3">
+                    <div class="card rounded-5 text-white bg-dark text-center" style="height: 230px; width: 215px;">
+                        <div class="card-body d-flex flex-column justify-content-center">
+                            <h2 class="card-title mb-2 fw-bold">Total</h2>
+                            <h2 class="card-title mb-2 fw-bold">Pegawai</h2>
+                            <h1 class="total-number"><span th:text="${employeeSummary.totalEmployees}"></span></h1>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Pegawai -->
+                <div class="col-md-8">
+                    <div class="summary">
+                        <div class="row border-bottom pb-2 mb-3">
+                            <h5 class="col-6 font-weight-bold">Posisi</h5>
+                            <h5 class="col-6 text-right font-weight-bold">Jumlah</h5>
+                        </div>
+                        <div th:each="position : ${employeeSummary.totalEmployeesByPosition}" class="row">
+                            <h5 class="col-6" style="font-size: medium;" th:text="${position.positionName}"></h5>
+                            <h5 class="col-6 text-right" style="font-size: medium;"
+                                th:text="${position.totalEmployees}">
+                            </h5>
+                        </div>
+                    </div>
+                    <br>
+
+                    <h6><a href="/client/employees" style="color:#006683; text-decoration: none;">Lihat Detail</a></h6>
+                </div>
+            </div>
+        </div>
+        <br>
+    </div>
+
+
+    <div th:insert="~{components/footer :: footer}"></div>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap JS, Popper.js, dan jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+
+
+</body>
+
+</html>
