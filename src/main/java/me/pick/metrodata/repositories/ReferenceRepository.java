@@ -14,7 +14,7 @@ import java.util.List;
 @Repository
 public interface ReferenceRepository extends JpaRepository<References, Long> {
 
-        @Query("SELECT r FROM References r WHERE r.reference_group1 = ?1")
+        @Query("SELECT r FROM References r WHERE r.reference_group1 LIKE %:referenceGroup1% ")
         List<References> findReferencesByGroup1(String referenceGroup1);
 
         @Query("SELECT r FROM References r WHERE r.reference_group2 = ?1")

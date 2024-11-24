@@ -68,7 +68,8 @@ public class TalentServiceImpl implements TalentService {
     private final InterviewScheduleService interviewScheduleService;
     private final InterviewScheduleHistoryService interviewScheduleHistoryService;
 
-    private Talent findByIdFromRepo(String id) {
+    @Override
+    public Talent findByIdFromRepo(String id) {
         return talentRepository.findById(id).orElseThrow(() -> new TalentDoesNotExistException(id));
     }
 
@@ -433,6 +434,11 @@ public class TalentServiceImpl implements TalentService {
                             return talentInterviewScheduleHistory;
                         }))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean checkNIKExists(String nik, String talentId){
+        return talentRepository.existsByNikAndNotId(nik, talentId);
     }
 
 }
