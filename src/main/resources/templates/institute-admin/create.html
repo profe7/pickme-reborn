@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="upgrade-insecure-requests"
+    />
+    <div th:insert="~{components-admin/plugin :: css}"></div>
+    <title>Instansi</title>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <div th:insert="~{components-admin/navbar :: navbar}"></div>
+      <div th:insert="~{components-admin/sidebar :: sidebar}"></div>
+
+      <div class="content-wrapper">
+        <div class="content-header">
+          <div class="container-fluid">
+            <div class="m-2">
+              <ol class="breadcrumb">
+                <li
+                  class="breadcrumb-item d-flex align-items-center text-muted"
+                >
+                  <i class="nav-icon fa fa-cog me-2"></i>Pengaturan
+                </li>
+                <li
+                  class="breadcrumb-item active d-flex align-items-center"
+                  style="color: #0066cc"
+                >
+                  <i class="nav-icon fa fa-building me-2"></i>Instansi
+                </li>
+              </ol>
+              <h1 class="mt-2"><strong>Tambah Instansi Baru</strong></h1>
+            </div>
+          </div>
+        </div>
+
+        <section class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="fw-bold mb-3">Formulir Instansi</h4>
+                    <div class="mb-3 col-12">
+                      <label for="name" class="form-label required">Nama</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="name"
+                        placeholder="Masukkan nama"
+                      />
+                      <div class="invalid-feedback">Kolom ini harus diisi</div>
+                    </div>
+                    <div class="container row">
+                      <div class="mb-3 col-6">
+                        <label for="instituteTypeId" class="form-label required"
+                          >Tipe Instansi</label
+                        >
+                        <select class="form-select" id="instituteTypeId">
+                          <option value="" disabled selected>Pilih Tipe</option>
+                          <option
+                            th:each="instituteType : ${instituteTypes}"
+                            th:value="${instituteType.name()}"
+                            th:text="${instituteType.name()}"
+                          ></option>
+                        </select>
+                        <div class="invalid-feedback">
+                          Kolom ini harus diisi
+                        </div>
+                      </div>
+                      <div class="mb-3 col-6">
+                        <label for="rmId" class="form-label required"
+                          >Manajer</label
+                        >
+                        <select class="form-select" id="rmId">
+                          <option value="" disabled selected>Pilih RM</option>
+                          <option
+                            th:each="rm : ${rms}"
+                            th:value="${rm.id}"
+                            th:text="${rm.firstName + ' ' + rm.lastName}"
+                          ></option>
+                        </select>
+                        <div class="invalid-feedback">
+                          Kolom ini harus diisi
+                        </div>
+                      </div>
+                    </div>
+                    <input
+                      type="hidden"
+                      class="form-control"
+                      id="rmId"
+                      th:value="${logged.id}"
+                    />
+                    <div class="container d-flex justify-content-end">
+                      <a
+                        th:href="@{/admin/institute}"
+                        class="btn btn-outline-primary btn-block me-2"
+                        onclick="return confirmBack()"
+                      >
+                        Batal
+                      </a>
+                      <button
+                        type="button"
+                        class="btn btn-primary btn-block"
+                        onclick="submit()"
+                      >
+                        Simpan
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div th:insert="~{components-admin/plugin :: js}"></div>
+    </div>
+
+    <!-- JS Local -->
+    <div>
+      <script th:src="@{/js/institute-admin/create.js}"></script>
+    </div>
+  </body>
+</html>

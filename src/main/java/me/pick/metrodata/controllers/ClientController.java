@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -32,6 +33,7 @@ import me.pick.metrodata.services.interview.InterviewScheduleService;
 import me.pick.metrodata.services.recommendation.RecommendationService;
 
 @Controller
+@PreAuthorize("hasRole('ROLE_CLIENT')")
 @RequestMapping("/client")
 @RequiredArgsConstructor
 public class ClientController {
@@ -42,15 +44,18 @@ public class ClientController {
 
     private final ClientService clientService;
 
-    @GetMapping("/")
+    @GetMapping
     public String clientHomePage(HttpSession session, Model model){
         Long clientId = (Long) session.getAttribute("clientId");
 
         ClientDashboardTelemetryResponse employeeSummary = clientService.getClientDashboardTelemetry(clientId);
+        List<ClientEmployeeResponse> clientEmployees = clientService.getClientEmployees(clientId);
 
         model.addAttribute("employee", employeeSummary);
+        model.addAttribute("employeeSummary", employeeSummary);
+        model.addAttribute("employees", clientEmployees);
 
-        return "";
+        return "client/dashboard-client";
     }
 
     @GetMapping("/employees")
@@ -93,11 +98,12 @@ public class ClientController {
             @RequestParam(required = false) InterviewType type,
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate,
-            @RequestParam(required = false) InterviewStatus status) {
+            @RequestParam(required = false) InterviewStatus status,
+            @RequestParam(required = false) Long mitraId) {
 
         Long clientId = (Long) session.getAttribute("clientId");
 
-        Page<InterviewSchedule> schedules = interviewScheduleService.getAll(search, clientId, type, startDate, endDate, status, page, size);
+        Page<InterviewSchedule> schedules = interviewScheduleService.getAll(search, clientId, type, startDate, endDate, status, mitraId, page, size);
         
         model.addAttribute("interviewSchedules", schedules);
         model.addAttribute("pageNumbers", IntStream.range(0, schedules.getTotalPages()).boxed().collect(Collectors.toList())); 

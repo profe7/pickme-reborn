@@ -45,13 +45,14 @@ document.addEventListener("DOMContentLoaded", function () {
         : "";
 
       const row = document.createElement("tr");
+      row.style.textAlign = "center";
       row.innerHTML = `
       <td>${rowNumber}</td>
       <td>${holiday.name || ""}</td>
       <td>${holiday.description || ""}</td>
       <td>${formattedDate}</td>
       <td>
-        <a class="btn btn-primary">
+        <a href="/admin/holiday/update/${holiday.id}" class="btn btn-primary">
           <i class="bi bi-pencil-square text-white"></i>
         </a>
         <a class="btn btn-danger">

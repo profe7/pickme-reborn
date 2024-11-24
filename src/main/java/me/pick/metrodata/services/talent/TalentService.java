@@ -42,4 +42,5 @@ public interface TalentService {
 
         boolean checkNIKExists(String nik, String talentId);
 
+        List<TalentResponse> getTalents();
 }

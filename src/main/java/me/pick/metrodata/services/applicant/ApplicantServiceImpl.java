@@ -59,6 +59,9 @@ public class ApplicantServiceImpl implements ApplicantService{
     @Override
     public Recommendation recommendApplicant(RecommendApplicantRequest request){
         Applicant applicant = applicantRepository.findById(request.getApplicantId()).orElseThrow(() -> new ApplicantDoesNotExistException(request.getApplicantId()));
+        if (applicant.getTalent().getStatusCV() != StatusCV.COMPLETE){
+            throw new IncompleteTalentCvException();
+        }
         Vacancy vacancy = vacancyRepository.findVacancyById(request.getVacancyId()).orElseThrow(() -> new VacancyNotExistException(request.getVacancyId()));
 
         Recommendation recommendation = new Recommendation();

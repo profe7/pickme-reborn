@@ -2,6 +2,7 @@ package me.pick.metrodata.services.reference;
 
 import lombok.RequiredArgsConstructor;
 import me.pick.metrodata.exceptions.reference.ReferenceDoesNotExistException;
+import me.pick.metrodata.models.dto.requests.ReferenceRequest;
 import me.pick.metrodata.models.dto.responses.ReferenceResponse;
 import me.pick.metrodata.models.entity.References;
 import me.pick.metrodata.repositories.ReferenceRepository;
@@ -58,4 +59,28 @@ public class ReferenceServiceImpl implements ReferenceService {
             .collect(Collectors.toList());
     }
 
+    public void create(ReferenceRequest referenceRequest) {
+        References references = modelMapper.map(referenceRequest, References.class);
+        references.setCreated_by(1);
+        references.setIs_active(Boolean.TRUE);
+
+        referenceRepository.save(references);
+    }
+
+    @Override
+    public void update(Long id, ReferenceRequest referenceRequest) {
+        References referencesOld = getReferenceById(id);
+        References references = modelMapper.map(referenceRequest, References.class);
+        references.setId(id);
+        references.setCreated_at(referencesOld.getCreated_at());
+        references.setCreated_by(referencesOld.getCreated_by());
+        references.setIs_active(referencesOld.getIs_active());
+
+        referenceRepository.save(references);
+    }
+
+    @Override
+    public void delete(Long id) {
+        referenceRepository.delete(getReferenceById(id));
+    }
 }

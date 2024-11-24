@@ -45,12 +45,12 @@
             <div class="row">
               <div class="col-12">
                 <div class="card">
-                  <div class="col-12 mt-2">
+                  <div class="col-12 mt-3">
                     <div class="row justify-content-between">
                       <div class="col-4 text-start mb-3 mt-2 ml-3">
                         <a
                           class="btn bi bi-plus"
-                          href="/interview-schedule/create"
+                          href="/admin/interview-schedule/create"
                           style="
                             background-color: #006699;
                             color: white;
@@ -62,7 +62,7 @@
                       <div class="col-3 text-end mb-3 mt-2 mr-3">
                         <a
                           class="btn bi bi-download"
-                          href="/export"
+                          href="/admin/interview-schedule/export"
                           style="
                             background-color: #006699;
                             color: white;
@@ -113,7 +113,14 @@
                               name="type"
                               onchange="applyFilter()"
                             >
-                              <option value="">Tipe Wawancara</option>
+                              <option value="" disabled selected>
+                                Tipe Wawancara
+                              </option>
+                              <option
+                                th:each="type : ${types}"
+                                th:value="${type.name()}"
+                                th:text="${type.name()}"
+                              ></option>
                             </select>
                           </div>
                           <div class="col-3">
@@ -134,7 +141,12 @@
                               name="status"
                               onchange="applyFilter()"
                             >
-                              <option value="">Status</option>
+                              <option value="" disabled selected>Status</option>
+                              <option
+                                th:each="status : ${statuses}"
+                                th:value="${status.name()}"
+                                th:text="${status.name()}"
+                              ></option>
                             </select>
                           </div>
                         </div>
@@ -177,10 +189,11 @@
           </div>
         </section>
       </div>
+      <div th:insert="~{components-admin/plugin :: js}"></div>
     </div>
 
     <!-- JS Local -->
-    <div layout:fragment="script">
+    <div>
       <script th:src="@{/js/interview-schedule-admin/index.js}"></script>
     </div>
   </body>

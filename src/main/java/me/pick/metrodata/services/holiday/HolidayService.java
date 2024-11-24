@@ -9,4 +9,6 @@ import me.pick.metrodata.models.entity.Holiday;
 public interface HolidayService {
 
     Page<Holiday> getFilteredHoliday(String searchName, LocalDate date, Integer page, Integer size);
+
+    Holiday getHolidayById(Long id);
 }

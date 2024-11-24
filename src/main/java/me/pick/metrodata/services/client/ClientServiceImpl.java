@@ -7,6 +7,7 @@ import me.pick.metrodata.exceptions.applicant.ApplicantDoesNotExistException;
 import me.pick.metrodata.exceptions.client.ClientDoesNotExistException;
 import me.pick.metrodata.exceptions.interviewschedule.InterviewScheduleDoesNotExistException;
 import me.pick.metrodata.models.dto.responses.ClientDashboardTelemetryResponse;
+import me.pick.metrodata.models.dto.responses.ClientResponse;
 import me.pick.metrodata.models.dto.responses.ClientEmployeeResponse;
 import me.pick.metrodata.models.dto.responses.PositionTelemetryResponse;
 import me.pick.metrodata.models.entity.Applicant;
@@ -17,11 +18,14 @@ import me.pick.metrodata.repositories.ClientRepository;
 import me.pick.metrodata.repositories.InterviewScheduleHistoryRepository;
 import me.pick.metrodata.repositories.InterviewScheduleRepository;
 import me.pick.metrodata.models.entity.Talent;
+
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +34,7 @@ public class ClientServiceImpl implements ClientService {
     private final ClientRepository clientRepository;
     private final ApplicantRepository applicantRepository;
     private final InterviewScheduleHistoryRepository interviewScheduleHistoryRepository;
+    private final ModelMapper modelMapper;
 
     // @Override
     // public List<Talent> getClientEmployees(Long clientId) {
@@ -58,10 +63,13 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public void deleteClientEmployee(Long clientId, String talentId) {
-        Applicant employee = applicantRepository.findByTalent_IdAndStatus(talentId, ApplicantStatus.ACCEPTED).orElseThrow(() -> new ApplicantDoesNotExistException(404L));
+        Applicant employee = applicantRepository.findByTalent_IdAndStatus(talentId, ApplicantStatus.ACCEPTED)
+                .orElseThrow(() -> new ApplicantDoesNotExistException(404L));
         employee.setStatus(ApplicantStatus.INACTIVE);
         applicantRepository.save(employee);
-        InterviewSchedule schedule = interviewScheduleRepository.findByApplicantAndClientIdAndStatus(employee, clientId, InterviewStatus.ACCEPTED).orElseThrow(() -> new InterviewScheduleDoesNotExistException(clientId));
+        InterviewSchedule schedule = interviewScheduleRepository
+                .findByApplicantAndClientIdAndStatus(employee, clientId, InterviewStatus.ACCEPTED)
+                .orElseThrow(() -> new InterviewScheduleDoesNotExistException(clientId));
         schedule.setStatus(InterviewStatus.INACTIVE);
         interviewScheduleRepository.save(schedule);
 
@@ -91,5 +99,15 @@ public class ClientServiceImpl implements ClientService {
             responses.add(response);
         });
         return responses;
+    }
+
+    @Override
+    public List<ClientResponse> getClients() {
+        return clientRepository.findAll().stream().map(client -> {
+            ClientResponse clientResponse = modelMapper.map(client, ClientResponse.class);
+            clientResponse.setClientName(client.getUser().getFirstName() + ' ' + client.getUser().getLastName());
+            return clientResponse;
+        })
+                .collect(Collectors.toList());
     }
 }

@@ -11,6 +11,7 @@
 </head>
 
 <body>
+    <input type="hidden" id="mitraId" th:value="${mitraId}">
     <div th:replace="~{components/navbar :: navbar}"></div>
 
     <div class="content-wrapper custom-container" layout:fragment="content">
@@ -64,7 +65,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="col-md-3">
                                 <div class="card">
                                     <div class="card-body">
@@ -73,7 +74,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="col-md-3">
                                 <div class="card" data-toggle="modal" data-target="#rejectModal">
                                     <div class="card-body">
@@ -82,65 +83,106 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="col-md-3">
-                                <div class="card" data-toggle="modal" data-target="#rejectModal">
+                                <div class="card" data-toggle="modal" data-target="#acceptModal">
                                     <div class="card-body">
                                         <h6 class="card-title">Jumlah Diterima</h6>
                                         <h3 th:text="${totalAcceptedApplicants}"></h3>
                                     </div>
                                 </div>
                             </div>
-                            
 
+
+                            <!-- Modal Ditolak-->
                             <div class="modal fade" id="rejectModal" tabindex="-1" role="dialog"
                                 aria-labelledby="rejectModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-lg" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="acceptModalLabel">Detail Hirings</h5>
+                                            <h5 class="modal-title fw-bold" id="rejectModalLabel">Detail Ditolak</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
 
                                         <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
-                                            <table class="table">
-                                                <thead>
-                                                    <tr>
-                                                        <th scope="col">#</th>
-                                                        <th scope="col">Talent Name</th>
-                                                        <th scope="col">Recruiter</th>
-                                                        <th scope="col">On Board Date</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="tableBody2">
-                                                </tbody>
-                                            </table>
+                                            <div class="table-responsive">
+                                                <table class="table table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">Nama Talent</th>
+                                                            <th scope="col">Umpan Balik</th>
+                                                            <th scope="col">Tanggal Ditolak</th>
+                                                            <th scope="col">Perekrut</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="tableBody2">
+                                                        <!-- Dynamic rows will be added here -->
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
 
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary"
-                                                data-dismiss="modal">Close</button>
+                                                data-dismiss="modal">Tutup</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <div style="display: flex; flex-direction: row;">
-                        <div class="col-md-4 my-3" style="flex: 1;">
-                            <div class="card card-talent" style="height: 100%;">
-                                <div class="card-body">
-                                    <h5 class="card-title">My Talent</h5>
-                                    <div class="col-md-12 my-2">
-                                        <canvas id="myTalentChart"></canvas>
+                            <!-- Modal Diterima-->
+                            <div class="modal fade" id="acceptModal" tabindex="-1" role="dialog"
+                                aria-labelledby="acceptModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title fw-bold" id="acceptModalLabel">Detail Diterima</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+
+                                        <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
+                                            <div class="table-responsive">
+                                                <table class="table table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">Nama Talent</th>
+                                                            <th scope="col">Tanggal On Board</th>
+                                                            <th scope="col">Perekrut</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="tableBody2">
+                                                        <!-- Dynamic rows will be added here -->
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Tutup</button>
+                                        </div>
                                     </div>
+                                </div>
+                            </div>
 
-                                    <div class="col-md-12 my-2">
-                                        <div class="row">
-                                            <!-- <div th:each="total : ${totals}" class="col-md-4 px-0">
+                        </div>
+
+                        <div style="display: flex; flex-direction: row;">
+                            <div class="col-md-4 my-3" style="flex: 1;">
+                                <div class="card card-talent" style="height: 100%;">
+                                    <div class="card-body">
+                                        <h5 class="card-title">My Talent</h5>
+                                        <div class="col-md-12 my-2">
+                                            <canvas id="myTalentChart"></canvas>
+                                        </div>
+
+                                        <div class="col-md-12 my-2">
+                                            <div class="row">
+                                                <!-- <div th:each="total : ${totals}" class="col-md-4 px-0">
                                                 <p>
                                                     <span class="rounded-pill mx-1"
                                                         th:style="'background-color:' + ${total.color} + ';'">&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -148,47 +190,50 @@
                                                 </p>
                                                 <h2 th:text="${total.total}" class="fw-bold"></h2>
                                             </div> -->
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="col-md-8 my-3" style="flex: 1;">
-                            <div class="card card-lowongan">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <h4 class="card-title">Lowongan Terbaru</h4>
-                                        </div>
-
-                                        <div class="table-responsive pt-3 scrollable-content">
-                                            <table class="table table-hover">
-                                                <thead class="text-center">
-                                                    <tr>
-                                                        <th scope="col">Judul Pekerjaan</th>
-                                                        <th scope="col">Posisi</th>
-                                                        <th scope="col">Total Pelamar</th>
-                                                        <th scope="col">Batas Pendaftaran</th>
-                                                    </tr>
-
-                                                </thead>
-                                                <tbody class="align-middle text-center" >
-                                                    <tr th:each="vacancy : ${newestVacancies}">
-                                                        <td th:text="${vacancy.vacancyTitle}"></td>
-                                                        <td th:text="${vacancy.vacancyPosition}"></td>
-                                                        <td th:text="${vacancy.vacancyApplicants}"></td>
-                                                        <td th:text="${#temporals.format(vacancy.expiredDate, 'dd-MM-yyyy')}"></td>
-                                                    </tr>
-                                                    
-                                                </tbody>
-                                            </table>
-
-                                            <div style="position: relative;">
-                                                <button type="button" class="btn rounded"
-                                                        style="background-color: #006683; color: antiquewhite; position: absolute; right: 0;">Semua Lowongan</button>
+                            <div class="col-md-8 my-3" style="flex: 1;">
+                                <div class="card card-lowongan">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h4 class="card-title">Lowongan Terbaru</h4>
                                             </div>
-                                            
+
+                                            <div class="table-responsive pt-3 scrollable-content">
+                                                <table class="table table-hover">
+                                                    <thead class="text-center">
+                                                        <tr>
+                                                            <th scope="col">Judul Pekerjaan</th>
+                                                            <th scope="col">Posisi</th>
+                                                            <th scope="col">Total Pelamar</th>
+                                                            <th scope="col">Batas Pendaftaran</th>
+                                                        </tr>
+
+                                                    </thead>
+                                                    <tbody class="align-middle text-center">
+                                                        <tr th:each="vacancy : ${newestVacancies}">
+                                                            <td th:text="${vacancy.vacancyTitle}"></td>
+                                                            <td th:text="${vacancy.vacancyPosition}"></td>
+                                                            <td th:text="${vacancy.vacancyApplicants}"></td>
+                                                            <td
+                                                                th:text="${#temporals.format(vacancy.expiredDate, 'dd-MM-yyyy')}">
+                                                            </td>
+                                                        </tr>
+
+                                                    </tbody>
+                                                </table>
+
+                                                <div style="position: relative;">
+                                                    <a th:href="@{'/vacancies'}" class="btn"
+                                                        style="background-color: #006683; color:antiquewhite; position: absolute; right: 0;">Semua
+                                                        Lowongan</a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -196,13 +241,19 @@
                         </div>
                     </div>
                 </div>
-            </div>
         </section>
     </div>
 
 
 
     <div th:insert="~{components/footer :: footer}"></div>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap JS, Popper.js, dan jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
 
 
 </body>

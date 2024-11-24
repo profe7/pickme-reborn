@@ -8,11 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import me.pick.metrodata.enums.MessageTemplateEnum;
 import me.pick.metrodata.models.entity.MessageTemplate;
 import me.pick.metrodata.models.entity.User;
 import me.pick.metrodata.services.message.MessageTemplateService;
@@ -49,5 +51,32 @@ public class AdminMessageTemplateController {
         response.put("messages", messageTemplatePage.getContent());
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/create")
+    // @PreAuthorize("hasAnyAuthority('CREATE_MESSAGE_TEMPLATE')")
+    public String createForm(MessageTemplate messageTemplate, Model model, HttpServletRequest request) {
+
+        User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
+
+        model.addAttribute("logged", loggedUser);
+        model.addAttribute("isActive", "message-template");
+        model.addAttribute("types", MessageTemplateEnum.values());
+
+        return "message-template-admin/create";
+    }
+
+    @GetMapping("/update/{id}")
+    // @PreAuthorize("hasAnyAuthority('UPDATE_MESSAGE_TEMPLATE')")
+    public String updateForm(@PathVariable Long id, Model model, HttpServletRequest request) {
+
+        User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
+
+        model.addAttribute("logged", loggedUser);
+        model.addAttribute("message", messageTemplateService.getMessageTemplateById(id));
+        model.addAttribute("isActive", "message-template");
+        model.addAttribute("types", MessageTemplateEnum.values());
+
+        return "message-template-admin/update";
     }
 }

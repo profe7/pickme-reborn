@@ -1,11 +1,3 @@
-const accountRoles = [
-  "ADMIN",
-  "CLIENT",
-  "MITRA",
-  "RM",
-  "SUPER ADMIN",
-  "TALENT",
-];
 const accountStatuses = ["AKTIF", "TIDAK AKTIF"];
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -15,13 +7,6 @@ document.addEventListener("DOMContentLoaded", function () {
     option.value = status;
     option.textContent = status;
     statusSelect.appendChild(option);
-  });
-  const roleSelect = document.getElementById("role");
-  accountRoles.forEach(function (role) {
-    const option = document.createElement("option");
-    option.value = role;
-    option.textContent = role;
-    roleSelect.appendChild(option);
   });
   document
     .getElementById("searchUsername")
@@ -72,6 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const statusColor = statusColors[status] || "#ccc";
 
       const row = document.createElement("tr");
+      row.style.textAlign = "center";
       row.innerHTML = `
       <td>${rowNumber}</td>
       <td>${account.username || ""}</td>
@@ -83,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
       } onClick="" style="transform: scale(1.5); margin: 5px;"></td>
       <td><span class="badge" style="background-color:${statusColor}">${status}</span></td>
       <td>
-        <a class="btn btn-primary">
+        <a href="/admin/account/update/${account.id}" class="btn btn-primary">
           <i class="bi bi-pencil-square text-white"></i>
         </a>
         <a href="/admin/account/${account.id}" class="btn btn-secondary">

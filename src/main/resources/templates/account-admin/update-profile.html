@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="upgrade-insecure-requests"
+    />
+    <div th:insert="~{components-admin/plugin :: css}"></div>
+    <title>Perbarui Profil</title>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <div th:insert="~{components-admin/navbar :: navbar}"></div>
+      <div th:insert="~{components-admin/sidebar :: sidebar}"></div>
+
+      <div class="content-wrapper">
+        <div class="content-header">
+          <div class="container-fluid">
+            <div class="m-2">
+              <h1><strong>Perbarui Profil</strong></h1>
+            </div>
+          </div>
+        </div>
+
+        <section class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="fw-bold mb-3">Perbarui Profil</h4>
+                    <div class="mb-3 col-12">
+                      <label for="username" class="form-label required"
+                        >Username</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="username"
+                        th:value="${account.username}"
+                      />
+                      <div class="invalid-feedback">Kolom ini harus diisi</div>
+                    </div>
+                    <div class="mb-3 col-12">
+                      <label for="firstName" class="form-label required"
+                        >Nama Depan</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="firstName"
+                        th:value="${account.firstName}"
+                      />
+                      <div class="invalid-feedback">Kolom ini harus diisi</div>
+                    </div>
+                    <div class="mb-3 col-12">
+                      <label for="lastName" class="form-label"
+                        >Nama Belakang</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="lastName"
+                        th:value="${account.lastName}"
+                      />
+                    </div>
+                    <div class="mb-3 col-12">
+                      <label for="email" class="form-label required"
+                        >Email</label
+                      >
+                      <input
+                        type="email"
+                        class="form-control"
+                        id="email"
+                        th:value="${account.email}"
+                      />
+                      <div class="invalid-feedback">Kolom ini harus diisi</div>
+                    </div>
+                    <div class="mb-3 col-12">
+                      <label for="phone" class="form-label">No. Telp</label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="phone"
+                        th:value="${account.phone}"
+                      />
+                    </div>
+                    <div class="container d-flex justify-content-end">
+                      <button
+                        type="button"
+                        class="btn btn-outline-primary me-2"
+                        onclick="return confirmBack()"
+                      >
+                        Kembali ke Beranda
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-primary"
+                        onclick="submit()"
+                      >
+                        Perbarui
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div th:insert="~{components-admin/plugin :: js}"></div>
+    </div>
+
+    <!-- JS Local -->
+    <div>
+      <script th:src="@{/js/account-admin/update-profile.js}"></script>
+    </div>
+  </body>
+</html>

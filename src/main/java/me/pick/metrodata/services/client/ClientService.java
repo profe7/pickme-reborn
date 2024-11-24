@@ -6,10 +6,14 @@ import me.pick.metrodata.models.entity.Talent;
 
 import java.util.List;
 
+import me.pick.metrodata.models.dto.responses.ClientResponse;
+
 public interface ClientService {
     List<ClientEmployeeResponse> getClientEmployees(Long clientId);
 
     void deleteClientEmployee(Long clientId, String talentId);
 
     ClientDashboardTelemetryResponse getClientDashboardTelemetry(Long clientId);
+
+    List<ClientResponse> getClients();
 }

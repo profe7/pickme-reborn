@@ -20,4 +20,9 @@ public class MessageTemplateServiceImpl implements MessageTemplateService {
         Pageable pageable = PageRequest.of(page, size);
         return messageTemplateRepository.findAllWithFilters(pageable);
     }
+
+    @Override
+    public MessageTemplate getMessageTemplateById(Long id) {
+        return messageTemplateRepository.findById(id).orElse(null);
+    }
 }

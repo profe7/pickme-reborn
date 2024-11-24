@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const rowNumber = startNumber + index + 1;
 
       const row = document.createElement("tr");
+      row.style.textAlign = "center";
       row.innerHTML = `
       <td>${rowNumber}</td>
       <td>${message.message || ""}</td>

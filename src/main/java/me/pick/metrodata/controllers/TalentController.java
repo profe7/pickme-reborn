@@ -6,6 +6,7 @@ import java.util.UUID;
 import java.util.ArrayList;
 
 import org.springframework.stereotype.Controller;
+<<<<<<< HEAD
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -33,7 +34,24 @@ import me.pick.metrodata.models.entity.Organization;
 import me.pick.metrodata.models.entity.Talent;
 import me.pick.metrodata.services.reference.ReferenceService;
 import me.pick.metrodata.services.talent.TalentService;
+=======
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+>>>>>>> 2cf74466c8b1c860832380114e89fb005d21ca90
 
+import me.pick.metrodata.services.talent.TalentService;
+
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import jakarta.servlet.http.HttpSession;
+import lombok.AllArgsConstructor;
 @Controller
 @RequestMapping("/talent")
 @RequiredArgsConstructor

@@ -441,4 +441,10 @@ public class TalentServiceImpl implements TalentService {
         return talentRepository.existsByNikAndNotId(nik, talentId);
     }
 
+    public List<TalentResponse> getTalents() {
+        return talentRepository.findAll().stream()
+                .map(talent -> modelMapper.map(talent, TalentResponse.class))
+                .collect(Collectors.toList());
+    }
+
 }
