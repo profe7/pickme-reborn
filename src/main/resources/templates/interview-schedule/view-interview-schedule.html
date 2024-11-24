@@ -8,11 +8,67 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
+<style>
+    .card {
+    font-size: 12px; /* Ukuran font di dalam card */
+    padding: 8px; /* Padding di dalam card */
+    margin-bottom: 10px; /* Jarak antar card */
+    border-radius: 6px; /* Radius sudut */
+    }
+
+    .card img {
+        width: 50px; /* Ukuran gambar */
+        height: 50px; /* Ukuran gambar */
+        object-fit: cover; /* Menjaga proporsi gambar */
+    }
+
+    .card h5 {
+        font-size: 14px; /* Ukuran judul */
+        margin-bottom: 5px; /* Jarak bawah judul */
+    }
+
+    .card p {
+        font-size: 12px; /* Ukuran teks paragraf */
+        margin: 0; /* Hilangkan margin default */
+    }
+
+        /* Pagination */
+    .pagination-info {
+        font-size: 12px;
+    }
+
+    .pagination a {
+        font-size: 12px;
+        padding: 5px 10px; /* Perkecil ukuran tombol pagination */
+    }
+
+    /* Search Bar */
+    #searchTalentName {
+        font-size: 12px;
+        padding: 5px; /* Perkecil padding */
+    }
+
+    /* Action Buttons */
+    .action-button {
+        font-size: 12px;
+        padding: 5px; /* Ukuran tombol lebih kecil */
+        width: 30px; /* Perkecil lebar tombol */
+        height: 30px; /* Perkecil tinggi tombol */
+    }
+
+    .action-button svg {
+        width: 12px; /* Perkecil ikon di dalam tombol */
+        height: 12px;
+    }
+
+</style>
+
 <body>
 <input type="hidden" id="clientId" th:value="${clientId}">
 <div class="content-wrapper" layout:fragment="content">
     <div class="container-fluid">
         <div class="row">
+        <div class="col-12 col-lg-6">
             <div class="col-12 my-2">
                 <div class="row justify-content-between align-items-center">
                     <div class="col-lg-4 select2-container">
@@ -213,6 +269,7 @@
 
             </div>
         </div>
+        </div>
     </div>
 </div>
 
@@ -266,12 +323,8 @@
                     <form id="acceptForm" method="post">
                         <input type="hidden" name="status" value="ACCEPTED" />
                         <div class="mb-3">
-                            <label for="startDate" class="form-label">Tanggal Mulai</label>
-                            <input type="date" class="form-control" id="startDate" name="startDate" required />
-                        </div>
-                        <div class="mb-3">
-                            <label for="endDate" class="form-label">Tanggal Selesai</label>
-                            <input type="date" class="form-control" id="endDate" name="endDate" required />
+                            <label for="onboarDate" class="form-label">Tanggal On Board</label>
+                            <input type="date" class="form-control" id="onboarDate" name="onboarDate" required />
                         </div>
                         <div class="mb-3">
                             <label for="feedback-accept" class="form-label">Feedback</label>
@@ -325,7 +378,7 @@
                 </div>
                 <div class="modal-footer">
                     <form id="processForm" method="post">
-                        <input type="hidden" name="status" value="PROCESS" />
+                        <input type="hidden" name="status" value="ON_PROCESS" />
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tidak</button>
                         <button type="submit" class="btn btn-primary">Ya</button>
                     </form>

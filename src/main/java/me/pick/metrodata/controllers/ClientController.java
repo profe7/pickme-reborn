@@ -22,9 +22,12 @@ import lombok.RequiredArgsConstructor;
 import me.pick.metrodata.enums.InterviewStatus;
 import me.pick.metrodata.enums.InterviewType;
 import me.pick.metrodata.models.dto.requests.InterviewUpdateRequest;
+import me.pick.metrodata.models.dto.responses.ClientDashboardTelemetryResponse;
+import me.pick.metrodata.models.dto.responses.ClientEmployeeResponse;
 import me.pick.metrodata.models.dto.responses.InterviewHistoryResponse;
 import me.pick.metrodata.models.dto.responses.RecommendationGroupedResponse;
 import me.pick.metrodata.models.entity.InterviewSchedule;
+import me.pick.metrodata.services.client.ClientService;
 import me.pick.metrodata.services.interview.InterviewScheduleService;
 import me.pick.metrodata.services.recommendation.RecommendationService;
 
@@ -37,6 +40,32 @@ public class ClientController {
 
     private final InterviewScheduleService interviewScheduleService;
 
+    private final ClientService clientService;
+
+    @GetMapping("/")
+    public String clientHomePage(HttpSession session, Model model){
+        Long clientId = (Long) session.getAttribute("clientId");
+
+        ClientDashboardTelemetryResponse employeeSummary = clientService.getClientDashboardTelemetry(clientId);
+
+        model.addAttribute("employee", employeeSummary);
+
+        return "";
+    }
+
+    @GetMapping("/employees")
+    public String clientEmployeesPage(HttpSession session, Model model){
+        Long clientId = (Long) session.getAttribute("clientId");
+        
+        List<ClientEmployeeResponse> clientEmployees = clientService.getClientEmployees(clientId);
+        ClientDashboardTelemetryResponse employeeSummary = clientService.getClientDashboardTelemetry(clientId);
+
+        model.addAttribute("employees", clientEmployees);
+        model.addAttribute("employeeSummary", employeeSummary);
+
+        return "client/view-employees";
+    }
+    
     @GetMapping("/recommendations")
     public String clientRecommendationPage(
             HttpSession session,
@@ -95,13 +124,11 @@ public class ClientController {
             RedirectAttributes redirectAttributes,
             BindingResult bindingResult) {
 
-        // Tetapkan interviewId dari path variable ke DTO
+
         request.setInterviewId(interviewId);
 
-        // Panggil service untuk memproses perubahan status
         interviewScheduleService.updateInterviewStatus(request);
 
-        // Tentukan pesan sukses berdasarkan status
         String successMessage;
         switch (request.getStatus()) {
             case RESCHEDULED:
@@ -121,10 +148,8 @@ public class ClientController {
                 break;
         }
 
-        // Tambahkan pesan sukses ke RedirectAttributes
         redirectAttributes.addFlashAttribute("successMessage", successMessage);
 
-        // Redirect ke halaman daftar wawancara
         return new RedirectView("/client/interview-schedules");
     }
 

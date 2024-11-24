@@ -39,4 +39,6 @@ public class InterviewUpdateRequest {
 
     private String interviewLink;
 
+    private LocalDate onboarDate;
+
 }
