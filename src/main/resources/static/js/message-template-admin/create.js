@@ -1,13 +1,11 @@
 $(document).ready(function () {});
 
 function submit() {
-  // Menghapus pesan invalid sebelum validasi
   $(".is-invalid").removeClass("is-invalid");
 
   var type = $("#type").val();
   var message = $("#message").val();
 
-  // Validasi sederhana untuk kolom yang wajib diisi
   if (!type || !message) {
     Swal.fire({
       icon: "error",
@@ -15,7 +13,6 @@ function submit() {
       text: "Semua kolom dengan label required harus diisi",
     });
 
-    // Menandai kolom yang tidak diisi dengan kelas is-invalid
     if (!type) $("#type").addClass("is-invalid");
     if (!message) $("#message").addClass("is-invalid");
 
@@ -28,12 +25,11 @@ function submit() {
   });
 
   Swal.fire({
-    title: "Apakah anda ingin membuat templat pesan ini?",
+    title: "Apakah Anda yakin ingin membuat 'Template Pesan' ini?",
     showCancelButton: true,
     confirmButtonText: "Ya",
     cancelButtonText: `Tidak`,
   }).then((result) => {
-    /* Read more about isConfirmed, isDenied below */
     if (result.isConfirmed) {
       $.LoadingOverlay("show");
       create(data);
@@ -43,36 +39,45 @@ function submit() {
 
 function create(data) {
   $.ajax({
-    url: `/api/message-template`,
+    url: `/admin/message-template/create`,
     method: "POST",
     dataType: "JSON",
-    beforeSend: addCsrfToken(),
     contentType: "application/json",
     data: data,
     success: (result) => {
-      // Menyembunyikan overlay loading
       $.LoadingOverlay("hide");
-
       Swal.fire({
         position: "center",
         icon: "success",
-        title: "Templat pesan berhasil dibuat",
+        title: "Template Pesan baru berhasil ditambahkan",
         showConfirmButton: true,
       }).then(() => {
-        // Memuat ulang halaman
-        window.location.href = "/message-template/";
+        window.location.href = "/admin/message-template";
       });
     },
     error: (e) => {
-      // Menyembunyikan overlay loading
       $.LoadingOverlay("hide");
-
       Swal.fire({
         position: "center",
         icon: "error",
-        title: "Templat pesan gagal dibuat",
+        title: "Template Pesan baru gagal ditambahkan",
         showConfirmButton: true,
       });
     },
   });
+}
+
+function confirmBack() {
+  Swal.fire({
+    title: "Apakah Anda yakin ingin kembali?",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonText: "Ya",
+    cancelButtonText: "Tidak",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = "/admin/message-template";
+    }
+  });
+  return false;
 }

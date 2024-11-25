@@ -6,6 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import me.pick.metrodata.enums.MessageTemplateEnum;
+import me.pick.metrodata.models.dto.requests.MessageTemplateRequest;
 import me.pick.metrodata.models.entity.MessageTemplate;
 import me.pick.metrodata.repositories.MessageTemplateRepository;
 
@@ -23,6 +25,24 @@ public class MessageTemplateServiceImpl implements MessageTemplateService {
 
     @Override
     public MessageTemplate getMessageTemplateById(Long id) {
-        return messageTemplateRepository.findById(id).orElse(null);
+        return messageTemplateRepository.findById(id).orElseThrow();
+    }
+
+    @Override
+    public void create(MessageTemplateRequest request) {
+        MessageTemplate messageTemplate = new MessageTemplate();
+        messageTemplate.setMessage(request.getMessage());
+        messageTemplate.setType(MessageTemplateEnum.valueOf(request.getType()));
+
+        messageTemplateRepository.save(messageTemplate);
+    }
+
+    @Override
+    public void update(Long id, MessageTemplateRequest request) {
+        MessageTemplate messageTemplate = getMessageTemplateById(id);
+        messageTemplate.setMessage(request.getMessage());
+        messageTemplate.setType(MessageTemplateEnum.valueOf(request.getType()));
+
+        messageTemplateRepository.save(messageTemplate);
     }
 }

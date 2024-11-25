@@ -85,7 +85,7 @@ public class InstituteServiceImpl implements InstituteService {
     public void create(InstituteRequest instituteRequest) {
         Institute institute = modelMapper.map(instituteRequest, Institute.class);
         institute.setInstituteType(InstituteType.valueOf(instituteRequest.getInstituteType()));
-        institute.setRmUser(userRepository.findById(instituteRequest.getRmId()).orElse(null));
+        institute.setRmUser(userRepository.findById(instituteRequest.getRmId()).orElseThrow());
 
         instituteRepository.save(institute);
     }
@@ -95,7 +95,7 @@ public class InstituteServiceImpl implements InstituteService {
         Institute institute = getInstituteById(id);
         institute.setInstituteName(instituteRequest.getInstituteName());
         institute.setInstituteType(InstituteType.valueOf(instituteRequest.getInstituteType()));
-        institute.setRmUser(userRepository.findById(instituteRequest.getRmId()).orElse(null));
+        institute.setRmUser(userRepository.findById(instituteRequest.getRmId()).orElseThrow());
 
         instituteRepository.save(institute);
     }
