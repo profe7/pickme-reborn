@@ -89,7 +89,7 @@ public class AdminParameterController {
 
     @PostMapping("/create")
     // @PreAuthorize("hasAnyAuthority('CREATE_PARAMETER')")
-    public ResponseEntity<Void> create(@RequestBody ReferenceRequest referenceRequest, HttpServletRequest request) {
+    public ResponseEntity<Void> create(@RequestBody ReferenceRequest referenceRequest) {
 
         try {
             referenceService.create(referenceRequest);

@@ -29,8 +29,8 @@ function submit() {
   Swal.fire({
     title: "Apakah Anda yakin ingin memperbarui 'Role' ini?",
     showCancelButton: true,
-    confirmButtonText: "Simpan",
-    cancelButtonText: "Batal",
+    confirmButtonText: "Ya",
+    cancelButtonText: "Tidak",
   }).then((result) => {
     if (result.isConfirmed) {
       $.LoadingOverlay("show");

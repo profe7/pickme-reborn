@@ -1,14 +1,12 @@
 $(document).ready(function () {});
 
 function submit() {
-  // Menghapus pesan invalid sebelum validasi
   $(".is-invalid").removeClass("is-invalid");
 
   var messageTemplateId = $("#messageTemplateId").val();
   var type = $("#type").val();
   var message = $("#message").val();
 
-  // Validasi sederhana untuk kolom yang wajib diisi
   if (!type || !message) {
     Swal.fire({
       icon: "error",
@@ -16,7 +14,6 @@ function submit() {
       text: "Semua kolom dengan label required harus diisi",
     });
 
-    // Menandai kolom yang tidak diisi dengan kelas is-invalid
     if (!type) $("#type").addClass("is-invalid");
     if (!message) $("#message").addClass("is-invalid");
 
@@ -29,12 +26,11 @@ function submit() {
   });
 
   Swal.fire({
-    title: "Apakah anda ingin menyimpan perubahan ini?",
+    title: "Apakah Anda yakin ingin memperbario 'Template Pesan' ini?",
     showCancelButton: true,
-    confirmButtonText: "Simpan",
-    cancelButtonText: `Batal`,
+    confirmButtonText: "Ya",
+    cancelButtonText: `Tidak`,
   }).then((result) => {
-    /* Read more about isConfirmed, isDenied below */
     if (result.isConfirmed) {
       $.LoadingOverlay("show");
       update(messageTemplateId, data);
@@ -44,36 +40,45 @@ function submit() {
 
 function update(id, data) {
   $.ajax({
-    url: `/api/message-template/${id}`,
+    url: `/admin/message-template/update/${id}`,
     method: "PUT",
     dataType: "JSON",
-    beforeSend: addCsrfToken(),
     contentType: "application/json",
     data: data,
     success: (result) => {
-      // Menyembunyikan overlay loading
       $.LoadingOverlay("hide");
-
       Swal.fire({
         position: "center",
         icon: "success",
-        title: "Templat pesan berhasil diperbarui",
+        title: "Template Pesan berhasil diperbarui",
         showConfirmButton: true,
       }).then(() => {
-        // Memuat ulang halaman
-        window.location.href = "/message-template/";
+        window.location.href = "/admin/message-template";
       });
     },
     error: (e) => {
-      // Menyembunyikan overlay loading
       $.LoadingOverlay("hide");
-
       Swal.fire({
         position: "center",
         icon: "error",
-        title: "Templat pesan gagal diperbarui",
+        title: "Template Pesan gagal diperbarui",
         showConfirmButton: true,
       });
     },
   });
+}
+
+function confirmBack() {
+  Swal.fire({
+    title: "Apakah Anda yakin ingin kembali?",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonText: "Ya",
+    cancelButtonText: "Tidak",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = "/admin/message-template";
+    }
+  });
+  return false;
 }

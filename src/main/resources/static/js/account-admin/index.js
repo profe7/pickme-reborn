@@ -65,8 +65,10 @@ document.addEventListener("DOMContentLoaded", function () {
       <td>${account.instituteName || ""}</td>
       <td>${account.roleName || ""}</td>
       <td><input type="checkbox" ${
-        account.access ? "checked" : ""
-      } onClick="" style="transform: scale(1.5); margin: 5px;"></td>
+        account.status ? "checked" : ""
+      } onChange="confirmUpdateAccess('${
+        account.id
+      }')" style="transform: scale(1.5); margin: 5px;"></td>
       <td><span class="badge" style="background-color:${statusColor}">${status}</span></td>
       <td>
         <a href="/admin/account/update/${account.id}" class="btn btn-primary">
@@ -137,3 +139,41 @@ document.addEventListener("DOMContentLoaded", function () {
 
   fetchSchedules();
 });
+
+function confirmUpdateAccess(accountId) {
+  Swal.fire({
+    title: "Apakah Anda yakin ingin memperbarui akses 'Akun' ini?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "Ya",
+    cancelButtonText: "Tidak",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.LoadingOverlay("show");
+      updateAccess(accountId);
+    }
+  });
+}
+
+async function updateAccess(accountId) {
+  try {
+    const response = await fetch(`/admin/account/update-access/${accountId}`, {
+      method: "DELETE",
+    });
+
+    if (response.ok) {
+      $.LoadingOverlay("hide");
+      Swal.fire("Akses diperbarui!", "Akses berhasil diperbarui.", "success");
+      fetchSchedules();
+    } else {
+      $.LoadingOverlay("hide");
+      Swal.fire("Gagal!", "Terjadi kesalahan saat memperbarui akses.", "error");
+    }
+  } catch (error) {
+    $.LoadingOverlay("hide");
+    console.error("Error deleting vacancy:", error);
+    Swal.fire("Gagal!", "Terjadi kesalahan saat memperbarui akses.", "error");
+  }
+}

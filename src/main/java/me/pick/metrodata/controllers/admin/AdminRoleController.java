@@ -96,7 +96,7 @@ public class AdminRoleController {
 
     @PostMapping("/create")
     // @PreAuthorize("hasAnyAuthority('CREATE_PARAMETER')")
-    public ResponseEntity<Void> create(@RequestBody RoleRequest roleRequest, HttpServletRequest request) {
+    public ResponseEntity<Void> create(@RequestBody RoleRequest roleRequest) {
 
         try {
             roleService.create(roleRequest);

@@ -15,61 +15,58 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class RestAccountController {
 
-    private final AccountService accountService;
+        private final AccountService accountService;
 
-    private static final String SUCCESS = "SUCCESS";
+        private static final String SUCCESS = "SUCCESS";
 
-    @PostMapping("/create-account")
-    @PreAuthorize("hasAnyAuthority('MANAGEMENT_CREATE_ACCOUNT', 'EXTERNAL_CREATE_ACCOUNT')")
-    public ResponseEntity<Object> createAccount(@RequestBody AccountRequest request) {
-        return ResponseHandler.generateResponse(new Response(
-                "Account created", HttpStatus.CREATED, SUCCESS, accountService.createAccount(request)
-        ));
-    }
+        @PostMapping("/create-account")
+        @PreAuthorize("hasAnyAuthority('MANAGEMENT_CREATE_ACCOUNT', 'EXTERNAL_CREATE_ACCOUNT')")
+        public ResponseEntity<Object> createAccount(@RequestBody AccountRequest request) {
+                accountService.create(request);
+                return ResponseHandler.generateResponse(new Response(
+                                "Account created", HttpStatus.CREATED, SUCCESS, request));
+        }
 
-    @GetMapping("/available-accounts")
-    @PreAuthorize("hasAnyAuthority('MANAGEMENT_READ_ACCOUNT','EXTERNAL_READ_ACCOUNT')")
-    public ResponseEntity<Object> getAllAvailableAccounts(
-            @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "10") Integer size,
-            @RequestParam(required = false, defaultValue = "") String search,
-            @RequestParam(required = false) Long institute,
-            @RequestParam(required = false) Long baseBudget,
-            @RequestParam(required = false) Long limitBudget
-    ) {
-        return ResponseHandler.generateResponse(new Response(
-                "Available accounts", HttpStatus.OK,  SUCCESS, accountService.getAllAvailableAccounts(page, size, search, institute, baseBudget, limitBudget)
-        ));
-    }
+        @GetMapping("/available-accounts")
+        @PreAuthorize("hasAnyAuthority('MANAGEMENT_READ_ACCOUNT','EXTERNAL_READ_ACCOUNT')")
+        public ResponseEntity<Object> getAllAvailableAccounts(
+                        @RequestParam(defaultValue = "0") Integer page,
+                        @RequestParam(defaultValue = "10") Integer size,
+                        @RequestParam(required = false, defaultValue = "") String search,
+                        @RequestParam(required = false) Long institute,
+                        @RequestParam(required = false) Long baseBudget,
+                        @RequestParam(required = false) Long limitBudget) {
+                return ResponseHandler.generateResponse(new Response(
+                                "Available accounts", HttpStatus.OK, SUCCESS, accountService.getAllAvailableAccounts(
+                                                page, size, search, institute, baseBudget, limitBudget)));
+        }
 
-    @GetMapping("/available-accounts-rm")
-    @PreAuthorize("hasAnyAuthority('EXTERNAL_READ_ACCOUNT')")
-    public ResponseEntity<Object> getAllAvailableAccountsByRM(
-            @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "10") Integer size,
-            @RequestParam(required = false, defaultValue = "") String search,
-            @RequestParam(required = false) Long institute,
-            @RequestParam(required = false) Long baseBudget,
-            @RequestParam(required = false) Long limitBudget
-    ) {
-        return ResponseHandler.generateResponse(new Response(
-                "Available accounts", HttpStatus.OK, SUCCESS, accountService.getAvailableAccountsOfRm(page, size, search, institute, baseBudget, limitBudget)
-        ));
-    }
+        @GetMapping("/available-accounts-rm")
+        @PreAuthorize("hasAnyAuthority('EXTERNAL_READ_ACCOUNT')")
+        public ResponseEntity<Object> getAllAvailableAccountsByRM(
+                        @RequestParam(defaultValue = "0") Integer page,
+                        @RequestParam(defaultValue = "10") Integer size,
+                        @RequestParam(required = false, defaultValue = "") String search,
+                        @RequestParam(required = false) Long institute,
+                        @RequestParam(required = false) Long baseBudget,
+                        @RequestParam(required = false) Long limitBudget) {
+                return ResponseHandler.generateResponse(new Response(
+                                "Available accounts", HttpStatus.OK, SUCCESS, accountService.getAvailableAccountsOfRm(
+                                                page, size, search, institute, baseBudget, limitBudget)));
+        }
 
-    @PostMapping("/edit-account/{id}")
-    @PreAuthorize("hasAnyAuthority('MANAGEMENT_UPDATE_ACCOUNT', 'EXTERNAL_UPDATE_ACCOUNT')")
-    public ResponseEntity<Object> editAccount(@PathVariable Long id, @RequestBody AccountRequest request) {
-        return ResponseHandler.generateResponse(new Response(
-                "Account updated", HttpStatus.OK, SUCCESS, accountService.editAccount(id, request)
-        ));
-    }
+        @PostMapping("/edit-account/{id}")
+        @PreAuthorize("hasAnyAuthority('MANAGEMENT_UPDATE_ACCOUNT', 'EXTERNAL_UPDATE_ACCOUNT')")
+        public ResponseEntity<Object> editAccount(@PathVariable Long id, @RequestBody AccountRequest request) {
+                accountService.update(id, request);
+                return ResponseHandler.generateResponse(new Response(
+                                "Account updated", HttpStatus.OK, SUCCESS, accountService.getAccountById(id)));
+        }
 
-    @GetMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('MANAGEMENT_READ_ACCOUNT','EXTERNAL_READ_ACCOUNT')")
-    public ResponseEntity<Object> getAccountById(@PathVariable Long id) {
-        return ResponseHandler.generateResponse(new Response(
-                "Account found", HttpStatus.OK, SUCCESS, accountService.getAccountById(id)
-        ));
-    }
+        @GetMapping("/{id}")
+        @PreAuthorize("hasAnyAuthority('MANAGEMENT_READ_ACCOUNT','EXTERNAL_READ_ACCOUNT')")
+        public ResponseEntity<Object> getAccountById(@PathVariable Long id) {
+                return ResponseHandler.generateResponse(new Response(
+                                "Account found", HttpStatus.OK, SUCCESS, accountService.getAccountById(id)));
+        }
 }
