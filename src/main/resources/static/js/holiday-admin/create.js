@@ -1,14 +1,12 @@
 $(document).ready(function () {});
 
 function submit() {
-  // Menghapus pesan invalid sebelum validasi
   $(".is-invalid").removeClass("is-invalid");
 
   var name = $("#name").val();
   var description = $("#description").val();
   var date = $("#date").val();
 
-  // Validasi sederhana untuk kolom yang wajib diisi
   if (!name || !description || !date) {
     Swal.fire({
       icon: "error",
@@ -16,7 +14,6 @@ function submit() {
       text: "Semua kolom dengan label required harus diisi",
     });
 
-    // Menandai kolom yang tidak diisi dengan kelas is-invalid
     if (!name) $("#name").addClass("is-invalid");
     if (!description) $("#description").addClass("is-invalid");
     if (!date) $("#date").addClass("is-invalid");
@@ -31,12 +28,11 @@ function submit() {
   });
 
   Swal.fire({
-    title: "Apakah anda ingin membuat hari libur ini?",
+    title: "Apakah Anda yakin ingin membuat 'Hari Libur' ini?",
     showCancelButton: true,
     confirmButtonText: "Ya",
     cancelButtonText: `Tidak`,
   }).then((result) => {
-    /* Read more about isConfirmed, isDenied below */
     if (result.isConfirmed) {
       $.LoadingOverlay("show");
       create(data);
@@ -49,33 +45,42 @@ function create(data) {
     url: `/admin/holiday/create`,
     method: "POST",
     dataType: "JSON",
-    beforeSend: addCsrfToken(),
     contentType: "application/json",
     data: data,
     success: (result) => {
-      // Menyembunyikan overlay loading
       $.LoadingOverlay("hide");
-
       Swal.fire({
         position: "center",
         icon: "success",
-        title: "Hari libur berhasil dibuat",
+        title: "Hari Libur baru berhasil ditambahkan",
         showConfirmButton: true,
       }).then(() => {
-        // Memuat ulang halaman
-        window.location.href = "/holiday/";
+        window.location.href = "/admin/holiday";
       });
     },
     error: (e) => {
-      // Menyembunyikan overlay loading
       $.LoadingOverlay("hide");
-
       Swal.fire({
         position: "center",
         icon: "error",
-        title: "Hari libur gagal dibuat",
+        title: "Hari Libur baru gagal ditambahkan",
         showConfirmButton: true,
       });
     },
   });
+}
+
+function confirmBack() {
+  Swal.fire({
+    title: "Apakah Anda yakin ingin kembali?",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonText: "Ya",
+    cancelButtonText: "Tidak",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = "/admin/holiday";
+    }
+  });
+  return false;
 }

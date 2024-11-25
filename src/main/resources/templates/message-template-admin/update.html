@@ -50,9 +50,9 @@
                       <select class="form-select" id="type">
                         <option
                           th:each="type : ${types}"
-                          th:value="${type}"
-                          th:text="${type}"
-                          th:selected="${message.type}"
+                          th:value="${type.name()}"
+                          th:text="${type.name()}"
+                          th:selected="${message.type.name()}"
                         ></option>
                       </select>
                       <div class="invalid-feedback">Kolom ini harus diisi</div>

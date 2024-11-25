@@ -5,24 +5,23 @@ import org.modelmapper.ModelMapper;
 import lombok.RequiredArgsConstructor;
 import me.pick.metrodata.exceptions.account.AccountAlreadyExistException;
 import me.pick.metrodata.exceptions.account.AccountDoesNotExistException;
-import me.pick.metrodata.exceptions.role.RoleDoesNotExistException;
 import me.pick.metrodata.models.dto.requests.AccountRequest;
 import me.pick.metrodata.models.dto.responses.AccountResponse;
 import me.pick.metrodata.models.entity.Account;
 import me.pick.metrodata.models.entity.Institute;
 import me.pick.metrodata.models.entity.User;
 import me.pick.metrodata.repositories.AccountRepository;
-import me.pick.metrodata.repositories.InstituteRepository;
-import me.pick.metrodata.repositories.RoleRepository;
 import me.pick.metrodata.repositories.UserRepository;
 import me.pick.metrodata.repositories.specifications.AccountSpecification;
+import me.pick.metrodata.services.institute.InstituteService;
+import me.pick.metrodata.services.role.RoleService;
 import me.pick.metrodata.utils.AuthUtil;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -33,31 +32,60 @@ import java.util.List;
 public class AccountServiceImpl implements AccountService {
 
         private final AccountRepository accountRepository;
-        private final PasswordEncoder passwordEncoder;
-        private final RoleRepository roleRepository;
-        private final InstituteRepository instituteRepository;
+        private final RoleService roleService;
+        private final InstituteService instituteService;
         private final UserRepository userRepository;
         private final ModelMapper modelMapper;
 
         @Override
-        public Account createAccount(AccountRequest request) {
-                Account existing = accountRepository.findByUsername(request.getAccountUsername()).orElse(null);
-                if (existing != null) {
-                        throw new AccountAlreadyExistException(request.getAccountUsername());
-                }
-                Account account = new Account();
-                User user = new User();
-                return accountDataHelper(account, request, user);
+        public void create(AccountRequest accountRequest) {
+                accountRepository.findByUsername(accountRequest.getUsername()).ifPresent(username -> {
+                        throw new AccountAlreadyExistException(accountRequest.getUsername());
+                });
+                Account account = modelMapper.map(accountRequest, Account.class);
+                User user = modelMapper.map(accountRequest, User.class);
+                accountDataHelper(account, accountRequest, user);
         }
 
         @Override
-        public Account editAccount(Long id, AccountRequest request) {
+        public void update(Long id, AccountRequest accountRequest) {
                 Account account = accountRepository.findById(id)
                                 .orElseThrow(() -> new AccountDoesNotExistException(id.toString()));
-                User user = userRepository.findById(account.getUser().getId())
-                                .orElseThrow(() -> new AccountDoesNotExistException(
-                                                account.getUser().getId().toString()));
-                return accountDataHelper(account, request, user);
+                Long userId = account.getUser().getId();
+                User user = userRepository.findById(userId)
+                                .orElseThrow(() -> new AccountDoesNotExistException(userId.toString()));
+
+                account.setUsername(accountRequest.getUsername());
+                account.setPassword(accountRequest.getPassword());
+                user.setFirstName(accountRequest.getFirstName());
+                user.setLastName(accountRequest.getLastName());
+                user.setEmail(accountRequest.getEmail());
+                user.setPhone(accountRequest.getPhone());
+                user.setBaseBudget(accountRequest.getBaseBudget());
+                user.setLimitBudget(accountRequest.getLimitBudget());
+
+                accountDataHelper(account, accountRequest, user);
+        }
+
+        @Override
+        public void updateProfile(Long id, AccountRequest accountRequest) {
+                Account account = accountRepository.findById(id)
+                                .orElseThrow(() -> new AccountDoesNotExistException(id.toString()));
+                Long userId = account.getUser().getId();
+                User user = userRepository.findById(userId)
+                                .orElseThrow(() -> new AccountDoesNotExistException(userId.toString()));
+
+                account.setUsername(accountRequest.getUsername());
+                user.setFirstName(accountRequest.getFirstName());
+                user.setLastName(accountRequest.getLastName());
+                user.setEmail(accountRequest.getEmail());
+                user.setPhone(accountRequest.getPhone());
+
+                account.setUser(user);
+                user.setAccount(account);
+
+                userRepository.save(user);
+                accountRepository.save(account);
         }
 
         @Override
@@ -79,8 +107,7 @@ public class AccountServiceImpl implements AccountService {
                 Long instituteId = user.getInstitute().getId();
                 List<Institute> institutes = new ArrayList<>();
                 institutes.add(account.getUser().getInstitute());
-                institutes.add(instituteRepository.findInstituteById(instituteId)
-                                .orElseThrow(() -> new RoleDoesNotExistException(instituteId)));
+                institutes.add(instituteService.getInstituteById(instituteId));
                 return accountRetrievalHelper(search, institute, baseBudget, limitBudget, institutes, page, size);
         }
 
@@ -115,21 +142,14 @@ public class AccountServiceImpl implements AccountService {
                 return new PageImpl<>(accounts.subList(start, end), pageable, accounts.size());
         }
 
-        private Account accountDataHelper(Account account, AccountRequest request, User user) {
-                account.setUsername(request.getAccountUsername());
-                account.setPassword(passwordEncoder.encode(request.getAccountPassword()));
-                account.setRole(roleRepository.findById(request.getRoleId())
-                                .orElseThrow(() -> new RoleDoesNotExistException(request.getRoleId())));
-
-                user.setFirstName(request.getAccountFirstName());
-                user.setLastName(request.getAccountLastName());
-                user.setEmail(request.getAccountEmail());
-                user.setInstitute(instituteRepository.findInstituteById(request.getInstituteId())
-                                .orElseThrow(() -> new RoleDoesNotExistException(request.getInstituteId())));
+        private void accountDataHelper(Account account, AccountRequest request, User user) {
+                account.setRole(roleService.getRoleById(request.getRoleId()));
+                user.setInstitute(instituteService.getInstituteById(request.getInstituteId()));
+                account.setUser(user);
+                user.setAccount(account);
 
                 userRepository.save(user);
-                account.setUser(user);
-                return accountRepository.save(account);
+                accountRepository.save(account);
         }
 
         @Override
@@ -157,5 +177,13 @@ public class AccountServiceImpl implements AccountService {
         @Override
         public List<Account> getAll() {
                 return accountRepository.findAll();
+        }
+
+        @Override
+        public void updateAccess(Long id) {
+                accountRepository.findById(id).map(account -> {
+                        account.setEnabled(!account.isEnabled());
+                        return accountRepository.save(account);
+                }).orElseThrow(() -> new AccountDoesNotExistException(id.toString()));
         }
 }

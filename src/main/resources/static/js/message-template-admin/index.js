@@ -29,8 +29,10 @@ document.addEventListener("DOMContentLoaded", function () {
       <td>${message.message || ""}</td>
       <td>${message.type || ""}</td>
       <td>
-        <a class="btn btn-success">
-          <i class="bi bi-person-check-fill text-white"></i>
+        <a href="/admin/message-template/update/${
+          message.id
+        }" class="btn btn-success">
+          <i class="bi bi-pencil-square text-white"></i>
         </a>
       </td>
     `;

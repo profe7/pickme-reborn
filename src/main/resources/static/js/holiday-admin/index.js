@@ -55,7 +55,9 @@ document.addEventListener("DOMContentLoaded", function () {
         <a href="/admin/holiday/update/${holiday.id}" class="btn btn-primary">
           <i class="bi bi-pencil-square text-white"></i>
         </a>
-        <a class="btn btn-danger">
+        <a href="#" class="btn btn-danger" onclick="confirmDelete('${
+          holiday.id
+        }')">
           <i class="bi bi-trash3-fill text-white"></i>
         </a>
       </td>
@@ -120,3 +122,37 @@ document.addEventListener("DOMContentLoaded", function () {
 
   fetchSchedules();
 });
+
+function confirmDelete(holidayId) {
+  Swal.fire({
+    title: "Apakah Anda yakin ingin menghapus 'Hari Libur' ini?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "Ya",
+    cancelButtonText: "Tidak",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      deleteVacancy(holidayId);
+    }
+  });
+}
+
+async function deleteVacancy(holidayId) {
+  try {
+    const response = await fetch(`/admin/holiday/delete/${holidayId}`, {
+      method: "DELETE",
+    });
+
+    if (response.ok) {
+      Swal.fire("Dihapus!", "Data berhasil dihapus.", "success");
+      fetchSchedules();
+    } else {
+      Swal.fire("Gagal!", "Terjadi kesalahan saat menghapus data.", "error");
+    }
+  } catch (error) {
+    console.error("Error deleting vacancy:", error);
+    Swal.fire("Gagal!", "Terjadi kesalahan saat menghapus data.", "error");
+  }
+}

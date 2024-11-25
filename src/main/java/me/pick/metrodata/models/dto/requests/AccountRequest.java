@@ -9,15 +9,21 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AccountRequest {
 
-    private String accountUsername;
+    private String username;
 
-    private String accountPassword;
+    private String password;
 
-    private String accountFirstName;
+    private String firstName;
 
-    private String accountLastName;
+    private String lastName;
 
-    private String accountEmail;
+    private String email;
+
+    private String phone;
+
+    private Long baseBudget;
+
+    private Long limitBudget;
 
     private Long roleId;
 
