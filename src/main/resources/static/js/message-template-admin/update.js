@@ -43,7 +43,6 @@ function update(id, data) {
     url: `/admin/message-template/update/${id}`,
     method: "PUT",
     dataType: "JSON",
-    beforeSend: addCsrfToken(),
     contentType: "application/json",
     data: data,
     success: (result) => {

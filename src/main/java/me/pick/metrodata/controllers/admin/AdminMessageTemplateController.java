@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import me.pick.metrodata.enums.MessageTemplateEnum;
-import me.pick.metrodata.models.dto.requests.InstituteRequest;
 import me.pick.metrodata.models.dto.requests.MessageTemplateRequest;
 import me.pick.metrodata.models.entity.MessageTemplate;
 import me.pick.metrodata.models.entity.User;
