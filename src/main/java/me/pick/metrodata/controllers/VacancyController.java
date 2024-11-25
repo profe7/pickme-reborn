@@ -46,11 +46,29 @@ public class VacancyController {
         model.addAttribute("currentPage", "/vacancies");
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", vacancyPage.getTotalPages());
+
+        return "mitra/vacancies-mitra";
+
+    }
+
+    @GetMapping("/search")
+    public String getFilteredVacanciesPage(Model model, HttpSession session,
+                                            @RequestParam(required = false) String title,
+                                            @RequestParam(required = false) String position,
+                                            @RequestParam(defaultValue = "0") Integer page,
+                                            @RequestParam(defaultValue = "10") Integer size) {
+
+        Page<Vacancy> vacancyPage = vacancyService.getFilteredVacancy(title, position, null, null, page, size);
+
+        model.addAttribute("vacancies", vacancyPage.getContent());
+        model.addAttribute("positions", vacancyService.getAllPositions());
+        model.addAttribute("currentPage", "/vacancies/search");
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", vacancyPage.getTotalPages());
         model.addAttribute("title", title);
         model.addAttribute("position", position);
 
         return "mitra/vacancies-mitra";
-
     }
 
     @GetMapping("/{vacancyId}")

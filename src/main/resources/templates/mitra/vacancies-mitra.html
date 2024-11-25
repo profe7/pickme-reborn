@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" 
-    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     layout:decorate="~{layout/main}">
 
 <head>
@@ -46,7 +45,7 @@
 
             <!-- Job Listings Section -->
             <div class="col-md-9">
-                <form th:action="@{/vacancies}" method="get">
+                <form th:action="@{/vacancies/search}" method="get">
                     <div class="row">
                         <div class="col-md-6 mb-4">
                             <input type="text" name="title" class="form-control" placeholder="Cari Judul Lowongan"
@@ -71,25 +70,31 @@
                                 <div class="card-body p-4">
                                     <h5 class="card-title" th:text="${vacancy.title}">Judul Lowongan</h5>
                                     <br>
-                                    <h6 class="card-subtitle mb-2" style="color: #006683;" th:text="${vacancy.position}">Posisi</h6>
+                                    <h6 class="card-subtitle mb-2" style="color: #006683;"
+                                        th:text="${vacancy.position}">Posisi</h6>
                                     <p class="card-text" th:text="${vacancy.description}">Deskripsi lowongan kerja.</p>
-                          
+
                                     <p class="card-text">
-                                        <small class="text-muted" style="font-weight: bold;">Batas Pendaftaran: <span style="font-weight: bold; "
-                                                th:text="${vacancy.expiredDate}">Tanggal Expired</span>
+                                        <small class="text-muted" style="font-weight: bold;">Batas Pendaftaran: <span
+                                                style="font-weight: bold; " th:text="${vacancy.expiredDate}">Tanggal
+                                                Expired</span>
                                         </small>
                                         <br />
-                                        <small class="text-muted" style="font-weight: bold;" >Status: <span style="font-weight: bold;" th:text="${vacancy.status}">Status</span></small>
+                                        <small class="text-muted" style="font-weight: bold;">Status: <span
+                                                style="font-weight: bold;"
+                                                th:text="${vacancy.status}">Status</span></small>
                                     </p>
                                     <hr>
-                                    
-                                    <a th:href="@{'/vacancies/' + ${vacancy.id}}" class="btn" style="background-color: #006683; color:antiquewhite;">Detail</a>
-                                    <small class="text-muted" style="margin-left: 10px;">Dibuat <span th:text="${vacancy.daysSinceCreated}"></span> hari yang lalu</small>
+
+                                    <a th:href="@{'/vacancies/' + ${vacancy.id}}" class="btn"
+                                        style="background-color: #006683; color:antiquewhite;">Detail</a>
+                                    <small class="text-muted" style="margin-left: 10px;">Dibuat <span
+                                            th:text="${vacancy.daysSinceCreated}"></span> hari yang lalu</small>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
 
@@ -120,12 +125,12 @@
                 </div>
             </div>
         </div>
-        
+
 
     </div>
     <div th:insert="~{components/footer :: footer}"></div>
 
-    
+
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.11/dist/umd/popper.min.js"></script>
