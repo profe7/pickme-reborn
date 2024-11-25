@@ -102,8 +102,6 @@ public class RecommendationServiceImpl implements RecommendationService {
 					Boolean invited = false;
 					for (InterviewSchedule schedule : applicant.getApplicant().getInterviewSchedules()) {
 						if (schedule.getPosition().equals(vacancyPosition) && schedule.getClient().getId().equals(clientId)) {
-							System.out.println(vacancyPosition + " " + clientId);
-							System.out.println(applicant.getApplicant().getTalent().getName());
 							invited = true;
 							break;
 						}
