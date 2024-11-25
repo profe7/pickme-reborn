@@ -243,7 +243,7 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
     @Override
     public Page<InterviewSchedule> getAll(String search, Long clientId, InterviewType type, String startDate,
             String endDate, InterviewStatus status, Long mitraId, int page, int size) {
-        return interviewRetrievalHelper(search, null, type, startDate, endDate, status, mitraId, page, size);
+        return interviewRetrievalHelper(search, clientId, type, startDate, endDate, status, mitraId, page, size);
     }
 
     @Override

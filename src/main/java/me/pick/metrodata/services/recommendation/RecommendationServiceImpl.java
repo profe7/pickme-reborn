@@ -5,10 +5,7 @@ import me.pick.metrodata.exceptions.recommendation.RecommendationDoesNotExistExc
 import me.pick.metrodata.models.dto.responses.RecommendationGroupedResponse;
 import me.pick.metrodata.models.dto.responses.RecommendationResponse;
 import me.pick.metrodata.models.dto.responses.TalentResponse;
-import me.pick.metrodata.models.entity.Recommendation;
-import me.pick.metrodata.models.entity.RecommendationApplicant;
-import me.pick.metrodata.models.entity.Talent;
-import me.pick.metrodata.models.entity.Vacancy;
+import me.pick.metrodata.models.entity.*;
 import me.pick.metrodata.repositories.RecommendationApplicantRepository;
 import me.pick.metrodata.repositories.RecommendationRepository;
 import me.pick.metrodata.repositories.specifications.RecommendationSpecification;
@@ -90,7 +87,6 @@ public class RecommendationServiceImpl implements RecommendationService {
 		for (Recommendation recommendation : recommendations) {
 			Long recommendationId = recommendation.getId();
 			Vacancy vacancy = recommendation.getVacancy();
-
 			String vacancyPosition = vacancy.getPosition();
 			Long vacancyId = vacancy.getId();
 
@@ -103,10 +99,19 @@ public class RecommendationServiceImpl implements RecommendationService {
 
 			if (applicants != null) {
 				for (RecommendationApplicant applicant : applicants) {
-					Talent talent = applicant.getApplicant().getTalent();
-					if (talent == null)
+					Boolean invited = false;
+					for (InterviewSchedule schedule : applicant.getApplicant().getInterviewSchedules()) {
+						if (schedule.getPosition().equals(vacancyPosition) && schedule.getClient().getId().equals(clientId)) {
+							System.out.println(vacancyPosition + " " + clientId);
+							System.out.println(applicant.getApplicant().getTalent().getName());
+							invited = true;
+							break;
+						}
+					}
+					if (invited) {
 						continue;
-
+					}
+					Talent talent = applicant.getApplicant().getTalent();
 					TalentResponse talentResponse = talentService.getById(talent.getId());
 					if (talent.getPhoto() != null) {
 						talentResponse.setPhoto(Base64.getEncoder().encodeToString(talent.getPhoto()));
