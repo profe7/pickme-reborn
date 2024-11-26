@@ -33,7 +33,7 @@ public interface TalentService {
 
         Page<Talent> getAll(Integer page, Integer size, String search, Long institute, Long baseSalary,
                         Long limitSalary,
-                        Boolean active, String job, String skill, Boolean idle);
+                        Boolean active, String job, String skill, Boolean idle, String companyName);
 
         List<TalentInterviewScheduleHistory> getTalentInterviewScheduleHistories(String talentId);
 

@@ -4,6 +4,9 @@ import me.pick.metrodata.models.dto.responses.ReadVacancyDetailResponse;
 import me.pick.metrodata.enums.VacancyStatus;
 import me.pick.metrodata.models.dto.requests.VacancyCreationRequest;
 import me.pick.metrodata.models.dto.requests.VacancyRequest;
+import me.pick.metrodata.models.dto.responses.VacancyApplicantsResponse;
+import me.pick.metrodata.models.entity.Applicant;
+import me.pick.metrodata.models.entity.Talent;
 import me.pick.metrodata.models.entity.Vacancy;
 
 import java.time.LocalDate;
@@ -38,4 +41,6 @@ public interface VacancyService {
         void update(Long id, VacancyRequest vacancyRequest);
 
         void delete(Long id);
+
+        Page<VacancyApplicantsResponse> getAppliedTalents(Long vacancyId, Integer page, Integer size, String companyName);
 }

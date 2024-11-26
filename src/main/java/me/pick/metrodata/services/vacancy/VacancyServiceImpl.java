@@ -3,6 +3,7 @@ package me.pick.metrodata.services.vacancy;
 import me.pick.metrodata.enums.ApplicantStatus;
 import me.pick.metrodata.models.dto.responses.ReadApplicantResponse;
 import me.pick.metrodata.models.dto.responses.ReadVacancyDetailResponse;
+import me.pick.metrodata.models.dto.responses.VacancyApplicantsResponse;
 import me.pick.metrodata.models.entity.Applicant;
 import me.pick.metrodata.models.entity.Talent;
 import me.pick.metrodata.models.entity.Vacancy;
@@ -31,6 +32,7 @@ import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Optional;
 import java.time.LocalDate;
 import java.util.List;
@@ -181,12 +183,36 @@ public class VacancyServiceImpl implements VacancyService {
         vacancyRepository.delete(vacancy);
     }
 
+    @Override
+    public Page<VacancyApplicantsResponse> getAppliedTalents(Long vacancyId, Integer page, Integer size, String companyName) {
+        List<Applicant> applicants = vacancyRepository.findVacancyById(vacancyId).orElseThrow(() -> new VacancyNotExistException(vacancyId)).getApplicants();
+        List<VacancyApplicantsResponse> response = new ArrayList<>();
+        if (companyName != null) {
+            applicants = applicants.stream()
+                    .filter(applicant -> applicant.getTalent().getMitra().getUser().getInstitute().getCompanyName()
+                            .contains(companyName))
+                    .toList();
+        }
+        for (Applicant applicant : applicants) {
+            response.add(new VacancyApplicantsResponse(applicant.getTalent().getName(), applicant.getTalent().getMitra().getUser().getInstitute().getInstituteName(), applicant.getId()));
+        }
+        return vacancyApplicantPaginationHelper(page, size, response);
+    }
+
     private Page<Vacancy> vacancyPaginationHelper(Integer page, Integer size, List<Vacancy> vacancies) {
         Pageable pageable = PageRequest.of(page, size);
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), vacancies.size());
 
         return new PageImpl<>(vacancies.subList(start, end), pageable, vacancies.size());
+    }
+
+    private Page<VacancyApplicantsResponse> vacancyApplicantPaginationHelper(Integer page, Integer size, List<VacancyApplicantsResponse> applicants) {
+        Pageable pageable = PageRequest.of(page, size);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), applicants.size());
+
+        return new PageImpl<>(applicants.subList(start, end), pageable, applicants.size());
     }
 
     @Override

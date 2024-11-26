@@ -69,4 +69,15 @@ public class RestVacancyController {
         ));
     }
 
+    @GetMapping("/{id}/applicants")
+    @PreAuthorize("hasAnyAuthority('READ_APPLICANT')")
+    public ResponseEntity<Object> getApplicants(@PathVariable Long id,
+                                               @RequestParam(defaultValue = "0") Integer page,
+                                               @RequestParam(defaultValue = "10") Integer size,
+                                               @RequestParam(defaultValue = "") String companyName) {
+        return ResponseHandler.generateResponse(new Response(
+                "Applicants", HttpStatus.OK, SUCCESS, vacancyService.getAppliedTalents(id, page, size, companyName)
+        ));
+    }
+
 }

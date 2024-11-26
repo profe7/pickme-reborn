@@ -79,9 +79,9 @@ public class TalentServiceImpl implements TalentService {
 
     @Override
     public Page<Talent> getAll(Integer page, Integer size, String search, Long institute, Long baseSalary,
-            Long limitSalary, Boolean active, String job, String skill, Boolean idle) {
+            Long limitSalary, Boolean active, String job, String skill, Boolean idle, String companyName) {
         Specification<Talent> spec = TalentSpecification.buildSpecification(search, baseSalary, limitSalary, active,
-                institute, job, skill, idle);
+                institute, job, skill, idle, companyName);
         List<Talent> talents = talentRepository.findAll(spec);
 
         Pageable pageable = PageRequest.of(page, size);
