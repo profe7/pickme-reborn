@@ -1,5 +1,7 @@
 package me.pick.metrodata.services.reference;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 
 import me.pick.metrodata.models.dto.requests.ReferenceRequest;
@@ -12,6 +14,8 @@ public interface ReferenceService {
 
     Page<ReferenceResponse> getFilteredReference(String searchParameterName, String searchParameterValue, Integer page,
             Integer size);
+    
+    List<ReferenceResponse> getReferenceData(String referenceGroupName);
 
     void create(ReferenceRequest referenceRequest);
 

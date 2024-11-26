@@ -10,6 +10,7 @@ import me.pick.metrodata.models.dto.requests.TalentFromVacancyRequest;
 import me.pick.metrodata.models.dto.responses.TalentAvailableForVacancyResponse;
 import me.pick.metrodata.models.dto.responses.TalentInterviewScheduleHistory;
 import me.pick.metrodata.models.dto.responses.TalentResponse;
+import me.pick.metrodata.models.entity.References;
 import me.pick.metrodata.models.entity.Talent;
 
 public interface TalentService {
@@ -36,6 +37,10 @@ public interface TalentService {
                         Boolean active, String job, String skill, Boolean idle);
 
         List<TalentInterviewScheduleHistory> getTalentInterviewScheduleHistories(String talentId);
+
+        Talent findByIdFromRepo(String talentId);
+
+        boolean checkNIKExists(String nik, String talentId);
 
         List<TalentResponse> getTalents();
 }
