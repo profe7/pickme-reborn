@@ -32,7 +32,7 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        
+
                         <div class="col-md-6">
                             <div class="detail-box2" style="color: black;">
                                 <h1>Selamat Datang di Pick Me</h1>
@@ -121,7 +121,7 @@
                                                             <th scope="col">Perekrut</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody id="tableBody2">
+                                                    <tbody id="talentDitolak">
                                                         <!-- Dynamic rows will be added here -->
                                                     </tbody>
                                                 </table>
@@ -158,8 +158,8 @@
                                                             <th scope="col">Perekrut</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody id="tableBody2">
-                                                        <!-- Dynamic rows will be added here -->
+                                                    <tbody id="talentDiterima">
+                                                      
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -182,11 +182,13 @@
                                     <div class="card-body">
                                         <h5 class="card-title">My Talent</h5>
                                         <div class="col-md-12 my-2">
-                                            <canvas id="donutChart"  style="max-width: 500px; max-height: 500px; margin: auto;"></canvas>
+                                            <canvas id="donutChart"
+                                                style="max-width: 500px; max-height: 500px; margin: auto;"></canvas>
 
                                         </div>
 
-                                        <div class="col-md-12 my-2 fw-bold" style="display: flex; justify-content: space-evenly; margin-top: 20px; font-size: 20px;">
+                                        <div class="col-md-12 my-2 fw-bold"
+                                            style="display: flex; justify-content: space-evenly; margin-top: 20px; font-size: 20px;">
                                             <div>
                                                 <span style="color: gray;">Kandidat</span>
                                                 <br>
@@ -265,14 +267,14 @@
                 url: '/mitra/chart-data',
                 method: 'GET',
                 success: function (response) {
-                   
+
                     var assigned = response.totalAssignedApplicants;
                     var accepted = response.totalAcceptedApplicants;
                     var rejected = response.totalRejectedApplicants;
 
                     var chartData = {
                         datasets: [{
-                            data: [assigned, assigned, rejected],
+                            data: [assigned, accepted, rejected],
                             backgroundColor: ['#A4A8AA', '#198754', '#DC3545'],
                             hoverBackgroundColor: ['#A4A8AA', '#198754', '#DC3545']
                         }]
@@ -280,7 +282,7 @@
 
                     var ctx = document.getElementById('donutChart').getContext('2d');
                     var donutChart = new Chart(ctx, {
-                        type: 'doughnut', 
+                        type: 'doughnut',
                         data: chartData,
                         options: {
                             responsive: true,
@@ -304,6 +306,64 @@
                 }
             });
         });
+
+        // modal ditolak
+        function loadRejectedTalents() {
+            const mitraId = document.getElementById('mitraId').value;
+            const url = `/mitra/result?status=REJECTED`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    let tableContent = '';
+                    data.forEach(item => {
+                        tableContent += `
+                        <tr>
+                            <td>${item.talentName}</td>
+                            <td>${item.feedback}</td>
+                            <td>${item.updatedAtDate}</td>
+                            <td>${item.recruiterName}</td>
+                        </tr>
+                    `;
+                    });
+
+                    document.getElementById('talentDitolak').innerHTML = tableContent;
+                })
+                .catch(error => console.error('Error loading rejected talents:', error));
+        }
+
+        $('#rejectModal').on('show.bs.modal', function () {
+            loadRejectedTalents();
+        });
+
+        // modal diterima
+        function loadAcceptedTalents() {
+            const mitraId = document.getElementById('mitraId').value;
+            const url = `/mitra/result?status=ACCEPTED`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    let tableContent = '';
+                    data.forEach(item => {
+                        tableContent += `
+                        <tr>
+                            <td>${item.talentName}</td>
+                            <td>${item.onboardDate}</td>
+                            <td>${item.recruiterName}</td>
+                        </tr>
+                    `;
+                    });
+
+                    document.getElementById('talentDiterima').innerHTML = tableContent;
+                })
+                .catch(error => console.error('Error loading accepted talents:', error));
+        }
+
+        $('#acceptModal').on('show.bs.modal', function () {
+            loadAcceptedTalents();
+        });
+
     </script>
 
     <!-- Bootstrap CSS -->

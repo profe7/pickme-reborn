@@ -1,11 +1,14 @@
 package me.pick.metrodata.controllers;
 
 import lombok.AllArgsConstructor;
+import me.pick.metrodata.enums.InterviewStatus;
 import me.pick.metrodata.models.dto.responses.MitraDashboardTelemetryResponse;
+import me.pick.metrodata.models.dto.responses.MitraTalentInterviewStatistics;
 import me.pick.metrodata.models.entity.Talent;
 import me.pick.metrodata.services.mitra.MitraService;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
@@ -27,6 +30,7 @@ import jakarta.servlet.http.HttpSession;
 public class MitraController {
 
     private final MitraService mitraService;
+    private static final String SUCCESS = "SUCCESS";
 
     @GetMapping
     public String mitraHomePage(Model model, HttpSession session) {
@@ -39,6 +43,7 @@ public class MitraController {
         model.addAttribute("totalRejectedApplicants", response.getTotalRejectedApplicants());
         model.addAttribute("totalAcceptedApplicants", response.getTotalAcceptedApplicants());
         model.addAttribute("totalAssignedApplicants", response.getTotalAssignedApplicants());
+        model.addAttribute("mitraId", mitraId);
 
         model.addAttribute("newestVacancies", response.getNewestVacancies());
 
@@ -57,7 +62,7 @@ public class MitraController {
         chartData.put("totalAcceptedApplicants", response.getTotalAcceptedApplicants());
         chartData.put("totalAssignedApplicants", response.getTotalAssignedApplicants());
 
-        return chartData; 
+        return chartData;
     }
 
     @GetMapping("/talent")
@@ -74,6 +79,24 @@ public class MitraController {
         model.addAttribute("position", position);
         model.addAttribute("skill", skill);
         return "mitra/mitra-view-all-talents";
+    }
+
+    @GetMapping("/result")
+    @ResponseBody
+    public List<MitraTalentInterviewStatistics> viewResultbyMitra(
+            HttpSession session,
+            @RequestParam(required = false) String status) {
+        Long mitraId = (Long) session.getAttribute("mitraId");
+
+        InterviewStatus interviewStatus = null;
+        if (status != null && !status.isEmpty()) {
+            try {
+                interviewStatus = InterviewStatus.valueOf(status.toUpperCase());
+            } catch (IllegalArgumentException e) {
+            }
+        }
+
+        return mitraService.getMitraTalentInterviewStatistics(mitraId, interviewStatus);
     }
 
 }
