@@ -36,19 +36,22 @@ public class VacancyController {
     public String getVacanciesPage(Model model,HttpSession session,
                                     @RequestParam(required = false) String title,
                                     @RequestParam(required = false) String position,
+                                    @RequestParam(required = false) String expiredDate,
+                                    @RequestParam(required = false) String updateAt,
                                     @RequestParam(defaultValue = "0") Integer page,
                                     @RequestParam(defaultValue = "10") Integer size) {
 
-        Page<Vacancy> vacancyPage = vacancyService.getOpenVacancies(page, size, null, null, title, position);
+        Page<Vacancy> vacancyPage = vacancyService.getOpenVacancies(page, size, expiredDate, updateAt, title, position);
 
         model.addAttribute("vacancies", vacancyPage.getContent());
         model.addAttribute("positions", vacancyService.getAllPositions());
         model.addAttribute("currentPage", "/vacancies");
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", vacancyPage.getTotalPages());
+        model.addAttribute("expiredDate", expiredDate);
+        model.addAttribute("updateAt", updateAt);
 
         return "mitra/vacancies-mitra";
-
     }
 
     @GetMapping("/search")

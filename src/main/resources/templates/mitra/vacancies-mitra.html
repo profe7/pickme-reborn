@@ -22,22 +22,22 @@
             <div class="col-md-3">
                 <div class="border p-3 mb-4">
                     <h6 class="mb-3">Batas Pendaftaran</h6>
-                    <input type="date" class="form-control mb-3" placeholder="dd/mm/yyyy">
+                    <input type="date" class="form-control mb-3" placeholder="dd/mm/yyyy" id="bataspendaftaran">
                     <h6 class="mb-3">Terakhir Diperbarui</h6>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="lastUpdated" id="24jam">
+                        <input class="form-check-input" type="radio" name="updateAt" id="24jam">
                         <label class="form-check-label" for="24jam">24 Jam Terakhir</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="lastUpdated" id="1minggu">
+                        <input class="form-check-input" type="radio" name="updateAt" id="1minggu">
                         <label class="form-check-label" for="1minggu">1 Minggu Terakhir</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="lastUpdated" id="1bulan">
+                        <input class="form-check-input" type="radio" name="updateAt" id="1bulan">
                         <label class="form-check-label" for="1bulan">1 Bulan Terakhir</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="lastUpdated" id="kapanpun">
+                        <input class="form-check-input" type="radio" name="updateAt" id="kapanpun">
                         <label class="form-check-label" for="kapanpun">Kapanpun</label>
                     </div>
                 </div>
@@ -94,7 +94,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
 
@@ -130,6 +129,9 @@
     </div>
     <div th:insert="~{components/footer :: footer}"></div>
 
+    <script>
+        
+    </script>
 
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

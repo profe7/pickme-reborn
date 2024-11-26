@@ -5,6 +5,9 @@ import me.pick.metrodata.models.dto.responses.MitraDashboardTelemetryResponse;
 import me.pick.metrodata.models.entity.Talent;
 import me.pick.metrodata.services.mitra.MitraService;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -34,19 +38,35 @@ public class MitraController {
         model.addAttribute("totalApplicants", response.getTotalApplicants());
         model.addAttribute("totalRejectedApplicants", response.getTotalRejectedApplicants());
         model.addAttribute("totalAcceptedApplicants", response.getTotalAcceptedApplicants());
+        model.addAttribute("totalAssignedApplicants", response.getTotalAssignedApplicants());
 
         model.addAttribute("newestVacancies", response.getNewestVacancies());
 
         return "mitra/dashboard-mitra";
     }
 
+    @GetMapping("/chart-data")
+    @ResponseBody
+    public Map<String, Long> getChartData(HttpSession session) {
+        Long mitraId = (Long) session.getAttribute("mitraId");
+
+        MitraDashboardTelemetryResponse response = mitraService.getMitraDashboardTelemetry(mitraId);
+
+        Map<String, Long> chartData = new HashMap<>();
+        chartData.put("totalRejectedApplicants", response.getTotalRejectedApplicants());
+        chartData.put("totalAcceptedApplicants", response.getTotalAcceptedApplicants());
+        chartData.put("totalAssignedApplicants", response.getTotalAssignedApplicants());
+
+        return chartData; 
+    }
+
     @GetMapping("/talent")
     public String viewAllTalentByMitra(HttpSession session,
-                                    @RequestParam(required = false) String position,
-                                    @RequestParam(required = false) String skill,
-                                    @RequestParam(defaultValue = "0") Integer page,
-                                    @RequestParam(defaultValue = "10") Integer size,
-                                    Model model) {
+            @RequestParam(required = false) String position,
+            @RequestParam(required = false) String skill,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size,
+            Model model) {
         Long mitraId = (Long) session.getAttribute("mitraId");
         Page<Talent> talents = mitraService.getFilteredMitraTalents(mitraId, page, size, position, skill);
         model.addAttribute("talents", talents);
