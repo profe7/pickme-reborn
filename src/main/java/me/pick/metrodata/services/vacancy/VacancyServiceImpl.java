@@ -185,7 +185,9 @@ public class VacancyServiceImpl implements VacancyService {
 
     @Override
     public Page<VacancyApplicantsResponse> getAppliedTalents(Long vacancyId, Integer page, Integer size, String companyName) {
-        List<Applicant> applicants = vacancyRepository.findVacancyById(vacancyId).orElseThrow(() -> new VacancyNotExistException(vacancyId)).getApplicants();
+        List<Applicant> applicants = vacancyRepository.findVacancyById(vacancyId)
+                .orElseThrow(() -> new VacancyNotExistException(vacancyId))
+                .getApplicants();
         List<VacancyApplicantsResponse> response = new ArrayList<>();
         if (companyName != null) {
             applicants = applicants.stream()
@@ -193,6 +195,10 @@ public class VacancyServiceImpl implements VacancyService {
                             .contains(companyName))
                     .toList();
         }
+        applicants = applicants.stream()
+                .filter(applicant -> applicant.getRecommendationApplicants().stream()
+                        .noneMatch(recommendationApplicant -> recommendationApplicant.getRecommendation().getVacancy().getId().equals(vacancyId)))
+                .toList();
         for (Applicant applicant : applicants) {
             response.add(new VacancyApplicantsResponse(applicant.getTalent().getName(), applicant.getTalent().getMitra().getUser().getInstitute().getInstituteName(), applicant.getId()));
         }
