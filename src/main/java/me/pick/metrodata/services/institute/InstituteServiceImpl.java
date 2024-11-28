@@ -20,6 +20,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import me.pick.metrodata.models.dto.requests.InstituteRequest;
 
@@ -98,6 +99,12 @@ public class InstituteServiceImpl implements InstituteService {
         institute.setRmUser(userRepository.findById(instituteRequest.getRmId()).orElseThrow());
 
         instituteRepository.save(institute);
+    }
+
+    @Override
+    public List<InstituteResponse> getAllInstituteByVacancyId(Long vacancyId) {
+        return instituteRepository.findInstitutesByVacancyId(vacancyId).stream()
+                .map(institute -> modelMapper.map(institute, InstituteResponse.class)).collect(Collectors.toList());
     }
 
 }

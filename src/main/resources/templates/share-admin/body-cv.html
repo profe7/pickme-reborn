@@ -1,0 +1,238 @@
+<div th:fragment="body-cv">
+  <div class="mt-4 basic-profile" id="txtPersonalSection">
+    <!-- <span style="font-size:20.8px; color:#355f90" th:text="${title}"></span> -->
+    <span style="font-size: 20.8px; color: #355f90">Personal Data</span>
+    <div class="row mt-3 mx-2">
+      <table style="width: 100%">
+        <tr>
+          <td class="align-top" style="width: 35%">
+            <span> Data of Birth:</span>
+          </td>
+          <td class="align-top" style="width: 35%">
+            <b th:if="!${showDateOfBirth}" id="txtDateOfBirth"> ______</b>
+            <b th:text="${showDateOfBirth}"></b>
+          </td>
+          <td
+            class="profileImageContainer image-profile-negative-margin-top text-center"
+            rowspan="9"
+            style="width: 30%; vertical-align: top; margin-top: -40px"
+          >
+            <img
+              class="image-profile image-profile-negative-margin-top"
+              th:if="!${showProfilePicture}"
+              id="imgProfileImagePreview"
+              th:src="${/img/no_image.jpg}"
+              width="120px"
+              style="margin-top: -40px"
+            />
+            <img
+              class="image-profile image-profile-negative-margin-top"
+              th:src="${showProfilePicture}"
+              width="120px"
+              style="margin-top: -40px"
+            />
+          </td>
+        </tr>
+        <tr>
+          <td class="align-top">
+            <span> Place of Birth:</span>
+          </td>
+          <td class="align-top">
+            <b th:if="!${showBirthPlace}" id="txtBirthPlace"> ______</b>
+            <b th:text="${showBirthPlace}"></b>
+          </td>
+        </tr>
+        <tr>
+          <td class="align-top">
+            <span> Nationality:</span>
+          </td>
+          <td class="align-top">
+            <b th:if="!${showNationality}" id="txtNationality"> ______</b>
+            <b th:text="${showNationality}"></b>
+          </td>
+        </tr>
+        <tr>
+          <td class="align-top">
+            <span> Marital Status:</span>
+          </td>
+          <td class="align-top">
+            <b th:if="!${showMaritialStatus}" id="txtMaritialStatus"> ______</b>
+            <b th:text="${showMaritialStatus}"></b>
+          </td>
+        </tr>
+        <tr>
+          <td class="align-top">
+            <span> Gender:</span>
+          </td>
+          <td class="align-top">
+            <b th:if="!${showGender}" id="txtGender"> ______</b>
+            <b th:text="${showGender}"></b>
+          </td>
+        </tr>
+        <tr>
+          <td class="align-top">
+            <span> Religion:</span>
+          </td>
+          <td class="align-top">
+            <b th:if="!${showReligion}" id="txtReligion"> ______</b>
+            <b th:text="${showReligion}"></b>
+          </td>
+        </tr>
+        <tr>
+          <td class="align-top">
+            <span> Phone Number:</span>
+          </td>
+          <td class="align-top">
+            <b th:if="!${showPhone}" id="txtPhone"> ______</b>
+            <b th:text="${showPhone}"></b>
+          </td>
+        </tr>
+        <tr>
+          <td class="align-top">
+            <span> E-mail:</span>
+          </td>
+          <td class="align-top">
+            <b th:if="!${showEmail}" id="txtEmail"> ______</b>
+            <b th:text="${showEmail}"></b>
+          </td>
+        </tr>
+        <tr>
+          <td class="align-top">
+            <span> Address:</span>
+          </td>
+          <td class="align-top">
+            <b th:if="!${showAddress}" id="txtAddress"> ______</b>
+            <b th:text="${showAddress}"></b>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div th:if="${languageData != ''}" class="mt-4 language">
+    <!-- <span style="font-size:20.8px; color:#355f90" th:text="${title}"></span> -->
+    <span style="font-size: 20.8px; color: #355f90">Language</span>
+    <div class="row mt-3 mx-2">
+      <div class="mx-3">
+        <table>
+          <div id="txtLanguageProfiency" class="align-top"></div>
+          <div th:remove="tag" th:utext="${languageData}"></div>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div th:if="${educationData != ''}" class="mt-4 education">
+    <!-- <span style="font-size:20.8px; color:#355f90" th:text="${title}"></span> -->
+    <span style="font-size: 20.8px; color: #355f90">Education</span>
+    <div class="row mt-3 mx-2">
+      <div class="mx-3">
+        <table>
+          <div id="txtEducationFrame" class="align-top"></div>
+          <div th:remove="tag" th:utext="${educationData}"></div>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div th:if="${skillData != ''}" class="mt-4 skill">
+    <!-- <span style="font-size:20.8px; color:#355f90" th:text="${title}"></span> -->
+    <span style="font-size: 20.8px; color: #355f90">Skill</span>
+    <div class="mt-3 mx-2 w-100">
+      <div th:remove="tag" th:utext="${skillData}"></div>
+      <div id="txtSkillFrame" class="row mx-2"></div>
+    </div>
+  </div>
+
+  <div th:if="${workData != ''}" class="mt-4 work-experience">
+    <!-- <span style="font-size:20.8px; color:#355f90" th:text="${title}"></span> -->
+    <span style="font-size: 20.8px; color: #355f90">Work Experience</span>
+    <div class="row mx-2 mt-3">
+      <div class="mx-3">
+        <table>
+          <div id="txtWorkFrame" class="align-top"></div>
+          <div th:remove="tag" th:utext="${workData}"></div>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div th:if="${projectData != ''}" class="mt-4 project">
+    <!-- <span style="font-size:20.8px; color:#355f90" th:text="${title}"></span> -->
+    <span style="font-size: 20.8px; color: #355f90">Project</span>
+    <div class="row mt-3 mx-2">
+      <div class="mx-3">
+        <table>
+          <div id="txtProjectFrame" class="align-top"></div>
+          <div th:remove="tag" th:utext="${projectData}"></div>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div th:if="${trainingData != ''}" class="mt-4 certificate">
+    <!-- <span style="font-size:20.8px; color:#355f90" th:text="${title}"></span> -->
+    <span style="font-size: 20.8px; color: #355f90">Training</span>
+    <div class="row mt-3 mx-2">
+      <div class="mx-3">
+        <table>
+          <div id="txtTrainingFrame" class="align-top"></div>
+          <div th:remove="tag" th:utext="${trainingData}"></div>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div th:if="${certificationData != ''}" class="mt-4 certification">
+    <!-- <span style="font-size:20.8px; color:#355f90" th:text="${title}"></span> -->
+    <span style="font-size: 20.8px; color: #355f90">Certification</span>
+    <div class="row mt-3 mx-2">
+      <div class="mx-3">
+        <table>
+          <div id="txtCertificationFrame" class="align-top"></div>
+          <div th:remove="tag" th:utext="${certificationData}"></div>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div th:if="${organizationData != ''}" class="mt-4 organization-experience">
+    <!-- <span style="font-size:20.8px; color:#355f90" th:text="${title}"></span> -->
+    <span style="font-size: 20.8px; color: #355f90"
+      >Organization Experience</span
+    >
+    <div class="row mt-3 mx-2">
+      <div class="mx-3">
+        <table>
+          <div id="txtOrganizationFrame" class="align-top"></div>
+          <div th:remove="tag" th:utext="${organizationData}"></div>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div th:if="${experienceData != ''}" class="mt-4 other">
+    <!-- <span style="font-size:20.8px; color:#355f90" th:text="${title}"></span> -->
+    <span style="font-size: 20.8px; color: #355f90">Other Experience</span>
+    <div class="row mt-3 mx-2">
+      <div class="mx-3">
+        <table>
+          <div id="txtExperienceFrame" class="align-top"></div>
+          <div th:remove="tag" th:utext="${experienceData}"></div>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div th:if="${awardData != ''}" class="mt-4 award">
+    <!-- <span style="font-size:20.8px; color:#355f90" th:text="${title}"></span> -->
+    <span style="font-size: 20.8px; color: #355f90">Award</span>
+    <div class="row mt-3 mx-2">
+      <div class="mx-3">
+        <table>
+          <div id="txtAwardFrame" class="align-top"></div>
+          <div th:remove="tag" th:utext="${awardData}"></div>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

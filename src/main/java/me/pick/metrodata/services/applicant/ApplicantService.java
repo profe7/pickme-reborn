@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface ApplicantService {
+
     Applicant createApplicant(ApplicantCreationRequest request);
 
     List<Applicant> multiCreateApplicant(MultiTalentApplicantRequest request);
@@ -17,5 +18,8 @@ public interface ApplicantService {
     Recommendation recommendApplicant(RecommendApplicantRequest request);
 
     Page<Applicant> getRecommendedApplicant(Long vacancyId, Integer page, Integer size);
+
+    Page<Applicant> getApplicantsByVacancyAndInstitute(Long vacancyId, String searchInstitute, Integer page,
+            Integer size);
 
 }

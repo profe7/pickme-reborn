@@ -25,4 +25,10 @@ public interface InstituteRepository extends JpaRepository<Institute, Long>, Jpa
                         @Param("searchName") String searchName,
                         @Param("searchtype") InstituteType searchtype,
                         Pageable pageable);
+
+        @Query("SELECT DISTINCT i FROM Applicant a " +
+                        "JOIN a.talent t " +
+                        "JOIN t.institute i " +
+                        "WHERE a.vacancy.id = :vacancyId")
+        List<Institute> findInstitutesByVacancyId(@Param("vacancyId") Long vacancyId);
 }

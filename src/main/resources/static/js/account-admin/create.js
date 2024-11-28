@@ -84,6 +84,7 @@ function create(data) {
     },
     error: (e) => {
       $.LoadingOverlay("hide");
+      console.error("Error response:", e.responseText);
       Swal.fire({
         position: "center",
         icon: "error",

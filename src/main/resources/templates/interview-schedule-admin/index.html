@@ -113,9 +113,7 @@
                               name="type"
                               onchange="applyFilter()"
                             >
-                              <option value="" disabled selected>
-                                Tipe Wawancara
-                              </option>
+                              <option value="" selected>Tipe Wawancara</option>
                               <option
                                 th:each="type : ${types}"
                                 th:value="${type.name()}"
@@ -141,7 +139,7 @@
                               name="status"
                               onchange="applyFilter()"
                             >
-                              <option value="" disabled selected>Status</option>
+                              <option value="" selected>Status</option>
                               <option
                                 th:each="status : ${statuses}"
                                 th:value="${status.name()}"

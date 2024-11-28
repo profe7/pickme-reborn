@@ -33,6 +33,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Optional;
 import java.time.LocalDate;
 import java.util.List;
@@ -184,23 +185,28 @@ public class VacancyServiceImpl implements VacancyService {
     }
 
     @Override
-    public Page<VacancyApplicantsResponse> getAppliedTalents(Long vacancyId, Integer page, Integer size, String companyName) {
+    public Page<VacancyApplicantsResponse> getAppliedTalents(Long vacancyId, Integer page, Integer size,
+            String companyName) {
         List<Applicant> applicants = vacancyRepository.findVacancyById(vacancyId)
                 .orElseThrow(() -> new VacancyNotExistException(vacancyId))
                 .getApplicants();
         List<VacancyApplicantsResponse> response = new ArrayList<>();
         if (companyName != null) {
             applicants = applicants.stream()
-                    .filter(applicant -> applicant.getTalent().getMitra().getUser().getInstitute().getCompanyName()
+                    .filter(applicant -> applicant.getTalent().getMitra().getUser().getInstitute().getInstituteName()
                             .contains(companyName))
                     .toList();
         }
         applicants = applicants.stream()
                 .filter(applicant -> applicant.getRecommendationApplicants().stream()
-                        .noneMatch(recommendationApplicant -> recommendationApplicant.getRecommendation().getVacancy().getId().equals(vacancyId)))
+                        .noneMatch(recommendationApplicant -> recommendationApplicant.getRecommendation().getVacancy()
+                                .getId().equals(vacancyId)))
                 .toList();
         for (Applicant applicant : applicants) {
-            response.add(new VacancyApplicantsResponse(applicant.getTalent().getName(), applicant.getTalent().getMitra().getUser().getInstitute().getInstituteName(), applicant.getId()));
+            response.add(new VacancyApplicantsResponse(
+                    applicant.getTalent().getPhoto(),
+                    applicant.getTalent().getName(),
+                    applicant.getTalent().getMitra().getUser().getInstitute().getInstituteName(), applicant.getId()));
         }
         return vacancyApplicantPaginationHelper(page, size, response);
     }
@@ -213,7 +219,8 @@ public class VacancyServiceImpl implements VacancyService {
         return new PageImpl<>(vacancies.subList(start, end), pageable, vacancies.size());
     }
 
-    private Page<VacancyApplicantsResponse> vacancyApplicantPaginationHelper(Integer page, Integer size, List<VacancyApplicantsResponse> applicants) {
+    private Page<VacancyApplicantsResponse> vacancyApplicantPaginationHelper(Integer page, Integer size,
+            List<VacancyApplicantsResponse> applicants) {
         Pageable pageable = PageRequest.of(page, size);
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), applicants.size());
