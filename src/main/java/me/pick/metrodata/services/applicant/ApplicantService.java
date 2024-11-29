@@ -22,4 +22,6 @@ public interface ApplicantService {
     Page<Applicant> getApplicantsByVacancyAndInstitute(Long vacancyId, String searchInstitute, Integer page,
             Integer size);
 
+    Applicant getApplicantById(Long id);
+
 }

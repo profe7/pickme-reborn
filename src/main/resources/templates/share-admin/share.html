@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="id">
+<html xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
-    <title>[[${showFullName}]] - CV-ME</title>
+    <title>[[${showFullName}]] - PICK-ME</title>
     <meta
       name="description"
       content="Berhentilah mengkhawatirkan format dan desain CV Anda - CV-ME siap membantu Anda."
@@ -14,7 +14,7 @@
       itemprop="description"
       content="Berhentilah mengkhawatirkan format dan desain CV Anda - CV-ME siap membantu Anda."
     />
-    <meta itemprop="image" th:content="${/img/cv.png}" />
+    <meta itemprop="image" th:content="@{/img/cv.png}" />
 
     <!-- Facebook Meta Tags -->
     <!-- <meta property="og:url" th:content="${baseUrl}" /> -->
@@ -59,7 +59,7 @@
     />
 
     <!-- Template CSS -->
-    <link rel="stylesheet" th:href="${/css/style-share.css}" />
+    <link rel="stylesheet" th:href="@{/css/style-share.css}" />
     <style>
       body {
         font-family: Arial, Helvetica, sans-serif;
@@ -224,7 +224,7 @@
   <body class="main-app">
     <div class="container">
       <a
-        th:href="${/admin/download-cv}"
+        th:href="@{/admin/download-cv}"
         onclick="downloadCv()"
         class="float-btn"
         data-toggle="tooltip"
@@ -266,10 +266,10 @@
       <hr />
       <footer class="my-4">
         <div class="text-center">
-          Copyright &copy; 2023
+          Copyright &copy; 2024
           <div class="bullet"></div>
           Powered By
-          <a class="text-primary font-weight-bold">CV-ME</a>
+          <a class="text-primary font-weight-bold">PICK-ME</a>
         </div>
       </footer>
     </div>
@@ -287,10 +287,10 @@
 
     <script th:inline="javascript">
       /*<![CDATA[*/
-      let baseUrl = /*[[${baseUrl}]]*/ "baseUrl";
+      let baseUrl = /*[[@{baseUrl}]]*/ "baseUrl";
       /*]]>*/
     </script>
 
-    <script th:src="${/js/share-admin/custom.js}"></script>
+    <script th:src="@{/js/share-admin/custom.js}"></script>
   </body>
 </html>

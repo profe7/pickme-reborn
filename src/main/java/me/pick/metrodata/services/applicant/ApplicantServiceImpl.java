@@ -112,4 +112,9 @@ public class ApplicantServiceImpl implements ApplicantService {
         return applicantRepository.findApplicantsByVacancyAndInstitute(vacancyId, searchInstitute, pageable);
     }
 
+    @Override
+    public Applicant getApplicantById(Long id) {
+        return applicantRepository.findById(id).orElseThrow();
+    }
+
 }
