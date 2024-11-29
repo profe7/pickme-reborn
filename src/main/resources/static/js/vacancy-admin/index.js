@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
       <td>${formattedDate}</td>
       <td><span class="badge" style="background-color:${statusColor}">${status}</span></td>
       <td>
-        <a href="/admin/vacancy/${vacancy.id}" class="btn btn-success">
+        <a href="/admin/vacancy/applied/${vacancy.id}" class="btn btn-success">
           <i class="bi bi-people-fill text-white"></i>
         </a>
         <a href="/admin/vacancy/update/${vacancy.id}" class="btn btn-primary">
@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", function () {
     prevButton.classList.toggle("disabled", currentPage <= 0);
     const prevLink = document.createElement("a");
     prevLink.classList.add("page-link");
-    prevLink.textContent = "Prev";
+    prevLink.innerHTML = "&lt;";
     prevLink.href = "#";
     prevLink.addEventListener("click", (e) => {
       e.preventDefault();
@@ -128,7 +128,7 @@ document.addEventListener("DOMContentLoaded", function () {
     nextButton.classList.toggle("disabled", currentPage >= totalPages - 1);
     const nextLink = document.createElement("a");
     nextLink.classList.add("page-link");
-    nextLink.textContent = "Next";
+    nextLink.innerHTML = "&gt;";
     nextLink.href = "#";
     nextLink.addEventListener("click", (e) => {
       e.preventDefault();
@@ -142,39 +142,39 @@ document.addEventListener("DOMContentLoaded", function () {
     } of ${totalPages}`;
   };
 
-  fetchSchedules();
-});
-
-function confirmDelete(vacancyId) {
-  Swal.fire({
-    title: "Apakah Anda yakin ingin menghapus 'Lowongan' ini?",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#d33",
-    cancelButtonColor: "#3085d6",
-    confirmButtonText: "Ya",
-    cancelButtonText: "Tidak",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      deleteVacancy(vacancyId);
-    }
-  });
-}
-
-async function deleteVacancy(vacancyId) {
-  try {
-    const response = await fetch(`/admin/vacancy/delete/${vacancyId}`, {
-      method: "DELETE",
+  function confirmDelete(vacancyId) {
+    Swal.fire({
+      title: "Apakah Anda yakin ingin menghapus 'Lowongan' ini?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Ya",
+      cancelButtonText: "Tidak",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteVacancy(vacancyId);
+      }
     });
+  }
 
-    if (response.ok) {
-      Swal.fire("Dihapus!", "Data berhasil dihapus.", "success");
-      fetchSchedules();
-    } else {
+  async function deleteVacancy(vacancyId) {
+    try {
+      const response = await fetch(`/admin/vacancy/delete/${vacancyId}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        Swal.fire("Dihapus!", "Data berhasil dihapus.", "success");
+        fetchSchedules();
+      } else {
+        Swal.fire("Gagal!", "Terjadi kesalahan saat menghapus data.", "error");
+      }
+    } catch (error) {
+      console.error("Error deleting vacancy:", error);
       Swal.fire("Gagal!", "Terjadi kesalahan saat menghapus data.", "error");
     }
-  } catch (error) {
-    console.error("Error deleting vacancy:", error);
-    Swal.fire("Gagal!", "Terjadi kesalahan saat menghapus data.", "error");
   }
-}
+
+  fetchSchedules();
+});

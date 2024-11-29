@@ -48,6 +48,7 @@ public class AdminInterviewScheduleController {
         model.addAttribute("isActive", "schedule");
         model.addAttribute("statuses", InterviewStatus.values());
         model.addAttribute("types", InterviewType.values());
+
         return "interview-schedule-admin/index";
     }
 

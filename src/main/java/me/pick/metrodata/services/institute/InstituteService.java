@@ -27,4 +27,6 @@ public interface InstituteService {
 
     void update(Long id, InstituteRequest instituteRequest);
 
+    List<InstituteResponse> getAllInstituteByVacancyId(Long vacancyId);
+
 }
