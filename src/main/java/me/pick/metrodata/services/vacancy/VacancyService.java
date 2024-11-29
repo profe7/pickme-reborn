@@ -44,4 +44,6 @@ public interface VacancyService {
 
         Page<VacancyApplicantsResponse> getAppliedTalents(Long vacancyId, Integer page, Integer size,
                         String companyName);
+
+        List<Vacancy> getAll();
 }

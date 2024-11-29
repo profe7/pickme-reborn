@@ -38,4 +38,7 @@ public interface TalentService {
         List<TalentInterviewScheduleHistory> getTalentInterviewScheduleHistories(String talentId);
 
         List<TalentResponse> getTalents();
+
+        List<TalentResponse> getTalentsByInstituteId(Long instituteId);
+
 }

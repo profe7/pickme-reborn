@@ -255,4 +255,9 @@ public class VacancyServiceImpl implements VacancyService {
     public void delete(Long id) {
         vacancyRepository.delete(getVacancyById(id));
     }
+
+    @Override
+    public List<Vacancy> getAll() {
+        return vacancyRepository.findAll();
+    }
 }

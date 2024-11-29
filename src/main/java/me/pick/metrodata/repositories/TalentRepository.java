@@ -33,4 +33,7 @@ public interface TalentRepository extends JpaRepository<Talent, String>, JpaSpec
                         @Param("searchMitra") String searchMitra,
                         @Param("status") StatusCV status,
                         Pageable pageable);
+
+        @Query("SELECT t FROM Talent t WHERE t.institute.id = :instituteId")
+        List<Talent> findTalentByInstituteId(Long instituteId);
 }

@@ -69,7 +69,6 @@ public class AdminParameterController {
 
         model.addAttribute("logged", loggedUser);
         model.addAttribute("isActive", "parameter");
-        model.addAttribute("isActive", "parameter");
 
         return "parameter-admin/create";
     }

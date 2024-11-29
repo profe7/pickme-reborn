@@ -37,29 +37,34 @@ public class AdminHomeController {
 
         Talent talent = userService.getById(id).getTalent();
 
-        model.addAttribute("showFullName", talent.getName());
-        model.addAttribute("showProfilePicture", talent.getPhoto());
-        model.addAttribute("showDateOfBirth", talent.getBirthOfDate());
-        model.addAttribute("showBirthPlace", talent.getPlaceOfBirth());
-        model.addAttribute("showNationality", talent.getNationality().getReference_name());
-        model.addAttribute("showMaritialStatus", talent.getMaritalStatus());
-        model.addAttribute("showGender", talent.getGender());
-        model.addAttribute("showReligion", talent.getReligion().name());
-        model.addAttribute("showEmail", talent.getEmail());
-        model.addAttribute("showPhone", talent.getPhone());
-        model.addAttribute("showAddress", talent.getFullAddress());
-        model.addAttribute("languageData", talent.getLanguageSkills());
-        model.addAttribute("educationData", talent.getEducations());
-        model.addAttribute("skillData", talent.getSkills());
-        model.addAttribute("workData", talent.getJobHistories());
-        model.addAttribute("projectData", talent.getProjects());
-        model.addAttribute("trainingData", talent.getTrainings());
-        model.addAttribute("certificationData", talent.getCertifications());
-        model.addAttribute("organizationData", talent.getOrganizations());
-        model.addAttribute("experienceData", talent.getOtherExperiences());
-        model.addAttribute("awardData", talent.getAchievement());
+        model.addAttribute("showFullName", talent.getName() != null ? talent.getName() : "");
+        model.addAttribute("showProfilePicture", talent.getPhoto() != null ? talent.getPhoto() : "");
+        model.addAttribute("showDateOfBirth",
+                talent.getBirthOfDate() != null ? talent.getBirthOfDate().toString() : "");
+        model.addAttribute("showBirthPlace", talent.getPlaceOfBirth() != null ? talent.getPlaceOfBirth() : "");
+        model.addAttribute("showNationality",
+                talent.getNationality() != null ? talent.getNationality().getReference_name() : "");
+        model.addAttribute("showMaritialStatus", talent.getMaritalStatus() != null ? talent.getMaritalStatus() : "");
+        model.addAttribute("showGender", talent.getGender() != null ? talent.getGender() : "");
+        model.addAttribute("showReligion", talent.getReligion() != null ? talent.getReligion().name() : "");
+        model.addAttribute("showEmail", talent.getEmail() != null ? talent.getEmail() : "");
+        model.addAttribute("showPhone", talent.getPhone() != null ? talent.getPhone() : "");
+        model.addAttribute("showAddress", talent.getFullAddress() != null ? talent.getFullAddress() : "");
+        model.addAttribute("languageData", talent.getLanguageSkills() != null ? talent.getLanguageSkills() : "");
+        model.addAttribute("educationData", talent.getEducations() != null ? talent.getEducations() : "");
+        model.addAttribute("skillData", talent.getSkills() != null ? talent.getSkills() : "");
+        model.addAttribute("workData", talent.getJobHistories() != null ? talent.getJobHistories() : "");
+        model.addAttribute("projectData", talent.getProjects() != null ? talent.getProjects() : "");
+        model.addAttribute("trainingData", talent.getTrainings() != null ? talent.getTrainings() : "");
+        model.addAttribute("certificationData",
+                talent.getCertifications() != null ? talent.getCertifications() : "");
+        model.addAttribute("organizationData",
+                talent.getOrganizations() != null ? talent.getOrganizations() : "");
+        model.addAttribute("experienceData",
+                talent.getOtherExperiences() != null ? talent.getOtherExperiences() : "");
+        model.addAttribute("awardData", talent.getAchievement() != null ? talent.getAchievement() : "");
 
-        return "components-admin/share";
+        return "share-admin/share";
     }
 
 }
