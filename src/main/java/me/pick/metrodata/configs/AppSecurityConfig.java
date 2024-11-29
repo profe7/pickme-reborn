@@ -66,7 +66,8 @@ public class AppSecurityConfig {
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login?logout=true")
-                        .permitAll());
+                        .permitAll())
+                .headers().frameOptions().disable();
         return http.build();
     }
 

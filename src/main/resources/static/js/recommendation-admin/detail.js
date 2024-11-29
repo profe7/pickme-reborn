@@ -199,14 +199,14 @@ document.addEventListener("DOMContentLoaded", () => {
     } of ${totalPages}`;
   };
 
-  window.viewTalentDetail = (talentId) => {
+  window.viewTalentDetail = (applicantId) => {
     const iframe = document.getElementById("talentDetail");
     const noDataDiv = document.getElementById("talentDetailNoData");
 
-    if (talentId) {
+    if (applicantId) {
       iframe.style.display = "block";
       noDataDiv.style.display = "none";
-      iframe.src = `/admin/share/${talentId}`;
+      iframe.src = `/admin/share/${applicantId}`;
     } else {
       iframe.style.display = "none";
       noDataDiv.style.display = "block";
