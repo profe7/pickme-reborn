@@ -1,14 +1,22 @@
 document.addEventListener("DOMContentLoaded", () => {
   document
-    .getElementById("mitra")
+    .getElementById("searchName")
     .addEventListener("input", () => fetchApplied());
+  document
+    .getElementById("searchPosition")
+    .addEventListener("change", () => fetchApplied());
+  document
+    .getElementById("searchSkill")
+    .addEventListener("change", () => fetchApplied());
 
   async function fetchApplied(page = 0) {
-    const searchInstitute = document.getElementById("mitra").value;
-    const jobId = document.getElementById("jobId").value;
+    const searchName = document.getElementById("searchName").value;
+    const searchPosition = document.getElementById("searchPosition").value;
+    const searchSkill = document.getElementById("searchSkill").value;
+    const recId = document.getElementById("recId").value;
 
     const response = await fetch(
-      `/admin/vacancy/applied/applicant/${jobId}?page=${page}&searchInstitute=${searchInstitute}`
+      `/admin/recommendation/detail/talent/${recId}?page=${page}&searchName=${searchName}&searchPosition=${searchPosition}&searchSkill=${searchSkill}`
     );
 
     if (response.ok) {
@@ -44,13 +52,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const updateTable = (data) => {
-    const container = document.getElementById("appliedTbl");
+    const container = document.getElementById("detailTbl");
     container.innerHTML = "";
     const row = document.createElement("div");
     row.classList.add("row");
 
-    if (data.applicants && data.applicants.length > 0) {
-      data.applicants.forEach((applicant) => {
+    if (data.talents && data.talents.length > 0) {
+      data.talents.forEach((talent) => {
         const card = document.createElement("div");
         card.classList.add("card", "w-100", "shadow-none", "border");
 
@@ -65,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const imgContainer = document.createElement("div");
         imgContainer.classList.add("d-flex", "align-items-center");
         const profileImg = document.createElement("img");
-        profileImg.src = applicant.applicantPhoto || "/img/no_image.jpg";
+        profileImg.src = talent.applicantPhoto || "/img/no_image.jpg";
         profileImg.alt = "Profile Image";
         profileImg.classList.add("rounded-circle", "me-3");
         profileImg.style.width = "40px";
@@ -77,27 +85,46 @@ document.addEventListener("DOMContentLoaded", () => {
         const textContainer = document.createElement("div");
         const title = document.createElement("h5");
         title.classList.add("card-title", "fw-bold");
-        title.textContent = applicant.applicantName || "-";
+        title.textContent = talent.applicantName || "-";
 
         const text = document.createElement("p");
-        text.classList.add("card-text");
-        text.textContent = applicant.applicantMitra || "-";
+        text.classList.add("card-text", "mb-1");
+        text.textContent = talent.applicantMitra || "-";
+
+        const skillsContainer = document.createElement("div");
+        const skillsContainerH5 = document.createElement("h5");
+        skillsContainer.appendChild(skillsContainerH5);
+        if (talent.applicantSkill && talent.applicantSkill.length > 0) {
+          talent.applicantSkill.forEach((skill) => {
+            const skillBadge = document.createElement("span");
+            skillBadge.classList.add(
+              "badge",
+              "text-bg-primary",
+              "me-2",
+              "mb-1"
+            );
+            skillBadge.textContent = skill.name;
+            skillBadge.style.fontWeight = "100";
+            skillsContainerH5.appendChild(skillBadge);
+          });
+        }
 
         textContainer.appendChild(title);
         textContainer.appendChild(text);
+        textContainer.appendChild(skillsContainer);
 
         const checkboxContainer = document.createElement("div");
         checkboxContainer.classList.add("d-flex", "ms-auto");
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
-        checkbox.id = applicant.applicantId;
-        checkbox.value = applicant.applicantName;
+        checkbox.id = talent.applicantId;
+        checkbox.value = talent.applicantName;
         checkbox.addEventListener("change", (e) => toggleSelected(e));
         checkbox.style.transform = "scale(1.5)";
         checkboxContainer.appendChild(checkbox);
 
         card.addEventListener("click", () => {
-          viewTalentDetail(applicant.applicantId);
+          viewTalentDetail(talent.applicantId);
         });
 
         cardBody.appendChild(imgContainer);

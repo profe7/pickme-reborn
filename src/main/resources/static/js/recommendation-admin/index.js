@@ -36,10 +36,14 @@ document.addEventListener("DOMContentLoaded", function () {
       <td>${formattedDate}</td>
       <td>${recommendation.description || ""}</td>
       <td>
-        <a class="btn btn-success">
+        <a href="/admin/recommendation/detail/${
+          recommendation.id
+        }" class="btn btn-success">
           <i class="bi bi-person-check-fill text-white"></i>
         </a>
-        <a class="btn btn-danger">
+        <a href="#" class="btn btn-danger" onclick="confirmDelete('${
+          recommendation.id
+        }')">
           <i class="bi bi-trash3-fill text-white"></i>
         </a>
       </td>
@@ -101,6 +105,40 @@ document.addEventListener("DOMContentLoaded", function () {
       currentPage + 1
     } of ${totalPages}`;
   };
+
+  function confirmDelete(recId) {
+    Swal.fire({
+      title: "Apakah Anda yakin ingin menghapus 'Rekomendasi Talent' ini?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Ya",
+      cancelButtonText: "Tidak",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteRecommendation(recId);
+      }
+    });
+  }
+
+  async function deleteRecommendation(recId) {
+    try {
+      const response = await fetch(`/admin/recommendation/delete/${recId}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        Swal.fire("Dihapus!", "Data berhasil dihapus.", "success");
+        fetchSchedules();
+      } else {
+        Swal.fire("Gagal!", "Terjadi kesalahan saat menghapus data.", "error");
+      }
+    } catch (error) {
+      console.error("Error deleting vacancy:", error);
+      Swal.fire("Gagal!", "Terjadi kesalahan saat menghapus data.", "error");
+    }
+  }
 
   fetchSchedules();
 });

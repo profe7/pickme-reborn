@@ -33,7 +33,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Optional;
 import java.time.LocalDate;
 import java.util.List;
@@ -206,7 +205,8 @@ public class VacancyServiceImpl implements VacancyService {
             response.add(new VacancyApplicantsResponse(
                     applicant.getTalent().getPhoto(),
                     applicant.getTalent().getName(),
-                    applicant.getTalent().getMitra().getUser().getInstitute().getInstituteName(), applicant.getId()));
+                    applicant.getTalent().getMitra().getUser().getInstitute().getInstituteName(), applicant.getId(),
+                    null));
         }
         return vacancyApplicantPaginationHelper(page, size, response);
     }

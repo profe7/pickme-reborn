@@ -9,7 +9,7 @@
     />
 
     <div th:insert="~{components-admin/plugin :: css}"></div>
-    <title>Lowongan</title>
+    <title>Rekomendasi</title>
   </head>
 
   <body>
@@ -31,17 +31,19 @@
                 <li
                   class="breadcrumb-item d-flex align-items-center text-muted"
                 >
-                  <i class="nav-icon fa fa-file-contract me-2"></i
-                  ><a class="text-muted" href="/admin/vacancy">Lowongan</a>
+                  <i class="nav-icon fa fa-user-check me-2"></i
+                  ><a class="text-muted" href="/admin/recommendation"
+                    >Rekomendasi Talent</a
+                  >
                 </li>
                 <li
                   class="breadcrumb-item active d-flex align-items-center"
                   style="color: #0066cc"
                 >
-                  Pelamar
+                  Rekomendasikan Talent
                 </li>
               </ol>
-              <h1 class="mt-2"><strong>Pelamar</strong></h1>
+              <h1 class="mt-2"><strong>Rekomendasikan Talent</strong></h1>
             </div>
           </div>
         </div>
@@ -56,11 +58,23 @@
                       <div class="col-12 text-start mb-2 mt-2 ml-3">
                         <input
                           type="hidden"
-                          id="jobId"
-                          th:value="${vacancy.id}"
+                          id="recId"
+                          th:value="${recommendation.id}"
                         />
-                        <h3 class="fw-bold" th:text="${vacancy.title}"></h3>
-                        <h5 th:text="${vacancy.position}"></h5>
+                        <h5>
+                          Posisi :
+                          <span th:text="${recommendation.position}"></span>
+                        </h5>
+                        <h5>
+                          Instansi :
+                          <span
+                            th:text="${recommendation.assignInstitute}"
+                          ></span>
+                        </h5>
+                        <h5>
+                          Keterangan :
+                          <span th:text="${recommendation.description}"></span>
+                        </h5>
                       </div>
                     </div>
                   </div>
@@ -73,19 +87,45 @@
                       >
                         <!-- Select -->
                         <div class="mb-3">
-                          <select id="mitra" class="form-control select2">
-                            <option value="">Cari berdasarkan mitra</option>
-                            <option
-                              th:each="institute : ${institutes}"
-                              th:value="${institute.instituteName}"
-                              th:text="${institute.instituteName}"
-                            ></option>
-                          </select>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="searchName"
+                            placeholder="Cari berdasarkan nama"
+                          />
+                        </div>
+                        <div class="row mb-3">
+                          <div class="col-6">
+                            <select
+                              id="searchPosition"
+                              class="form-control select2"
+                            >
+                              <option value="">Cari berdasarkan posisi</option>
+                              <option
+                                th:each="position : ${positions}"
+                                th:value="${position}"
+                                th:text="${position}"
+                              ></option>
+                            </select>
+                          </div>
+                          <div class="col-6">
+                            <select
+                              id="searchSkill"
+                              class="form-control select2"
+                            >
+                              <option value="">Cari berdasarkan skill</option>
+                              <option
+                                th:each="skill : ${skills}"
+                                th:value="${skill}"
+                                th:text="${skill}"
+                              ></option>
+                            </select>
+                          </div>
                         </div>
 
                         <!-- Tabel -->
                         <div class="px-2">
-                          <div id="appliedTbl"></div>
+                          <div id="detailTbl"></div>
                         </div>
 
                         <!-- Pagination -->
@@ -144,7 +184,7 @@
     </div>
 
     <div layout:fragment="script">
-      <script th:src="@{/js/vacancy-admin/applied.js}"></script>
+      <script th:src="@{/js/recommendation-admin/detail.js}"></script>
     </div>
   </body>
 </html>

@@ -55,4 +55,18 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long>, Jpa
       Page<Applicant> findApplicantsByVacancyAndInstitute(@Param("vacancyId") Long vacancyId,
                   String searchInstitute,
                   Pageable pageable);
+
+      @Query("SELECT a FROM Applicant a "
+                  + "JOIN a.recommendationApplicants ra "
+                  + "JOIN a.talent.skills s "
+                  + "WHERE (:searchPosition IS NULL OR ra.position LIKE %:searchPosition%) AND "
+                  + "(:searchName IS NULL OR a.talent.name LIKE %:searchName%) AND "
+                  + "(:recommendationId IS NULL OR ra.recommendation.id = :recommendationId) AND "
+                  + "(:searchSkill IS NULL OR s.name LIKE %:searchSkill%)")
+      Page<Applicant> findAllWithFilters(
+                  @Param("recommendationId") Long recommendationId,
+                  @Param("searchName") String searchName,
+                  @Param("searchPosition") String searchPosition,
+                  @Param("searchSkill") String searchSkill,
+                  Pageable pageable);
 }
