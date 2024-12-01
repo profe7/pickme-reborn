@@ -89,25 +89,34 @@ public class AdminHolidayController {
 
     @PostMapping("/create")
     // @PreAuthorize("hasAnyAuthority('CREATE_PARAMETER')")
-    public ResponseEntity<Void> create(@RequestBody HolidayRequest holidayRequest) {
-
+    public ResponseEntity<Map<String, Object>> create(@RequestBody HolidayRequest holidayRequest) {
+        Map<String, Object> response = new HashMap<>();
         try {
             holidayService.create(holidayRequest);
-            return ResponseEntity.status(HttpStatus.OK).build();
+            response.put("message", "Hari libur baru berhasil ditambahkan");
+            response.put("status", "success");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            response.put("message", "Terjadi kesalahan saat menambahkan hari libur baru");
+            response.put("status", "error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
     @PutMapping("/update/{id}")
     // @PreAuthorize("hasAnyAuthority('UPDATE_PARAMETER')")
-    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody HolidayRequest holidayRequest) {
-
+    public ResponseEntity<Map<String, Object>> update(@PathVariable Long id,
+            @RequestBody HolidayRequest holidayRequest) {
+        Map<String, Object> response = new HashMap<>();
         try {
             holidayService.update(id, holidayRequest);
-            return ResponseEntity.status(HttpStatus.OK).build();
+            response.put("message", "Hari libur berhasil diperbarui");
+            response.put("status", "success");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            response.put("message", "Terjadi kesalahan saat memperbarui hari libur");
+            response.put("status", "error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
