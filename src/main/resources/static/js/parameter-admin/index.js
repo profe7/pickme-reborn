@@ -51,7 +51,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }" class="btn btn-primary">
           <i class="bi bi-pencil-square text-white"></i>
         </a>
-        <a class="btn btn-danger">
+        <a href="#" class="btn btn-danger" onclick="confirmDelete('${
+          parameter.id
+        }')">
           <i class="bi bi-trash3-fill text-white"></i>
         </a>
       </td>
@@ -116,3 +118,37 @@ document.addEventListener("DOMContentLoaded", function () {
 
   fetchSchedules();
 });
+
+function confirmDelete(holidayId) {
+  Swal.fire({
+    title: "Apakah Anda yakin ingin menghapus 'Parameter' ini?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "Ya",
+    cancelButtonText: "Tidak",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      deleteHoliday(parameterId);
+    }
+  });
+}
+
+async function deleteHoliday(parameterId) {
+  try {
+    const response = await fetch(`/admin/parameter/delete/${parameterId}`, {
+      method: "DELETE",
+    });
+
+    if (response.ok) {
+      Swal.fire("Dihapus!", "Data berhasil dihapus.", "success");
+      fetchSchedules();
+    } else {
+      Swal.fire("Gagal!", "Terjadi kesalahan saat menghapus data.", "error");
+    }
+  } catch (error) {
+    console.error("Error deleting parameter:", error);
+    Swal.fire("Gagal!", "Terjadi kesalahan saat menghapus data.", "error");
+  }
+}

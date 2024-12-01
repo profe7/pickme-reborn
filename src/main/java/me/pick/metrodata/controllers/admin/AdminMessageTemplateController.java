@@ -87,25 +87,34 @@ public class AdminMessageTemplateController {
 
     @PostMapping("/create")
     // @PreAuthorize("hasAnyAuthority('CREATE_PARAMETER')")
-    public ResponseEntity<Void> create(@RequestBody MessageTemplateRequest request) {
-
+    public ResponseEntity<Map<String, Object>> create(@RequestBody MessageTemplateRequest request) {
+        Map<String, Object> response = new HashMap<>();
         try {
             messageTemplateService.create(request);
-            return ResponseEntity.status(HttpStatus.OK).build();
+            response.put("message", "Template pesan baru berhasil ditambahkan");
+            response.put("status", "success");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            response.put("message", "Terjadi kesalahan saat menambahkan template pesan baru");
+            response.put("status", "error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
     @PutMapping("/update/{id}")
     // @PreAuthorize("hasAnyAuthority('UPDATE_PARAMETER')")
-    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody MessageTemplateRequest request) {
-
+    public ResponseEntity<Map<String, Object>> update(@PathVariable Long id,
+            @RequestBody MessageTemplateRequest request) {
+        Map<String, Object> response = new HashMap<>();
         try {
             messageTemplateService.update(id, request);
-            return ResponseEntity.status(HttpStatus.OK).build();
+            response.put("message", "Template pesan berhasil diperbarui");
+            response.put("status", "success");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            response.put("message", "Terjadi kesalahan saat memperbarui template pesan");
+            response.put("status", "error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 }

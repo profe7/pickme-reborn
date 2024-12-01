@@ -152,7 +152,7 @@ async function deleteHoliday(holidayId) {
       Swal.fire("Gagal!", "Terjadi kesalahan saat menghapus data.", "error");
     }
   } catch (error) {
-    console.error("Error deleting vacancy:", error);
+    console.error("Error deleting holiday:", error);
     Swal.fire("Gagal!", "Terjadi kesalahan saat menghapus data.", "error");
   }
 }
