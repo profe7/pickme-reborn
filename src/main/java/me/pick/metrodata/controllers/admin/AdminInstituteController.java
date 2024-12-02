@@ -93,25 +93,34 @@ public class AdminInstituteController {
 
     @PostMapping("/create")
     // @PreAuthorize("hasAnyAuthority('CREATE_PARAMETER')")
-    public ResponseEntity<Void> create(@RequestBody InstituteRequest instituteRequest) {
-
+    public ResponseEntity<Map<String, Object>> create(@RequestBody InstituteRequest instituteRequest) {
+        Map<String, Object> response = new HashMap<>();
         try {
             instituteService.create(instituteRequest);
-            return ResponseEntity.status(HttpStatus.OK).build();
+            response.put("message", "Instansi baru berhasil ditambahkan");
+            response.put("status", "success");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            response.put("message", "Terjadi kesalahan saat menambahkan instansi baru");
+            response.put("status", "error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
     @PutMapping("/update/{id}")
     // @PreAuthorize("hasAnyAuthority('UPDATE_PARAMETER')")
-    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody InstituteRequest instituteRequest) {
-
+    public ResponseEntity<Map<String, Object>> update(@PathVariable Long id,
+            @RequestBody InstituteRequest instituteRequest) {
+        Map<String, Object> response = new HashMap<>();
         try {
             instituteService.update(id, instituteRequest);
-            return ResponseEntity.status(HttpStatus.OK).build();
+            response.put("message", "Instansi berhasil diperbarui");
+            response.put("status", "success");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            response.put("message", "Terjadi kesalahan saat memperbarui instansi");
+            response.put("status", "error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 }

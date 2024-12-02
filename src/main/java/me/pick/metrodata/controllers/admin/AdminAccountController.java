@@ -121,25 +121,34 @@ public class AdminAccountController {
 
     @PostMapping("/create")
     // @PreAuthorize("hasAnyAuthority('CREATE_PARAMETER')")
-    public ResponseEntity<Void> create(@RequestBody AccountRequest accountRequest) {
-
+    public ResponseEntity<Map<String, Object>> create(@RequestBody AccountRequest accountRequest) {
+        Map<String, Object> response = new HashMap<>();
         try {
             accountService.create(accountRequest);
-            return ResponseEntity.status(HttpStatus.OK).build();
+            response.put("message", "Akun baru berhasil ditambahkan");
+            response.put("status", "success");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            response.put("message", "Terjadi kesalahan saat menambahkan akun baru");
+            response.put("status", "error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
     @PutMapping("/update/{id}")
     // @PreAuthorize("hasAnyAuthority('UPDATE_PARAMETER')")
-    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody AccountRequest accountRequest) {
-
+    public ResponseEntity<Map<String, Object>> update(@PathVariable Long id,
+            @RequestBody AccountRequest accountRequest) {
+        Map<String, Object> response = new HashMap<>();
         try {
             accountService.update(id, accountRequest);
-            return ResponseEntity.status(HttpStatus.OK).build();
+            response.put("message", "Akun berhasil diperbarui");
+            response.put("status", "success");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            response.put("message", "Terjadi kesalahan saat memperbarui akun");
+            response.put("status", "error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 

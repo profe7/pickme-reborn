@@ -6,11 +6,14 @@ import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -18,6 +21,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import me.pick.metrodata.enums.InterviewStatus;
 import me.pick.metrodata.enums.InterviewType;
+import me.pick.metrodata.models.dto.requests.InterviewScheduleRequest;
+import me.pick.metrodata.models.dto.requests.ReferenceRequest;
 import me.pick.metrodata.models.dto.responses.InterviewScheduleResponse;
 import me.pick.metrodata.models.entity.InterviewSchedule;
 import me.pick.metrodata.models.entity.User;
@@ -104,5 +109,21 @@ public class AdminInterviewScheduleController {
         model.addAttribute("clients", clientService.getClients());
 
         return "interview-schedule-admin/create";
+    }
+
+    @PostMapping("/create")
+    // @PreAuthorize("hasAnyAuthority('CREATE_PARAMETER')")
+    public ResponseEntity<Map<String, Object>> create(@RequestBody InterviewScheduleRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            interviewScheduleService.inviteToInterview(request);
+            response.put("message", "Jadwal wawancara baru berhasil ditambahkan");
+            response.put("status", "success");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception e) {
+            response.put("message", "Terjadi kesalahan saat menambahkan jadwal wawancara baru");
+            response.put("status", "error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
     }
 }

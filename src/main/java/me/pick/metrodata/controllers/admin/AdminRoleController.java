@@ -96,25 +96,32 @@ public class AdminRoleController {
 
     @PostMapping("/create")
     // @PreAuthorize("hasAnyAuthority('CREATE_PARAMETER')")
-    public ResponseEntity<Void> create(@RequestBody RoleRequest roleRequest) {
-
+    public ResponseEntity<Map<String, Object>> create(@RequestBody RoleRequest roleRequest) {
+        Map<String, Object> response = new HashMap<>();
         try {
-            roleService.create(roleRequest);
-            return ResponseEntity.status(HttpStatus.OK).build();
+            response.put("message", "Role baru berhasil ditambahkan");
+            response.put("status", "success");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            response.put("message", "Terjadi kesalahan saat menambahkan role baru");
+            response.put("status", "error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
     @PutMapping("/update/{id}")
     // @PreAuthorize("hasAnyAuthority('UPDATE_PARAMETER')")
-    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody RoleRequest roleRequest) {
-
+    public ResponseEntity<Map<String, Object>> update(@PathVariable Long id, @RequestBody RoleRequest roleRequest) {
+        Map<String, Object> response = new HashMap<>();
         try {
             roleService.update(id, roleRequest);
-            return ResponseEntity.status(HttpStatus.OK).build();
+            response.put("message", "Role berhasil diperbarui");
+            response.put("status", "success");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            response.put("message", "Terjadi kesalahan saat memperbarui role");
+            response.put("status", "error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 

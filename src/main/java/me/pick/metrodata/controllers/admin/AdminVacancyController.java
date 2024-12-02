@@ -104,26 +104,36 @@ public class AdminVacancyController {
 
     @PostMapping("/create")
     // @PreAuthorize("hasAnyAuthority('CREATE_JOB')")
-    public ResponseEntity<Void> create(@RequestBody VacancyRequest vacancyRequest, HttpServletRequest request) {
-
+    public ResponseEntity<Map<String, Object>> create(@RequestBody VacancyRequest vacancyRequest,
+            HttpServletRequest request) {
+        Map<String, Object> response = new HashMap<>();
         try {
             User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
             vacancyService.create(loggedUser.getId(), vacancyRequest);
-            return ResponseEntity.status(HttpStatus.OK).build();
+            response.put("message", "Lowongan baru berhasil ditambahkan");
+            response.put("status", "success");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            response.put("message", "Terjadi kesalahan saat menambahkan lowongan baru");
+            response.put("status", "error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
     @PutMapping("/update/{id}")
     // @PreAuthorize("hasAnyAuthority('CREATE_JOB')")
-    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody VacancyRequest vacancyRequest) {
-
+    public ResponseEntity<Map<String, Object>> update(@PathVariable Long id,
+            @RequestBody VacancyRequest vacancyRequest) {
+        Map<String, Object> response = new HashMap<>();
         try {
             vacancyService.update(id, vacancyRequest);
-            return ResponseEntity.status(HttpStatus.OK).build();
+            response.put("message", "Lowongan berhasil diperbarui");
+            response.put("status", "success");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            response.put("message", "Terjadi kesalahan saat memperbarui lowongan");
+            response.put("status", "error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
