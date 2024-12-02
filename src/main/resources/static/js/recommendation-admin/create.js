@@ -24,11 +24,9 @@ function submit() {
   }
 
   var data = JSON.stringify({
-    position: position,
     vacancyId: selectRtor,
-    instituteId: selectInstitute,
     description: description,
-    talentIds: selectedTalents,
+    applicantIds: selectedTalents,
   });
 
   Swal.fire({
@@ -56,7 +54,7 @@ function create(data) {
       Swal.fire({
         position: "center",
         icon: "success",
-        title: "Talent baru berhasil ditambahkan",
+        title: "Talent baru berhasil direkomendasikan",
         showConfirmButton: true,
       }).then(() => {
         window.location.href = "/admin/recommendation";
@@ -67,7 +65,7 @@ function create(data) {
       Swal.fire({
         position: "center",
         icon: "error",
-        title: "Talent baru gagal ditambahkan",
+        title: "Talent baru gagal direkomendasikan",
         showConfirmButton: true,
       });
     },
@@ -117,12 +115,12 @@ function populateTalentTable(data) {
   const tbody = $("#talentTable tbody");
   tbody.empty();
 
-  data.forEach((talent) => {
+  data.forEach((applicant) => {
     const row = `
       <tr style="text-align: center">
-        <td>${talent.name}</td>
+        <td>${applicant.talent.name}</td>
         <td>
-          <input type="checkbox" class="select-talent" data-id="${talent.id}" data-name="${talent.name}" data-email="${talent.email}">
+          <input type="checkbox" class="select-talent" data-id="${applicant.id}" data-name="${applicant.talent.name}" data-email="${applicant.talent.email}">
         </td>
       </tr>
     `;
@@ -189,16 +187,16 @@ function deleteTalent(id) {
 }
 
 $("#addTalentButton").on("click", () => {
-  var selectInstitute = $("#selectInstitute").val();
+  var selectRtor = $("#selectRtor").val();
 
-  if (!selectInstitute) {
+  if (!selectRtor) {
     Swal.fire({
       icon: "error",
       title: "Error",
-      text: "Kolom instansi harus diisi terlebih dahulu",
+      text: "Kolom rtor harus diisi terlebih dahulu",
     });
   } else {
-    fetchTalents(selectInstitute);
+    fetchTalents(selectRtor);
     $("#addTalentModal").modal("show");
   }
 });

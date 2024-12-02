@@ -69,4 +69,9 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long>, Jpa
                   @Param("searchPosition") String searchPosition,
                   @Param("searchSkill") String searchSkill,
                   Pageable pageable);
+
+      @Query("SELECT a FROM Applicant a " +
+                  "JOIN a.vacancy v " +
+                  "WHERE v.id = :vacancyId")
+      List<Applicant> findApplicantsByVacancyId(@Param("vacancyId") Long vacancyId);
 }

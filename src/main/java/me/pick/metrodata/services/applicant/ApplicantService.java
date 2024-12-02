@@ -1,13 +1,15 @@
 package me.pick.metrodata.services.applicant;
 
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+
 import me.pick.metrodata.models.dto.requests.ApplicantCreationRequest;
 import me.pick.metrodata.models.dto.requests.MultiTalentApplicantRequest;
 import me.pick.metrodata.models.dto.requests.RecommendApplicantRequest;
+import me.pick.metrodata.models.dto.responses.RecommendApplicantResponse;
 import me.pick.metrodata.models.entity.Applicant;
 import me.pick.metrodata.models.entity.Recommendation;
-import org.springframework.data.domain.Page;
-
-import java.util.List;
 
 public interface ApplicantService {
 
@@ -24,4 +26,7 @@ public interface ApplicantService {
 
     Applicant getApplicantById(Long id);
 
+    List<RecommendApplicantResponse> getRecommendedApplicantList(String vacancy);
+
+    List<Applicant> getApplicantsByVacancy(Long vacancyId);
 }

@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import me.pick.metrodata.enums.VacancyStatus;
+import me.pick.metrodata.models.dto.requests.RecommendApplicantRequest;
+import me.pick.metrodata.models.dto.requests.RecommendationRequest;
 import me.pick.metrodata.models.dto.requests.VacancyRequest;
 import me.pick.metrodata.models.dto.responses.VacancyApplicantsResponse;
 import me.pick.metrodata.models.entity.User;
@@ -29,6 +31,7 @@ import me.pick.metrodata.models.entity.Vacancy;
 import me.pick.metrodata.services.institute.InstituteService;
 import me.pick.metrodata.services.user.UserService;
 import me.pick.metrodata.services.vacancy.VacancyService;
+import me.pick.metrodata.services.applicant.ApplicantService;
 
 @Controller
 @RequestMapping("/admin/vacancy")
@@ -38,6 +41,7 @@ public class AdminVacancyController {
     private final VacancyService vacancyService;
     private final UserService userService;
     private final InstituteService instituteService;
+    private final ApplicantService applicantService;
 
     @GetMapping
     public String index(Model model, HttpServletRequest request) {
@@ -179,5 +183,28 @@ public class AdminVacancyController {
         response.put("totalItems", vacancyPage.getTotalElements());
 
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/applied")
+    // @PreAuthorize("hasAnyAuthority('CREATE_JOB')")
+    public ResponseEntity<Map<String, Object>> applied(@RequestBody RecommendationRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            for (Long applicantId : request.getApplicantIds()) {
+                Long rmId = applicantService.getApplicantById(applicantId).getTalent().getInstitute().getRmUser()
+                        .getId();
+                RecommendApplicantRequest recommendApplicantRequest = new RecommendApplicantRequest(
+                        applicantId,
+                        request.getVacancyId(), rmId, request.getDescription());
+                applicantService.recommendApplicant(recommendApplicantRequest);
+            }
+            response.put("message", "Talent berhasil direkomendasikan");
+            response.put("status", "success");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception e) {
+            response.put("message", "Terjadi kesalahan saat merekomendasikan talent");
+            response.put("status", "error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
     }
 }

@@ -13,14 +13,60 @@ $(document).ready(function () {
     }
   });
 
-  // $("#ccSelect").select2({
-  //   tags: true,
-  //   tokenSeparators: [",", " "],
-  // });
+  $("#position").change(function () {
+    fetchTalents();
+  });
 });
 
+async function fetchTalents() {
+  const position = $("#position").val();
+
+  // Cek jika posisi tidak ada
+  if (!position) {
+    $("#talentId").html(
+      '<option value="" disabled selected>Pilih Talent</option>'
+    );
+    $("#talentId").prop("disabled", true);
+    $("#recruiterId").html(
+      '<option value="" disabled selected>Pilih Perekrut/Klien</option>'
+    );
+    $("#recruiterId").prop("disabled", true);
+    return;
+  }
+
+  try {
+    const applicantResponse = await fetch(
+      `/admin/interview-schedule/create/talent?position=${position}`
+    );
+    const response = await applicantResponse.json();
+
+    let talentOptions =
+      '<option value="" disabled selected>Pilih Talent</option>';
+    let recruiterOptions =
+      '<option value="" disabled selected>Pilih Perekrut/Klien</option>';
+    response.applicants.forEach((applicant) => {
+      talentOptions += `<option value="${applicant.applicantId}">${applicant.talentName}</option>`;
+      recruiterOptions += `<option value="${applicant.clientId}">${applicant.clientName}</option>`;
+    });
+    $("#talentId").html(talentOptions);
+    $("#talentId").prop("disabled", false);
+    $("#recruiterId").html(recruiterOptions);
+    $("#recruiterId").prop("disabled", false);
+  } catch (error) {
+    console.error("Error fetching talents and recruiters:", error);
+
+    $("#talentId").html(
+      '<option value="" disabled selected>Gagal memuat Talent</option>'
+    );
+    $("#talentId").prop("disabled", true);
+    $("#recruiterId").html(
+      '<option value="" disabled selected>Gagal memuat Perekrut/Klien</option>'
+    );
+    $("#recruiterId").prop("disabled", true);
+  }
+}
+
 function submit() {
-  let ccSelect = $("#ccSelect").val();
   let position = $("#position").val();
   let recruiterId = $("#recruiterId").val();
   let talentId = $("#talentId").val();
@@ -35,7 +81,6 @@ function submit() {
   $(".is-invalid").removeClass("is-invalid");
 
   if (
-    !ccSelect.length ||
     !position ||
     !recruiterId ||
     !talentId ||
@@ -45,7 +90,6 @@ function submit() {
     !endTime
   ) {
     showErrorAlert("Semua kolom yang berlabel required harus diisi");
-    if (!ccSelect.length) $("#ccSelect").addClass("is-invalid");
     if (!position) $("#position").addClass("is-invalid");
     if (!recruiterId) $("#recruiterId").addClass("is-invalid");
     if (!talentId) $("#talentId").addClass("is-invalid");
@@ -63,7 +107,6 @@ function submit() {
   let status = "ON_PROCESS";
 
   let data = {
-    ccSelect: ccSelect,
     date: date,
     startTime: startTime,
     endTime: endTime,
