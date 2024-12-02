@@ -16,20 +16,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import me.pick.metrodata.enums.InterviewStatus;
 import me.pick.metrodata.enums.InterviewType;
 import me.pick.metrodata.models.dto.requests.InterviewScheduleRequest;
-import me.pick.metrodata.models.dto.requests.ReferenceRequest;
 import me.pick.metrodata.models.dto.responses.InterviewScheduleResponse;
 import me.pick.metrodata.models.entity.InterviewSchedule;
 import me.pick.metrodata.models.entity.User;
+import me.pick.metrodata.services.applicant.ApplicantService;
 import me.pick.metrodata.services.client.ClientService;
 import me.pick.metrodata.services.interview.InterviewScheduleService;
 import me.pick.metrodata.services.interviewhistory.InterviewScheduleHistoryService;
 import me.pick.metrodata.services.talent.TalentService;
+import me.pick.metrodata.services.vacancy.VacancyService;
 import me.pick.metrodata.services.user.UserService;
 
 @Controller
@@ -42,6 +44,8 @@ public class AdminInterviewScheduleController {
     private final UserService userService;
     private final TalentService talentService;
     private final ClientService clientService;
+    private final VacancyService vacancyService;
+    private final ApplicantService applicantService;
 
     @GetMapping
     // @PreAuthorize("hasAnyAuthority('READ_INTERVIEW')")
@@ -105,10 +109,26 @@ public class AdminInterviewScheduleController {
 
         model.addAttribute("logged", loggedUser);
         model.addAttribute("talents", talentService.getTalents());
+        model.addAttribute("vacancies", vacancyService.getAllPositions());
         model.addAttribute("isActive", "schedule");
         model.addAttribute("clients", clientService.getClients());
 
         return "interview-schedule-admin/create";
+    }
+
+    @GetMapping("/create/talent")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getRecommendApplicant(
+            @RequestParam(value = "position") String position) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            response.put("applicants", applicantService.getRecommendedApplicantList(position));
+            response.put("status", "success");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception e) {
+            response.put("status", "error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
     }
 
     @PostMapping("/create")

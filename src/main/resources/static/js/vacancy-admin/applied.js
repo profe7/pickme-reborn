@@ -172,6 +172,50 @@ document.addEventListener("DOMContentLoaded", () => {
     } of ${totalPages}`;
   };
 
+  const submitButton = document.getElementById("submit-button");
+  submitButton.addEventListener("click", () => {
+    if (!submitButton.disabled) {
+      applied(data);
+    }
+  });
+
+  var data = JSON.stringify({
+    applicantIds: Array.from(selectedApplicants),
+    description: null,
+    position: null,
+    vacancyId: document.getElementById("jobId").value,
+  });
+
+  function applied(data) {
+    $.ajax({
+      url: `/admin/vacancy/applied`,
+      method: "POST",
+      dataType: "JSON",
+      contentType: "application/json",
+      data: data,
+      success: (result) => {
+        $.LoadingOverlay("hide");
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Talent berhasil direkomendasikan",
+          showConfirmButton: true,
+        }).then(() => {
+          window.location.href = "/admin/vacancy";
+        });
+      },
+      error: (e) => {
+        $.LoadingOverlay("hide");
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: "Talent gagal direkomendasikan",
+          showConfirmButton: true,
+        });
+      },
+    });
+  }
+
   window.viewTalentDetail = (applicantId) => {
     const iframe = document.getElementById("talentDetail");
     const noDataDiv = document.getElementById("talentDetailNoData");

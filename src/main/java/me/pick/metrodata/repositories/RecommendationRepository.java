@@ -20,4 +20,7 @@ public interface RecommendationRepository
 
     @Query("SELECT r FROM Recommendation r")
     Page<Recommendation> findAllWithFilters(Pageable pageable);
+
+    @Query("SELECT r FROM Recommendation r WHERE r.vacancy.position = ?1")
+    List<Recommendation> findRecommendationByVacancy(String vacancy);
 }
