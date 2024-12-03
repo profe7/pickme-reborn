@@ -1,5 +1,6 @@
 package me.pick.metrodata.controllers.admin;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +23,7 @@ public class AdminHomeController {
         private final ApplicantService applicantService;
 
         @GetMapping
-        // @PreAuthorize("hasAnyAuthority('MANAGEMENT_READ_ACCOUNT','EXTERNAL_READ_ACCOUNT')")
+        @PreAuthorize("hasAnyAuthority('MANAGEMENT_READ_ACCOUNT','EXTERNAL_READ_ACCOUNT')")
         public String home(Model model, HttpServletRequest request) {
 
                 User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));

@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,7 +52,7 @@ public class AdminInterviewScheduleController {
     private final ApplicantService applicantService;
 
     @GetMapping
-    // @PreAuthorize("hasAnyAuthority('READ_INTERVIEW')")
+    @PreAuthorize("hasAnyAuthority('READ_INTERVIEW')")
     public String index(Model model, HttpServletRequest request) {
 
         User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
@@ -65,6 +66,7 @@ public class AdminInterviewScheduleController {
     }
 
     @GetMapping("/api")
+    @PreAuthorize("hasAnyAuthority('READ_INTERVIEW')")
     public ResponseEntity<Map<String, Object>> getInterviewSchedules(
             @RequestParam(value = "searchRecruiter", required = false) String searchRecruiter,
             @RequestParam(value = "searchTalent", required = false) String searchTalent,
@@ -87,7 +89,7 @@ public class AdminInterviewScheduleController {
     }
 
     @GetMapping("/history/{id}")
-    // @PreAuthorize("hasAnyAuthority('READ_INTERVIEW')")
+    @PreAuthorize("hasAnyAuthority('READ_INTERVIEW')")
     public String history(@PathVariable Long id, Model model, HttpServletRequest request) {
 
         User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
@@ -106,6 +108,7 @@ public class AdminInterviewScheduleController {
     }
 
     @GetMapping("/create")
+    @PreAuthorize("hasAnyAuthority('CREATE_INTERVIEW')")
     public String createForm(Model model, HttpServletRequest request) {
 
         User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
@@ -120,6 +123,7 @@ public class AdminInterviewScheduleController {
     }
 
     @GetMapping("/create/talent")
+    @PreAuthorize("hasAnyAuthority('CREATE_INTERVIEW')")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getRecommendApplicant(
             @RequestParam(value = "position") String position) {
@@ -135,7 +139,7 @@ public class AdminInterviewScheduleController {
     }
 
     @PostMapping("/create")
-    // @PreAuthorize("hasAnyAuthority('CREATE_PARAMETER')")
+    @PreAuthorize("hasAnyAuthority('CREATE_INTERVIEW')")
     public ResponseEntity<Map<String, Object>> create(@RequestBody InterviewScheduleRequest request) {
         Map<String, Object> response = new HashMap<>();
         try {
@@ -151,7 +155,7 @@ public class AdminInterviewScheduleController {
     }
 
     @GetMapping("/export")
-    // @PreAuthorize("hasAnyAuthority('READ_INTERVIEW')")
+    @PreAuthorize("hasAnyAuthority('READ_INTERVIEW')")
     public ResponseEntity<ByteArrayResource> exportInterviewData(
             @RequestParam(value = "searchRecruiter", required = false) String searchRecruiter,
             @RequestParam(value = "searchTalent", required = false) String searchTalent,

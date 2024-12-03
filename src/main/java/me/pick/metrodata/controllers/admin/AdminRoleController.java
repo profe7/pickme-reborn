@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,6 +38,7 @@ public class AdminRoleController {
     private final PrivilegeService privilegeService;
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('READ_ROLE')")
     public String index(Model model, HttpServletRequest request) {
 
         User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
@@ -47,7 +49,7 @@ public class AdminRoleController {
     }
 
     @GetMapping("/api")
-    // @PreAuthorize("hasAnyAuthority('READ_TALENT')")
+    @PreAuthorize("hasAnyAuthority('READ_ROLE')")
     public ResponseEntity<Map<String, Object>> getRoles(
             @RequestParam(value = "page", required = false) Integer page,
             @RequestParam(defaultValue = "10", required = false) Integer size) {
@@ -61,7 +63,7 @@ public class AdminRoleController {
     }
 
     @GetMapping("/create")
-    // @PreAuthorize("hasAnyAuthority('CREATE_ROLE')")
+    @PreAuthorize("hasAnyAuthority('CREATE_ROLE')")
     public String createForm(Model model, HttpServletRequest request) {
 
         User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
@@ -74,7 +76,7 @@ public class AdminRoleController {
     }
 
     @GetMapping("/update/{id}")
-    // @PreAuthorize("hasAnyAuthority('UPDATE_ROLE')")
+    @PreAuthorize("hasAnyAuthority('UPDATE_ROLE')")
     public String updateForm(@PathVariable Long id, Model model, HttpServletRequest request) {
 
         User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
@@ -89,13 +91,13 @@ public class AdminRoleController {
     }
 
     @GetMapping("/{id}")
-    // @PreAuthorize("hasAnyAuthority('READ_ROLE')")
+    @PreAuthorize("hasAnyAuthority('READ_ROLE')")
     public Role getById(@PathVariable Long id) {
         return roleService.getRoleById(id);
     }
 
     @PostMapping("/create")
-    // @PreAuthorize("hasAnyAuthority('CREATE_PARAMETER')")
+    @PreAuthorize("hasAnyAuthority('CREATE_ROLE')")
     public ResponseEntity<Map<String, Object>> create(@RequestBody RoleRequest roleRequest) {
         Map<String, Object> response = new HashMap<>();
         try {
@@ -110,7 +112,7 @@ public class AdminRoleController {
     }
 
     @PutMapping("/update/{id}")
-    // @PreAuthorize("hasAnyAuthority('UPDATE_PARAMETER')")
+    @PreAuthorize("hasAnyAuthority('UPDATE_ROLE')")
     public ResponseEntity<Map<String, Object>> update(@PathVariable Long id, @RequestBody RoleRequest roleRequest) {
         Map<String, Object> response = new HashMap<>();
         try {
@@ -126,7 +128,7 @@ public class AdminRoleController {
     }
 
     @DeleteMapping("/delete/{id}")
-    // @PreAuthorize("hasAnyAuthority('DELETE_PARAMETER')")
+    @PreAuthorize("hasAnyAuthority('DELETE_ROLE')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
 
         try {

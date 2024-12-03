@@ -53,7 +53,6 @@ public class AdminRecommendationController {
     }
 
     @GetMapping("/api")
-    // @PreAuthorize("hasAnyAuthority('READ_TALENT')")
     public ResponseEntity<Map<String, Object>> getRecommendations(
             @RequestParam(value = "page", required = false) Integer page,
             @RequestParam(defaultValue = "10", required = false) Integer size) {
@@ -81,7 +80,6 @@ public class AdminRecommendationController {
     }
 
     @GetMapping("/detail/talent/{id}")
-    // @PreAuthorize("hasAnyAuthority('READ_JOB')")
     public ResponseEntity<Map<String, Object>> getDetailTalents(
             @PathVariable Long id,
             @RequestParam(value = "searchName", required = false, defaultValue = "") String searchName,
@@ -103,7 +101,6 @@ public class AdminRecommendationController {
     }
 
     @DeleteMapping("/delete/{id}")
-    // @PreAuthorize("hasAnyAuthority('CREATE_JOB')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
 
         try {
@@ -115,7 +112,6 @@ public class AdminRecommendationController {
     }
 
     @GetMapping("/talent/{id}")
-    // @PreAuthorize("hasAnyAuthority('READ_JOB')")
     public ResponseEntity<List<Applicant>> getTalents(@PathVariable Long id) {
 
         List<Applicant> applicants = applicantService.getApplicantsByVacancy(id);
@@ -124,7 +120,6 @@ public class AdminRecommendationController {
     }
 
     @GetMapping("/create")
-    // @PreAuthorize("hasAnyAuthority('CREATE_PARAMETER')")
     public String createForm(Model model, HttpServletRequest request) {
 
         User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
@@ -137,7 +132,6 @@ public class AdminRecommendationController {
     }
 
     @PostMapping("/create")
-    // @PreAuthorize("hasAnyAuthority('CREATE_JOB')")
     public ResponseEntity<Map<String, Object>> applied(@RequestBody RecommendationRequest request) {
         Map<String, Object> response = new HashMap<>();
         try {

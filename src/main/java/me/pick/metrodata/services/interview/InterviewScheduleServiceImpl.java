@@ -361,7 +361,7 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
             dataStyle.setFont(dataFont);
 
             Row headerRow = sheet.createRow(0);
-            String[] headers = { "Perekrut", "Talent", "Posisi", "Wawancara", "Tanggal", "Waktu Mulai", "Waktu Selesai",
+            String[] headers = { "Perekrut", "Talent", "Posisi", "Wawancara", "Tanggal", "Waktu",
                     "Status" };
             for (int i = 0; i < headers.length; i++) {
                 Cell cell = headerRow.createCell(i);
@@ -372,14 +372,14 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
             int rowNum = 1;
             for (InterviewSchedule interview : interviews) {
                 Row row = sheet.createRow(rowNum++);
-                row.createCell(0).setCellValue(interview.getRecruiter().getInstitute().getName());
-                row.createCell(1).setCellValue(interview.getTalent().getName());
+                row.createCell(0).setCellValue(interview.getClient().getUser().getInstitute().getInstituteName());
+                row.createCell(1).setCellValue(interview.getApplicant().getTalent().getName());
                 row.createCell(2).setCellValue(interview.getPosition());
-                row.createCell(3).setCellValue(interview.getOffline() ? "online" : "offline");
+                row.createCell(3).setCellValue(interview.getInterviewType().toString());
                 row.createCell(4).setCellValue(interview.getDate().toString());
-                row.createCell(5).setCellValue(interview.getStartTime().toString());
-                row.createCell(6).setCellValue(interview.getEndTime().toString());
-                row.createCell(7).setCellValue(interview.getStatus().getName());
+                row.createCell(5).setCellValue(interview.getStartTime().toString() + " - " + interview.getEndTime()
+                        .toString());
+                row.createCell(7).setCellValue(interview.getStatus().toString());
                 for (int i = 0; i < headers.length; i++) {
                     row.getCell(i).setCellStyle(dataStyle);
                 }
