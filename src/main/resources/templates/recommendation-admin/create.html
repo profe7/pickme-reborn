@@ -48,12 +48,14 @@
                     <h4 class="fw-bold mb-3">Formulir Rekomendasi</h4>
                     <div class="mb-3 col-12">
                       <label for="position" class="required">Posisi</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="position"
-                        name="position"
-                      />
+                      <select id="position" class="form-control">
+                        <option value="" selected>Pilih Posisi</option>
+                        <option
+                          th:each="vacancy: ${vacancies}"
+                          th:value="${vacancy.id}"
+                          th:text="${vacancy.position}"
+                        ></option>
+                      </select>
                       <div class="invalid-feedback">Kolom ini harus diisi</div>
                     </div>
                     <div class="container row">
