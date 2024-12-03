@@ -1,5 +1,7 @@
 package me.pick.metrodata.services.interview;
 
+import java.io.ByteArrayOutputStream;
+
 import lombok.RequiredArgsConstructor;
 import me.pick.metrodata.enums.ApplicantStatus;
 import me.pick.metrodata.enums.InterviewStatus;
@@ -21,6 +23,7 @@ import me.pick.metrodata.repositories.specifications.InterviewScheduleSpecificat
 import me.pick.metrodata.services.email.EmailService;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -28,12 +31,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 @Service
 @RequiredArgsConstructor
@@ -285,8 +291,7 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
                 .map(history -> new InterviewHistoryResponse(
                         interviewSchedule.getApplicant().getTalent().getName(),
                         history.getStatus().toString(),
-                        history.getCreated_at()
-                ))
+                        history.getCreated_at()))
                 .collect(Collectors.toList());
     }
 
@@ -318,5 +323,76 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
             return interviewScheduleResponse;
         })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public ByteArrayResource export(String searchRecruiter, String searchTalent, InterviewType type, LocalDate date,
+            InterviewStatus status) {
+        List<InterviewSchedule> interviews = interviewScheduleRepository.findAllWithFilters(searchRecruiter,
+                searchTalent, type, date, status);
+
+        try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            Sheet sheet = workbook.createSheet("Interview Schedules");
+
+            // Define cell styles
+            CellStyle headerStyle = workbook.createCellStyle();
+            headerStyle.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex()); // Soft blue color
+            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            headerStyle.setAlignment(HorizontalAlignment.CENTER); // Text alignment to center
+            Font headerFont = workbook.createFont();
+            headerFont.setFontName("Times New Roman");
+            headerFont.setFontHeightInPoints((short) 12);
+            headerFont.setBold(true);
+            headerStyle.setFont(headerFont);
+            headerStyle.setBorderTop(BorderStyle.THIN);
+            headerStyle.setBorderBottom(BorderStyle.THIN);
+            headerStyle.setBorderLeft(BorderStyle.THIN);
+            headerStyle.setBorderRight(BorderStyle.THIN);
+
+            CellStyle dataStyle = workbook.createCellStyle();
+            dataStyle.setAlignment(HorizontalAlignment.CENTER);
+            dataStyle.setBorderTop(BorderStyle.THIN);
+            dataStyle.setBorderBottom(BorderStyle.THIN);
+            dataStyle.setBorderLeft(BorderStyle.THIN);
+            dataStyle.setBorderRight(BorderStyle.THIN);
+            Font dataFont = workbook.createFont();
+            dataFont.setFontName("Times New Roman");
+            dataFont.setFontHeightInPoints((short) 12);
+            dataStyle.setFont(dataFont);
+
+            Row headerRow = sheet.createRow(0);
+            String[] headers = { "Perekrut", "Talent", "Posisi", "Wawancara", "Tanggal", "Waktu Mulai", "Waktu Selesai",
+                    "Status" };
+            for (int i = 0; i < headers.length; i++) {
+                Cell cell = headerRow.createCell(i);
+                cell.setCellValue(headers[i]);
+                cell.setCellStyle(headerStyle);
+            }
+
+            int rowNum = 1;
+            for (InterviewSchedule interview : interviews) {
+                Row row = sheet.createRow(rowNum++);
+                row.createCell(0).setCellValue(interview.getRecruiter().getInstitute().getName());
+                row.createCell(1).setCellValue(interview.getTalent().getName());
+                row.createCell(2).setCellValue(interview.getPosition());
+                row.createCell(3).setCellValue(interview.getOffline() ? "online" : "offline");
+                row.createCell(4).setCellValue(interview.getDate().toString());
+                row.createCell(5).setCellValue(interview.getStartTime().toString());
+                row.createCell(6).setCellValue(interview.getEndTime().toString());
+                row.createCell(7).setCellValue(interview.getStatus().getName());
+                for (int i = 0; i < headers.length; i++) {
+                    row.getCell(i).setCellStyle(dataStyle);
+                }
+            }
+            for (int i = 0; i < headers.length; i++) {
+                sheet.autoSizeColumn(i);
+            }
+
+            workbook.write(outputStream);
+
+            return new ByteArrayResource(outputStream.toByteArray());
+        } catch (IOException e) {
+            return null;
+        }
     }
 }

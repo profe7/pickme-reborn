@@ -69,4 +69,17 @@ public interface InterviewScheduleRepository
                         + "JOIN a.talent t "
                         + "WHERE t.id = :talentId")
         List<InterviewSchedule> findInterviewScheduleByTalentId(@Param("talentId") String talentId);
+
+        @Query("SELECT i FROM InterviewSchedule i WHERE "
+                        + "(:recruiter IS NULL OR i.client.user.firstName LIKE %:recruiter%) AND "
+                        + "(:talent IS NULL OR i.applicant.talent.name LIKE %:talent%) AND "
+                        + "(:type IS NULL OR i.interviewType = :type) AND "
+                        + "(:date IS NULL OR i.date = :date) AND "
+                        + "(:status IS NULL OR i.status = :status)")
+        List<InterviewSchedule> findAllWithFilters(
+                        @Param("recruiter") String recruiter,
+                        @Param("talent") String talent,
+                        @Param("type") InterviewType type,
+                        @Param("date") LocalDate date,
+                        @Param("status") InterviewStatus status);
 }

@@ -14,6 +14,21 @@ document.addEventListener("DOMContentLoaded", function () {
   document
     .getElementById("status")
     .addEventListener("change", () => fetchSchedules());
+  document
+    .getElementById("exportButton")
+    .addEventListener("click", () => exportData());
+
+  function exportData() {
+    const searchRecruiter = document.getElementById("searchRecruiter").value;
+    const searchTalent = document.getElementById("searchTalent").value;
+    const type = document.getElementById("type").value;
+    const date = document.getElementById("date").value;
+    const status = document.getElementById("status").value;
+
+    var url = `/admin/interview-schedule/export?searchRecruiter=${searchRecruiter}&searchTalent=${searchTalent}&type=${type}&date=${date}&status=${status}`;
+
+    window.location.href = url;
+  }
 
   async function fetchSchedules(page = 0) {
     const searchRecruiter = document.getElementById("searchRecruiter").value;
