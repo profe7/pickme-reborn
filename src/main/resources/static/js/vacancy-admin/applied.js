@@ -175,7 +175,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const submitButton = document.getElementById("submit-button");
   submitButton.addEventListener("click", () => {
     if (!submitButton.disabled) {
-      applied(data);
+      Swal.fire({
+        position: "center",
+        title: "Apakah Anda yakin ingin merekomendasikan 'Talent' ini?",
+        icon: "warning",
+        confirmButtonText: "Ya",
+        cancelButtonText: "Tidak",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          applied(data);
+        }
+      });
     }
   });
 
@@ -201,7 +211,7 @@ document.addEventListener("DOMContentLoaded", () => {
           title: "Talent berhasil direkomendasikan",
           showConfirmButton: true,
         }).then(() => {
-          window.location.href = "/admin/vacancy";
+          window.location.href = "#";
         });
       },
       error: (e) => {
