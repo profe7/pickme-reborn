@@ -1,6 +1,5 @@
 <div th:fragment="sidebar">
   <aside class="main-sidebar elevation-4 sidebar-dark-navy sidebar-color">
-    <!-- Brand Logo -->
     <a
       th:href="@{/admin}"
       class="brand-link d-flex align-items-center justify-content-center"
@@ -13,21 +12,13 @@
       <span class="brand-text text-white fw-bold">PICK-ME</span>
     </a>
 
-    <!-- Sidebar -->
     <div class="sidebar">
-      <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul
           class="nav nav-pills nav-sidebar flex-column"
           data-widget="treeview"
           role="menu"
         >
-          <!-- <li class="nav-item">
-            <a th:href="@{/user}" class="nav-link">
-              <i class="nav-icon fa fa-user"></i>
-              <p>User</p>
-            </a>
-          </li> -->
           <li class="nav-item">
             <a
               th:href="@{/admin}"

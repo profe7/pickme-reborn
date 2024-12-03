@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +30,7 @@ public class AdminTalentController {
     private final UserService userService;
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('READ_TALENT')")
     public String index(Model model, HttpServletRequest request) {
 
         User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
@@ -39,7 +41,7 @@ public class AdminTalentController {
     }
 
     @GetMapping("/api")
-    // @PreAuthorize("hasAnyAuthority('READ_TALENT')")
+    @PreAuthorize("hasAnyAuthority('READ_TALENT')")
     public ResponseEntity<Map<String, Object>> getTalents(
             @RequestParam(value = "searchName", required = false) String searchName,
             @RequestParam(value = "searchMitra", required = false) String searchMitra,
@@ -56,7 +58,7 @@ public class AdminTalentController {
     }
 
     @GetMapping("/detail/{id}")
-    // @PreAuthorize("hasAnyAuthority('READ_INTERVIEW')")
+    @PreAuthorize("hasAnyAuthority('READ_TALENT')")
     public String detail(@PathVariable String id, Model model, HttpServletRequest request) {
 
         User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));

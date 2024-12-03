@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -44,6 +45,7 @@ public class AdminVacancyController {
     private final ApplicantService applicantService;
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('READ_JOB')")
     public String index(Model model, HttpServletRequest request) {
 
         User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
@@ -55,7 +57,7 @@ public class AdminVacancyController {
     }
 
     @GetMapping("/api")
-    // @PreAuthorize("hasAnyAuthority('READ_JOB')")
+    @PreAuthorize("hasAnyAuthority('READ_JOB')")
     public ResponseEntity<Map<String, Object>> getVacancies(
             @RequestParam(value = "searchTitle", required = false, defaultValue = "") String searchTitle,
             @RequestParam(value = "searchPosition", required = false) String searchPosition,
@@ -77,7 +79,7 @@ public class AdminVacancyController {
     }
 
     @GetMapping("/create")
-    // @PreAuthorize("hasAnyAuthority('CREATE_JOB')")
+    @PreAuthorize("hasAnyAuthority('CREATE_JOB')")
     public String createForm(Model model, HttpServletRequest request) {
 
         User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
@@ -90,7 +92,7 @@ public class AdminVacancyController {
     }
 
     @GetMapping("/update/{id}")
-    // @PreAuthorize("hasAnyAuthority('UPDATE_JOB')")
+    @PreAuthorize("hasAnyAuthority('UPDATE_JOB')")
     public String updateForm(@PathVariable Long id, Model model, HttpServletRequest request) {
 
         User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
@@ -107,7 +109,7 @@ public class AdminVacancyController {
     }
 
     @PostMapping("/create")
-    // @PreAuthorize("hasAnyAuthority('CREATE_JOB')")
+    @PreAuthorize("hasAnyAuthority('CREATE_JOB')")
     public ResponseEntity<Map<String, Object>> create(@RequestBody VacancyRequest vacancyRequest,
             HttpServletRequest request) {
         Map<String, Object> response = new HashMap<>();
@@ -125,7 +127,7 @@ public class AdminVacancyController {
     }
 
     @PutMapping("/update/{id}")
-    // @PreAuthorize("hasAnyAuthority('CREATE_JOB')")
+    @PreAuthorize("hasAnyAuthority('UPDATE_JOB')")
     public ResponseEntity<Map<String, Object>> update(@PathVariable Long id,
             @RequestBody VacancyRequest vacancyRequest) {
         Map<String, Object> response = new HashMap<>();
@@ -142,7 +144,7 @@ public class AdminVacancyController {
     }
 
     @DeleteMapping("/delete/{id}")
-    // @PreAuthorize("hasAnyAuthority('CREATE_JOB')")
+    @PreAuthorize("hasAnyAuthority('DELETE_JOB')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
 
         try {
@@ -167,7 +169,6 @@ public class AdminVacancyController {
     }
 
     @GetMapping("/applied/applicant/{id}")
-    // @PreAuthorize("hasAnyAuthority('READ_JOB')")
     public ResponseEntity<Map<String, Object>> getApplicant(
             @PathVariable Long id,
             @RequestParam(value = "searchInstitute", required = false, defaultValue = "") String searchInstitute,
@@ -186,7 +187,6 @@ public class AdminVacancyController {
     }
 
     @PostMapping("/applied")
-    // @PreAuthorize("hasAnyAuthority('CREATE_JOB')")
     public ResponseEntity<Map<String, Object>> applied(@RequestBody RecommendationRequest request) {
         Map<String, Object> response = new HashMap<>();
         try {
