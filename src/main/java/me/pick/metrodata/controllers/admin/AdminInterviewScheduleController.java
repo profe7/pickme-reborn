@@ -4,9 +4,12 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -145,5 +148,26 @@ public class AdminInterviewScheduleController {
             response.put("status", "error");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
+    }
+
+    @GetMapping("/export")
+    // @PreAuthorize("hasAnyAuthority('READ_INTERVIEW')")
+    public ResponseEntity<ByteArrayResource> exportInterviewData(
+            @RequestParam(value = "searchRecruiter", required = false) String searchRecruiter,
+            @RequestParam(value = "searchTalent", required = false) String searchTalent,
+            @RequestParam(value = "type", required = false) InterviewType type,
+            @RequestParam(value = "date", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
+            @RequestParam(value = "status", required = false) InterviewStatus status) {
+
+        ByteArrayResource resource = interviewScheduleService.export(searchRecruiter, searchTalent, type,
+                date, status);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=interview_schedules.xlsx");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource);
     }
 }

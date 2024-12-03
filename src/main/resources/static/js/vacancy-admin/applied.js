@@ -179,6 +179,7 @@ document.addEventListener("DOMContentLoaded", () => {
         position: "center",
         title: "Apakah Anda yakin ingin merekomendasikan 'Talent' ini?",
         icon: "warning",
+        showCancelButton: true,
         confirmButtonText: "Ya",
         cancelButtonText: "Tidak",
       }).then((result) => {
@@ -189,11 +190,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  const vacancyId = document.getElementById("jobId").value;
+
   var data = JSON.stringify({
     applicantIds: Array.from(selectedApplicants),
     description: null,
     position: null,
-    vacancyId: document.getElementById("jobId").value,
+    vacancyId: vacancyId,
   });
 
   function applied(data) {
@@ -211,7 +214,7 @@ document.addEventListener("DOMContentLoaded", () => {
           title: "Talent berhasil direkomendasikan",
           showConfirmButton: true,
         }).then(() => {
-          window.location.href = "#";
+          window.location.href = `/admin/vacancy/applied/${vacancyId}`;
         });
       },
       error: (e) => {
