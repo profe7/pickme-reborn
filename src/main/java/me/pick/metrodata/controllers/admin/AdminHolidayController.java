@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
@@ -131,6 +132,21 @@ public class AdminHolidayController {
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PostMapping("/upload")
+    @PreAuthorize("hasAnyAuthority('CREATE_HOLIDAY','UPDATE_HOLIDAY')")
+    public ResponseEntity<String> uploadJsonFile(@RequestParam("json") MultipartFile json) {
+        try {
+            Boolean result = holidayService.uploadJSONFile(json);
+            if (result) {
+                return ResponseEntity.ok("File JSON berhasil diunggah.");
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Gagal mengunggah file JSON.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Terjadi kesalahan sistem.");
         }
     }
 }

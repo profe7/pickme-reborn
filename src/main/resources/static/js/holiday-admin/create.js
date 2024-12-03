@@ -6,6 +6,12 @@ function submit() {
   var name = $("#name").val();
   var description = $("#description").val();
   var date = $("#date").val();
+  var fileInput = $("#customFile")[0].files;
+
+  if (fileInput.length > 0) {
+    handleFileUpload(fileInput[0]);
+    return;
+  }
 
   if (!name || !description || !date) {
     Swal.fire({
@@ -37,6 +43,62 @@ function submit() {
       $.LoadingOverlay("show");
       create(data);
     }
+  });
+}
+
+function handleFileUpload(file) {
+  if (!file.name.endsWith(".json")) {
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "Hanya file dengan format .json yang diperbolehkan",
+    });
+    return;
+  }
+
+  var formData = new FormData();
+  formData.append("json", file);
+
+  Swal.fire({
+    title: "Apakah Anda yakin ingin mengunggah file JSON 'Hari Libur' ini?",
+    showCancelButton: true,
+    confirmButtonText: "Ya",
+    cancelButtonText: `Tidak`,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.LoadingOverlay("show");
+      uploadFile(formData);
+    }
+  });
+}
+
+function uploadFile(formData) {
+  $.ajax({
+    url: `/admin/holiday/upload`,
+    method: "POST",
+    processData: false,
+    contentType: false,
+    data: formData,
+    success: (result) => {
+      $.LoadingOverlay("hide");
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "File JSON berhasil diunggah",
+        showConfirmButton: true,
+      }).then(() => {
+        window.location.href = "/admin/holiday";
+      });
+    },
+    error: (e) => {
+      $.LoadingOverlay("hide");
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Gagal mengunggah file JSON",
+        showConfirmButton: true,
+      });
+    },
   });
 }
 

@@ -379,9 +379,13 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
                 row.createCell(4).setCellValue(interview.getDate().toString());
                 row.createCell(5).setCellValue(interview.getStartTime().toString() + " - " + interview.getEndTime()
                         .toString());
-                row.createCell(7).setCellValue(interview.getStatus().toString());
+                row.createCell(6).setCellValue(interview.getStatus().toString());
                 for (int i = 0; i < headers.length; i++) {
-                    row.getCell(i).setCellStyle(dataStyle);
+                    Cell cell = row.getCell(i);
+                    if (cell == null) {
+                        cell = row.createCell(i);
+                    }
+                    cell.setCellStyle(dataStyle);
                 }
             }
             for (int i = 0; i < headers.length; i++) {
@@ -392,6 +396,7 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
 
             return new ByteArrayResource(outputStream.toByteArray());
         } catch (IOException e) {
+            e.printStackTrace();
             return null;
         }
     }
