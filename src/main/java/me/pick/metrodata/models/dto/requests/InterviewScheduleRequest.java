@@ -1,15 +1,8 @@
 package me.pick.metrodata.models.dto.requests;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import me.pick.metrodata.enums.InterviewType;
-import org.springframework.format.annotation.DateTimeFormat;
-import me.pick.metrodata.enums.InterviewStatus;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Data
 @NoArgsConstructor
@@ -22,11 +15,11 @@ public class InterviewScheduleRequest {
 
     private String interviewLink;
 
-    private InterviewType interviewType;
+    private String interviewType;
 
     private String message;
 
-    private InterviewStatus status;
+    private String status;
 
     private String feedback;
 
@@ -34,20 +27,12 @@ public class InterviewScheduleRequest {
 
     private Long applicantId;
 
-    @DateTimeFormat(pattern = "dd-MM-YYYY")
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    private LocalDate date;
+    private String date;
 
-    @DateTimeFormat(pattern = "dd-MM-YYYY")
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    private LocalDate onBoardDate;
+    private String onBoardDate;
 
-    @DateTimeFormat(pattern = "HH:mm")
-    @JsonFormat(pattern = "HH:mm")
-    private LocalTime startTime;
+    private String startTime;
 
-    @DateTimeFormat(pattern = "HH:mm")
-    @JsonFormat(pattern = "HH:mm")
-    private LocalTime endTime;
+    private String endTime;
 
 }

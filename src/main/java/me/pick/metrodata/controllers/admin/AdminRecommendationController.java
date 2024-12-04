@@ -21,9 +21,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import me.pick.metrodata.models.dto.requests.RecommendApplicantRequest;
 import me.pick.metrodata.models.dto.requests.RecommendationRequest;
+import me.pick.metrodata.models.dto.responses.RecommendApplicantResponse;
 import me.pick.metrodata.models.dto.responses.RecommendationResponse;
 import me.pick.metrodata.models.dto.responses.VacancyApplicantsResponse;
-import me.pick.metrodata.models.entity.Applicant;
 import me.pick.metrodata.models.entity.User;
 import me.pick.metrodata.services.applicant.ApplicantService;
 import me.pick.metrodata.services.institute.InstituteService;
@@ -112,9 +112,9 @@ public class AdminRecommendationController {
     }
 
     @GetMapping("/talent/{id}")
-    public ResponseEntity<List<Applicant>> getTalents(@PathVariable Long id) {
+    public ResponseEntity<List<RecommendApplicantResponse>> getTalents(@PathVariable Long id) {
 
-        List<Applicant> applicants = applicantService.getApplicantsByVacancy(id);
+        List<RecommendApplicantResponse> applicants = applicantService.getApplicantsByVacancy(id);
 
         return ResponseEntity.ok(applicants);
     }
@@ -148,7 +148,7 @@ public class AdminRecommendationController {
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
             response.put("message", "Terjadi kesalahan saat merekomendasikan talent");
-            response.put("status", "error");
+            response.put("status", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }

@@ -156,8 +156,8 @@ function create(data) {
       $.LoadingOverlay("hide");
       Swal.fire({
         position: "center",
-        icon: "success",
-        title: "Jadwal Wawancara berhasil dibuat",
+        icon: "error",
+        title: "Jadwal Wawancara baru gagal dibuat",
         showConfirmButton: true,
       });
     },

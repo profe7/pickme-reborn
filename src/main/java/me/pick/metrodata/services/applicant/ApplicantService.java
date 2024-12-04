@@ -28,5 +28,5 @@ public interface ApplicantService {
 
     List<RecommendApplicantResponse> getRecommendedApplicantList(String vacancy);
 
-    List<Applicant> getApplicantsByVacancy(Long vacancyId);
+    List<RecommendApplicantResponse> getApplicantsByVacancy(Long vacancyId);
 }
