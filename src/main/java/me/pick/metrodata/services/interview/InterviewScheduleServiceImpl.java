@@ -21,6 +21,7 @@ import me.pick.metrodata.models.entity.*;
 import me.pick.metrodata.repositories.*;
 import me.pick.metrodata.repositories.specifications.InterviewScheduleSpecification;
 import me.pick.metrodata.services.email.EmailService;
+import me.pick.metrodata.utils.DateTimeUtil;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.core.io.ByteArrayResource;
@@ -87,9 +88,9 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
                 throw new InterviewScheduleUpdateBadRequestException("Date, start time, and end time must be provided");
             }
             InterviewScheduleRequest check = new InterviewScheduleRequest();
-            check.setDate(request.getDate());
-            check.setStartTime(request.getStartTime());
-            check.setEndTime(request.getEndTime());
+            check.setDate(request.getDate().toString());
+            check.setStartTime(request.getStartTime().toString());
+            check.setEndTime(request.getEndTime().toString());
             check.setClientId(interviewSchedule.getClient().getId());
             RecommendationApplicant recommendedApplicant = recommendationApplicantRepository
                     .findByApplicantIdAndPosition(interviewSchedule.getApplicant().getId(),
@@ -195,14 +196,14 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
 
         InterviewSchedule interviewSchedule = new InterviewSchedule();
         interviewSchedule.setPosition(request.getPosition());
-        interviewSchedule.setDate(request.getDate());
-        interviewSchedule.setStartTime(request.getStartTime());
-        interviewSchedule.setEndTime(request.getEndTime());
+        interviewSchedule.setDate(DateTimeUtil.stringToLocalDate(request.getDate()));
+        interviewSchedule.setStartTime(LocalTime.parse(request.getStartTime()));
+        interviewSchedule.setEndTime(LocalTime.parse(request.getEndTime()));
         interviewSchedule.setLocationAddress(request.getLocationAddress());
         interviewSchedule.setInterviewLink(request.getInterviewLink());
-        interviewSchedule.setInterviewType(request.getInterviewType());
+        interviewSchedule.setInterviewType(InterviewType.valueOf(request.getInterviewType()));
         interviewSchedule.setMessage(request.getMessage());
-        interviewSchedule.setStatus(request.getStatus());
+        interviewSchedule.setStatus(InterviewStatus.valueOf(request.getStatus()));
         interviewSchedule.setClient(client);
         interviewSchedule.setApplicant(applicant);
         return interviewSchedule;
@@ -215,17 +216,17 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
         Applicant applicant = recommendedApplicant.getApplicant();
 
         InterviewSchedule found = interviewScheduleRepository.findInterviewScheduleByClientAndApplicantAndDate(client,
-                applicant, request.getDate());
+                applicant, DateTimeUtil.stringToLocalDate(request.getDate()));
         List<InterviewSchedule> todaysInterviews = interviewScheduleRepository
-                .findInterviewScheduleByClientAndDate(client, request.getDate());
+                .findInterviewScheduleByClientAndDate(client, DateTimeUtil.stringToLocalDate(request.getDate()));
 
         List<LocalTime> reservedTimes = new ArrayList<>();
 
         for (InterviewSchedule interview : todaysInterviews) {
             reservedTimes.add(interview.getStartTime());
             reservedTimes.add(interview.getEndTime());
-            LocalTime start = request.getStartTime();
-            LocalTime end = request.getEndTime();
+            LocalTime start = LocalTime.parse(request.getStartTime());
+            LocalTime end = LocalTime.parse(request.getEndTime());
             while (start.isBefore(end)) {
                 reservedTimes.add(start);
                 start = start.plusMinutes(15);
@@ -233,12 +234,13 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
         }
 
         for (LocalTime time : reservedTimes) {
-            if (request.getStartTime().isBefore(time) && request.getEndTime().isAfter(time)) {
+            if (LocalTime.parse(request.getStartTime()).isBefore(time)
+                    && LocalTime.parse(request.getEndTime()).isAfter(time)) {
                 return true;
-            } else if (request.getStartTime().isAfter(request.getEndTime())
-                    || request.getEndTime().equals(request.getStartTime())
-                    || request.getStartTime().equals(request.getEndTime())
-                    || request.getEndTime().isBefore(request.getStartTime())) {
+            } else if (LocalTime.parse(request.getStartTime()).isAfter(LocalTime.parse(request.getEndTime()))
+                    || LocalTime.parse(request.getEndTime()).equals(LocalTime.parse(request.getStartTime()))
+                    || LocalTime.parse(request.getStartTime()).equals(LocalTime.parse(request.getEndTime()))
+                    || LocalTime.parse(request.getEndTime()).isBefore(LocalTime.parse(request.getStartTime()))) {
                 return true;
             }
         }

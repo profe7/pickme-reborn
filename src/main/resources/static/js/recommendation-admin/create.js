@@ -24,9 +24,10 @@ function submit() {
   }
 
   var data = JSON.stringify({
-    vacancyId: selectRtor,
+    vacancyId: position,
     description: description,
-    applicantIds: selectedTalents,
+    applicantIds: selectedTalents.map((talent) => talent.id),
+    position: null,
   });
 
   Swal.fire({
@@ -54,7 +55,7 @@ function create(data) {
       Swal.fire({
         position: "center",
         icon: "success",
-        title: "Talent baru berhasil direkomendasikan",
+        title: "Talent berhasil direkomendasikan",
         showConfirmButton: true,
       }).then(() => {
         window.location.href = "/admin/recommendation";
@@ -65,7 +66,7 @@ function create(data) {
       Swal.fire({
         position: "center",
         icon: "error",
-        title: "Talent baru gagal direkomendasikan",
+        title: "Talent gagal direkomendasikan",
         showConfirmButton: true,
       });
     },
@@ -118,9 +119,9 @@ function populateTalentTable(data) {
   data.forEach((applicant) => {
     const row = `
       <tr style="text-align: center">
-        <td>${applicant.talent.name}</td>
+        <td>${applicant.talentName}</td>
         <td>
-          <input type="checkbox" class="select-talent" data-id="${applicant.id}" data-name="${applicant.talent.name}" data-email="${applicant.talent.email}">
+          <input type="checkbox" class="select-talent" data-id="${applicant.applicantId}" data-name="${applicant.talentName}" data-email="${applicant.talentEmail}">
         </td>
       </tr>
     `;
@@ -164,7 +165,7 @@ function updateRecommendationTable(newTalents) {
   const tbody = $("#recommendationTbl");
   newTalents.forEach((talent, index) => {
     const row = `
-      <tr id="talent-${talent.id}">
+      <tr style="text-align: center" id="talent-${talent.id}">
         <td>${selectedTalents.length - newTalents.length + index + 1}</td>
         <td>${talent.name}</td>
         <td>${talent.email}</td>
@@ -187,16 +188,35 @@ function deleteTalent(id) {
 }
 
 $("#addTalentButton").on("click", () => {
-  var selectRtor = $("#selectRtor").val();
+  var position = $("#position").val();
 
-  if (!selectRtor) {
+  if (!position) {
     Swal.fire({
       icon: "error",
       title: "Error",
-      text: "Kolom rtor harus diisi terlebih dahulu",
+      text: "Kolom position harus diisi terlebih dahulu",
     });
   } else {
-    fetchTalents(selectRtor);
+    fetchTalents(position);
     $("#addTalentModal").modal("show");
+  }
+});
+
+$("#position").on("change", function () {
+  const selectedOption = $(this).find(":selected");
+
+  const rtorId = selectedOption.data("rtor");
+  const instituteId = selectedOption.data("institute");
+
+  if (rtorId) {
+    $("#selectRtor").val(rtorId);
+  } else {
+    $("#selectRtor").val("");
+  }
+
+  if (instituteId) {
+    $("#selectInstitute").val(instituteId);
+  } else {
+    $("#selectInstitute").val("");
   }
 });

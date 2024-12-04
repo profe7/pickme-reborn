@@ -49,11 +49,13 @@
                     <div class="mb-3 col-12">
                       <label for="position" class="required">Posisi</label>
                       <select id="position" class="form-control">
-                        <option value="" selected>Pilih Posisi</option>
+                        <option value="" disable selected>Pilih Posisi</option>
                         <option
                           th:each="vacancy: ${vacancies}"
                           th:value="${vacancy.id}"
                           th:text="${vacancy.position}"
+                          th:data-rtor="${vacancy.title}"
+                          th:data-institute="${vacancy.client.user.institute.instituteName}"
                         ></option>
                       </select>
                       <div class="invalid-feedback">Kolom ini harus diisi</div>
@@ -63,16 +65,13 @@
                         <label for="selectRtor"
                           >RtR (Request to Recruitment)</label
                         >
-                        <select id="selectRtor" class="form-control">
-                          <option value="" selected>
-                            Pilih Request to Recruitment
-                          </option>
-                          <option
-                            th:each="vacancy: ${vacancies}"
-                            th:value="${vacancy.id}"
-                            th:text="${vacancy.title}"
-                          ></option>
-                        </select>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="selectRtor"
+                          name="selectRtor"
+                          disabled
+                        />
                         <div class="invalid-feedback" id="rtor-error">
                           Kolom ini harus diisi
                         </div>
@@ -82,14 +81,13 @@
                           <label for="selectInstitute" class="required"
                             >Institute</label
                           >
-                          <select id="selectInstitute" class="form-control">
-                            <option value="" selected>Pilih Institute</option>
-                            <option
-                              th:each="institute : ${institutes}"
-                              th:value="${institute.id}"
-                              th:text="${institute.instituteName}"
-                            ></option>
-                          </select>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="selectInstitute"
+                            name="selectInstitute"
+                            disabled
+                          />
                           <div class="invalid-feedback">
                             Kolom ini harus diisi
                           </div>

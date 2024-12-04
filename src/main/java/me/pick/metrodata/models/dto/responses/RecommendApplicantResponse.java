@@ -16,4 +16,6 @@ public class RecommendApplicantResponse {
     private Long clientId;
 
     private String clientName;
+
+    private String talentEmail;
 }

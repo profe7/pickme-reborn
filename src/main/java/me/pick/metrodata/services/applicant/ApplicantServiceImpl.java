@@ -148,13 +148,25 @@ public class ApplicantServiceImpl implements ApplicantService {
             recommendApplicantResponse
                     .setClientName(applicant.getVacancy().getClient().getUser().getFirstName() + ' ' + applicant
                             .getVacancy().getClient().getUser().getLastName());
+            recommendApplicantResponse.setTalentEmail(applicant.getTalent().getEmail());
             return recommendApplicantResponse;
         }).collect(Collectors.toList());
     }
 
     @Override
-    public List<Applicant> getApplicantsByVacancy(Long vacancyId) {
-        return applicantRepository.findApplicantsByVacancyId(vacancyId);
+    public List<RecommendApplicantResponse> getApplicantsByVacancy(Long vacancyId) {
+        return applicantRepository.findApplicantsByVacancyId(vacancyId).stream()
+                .filter(applicant -> StatusCV.COMPLETE.equals(applicant.getTalent().getStatusCV())).map(applicant -> {
+                    RecommendApplicantResponse recommendApplicantResponse = new RecommendApplicantResponse();
+                    recommendApplicantResponse.setApplicantId(applicant.getId());
+                    recommendApplicantResponse.setTalentName(applicant.getTalent().getName());
+                    recommendApplicantResponse.setClientId(applicant.getVacancy().getClient().getId());
+                    recommendApplicantResponse
+                            .setClientName(applicant.getVacancy().getClient().getUser().getFirstName() + ' ' + applicant
+                                    .getVacancy().getClient().getUser().getLastName());
+                    recommendApplicantResponse.setTalentEmail(applicant.getTalent().getEmail());
+                    return recommendApplicantResponse;
+                }).collect(Collectors.toList());
     }
 
 }

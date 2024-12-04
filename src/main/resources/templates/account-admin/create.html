@@ -144,7 +144,7 @@
                           >Role</label
                         >
                         <select class="form-select" id="roleId">
-                          <option value="" selected>Pilih Peran</option>
+                          <option value="" disable selected>Pilih Peran</option>
                           <option
                             th:each="role : ${roles}"
                             th:value="${role.id}"
@@ -160,7 +160,9 @@
                           >Instansi</label
                         >
                         <select class="form-select" id="instituteId">
-                          <option value="" selected>Pilih Instansi</option>
+                          <option value="" disable selected>
+                            Pilih Instansi
+                          </option>
                           <option
                             th:each="institute : ${institutes}"
                             th:value="${institute.id}"
