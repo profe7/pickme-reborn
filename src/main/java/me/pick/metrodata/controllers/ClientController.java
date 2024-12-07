@@ -85,7 +85,7 @@ public class ClientController {
         model.addAttribute("recommendations", recommendations);
         model.addAttribute("pageNumbers", IntStream.range(0, recommendations.getTotalPages()).boxed().toList());
 
-        return "recommendation/view-recommendation-talent";
+        return "client/view-recommendation-talent";
     }
 
     @GetMapping("/interview-schedules")

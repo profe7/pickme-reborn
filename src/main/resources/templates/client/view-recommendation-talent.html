@@ -130,6 +130,7 @@
 <body class="hold-transition sidebar-mini">
 <input type="hidden" id="clientId" th:value="${clientId}">
 
+<div th:replace="~{components/navbar :: navbar-client}"></div>
 <div class="content-wrapper" layout:fragment="content">
   <div id="container" class="container-fluid custom-container px-4">
     <div class="d-flex">

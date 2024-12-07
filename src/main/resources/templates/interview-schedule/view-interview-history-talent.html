@@ -28,6 +28,8 @@
     </style>
 </head>
 <body>
+    
+    <div th:replace="~{components/navbar :: navbar-client}"></div>
     <div class="container my-5">
         <!-- Talent Name -->
         <h3 th:text="'Nama Talent: ' + ${interviewHistory[0]?.namaTalent}" class="mb-3"></h3>

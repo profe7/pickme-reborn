@@ -1,149 +1,3 @@
-<!-- <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    layout:decorate="~{layout/main}">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form CV</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-    <link rel="stylesheet" th:href="@{/css/responsive.css}">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-
-<body>
-    <div th:replace="~{components/navbar :: navbar}"></div>
-    <div class="content-wrapper custom-container" layout:fragment="content">
-        <div class="hero_area">
-            <div class="hero_bg_box">
-                <div class="bg_img_box">
-                </div>
-            </div>
-
-            <div class="container mt-5">
-                <form>
-                    <h5 class="mb-3">Data Pribadi <span class="text-danger">*</span></h5>
-                    <p class="text-muted">Catatan: Harap lengkapi sesuai dengan data Anda saat ini</p>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="namaLengkap" class="form-label">Nama Lengkap <span
-                                    class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="namaLengkap"
-                                placeholder="Masukkan nama lengkap">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="pasFoto" class="form-label">Pas Foto <span class="text-danger">*</span></label>
-                            <div class="d-flex align-items-center">
-                                <div class="me-3">
-                                    <div class="border p-2 rounded"
-                                        style="width: 80px; height: 80px; display: flex; justify-content: center; align-items: center;">
-                                        <span class="text-muted">Klik untuk upload foto</span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <button type="button" class="btn btn-primary btn-sm mb-1">Ubah Foto</button><br>
-                                    <button type="button" class="btn btn-danger btn-sm">Hapus Foto</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="nomorKTP" class="form-label">Nomor KTP <span
-                                    class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="nomorKTP" placeholder="Masukkan nomor KTP">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="tempatLahir" class="form-label">Tempat Lahir <span
-                                    class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="tempatLahir"
-                                placeholder="Masukkan tempat lahir">
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="tanggalLahir" class="form-label">Tanggal Lahir <span
-                                    class="text-danger">*</span></label>
-                            <input type="date" class="form-control" id="tanggalLahir">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="kewarganegaraan" class="form-label">Kewarganegaraan <span
-                                    class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="kewarganegaraan"
-                                placeholder="Masukkan kewarganegaraan">
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="jenisKelamin" class="form-label">Jenis Kelamin <span
-                                    class="text-danger">*</span></label>
-                            <select class="form-select" id="jenisKelamin">
-                                <option value="">--Pilih--</option>
-                                <option value="L">Laki-Laki</option>
-                                <option value="P">Perempuan</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
-                            <select class="form-select" id="status">
-                                <option value="">--Pilih--</option>
-                                <option value="single">Belum Menikah</option>
-                                <option value="married">Menikah</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="agama" class="form-label">Agama <span class="text-danger">*</span></label>
-                            <select class="form-select" id="agama">
-                                <option value="">--Pilih--</option>
-                                <option value="islam">Islam</option>
-                                <option value="kristen">Kristen</option>
-                                <option value="hindu">Hindu</option>
-                                <option value="buddha">Buddha</option>
-                                <option value="lainnya">Lainnya</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
-                            <input type="email" class="form-control" id="email" placeholder="Masukkan email">
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="noTelepon" class="form-label">No Telepon <span
-                                    class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="noTelepon" placeholder="Masukkan nomor telepon">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="alamat" class="form-label">Alamat <span class="text-danger">*</span></label>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <input type="text" class="form-control" id="provinsi" placeholder="Provinsi">
-                                </div>
-                                <div class="col-md-6">
-                                    <input type="text" class="form-control" id="kota" placeholder="Kota">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="alamatLengkap" class="form-label">Alamat Lengkap</label>
-                        <textarea class="form-control" id="alamatLengkap" rows="3"
-                            placeholder="Masukkan alamat lengkap"></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
-            </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-    </div>
-    </div>
-    <div th:insert="~{components/footer :: footer}"></div>
-</body>
-
-</html> -->
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -151,370 +5,1079 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Form Data Pribadi</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Include jQuery from CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Include Bootstrap (required for Summernote) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
 </head>
 
 <body>
-    <div class="container mt-5">
-        <!-- Button untuk membuka/menutup form -->
-        <div class=" card card-body">
-            <button class="btn btn-primary mb-3" type="button" data-bs-toggle="collapse"
-                data-bs-target="#dataPribadiForm" aria-expanded="false" aria-controls="dataPribadiForm"
-                style="height: 9; width: 30px;">
-            </button>
-            <h5 class="mb-3">Data Pribadi <span class="text-danger">*</span></h5>
-        </div>
+    <input type="hidden" id="talentId" th:value="${talentId}">
+    <div class="top">
+        <section class="section">
+            <div class="section-body">
+                <div class="row no-gutters">
+                    <div class="col-12 col-md-12 col-lg-12">
+                        <div id="cv-editor" class="card scrollit shadow shadow-sm"
+                            style="margin: 0; width: 100%; padding: 2%;">
+                            <form id="form" class="needs-validation" novalidate="">
 
-        <!-- Form yang bisa dibuka/tutup -->
-        <div class="collapse" id="dataPribadiForm">
-            <form>
-                <div class="card card-body">
-                    <!-- <h5 class="mb-3">Data Pribadi <span class="text-danger">*</span></h5> -->
-                    <p class="text-muted">Catatan: Harap lengkapi sesuai dengan data Anda saat ini</p>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="namaLengkap" class="form-label">Nama Lengkap <span
-                                    class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="namaLengkap"
-                                placeholder="Masukkan nama lengkap">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="pasFoto" class="form-label">Pas Foto <span class="text-danger">*</span></label>
-                            <div class="d-flex align-items-center">
-                                <div class="me-3">
-                                    <div class="border p-2 rounded"
-                                        style="width: 80px; height: 80px; display: flex; justify-content: center; align-items: center;">
-                                        <span class="text-muted">Klik untuk upload foto</span>
+                                <!-- Data Pribadi -->
+                                 
+                                <div class="card-body border">
+                                    <h2 class="section-title">Data Pribadi <b class="text-danger">*</b></h2>
+                                    <p class="mb-2">
+                                        <i class="text-muted">
+                                            Note: Please type it in English and complete according to your current data
+                                        </i>
+                                    </p>
+
+                                    <div id="sectionPersonal" class="row mb-3 form-group" style="margin-left: 1px;">
+
+                                    </div>
+
+                                    <!-- Tombol untuk menambah data -->
+                                    <div class="row mt-2">
+                                        <div class="form-group col-md-12 col-12">
+                                            <!-- Tombol tambah data -->
+                                            <button class="btn btn-outline-primary p-2" type="button"
+                                                onclick="addNewPersonalForm()">
+                                                <span class="fa fa-plus"> + Tambah Data</span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Template Form untuk input data -->
+                                    <template id="personalFormTemplate">
+                                        <div class="card border mb-3">
+                                            <div class="card-body">
+                                                <div class="row mb-3">
+                                                    <div class="col-md-6">
+                                                        <label for="namaLengkap" class="form-label">Nama Lengkap <span
+                                                                class="text-danger">*</span></label>
+                                                        <input type="text" class="form-control" id="namaLengkap"
+                                                            placeholder="Masukkan nama lengkap">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="pasFoto" class="form-label">Pas Foto <span
+                                                                class="text-danger">*</span></label>
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="me-3">
+                                                                <div class="border p-2 rounded"
+                                                                    style="width: 80px; height: 80px; display: flex; justify-content: center; align-items: center;">
+                                                                    <span class="text-muted">Klik untuk upload
+                                                                        foto</span>
+                                                                </div>
+                                                            </div>
+                                                            <div>
+                                                                <button type="button"
+                                                                    class="btn btn-primary btn-sm mb-1">Ubah
+                                                                    Foto</button><br>
+                                                                <button type="button"
+                                                                    class="btn btn-danger btn-sm">Hapus Foto</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-6">
+                                                        <label for="nomorKTP" class="form-label">Nomor KTP <span
+                                                                class="text-danger">*</span></label>
+                                                        <input type="text" class="form-control" id="nomorKTP"
+                                                            placeholder="Masukkan nomor KTP">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="tempatLahir" class="form-label">Tempat Lahir <span
+                                                                class="text-danger">*</span></label>
+                                                        <input type="text" class="form-control" id="tempatLahir"
+                                                            placeholder="Masukkan tempat lahir">
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-6">
+                                                        <label for="tanggalLahir" class="form-label">Tanggal Lahir <span
+                                                                class="text-danger">*</span></label>
+                                                        <input type="date" class="form-control" id="tanggalLahir">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="kewarganegaraan" class="form-label">Kewarganegaraan
+                                                            <span class="text-danger">*</span></label>
+                                                        <input type="text" class="form-control" id="kewarganegaraan"
+                                                            placeholder="Masukkan kewarganegaraan">
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-6">
+                                                        <label for="jenisKelamin" class="form-label">Jenis Kelamin <span
+                                                                class="text-danger">*</span></label>
+                                                        <select class="form-select" id="jenisKelamin">
+                                                            <option value="">--Pilih--</option>
+                                                            <option value="L">Laki-Laki</option>
+                                                            <option value="P">Perempuan</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="status" class="form-label">Status <span
+                                                                class="text-danger">*</span></label>
+                                                        <select class="form-select" id="status">
+                                                            <option value="">--Pilih--</option>
+                                                            <option value="single">Belum Menikah</option>
+                                                            <option value="married">Menikah</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-6">
+                                                        <label for="agama" class="form-label">Agama <span
+                                                                class="text-danger">*</span></label>
+                                                        <select class="form-select" id="agama">
+                                                            <option value="">--Pilih--</option>
+                                                            <option value="islam">Islam</option>
+                                                            <option value="kristen">Kristen</option>
+                                                            <option value="hindu">Hindu</option>
+                                                            <option value="buddha">Buddha</option>
+                                                            <option value="lainnya">Lainnya</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="email" class="form-label">Email <span
+                                                                class="text-danger">*</span></label>
+                                                        <input type="email" class="form-control" id="email"
+                                                            placeholder="Masukkan email">
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-6">
+                                                        <label for="noTelepon" class="form-label">No Telepon <span
+                                                                class="text-danger">*</span></label>
+                                                        <input type="text" class="form-control" id="noTelepon"
+                                                            placeholder="Masukkan nomor telepon">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="alamat" class="form-label">Alamat <span
+                                                                class="text-danger">*</span></label>
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <input type="text" class="form-control" id="provinsi"
+                                                                    placeholder="Provinsi">
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <input type="text" class="form-control" id="kota"
+                                                                    placeholder="Kota">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="alamatLengkap" class="form-label">Alamat Lengkap</label>
+                                                    <textarea class="form-control" id="alamatLengkap" rows="3"
+                                                        placeholder="Masukkan alamat lengkap"></textarea>
+                                                </div>
+
+
+                                                <!-- Tombol Hapus -->
+                                                <button type="button" class="btn btn-outline-danger btn-sm"
+                                                    onclick="removePersonalForm(this)">
+                                                    <i class="fa fa-trash"></i> Hapus
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+
+                                <!-- Bagian Kemampuan Bahasa -->
+                                <div class="card-body border">
+                                    <h2 class="section-title">Kemampuan Bahasa <b class="text-danger">*</b></h2>
+
+                                    <div id="sectionLanguage" class="row mb-3 form-group" style="margin-left: 1px;">
+
+                                    </div>
+
+                                    <!-- Tombol untuk menambah data -->
+                                    <div class="row mt-2">
+                                        <div class="form-group col-md-12 col-12">
+                                            <!-- Tombol tambah data -->
+                                            <button class="btn btn-outline-primary p-2" type="button"
+                                                onclick="addNewLanguageForm()">
+                                                <span class="fa fa-plus"> + Tambah Data</span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Template Form untuk input data -->
+                                    <template id="languageFormTemplate">
+                                        <div class="card border mb-3">
+                                            <div class="card-body">
+                                                <label for="language" class="form-label fw-bold">Bahasa</label>
+                                                <select class="form-select">
+                                                    <option value="">-- Pilih --</option>
+                                                    <option value="indonesia">Indonesia</option>
+                                                    <option value="english">English</option>
+                                                    <option value="japanese">Japanese</option>
+                                                </select>
+
+                                                <!-- Writing -->
+                                                <div class="row mb-3 align-items-center">
+                                                    <div class="col-md-6">
+                                                        <label for="writing"
+                                                            class="form-label fw-bold">Kemampuan</label>
+                                                        <input type="text" class="form-control" value="Writing"
+                                                            readonly>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="writing-level"
+                                                            class="form-label fw-bold">Tingkat</label>
+                                                        <select class="form-select">
+                                                            <option value="">-- Pilih --</option>
+                                                            <option value="beginner">Beginner</option>
+                                                            <option value="intermediate">Intermediate</option>
+                                                            <option value="advanced">Advanced</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Reading -->
+                                                <div class="row mb-3 align-items-center">
+                                                    <div class="col-md-6">
+                                                        <label for="reading"
+                                                            class="form-label fw-bold">Kemampuan</label>
+                                                        <input type="text" class="form-control" value="Reading"
+                                                            readonly>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="reading-level"
+                                                            class="form-label fw-bold">Tingkat</label>
+                                                        <select class="form-select">
+                                                            <option value="">-- Pilih --</option>
+                                                            <option value="beginner">Beginner</option>
+                                                            <option value="intermediate">Intermediate</option>
+                                                            <option value="advanced">Advanced</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Speaking -->
+                                                <div class="row mb-3 align-items-center">
+                                                    <div class="col-md-6">
+                                                        <label for="speaking"
+                                                            class="form-label fw-bold">Kemampuan</label>
+                                                        <input type="text" class="form-control" value="Speaking"
+                                                            readonly>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="speaking-level"
+                                                            class="form-label fw-bold">Tingkat</label>
+                                                        <select class="form-select">
+                                                            <option value="">-- Pilih --</option>
+                                                            <option value="beginner">Beginner</option>
+                                                            <option value="intermediate">Intermediate</option>
+                                                            <option value="advanced">Advanced</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Tombol Hapus -->
+                                                <button type="button" class="btn btn-outline-danger btn-sm"
+                                                    onclick="removeLanguageForm(this)">
+                                                    <i class="fa fa-trash"></i> Hapus
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+
+
+                                <!-- Pendidikan -->
+                                <div class="card-body border">
+                                    <h2 class="section-title">Pendidikan <b class="text-danger">*</b></h2>
+
+
+                                    <div id="sectionEducation" class="row mb-3 form-group" style="margin-left: 1px;">
+
+                                    </div>
+
+                                    <!-- Tombol untuk menambah data -->
+                                    <div class="row mt-2">
+                                        <div class="form-group col-md-12 col-12">
+                                            <!-- Tombol tambah data -->
+                                            <button class="btn btn-outline-primary p-2" type="button"
+                                                onclick="addNewEducationForm()">
+                                                <span class="fa fa-plus"> + Tambah Data</span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+
+                                    <!-- Template Form untuk input data -->
+                                    <template id="EducationFormTemplate">
+                                        <div class="card border mb-3">
+                                            <div class="card-body">
+                                                <label for="education" class="form-label fw-bold">Universitas /
+                                                    Sekolah</label>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-6">
+                                                        <input type="text" id="school" name="school"
+                                                            class="form-control"
+                                                            placeholder="Masukkan nama universitas/sekolah">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="level" class="form-label fw-bold">Jenjang</label>
+                                                        <select id="level" name="level" class="form-select">
+                                                            <option value="">-- Pilih --</option>
+                                                            <option value="sd">SD</option>
+                                                            <option value="smp">SMP</option>
+                                                            <option value="sma">SMA</option>
+                                                            <option value="diploma">Diploma</option>
+                                                            <option value="sarjana">Sarjana</option>
+                                                            <option value="magister">Magister</option>
+                                                            <option value="doktor">Doktor</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-6">
+                                                        <label for="start-date-education"
+                                                            class="form-label fw-bold">Dimulai
+                                                            dari</label>
+                                                        <input type="date" id="start-date-education"
+                                                            name="start-date-education" class="form-control">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="end-date-education"
+                                                            class="form-label fw-bold">Berakhir
+                                                            pada</label>
+                                                        <input type="date" id="end-date-education"
+                                                            name="end-date-education" class="form-control">
+                                                    </div>
+                                                </div>
+
+
+                                                <!-- Tombol Hapus -->
+                                                <button type="button" class="btn btn-outline-danger btn-sm"
+                                                    onclick="removeEducationForm(this)">
+                                                    <i class="fa fa-trash"></i> Hapus
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+
+                                <!-- Keterampilan -->
+                                <div class="card-body border">
+                                    <h2 class="section-title">Keterampilan <b class="text-danger">*</b></h2>
+
+                                    <div id="sectionSkills" class="row mb-3 form-group" style="margin-left: 1px;">
+
+                                    </div>
+
+                                    <!-- Tombol untuk menambah data -->
+                                    <div class="row mt-2">
+                                        <div class="form-group col-md-12 col-12">
+                                            <button class="btn btn-outline-primary p-2" type="button"
+                                                onclick="addNewSkillsForm()">
+                                                <span class="fa fa-plus"> + Tambah Data</span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Template Form untuk input data -->
+                                    <template id="SkillsFormTemplate">
+                                        <div class="card border mb-3">
+                                            <div class="card-body">
+                                                <label for="skills" class="form-label fw-bold">Skills</label>
+                                                <select class="form-select">
+                                                    <option value="">-- Pilih --</option>
+                                                    <option value="indonesia">HTML</option>
+                                                    <option value="english">JAVA</option>
+                                                    <option value="japanese">JS</option>
+                                                </select>
+
+                                                <div class="row mb-3">
+                                                    <div class="col-md-6">
+                                                        <label for="level" class="form-label fw-bold">Tingkat</label>
+                                                        <select id="level" name="level" class="form-select">
+                                                            <option value="">-- Pilih --</option>
+                                                            <option value="Beginner">Beginner</option>
+                                                            <option value="Intermediate">Intermediate</option>
+                                                            <option value="Advanced">Advanced</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="category"
+                                                            class="form-label fw-bold">Kategori</label>
+                                                        <select id="category" name="category" class="form-select">
+                                                            <option value="">-- Pilih --</option>
+                                                            <option value="hard_skill">Hard Skill</option>
+                                                            <option value="soft_skill">Soft Skill</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Tombol Hapus -->
+                                                <button type="button" class="btn btn-outline-danger btn-sm"
+                                                    onclick="removeSkillsForm(this)">
+                                                    <i class="fa fa-trash"></i> Hapus
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </form>
+
+                            <!-- Riwayat Pekerjaan -->
+                            <div class="card-body border">
+                                <h2 class="section-title">Riwayat Pekerjaan</h2>
+                                <div id="sectionJobHistory" class="row mb-3 form-group" style="margin-left: 1px;">
+
+                                </div>
+
+                                <!-- Tombol untuk menambah data -->
+                                <div class="row mt-2">
+                                    <div class="form-group col-md-12 col-12">
+                                        <button class="btn btn-outline-primary p-2" type="button"
+                                            onclick="addNewJobHistoryForm()">
+                                            <span class="fa fa-plus"> + Tambah Data</span>
+                                        </button>
                                     </div>
                                 </div>
-                                <div>
-                                    <button type="button" class="btn btn-primary btn-sm mb-1">Ubah Foto</button><br>
-                                    <button type="button" class="btn btn-danger btn-sm">Hapus Foto</button>
+
+                                <!-- Template Form untuk input data -->
+                                <template id="JobHistoryFormTemplate">
+                                    <div class="card border mb-3">
+                                        <div class="card-body">
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <label for="company_name"
+                                                        class="form-label fw-bold">Perusahaan</label>
+                                                    <input type="text" id="company_name" name="company_name"
+                                                        class="form-control" placeholder="Masukkan nama perusahaan">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="position" class="form-label fw-bold">Posisi
+                                                        Contract</label>
+                                                    <select id="position" name="position" class="form-select">
+                                                        <option value="" disabled selected>-- Pilih --</option>
+                                                        <option value="Manager">Manager</option>
+                                                        <option value="CEO">CEO</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <div class="form-group form-check">
+                                                        <input type="checkbox" class="form-check-input" id="jobEnroll"
+                                                            onchange="disableEndDate(this, '#end-date-job-history')"
+                                                            style="margin-left: 0!important;">
+                                                        <label for="jobEnroll" class="form-check-label"
+                                                            style="margin-left: 20px!important;">Saya masih bekerja
+                                                            disini</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="contract_status" class="form-label fw-bold">Status
+                                                        Contract</label>
+                                                    <select id="contract_status" name="contract_status"
+                                                        class="form-select">
+                                                        <option value="" disabled selected>-- Pilih --</option>
+                                                        <option value="INTERNSHIP">Internship</option>
+                                                        <option value="CONTRACT">Contract</option>
+                                                        <option value="PART_TIME">Part Time</option>
+                                                        <option value="FULL_TIME">Full Time</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <label for="start-date-job-history"
+                                                        class="form-label fw-bold">Dimulai
+                                                        dari</label>
+                                                    <input type="date" id="start-date-job-history"
+                                                        name="start-date-job-history" class="form-control">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="end-date-job-history"
+                                                        class="form-label fw-bold">Berakhir
+                                                        pada</label>
+                                                    <input type="date" id="end-date-job-history"
+                                                        name="end-date-job-history" class="form-control">
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group col-md-12">
+                                                <label for="inputJobDescription-1" class="form-label fw-bold">Deskripsi
+                                                    Pekerjaan</label>
+                                                <textarea class="form-control" name="description"></textarea>
+                                            </div>
+
+                                            <div class="form-group col-md-12">
+                                                <label for="inputSpesificationProject-1"
+                                                    class="form-label fw-bold">Spesifikasi Proyek</label>
+                                                <textarea class="form-control" name="description"></textarea>
+                                            </div>
+
+                                            <!-- Tombol Hapus -->
+                                            <button type="button" class="btn btn-outline-danger btn-sm"
+                                                onclick="removeJobHistoryForm(this)">
+                                                <i class="fa fa-trash"></i> Hapus
+                                            </button>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <!-- Project -->
+                            <div class="card-body border">
+                                <h2 class="section-title">Project</h2>
+                                <div id="sectionProject" class="row mb-3 form-group" style="margin-left: 1px;">
+
                                 </div>
+
+                                <!-- Tombol untuk menambah data -->
+                                <div class="row mt-2">
+                                    <div class="form-group col-md-12 col-12">
+                                        <button class="btn btn-outline-primary p-2" type="button"
+                                            onclick="addNewProjectForm()">
+                                            <span class="fa fa-plus"> + Tambah Data</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Template Form untuk input data -->
+                                <template id="projectFormTemplate">
+                                    <div class="card border mb-3">
+                                        <div class="card-body">
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <label for="project_name" class="form-label fw-bold">Nama
+                                                        Project</label>
+                                                    <input type="text" id="project_name" name="project_name"
+                                                        class="form-control" placeholder="Masukkan nama project">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="lembaga" class="form-label fw-bold">Lembaga/Perusahaan
+                                                    </label>
+                                                    <input type="text" id="lembaga" name="lembaga" class="form-control"
+                                                        placeholder="Masukkan nama Lembaga/Perusahaan">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-12">
+                                                <label for="inputJobDescription-1" class="form-label fw-bold">Deskripsi
+                                                    Pekerjaan</label>
+                                                <textarea class="form-control" name="description"></textarea>
+                                            </div>
+
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <label for="start-date-project" class="form-label fw-bold">Dimulai
+                                                        dari</label>
+                                                    <input type="date" id="start-date-project" name="start-date-project"
+                                                        class="form-control">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="end-date-project" class="form-label fw-bold">Berakhir
+                                                        pada</label>
+                                                    <input type="date" id="end-date-project" name="end-date-project"
+                                                        class="form-control">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-12">
+                                                <label for="skill" class="form-label fw-bold">Skill</label>
+                                                <select id="skill" name="skill" class="form-select">
+                                                    <option value="" disabled selected>-- Pilih --</option>
+                                                    <option value="java">JAVA</option>
+                                                    <option value="CEO">CEO</option>
+                                                </select>
+                                            </div>
+
+
+                                            <!-- Tombol Hapus -->
+                                            <button type="button" class="btn btn-outline-danger btn-sm"
+                                                onclick="removeProjectForm(this)">
+                                                <i class="fa fa-trash"></i> Hapus
+                                            </button>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <!-- Pelatihan -->
+                            <div class="card-body border">
+                                <h2 class="section-training">Pelatihan</h2>
+
+                                <div id="sectionTraining" class="row mb-3 form-group" style="margin-left: 1px;">
+
+                                </div>
+
+                                <!-- Tombol untuk menambah data -->
+                                <div class="row mt-2">
+                                    <div class="form-group col-md-12 col-12">
+                                        <button class="btn btn-outline-primary p-2" type="button"
+                                            onclick="addNewTrainingForm()">
+                                            <span class="fa fa-plus"> + Tambah Data</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Template Form untuk input data -->
+                                <template id="trainingFormTemplate">
+                                    <div class="card border mb-3">
+                                        <div class="card-body">
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <label for="training_name" class="form-label fw-bold">Nama
+                                                        Pelatihan</label>
+                                                    <input type="text" id="training_name" name="training_name"
+                                                        class="form-control" placeholder="Masukkan nama pelatihan">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="training-date" class="form-label fw-bold">Bulan - Tahun
+                                                    </label>
+                                                    <input type="date" id="training-date" name="training-date"
+                                                        class="form-control">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-12">
+                                                <label for="syllabus" class="form-label fw-bold">Syllabus
+                                                </label>
+                                                <textarea class="form-control" name="syllabus"></textarea>
+                                            </div>
+
+                                            <!-- Tombol Hapus -->
+                                            <button type="button" class="btn btn-outline-danger btn-sm"
+                                                onclick="removeTrainingForm(this)">
+                                                <i class="fa fa-trash"></i> Hapus
+                                            </button>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <!-- Sertifikasi -->
+                            <div class="card-body border">
+                                <h2 class="section-sertification">Sertifikasi</h2>
+
+                                <div id="sectionSertification" class="row mb-3 form-group" style="margin-left: 1px;">
+
+                                </div>
+
+                                <!-- Tombol untuk menambah data -->
+                                <div class="row mt-2">
+                                    <div class="form-group col-md-12 col-12">
+                                        <button class="btn btn-outline-primary p-2" type="button"
+                                            onclick="addNewSertificationForm()">
+                                            <span class="fa fa-plus"> + Tambah Data</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Template Form untuk input data -->
+                                <template id="sertificationFormTemplate">
+                                    <div class="card border mb-3">
+                                        <div class="card-body">
+
+                                            <div class="col-md-12">
+                                                <label for="sertification_name" class="form-label fw-bold">Nama
+                                                    Sertifikasi</label>
+                                                <input type="text" id="sertification_name" name="sertification_name"
+                                                    class="form-control" placeholder="Masukkan nama sertifikasi">
+                                            </div>
+
+
+                                            <div class="col-md-12">
+                                                <label for="lembaga_name" class="form-label fw-bold">Nama
+                                                    Sertifikasi</label>
+                                                <input type="text" id="lembaga_name" name="lembaga_name"
+                                                    class="form-control" placeholder="Masukkan nama lembaga">
+                                            </div>
+
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <label for="start-date-sertification"
+                                                        class="form-label fw-bold">Dikeluarkan pada
+                                                        dari</label>
+                                                    <input type="date" id="start-date-sertification"
+                                                        name="start-date-sertification" class="form-control">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="end-date-sertification"
+                                                        class="form-label fw-bold">Berlaku Sampai
+                                                    </label>
+                                                    <input type="date" id="end-date-sertification"
+                                                        name="end-date-sertification" class="form-control">
+                                                </div>
+                                            </div>
+
+                                            <!-- Tombol Hapus -->
+                                            <button type="button" class="btn btn-outline-danger btn-sm"
+                                                onclick="removeSertificationForm(this)">
+                                                <i class="fa fa-trash"></i> Hapus
+                                            </button>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <!-- Organisasi -->
+                            <div class="card-body border">
+                                <h2 class="section-organization">Organisasi</h2>
+
+                                <div id="sectionOrganization" class="row mb-3 form-group" style="margin-left: 1px;">
+
+                                </div>
+
+                                <!-- Tombol untuk menambah data -->
+                                <div class="row mt-2">
+                                    <div class="form-group col-md-12 col-12">
+                                        <button class="btn btn-outline-primary p-2" type="button"
+                                            onclick="addNewOrganizationForm()">
+                                            <span class="fa fa-plus"> + Tambah Data</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Template Form untuk input data -->
+                                <template id="organizationFormTemplate">
+                                    <div class="card border mb-3">
+                                        <div class="card-body">
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <label for="organization_name" class="form-label fw-bold">Nama
+                                                        Organisasi</label>
+                                                    <input type="text" id="organization_name" name="organization_name"
+                                                        class="form-control" placeholder="Masukkan nama organisasi">
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <label for="organization_position"
+                                                        class="form-label fw-bold">Posisi</label>
+                                                    <select class="form-select">
+                                                        <option value="">-- Pilih --</option>
+                                                        <option value="oc">oc</option>
+                                                        <option value="sc">sc</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <label for="start-date-sertification"
+                                                        class="form-label fw-bold">Dimulai dari
+                                                    </label>
+                                                    <input type="date" id="start-date-organization"
+                                                        name="start-date-organization" class="form-control">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="end-date-organization"
+                                                        class="form-label fw-bold">Berakhir Pada
+                                                    </label>
+                                                    <input type="date" id="end-date-organization"
+                                                        name="end-date-organization" class="form-control">
+                                                </div>
+                                            </div>
+
+                                            <!-- Tombol Hapus -->
+                                            <button type="button" class="btn btn-outline-danger btn-sm"
+                                                onclick="removeOrganizationForm(this)">
+                                                <i class="fa fa-trash"></i> Hapus
+                                            </button>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <!-- Pengalaman Lain -->
+                            <div class="card-body border">
+                                <h2 class="section-experience">Pengalaman Lain</h2>
+                                <div id="sectionExperience" class="row mb-3 form-group" style="margin-left: 1px;">
+
+                                </div>
+
+                                <!-- Tombol untuk menambah data -->
+                                <div class="row mt-2">
+                                    <div class="form-group col-md-12 col-12">
+                                        <button class="btn btn-outline-primary p-2" type="button"
+                                            onclick="addNewExperienceForm()">
+                                            <span class="fa fa-plus"> + Tambah Data</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Template Form untuk input data -->
+                                <template id="experienceFormTemplate">
+                                    <div class="card border mb-3">
+                                        <div class="card-body">
+
+                                            <div class="col-md-12">
+                                                <label for="company_name" class="form-label fw-bold">Nama
+                                                    Pengalaman</label>
+                                                <input type="text" id="company_name" name="company_name"
+                                                    class="form-control" placeholder="Masukkan nama perusahaan">
+                                            </div>
+
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <label for="lembaga" class="form-label fw-bold">Lembaga</label>
+                                                    <input type="text" id="lembaga" name="lembaga" class="form-control"
+                                                        placeholder="Masukkan nama lembaga">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="start-date-experience" class="form-label fw-bold">Bulan
+                                                        - Tahun</label>
+                                                    <input type="date" id="start-date-experience"
+                                                        name="start-date-experience" class="form-control">
+                                                </div>
+
+                                            </div>
+
+                                            <div class="form-group col-md-12">
+                                                <label for="inputExperience" class="form-label fw-bold">Deskripsi
+                                                </label>
+                                                <textarea class="form-control" name="inputExperience"></textarea>
+                                            </div>
+
+                                            <!-- Tombol Hapus -->
+                                            <button type="button" class="btn btn-outline-danger btn-sm"
+                                                onclick="removeExperienceForm(this)">
+                                                <i class="fa fa-trash"></i> Hapus
+                                            </button>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <!-- Penghargaan/Prestasi -->
+                            <div class="card-body border">
+                                <h2 class="section-award">Penghargaan/Prestasi</h2>
+                                <div id="sectionAward" class="row mb-3 form-group" style="margin-left: 1px;">
+
+                                </div>
+
+                                <!-- Tombol untuk menambah data -->
+                                <div class="row mt-2">
+                                    <div class="form-group col-md-12 col-12">
+                                        <button class="btn btn-outline-primary p-2" type="button"
+                                            onclick="addNewAwardForm()">
+                                            <span class="fa fa-plus"> + Tambah Data</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Template Form untuk input data -->
+                                <template id="awardFormTemplate">
+                                    <div class="card border mb-3">
+                                        <div class="card-body">
+
+                                            <div class="col-md-12">
+                                                <label for="award-name" class="form-label fw-bold">Nama
+                                                    Penghargaan/Prestasi</label>
+                                                <input type="text" id="award-name" name="award-name"
+                                                    class="form-control"
+                                                    placeholder="Masukkan nama penghargaan/prestasi">
+                                            </div>
+
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <label for="lembaga" class="form-label fw-bold">Lembaga</label>
+                                                    <input type="text" id="lembaga" name="lembaga" class="form-control"
+                                                        placeholder="Masukkan nama lembaga">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="start-date-experience"
+                                                        class="form-label fw-bold">Tahun</label>
+                                                    <input type="date" id="start-date-experience"
+                                                        name="start-date-experience" class="form-control">
+                                                </div>
+
+                                            </div>
+
+                                            <!-- Tombol Hapus -->
+                                            <button type="button" class="btn btn-outline-danger btn-sm"
+                                                onclick="removeAwardForm(this)">
+                                                <i class="fa fa-trash"></i> Hapus
+                                            </button>
+                                        </div>
+                                    </div>
+                                </template>
                             </div>
                         </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="nomorKTP" class="form-label">Nomor KTP <span
-                                    class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="nomorKTP" placeholder="Masukkan nomor KTP">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="tempatLahir" class="form-label">Tempat Lahir <span
-                                    class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="tempatLahir"
-                                placeholder="Masukkan tempat lahir">
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="tanggalLahir" class="form-label">Tanggal Lahir <span
-                                    class="text-danger">*</span></label>
-                            <input type="date" class="form-control" id="tanggalLahir">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="kewarganegaraan" class="form-label">Kewarganegaraan <span
-                                    class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="kewarganegaraan"
-                                placeholder="Masukkan kewarganegaraan">
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="jenisKelamin" class="form-label">Jenis Kelamin <span
-                                    class="text-danger">*</span></label>
-                            <select class="form-select" id="jenisKelamin">
-                                <option value="">--Pilih--</option>
-                                <option value="L">Laki-Laki</option>
-                                <option value="P">Perempuan</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
-                            <select class="form-select" id="status">
-                                <option value="">--Pilih--</option>
-                                <option value="single">Belum Menikah</option>
-                                <option value="married">Menikah</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="agama" class="form-label">Agama <span class="text-danger">*</span></label>
-                            <select class="form-select" id="agama">
-                                <option value="">--Pilih--</option>
-                                <option value="islam">Islam</option>
-                                <option value="kristen">Kristen</option>
-                                <option value="hindu">Hindu</option>
-                                <option value="buddha">Buddha</option>
-                                <option value="lainnya">Lainnya</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
-                            <input type="email" class="form-control" id="email" placeholder="Masukkan email">
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="noTelepon" class="form-label">No Telepon <span
-                                    class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="noTelepon" placeholder="Masukkan nomor telepon">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="alamat" class="form-label">Alamat <span class="text-danger">*</span></label>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <input type="text" class="form-control" id="provinsi" placeholder="Provinsi">
-                                </div>
-                                <div class="col-md-6">
-                                    <input type="text" class="form-control" id="kota" placeholder="Kota">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="alamatLengkap" class="form-label">Alamat Lengkap</label>
-                        <textarea class="form-control" id="alamatLengkap" rows="3"
-                            placeholder="Masukkan alamat lengkap"></textarea>
-                    </div>
-                    <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
-                </div>
-            </form>
-        </div>
-    </div>
 
-    <!-- Kemampuan Bahasa -->
-    <div class="container mt-5">
-        <div class=" card card-body">
-            <button class="btn btn-primary mb-3" type="button" data-bs-toggle="collapse"
-                data-bs-target="#dataKemampuanBahasa" aria-expanded="false" aria-controls="dataKemampuanBahasa"
-                style="height: 9; width: 30px;">
-            </button>
-            <h5 class="mb-3">Kemampuan Bahasa <span class="text-danger">*</span></h5>
-        </div>
-        <div class="collapse" id="dataKemampuanBahasa">
-            <form>
-                <div class="card card-body">
-                    <label for="language" class="form-label fw-bold">Bahasa</label>
-                    <select id="language" name="language" class="form-select">
-                        <option value="">-- Pilih --</option>
-                        <option value="indonesia">Indonesia</option>
-                        <option value="english">English</option>
-                        <option value="japanese">Japanese</option>
-                    </select>
+                        <div class="d-flex justify-content-end p-3">
+                            <button class="btn btn-info me-2 text-white">
+                                <i class="fas fa-search"></i> Preview CV
+                            </button>
+                            <button class="btn btn-primary text-white">
+                                <i class="fas fa-save"></i> Simpan Perubahan
+                            </button>
+                        </div>
 
-                    <!-- Writing -->
-                    <div class="row mb-3 align-items-center">
-                        <div class="col-md-6">
-                            <label for="writing" class="form-label fw-bold">Kemampuan</label>
-                            <input type="text" id="writing" class="form-control" value="Writing" readonly>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="writing-level" class="form-label fw-bold">Tingkat</label>
-                            <select id="writing-level" name="writing-level" class="form-select">
-                                <option value="">-- Pilih --</option>
-                                <option value="beginner">Beginner</option>
-                                <option value="intermediate">Intermediate</option>
-                                <option value="advanced">Advanced</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- Reading -->
-                    <div class="row mb-3 align-items-center">
-                        <div class="col-md-6">
-                            <label for="reading" class="form-label fw-bold">Kemampuan</label>
-                            <input type="text" id="reading" class="form-control" value="Reading" readonly>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="reading-level" class="form-label fw-bold">Tingkat</label>
-                            <select id="reading-level" name="reading-level" class="form-select">
-                                <option value="">-- Pilih --</option>
-                                <option value="beginner">Beginner</option>
-                                <option value="intermediate">Intermediate</option>
-                                <option value="advanced">Advanced</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- Speaking -->
-                    <div class="row mb-3 align-items-center">
-                        <div class="col-md-6">
-                            <label for="speaking" class="form-label fw-bold">Kemampuan</label>
-                            <input type="text" id="speaking" class="form-control" value="Speaking" readonly>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="speaking-level" class="form-label fw-bold">Tingkat</label>
-                            <select id="speaking-level" name="speaking-level" class="form-select">
-                                <option value="">-- Pilih --</option>
-                                <option value="beginner">Beginner</option>
-                                <option value="intermediate">Intermediate</option>
-                                <option value="advanced">Advanced</option>
-                            </select>
-                        </div>
                     </div>
                 </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Pendidikan -->
-    <div class="container mt-5">
-        <div class=" card card-body">
-            <button class="btn btn-primary mb-3" type="button" data-bs-toggle="collapse"
-                data-bs-target="#dataPendidikan" aria-expanded="false" aria-controls="dataPendidikan"
-                style="height: 9; width: 30px;">
-            </button>
-            <h5 class="mb-3">Pendidikan <span class="text-danger">*</span></h5>
-        </div>
-        <div class="collapse" id="dataPendidikan">
-            <form>
-                <div class="card card-body">
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="school" class="form-label fw-bold">Universitas / Sekolah</label>
-                            <input type="text" id="school" name="school" class="form-control"
-                                placeholder="Masukkan nama universitas/sekolah">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="level" class="form-label fw-bold">Jenjang</label>
-                            <select id="level" name="level" class="form-select">
-                                <option value="">-- Pilih --</option>
-                                <option value="sd">SD</option>
-                                <option value="smp">SMP</option>
-                                <option value="sma">SMA</option>
-                                <option value="diploma">Diploma</option>
-                                <option value="sarjana">Sarjana</option>
-                                <option value="magister">Magister</option>
-                                <option value="doktor">Doktor</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="start-date" class="form-label fw-bold">Dimulai dari</label>
-                            <input type="date" id="start-date" name="start-date" class="form-control">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="end-date" class="form-label fw-bold">Berakhir pada</label>
-                            <input type="date" id="end-date" name="end-date" class="form-control">
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Checkbox -->
-                <!-- <div class="form-check mb-3">
-                    <input type="checkbox" class="form-check-input" id="current-study">
-                    <label class="form-check-label" for="current-study">Saya masih bersekolah di sini</label>
-                </div> -->
-
-                <!-- Tanggal Mulai dan Berakhir -->
-
-            </form>
-        </div>
-    </div>
-
-    <!-- Keterampilan  -->
-    <div class="container mt-5">
-        <div class=" card card-body">
-            <button class="btn btn-primary mb-3" type="button" data-bs-toggle="collapse"
-                data-bs-target="#dataKeterampilan" aria-expanded="false" aria-controls="dataKeterampilan"
-                style="height: 9; width: 30px;">
-            </button>
-            <h5 class="mb-3">Keterampilan <span class="text-danger">*</span></h5>
-        </div>
-        <div class="collapse" id="dataKeterampilan">
-            <form>
-                <div class="card card-body">
-                    <label for="skill" class="form-label fw-bold">Keterampilan</label>
-                    <select id="skill" name="skill" class="form-select">
-                        <option value="">-- Pilih --</option>
-                        <option value="HTML">HTML</option>
-                        <option value="REACT">REACT</option>
-                        <option value="JAVA">JAVA</option>
-                    </select>
-
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="level" class="form-label fw-bold">Tingkat</label>
-                            <select id="level" name="level" class="form-select">
-                                <option value="">-- Pilih --</option>
-                                <option value="Beginner">Beginner</option>
-                                <option value="Intermediate">Intermediate</option>
-                                <option value="Advanced">Advanced</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="category" class="form-label fw-bold">Kategori</label>
-                            <select id="category" name="category" class="form-select">
-                                <option value="">-- Pilih --</option>
-                                <option value="hard_skill">Hard Skill</option>
-                                <option value="soft_skill">Soft Skill</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Keterampilan  -->
-    <div class="container mt-5">
-        <div class=" card card-body">
-            <button class="btn btn-primary mb-3" type="button" data-bs-toggle="collapse"
-                data-bs-target="#dataRiwayatPekerjaan" aria-expanded="false" aria-controls="dataRiwayatPekerjaan"
-                style="height: 9; width: 30px;">
-            </button>
-            <h5 class="mb-3">Riwayat Pekerjaan <span class="text-danger">*</span></h5>
-        </div>
-        <div class="collapse" id="dataRiwayatPekerjaan">
-            <form>
-                <div class="card card-body">
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="company_name" class="form-label fw-bold">Perusahaan</label>
-                            <input type="text" id="company_name" name="company_name" class="form-control"
-                            placeholder="Masukkan nama perusahaan">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="contract_status" class="form-label fw-bold">Status Contract</label>
-                            <select id="contract_status" name="contract_status" class="form-select">
-                                <option value="" disabled selected>-- Pilih --</option>
-                                <option value="INTERNSHIP">Internship</option>
-                                <option value="CONTRACT">Contract</option>
-                                <option value="PART_TIME">Part Time</option>
-                                <option value="FULL_TIME">Full Time</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
+            </div>
+        </section>
 
 
+        <script>
+
+            // Personal
+            function addNewPersonalForm() {
+                const sectionPersonal = document.getElementById('sectionPersonal');
+                const template = document.getElementById('personalFormTemplate');
+                const newForm = document.importNode(template.content, true);
+                sectionPersonal.appendChild(newForm);
+            }
+            function removePersonalForm(button) {
+                const form = button.closest('.card');
+                form.remove();
+            }
+
+            // Kemampuan Bahasa
+            function addNewLanguageForm() {
+                const sectionLanguage = document.getElementById('sectionLanguage');
+                const template = document.getElementById('languageFormTemplate');
+                const newForm = document.importNode(template.content, true);
+                sectionLanguage.appendChild(newForm);
+            }
+            function removeLanguageForm(button) {
+                const form = button.closest('.card');
+                form.remove();
+            }
+
+            // Pendidikan
+            function addNewEducationForm() {
+                const sectionEducation = document.getElementById('sectionEducation');
+                const template = document.getElementById('EducationFormTemplate');
+                const newForm = document.importNode(template.content, true);
+                sectionEducation.appendChild(newForm);
+            }
+            function removeEducationForm(button) {
+                const form = button.closest('.card');
+                form.remove();
+            }
+
+            // Keterampilan
+            function addNewSkillsForm() {
+                const sectionSkills = document.getElementById('sectionSkills');
+                const template = document.getElementById('SkillsFormTemplate');
+                const newForm = document.importNode(template.content, true);
+                sectionSkills.appendChild(newForm);
+            }
+            function removeSkillsForm(button) {
+                const form = button.closest('.card');
+                form.remove();
+            }
+
+            // Riwayat Pekerjaan
+            function addNewJobHistoryForm() {
+                const sectionJobHistory = document.getElementById('sectionJobHistory');
+                const template = document.getElementById('JobHistoryFormTemplate');
+                const newForm = document.importNode(template.content, true);
+                sectionJobHistory.appendChild(newForm);
+            }
+            function removeJobHistoryForm(button) {
+                const form = button.closest('.card');
+                form.remove();
+            }
+            function disableEndDate(checkbox, endDateSelector) {
+                const endDateInput = document.querySelector(endDateSelector);
+
+                // Jika checkbox dicentang, disable end date input
+                if (checkbox.checked) {
+                    endDateInput.disabled = true;
+                    endDateInput.value = '';
+                } else {
+                    endDateInput.disabled = false;
+                }
+            }
+
+            // Project
+            function addNewProjectForm() {
+                const sectionProject = document.getElementById('sectionProject');
+                const template = document.getElementById('projectFormTemplate');
+                const newForm = document.importNode(template.content, true);
+                sectionProject.appendChild(newForm);
+            }
+            function removeProjectForm(button) {
+                const form = button.closest('.card');
+                form.remove();
+            }
+
+            // Training
+            function addNewTrainingForm() {
+                const sectionTraining = document.getElementById('sectionTraining');
+                const template = document.getElementById('trainingFormTemplate');
+                const newForm = document.importNode(template.content, true);
+                sectionTraining.appendChild(newForm);
+            }
+            function removeTrainingForm(button) {
+                const form = button.closest('.card');
+                form.remove();
+            }
+
+            // Sertification
+            function addNewSertificationForm() {
+                const sectionSertification = document.getElementById('sectionSertification');
+                const template = document.getElementById('sertificationFormTemplate');
+                const newForm = document.importNode(template.content, true);
+                sectionSertification.appendChild(newForm);
+            }
+            function removeSertificationForm(button) {
+                const form = button.closest('.card');
+                form.remove();
+            }
+
+            // Organization
+            function addNewOrganizationForm() {
+                const sectionOrganization = document.getElementById('sectionOrganization');
+                const template = document.getElementById('organizationFormTemplate');
+                const newForm = document.importNode(template.content, true);
+                sectionOrganization.appendChild(newForm);
+            }
+            function removeOrganizationForm(button) {
+                const form = button.closest('.card');
+                form.remove();
+            }
 
 
+            // Experience
+            function addNewExperienceForm() {
+                const sectionExperience = document.getElementById('sectionExperience');
+                const template = document.getElementById('experienceFormTemplate');
+                const newForm = document.importNode(template.content, true);
+                sectionExperience.appendChild(newForm);
+            }
+            function removeExperienceForm(button) {
+                const form = button.closest('.card');
+                form.remove();
+            }
 
-
-
-
-
-
-
-
-
+            // Award
+            function addNewAwardForm() {
+                const sectionAward = document.getElementById('sectionAward');
+                const template = document.getElementById('awardFormTemplate');
+                const newForm = document.importNode(template.content, true);
+                sectionAward.appendChild(newForm);
+            }
+            function removeAwardForm(button) {
+                const form = button.closest('.card');
+                form.remove();
+            }
 
 
 
+        </script>
 
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
 </body>
 
 </html>

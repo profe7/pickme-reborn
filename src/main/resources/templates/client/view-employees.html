@@ -109,6 +109,7 @@
     <!-- Main Dashboard Container -->
      
     <input type="hidden" id="clientId" th:value="${clientId}">
+    <div th:replace="~{components/navbar :: navbar-client}"></div>
     <div class="dashboard-container">
         <!-- Summary Box -->
         <div class="summary-box">

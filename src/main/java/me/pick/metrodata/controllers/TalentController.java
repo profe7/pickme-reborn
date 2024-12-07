@@ -40,15 +40,20 @@ public class TalentController {
 
     private final TalentService talentService;
 
-    @GetMapping("/data-completion/{talentId}")
-    public String formAddCompletedTalentData(HttpSession session, @PathVariable("talentId") String talentId, Model model){
-        Long mitraId = (long) session.getAttribute("mitraId");
+    @GetMapping("")
+    public String showTalentDashboard() {
+        return "talent/talent-form-cv"; 
+    }
+   
+    @GetMapping("/data-completion")
+    public String addFormTalent(HttpSession session, Model model){
+        String talentId = (String) session.getAttribute("talentId");
 
         var talentDTO = new TalentDataCompletionRequest();
 
         Talent dataTalentBefore = talentService.findByIdFromRepo(talentId.toString());
 
-        talentDTO.setMitraId(mitraId);
+        talentDTO.setTalentId(talentId);
         talentDTO.setTalentId(dataTalentBefore.getId());
         talentDTO.setTalentFullName(dataTalentBefore.getName());
         talentDTO.setTalentNik(dataTalentBefore.getNik());
@@ -105,7 +110,7 @@ public class TalentController {
 
         model.addAttribute("organizationPosition", organizationPositions);
 
-        return "talent/form-completion-talent";
+        return "talent/talent-form-cv";
 
     }
     
@@ -139,6 +144,5 @@ public class TalentController {
 
         return new RedirectView("/data-completion");
     }
-
 
 }

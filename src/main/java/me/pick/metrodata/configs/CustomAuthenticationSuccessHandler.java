@@ -25,10 +25,15 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         } else if ("MITRA".equals(accountDetail.getAccount().getRole().getName())) {
             request.getSession().setAttribute("mitraId", accountDetail.getAccount().getUser().getMitra().getId());
             redirectUrl = "/mitra";
+        } else if ("TALENT".equals(accountDetail.getAccount().getRole().getName())) {
+            request.getSession().setAttribute("talentId", accountDetail.getAccount().getUser().getTalent().getId());
+            redirectUrl = "/talent";
+        
         } else if ("ADMIN".equals(accountDetail.getAccount().getRole().getName())) {
             request.getSession().setAttribute("userId", accountDetail.getAccount().getUser().getId());
             redirectUrl = "/admin";
         }
+        
 
         response.sendRedirect(redirectUrl);
     }

@@ -53,6 +53,7 @@ public class AppSecurityConfig {
                                         .requestMatchers(new AntPathRequestMatcher("/dist/**")).permitAll()
                                         .requestMatchers(new AntPathRequestMatcher("/fonts/**")).permitAll()
                                         .requestMatchers(new AntPathRequestMatcher("/img/**")).permitAll()
+                                        .requestMatchers(new AntPathRequestMatcher("/talent/**")).authenticated()
                                         .requestMatchers(new AntPathRequestMatcher("/client/**")).authenticated()
                                         .requestMatchers(new AntPathRequestMatcher("/api/v1/**")).authenticated());
                     } catch (Exception e) {
