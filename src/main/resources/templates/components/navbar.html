@@ -100,4 +100,37 @@
     </div>
   </nav>
 </div>
+
+  <!-- NAVBAR TALENT -->
+<div th:fragment="navbar-talent">
+  <nav class="navbar navbar-expand-lg user_nav-container" sec:authorize="hasAuthority('CREATE_INTERVIEW')">
+    <a class="navbar-brand fw-bold" th:href="@{/talent}">
+      <img th:src="@{/img/metrodata-logo.webp}" alt="pickme-logo" class="brand-image border-0" />
+      <span>Pick-Me</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
+      aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+      <ul class="navbar-nav ms-auto">
+        <!-- Home -->
+        <li class="nav-item" th:classappend="${currentPage == '/client' ? 'active fw-bold' : ''}">
+          <a class="nav-link" th:href="@{/talent}">Beranda</a>
+        </li>
+
+        <!-- User Dropdown (Visible to authenticated users) -->
+        <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+          <a class="nav-item nav-link dropdown-toggle cursor-pointer" id="navbarDropdown" role="button"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            <span sec:authentication="name"></span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-lg" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" th:href="@{/logout}">Logout</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </nav>
 </div>
+<!-- END NAVBAR CLIENT -->

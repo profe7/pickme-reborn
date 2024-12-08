@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Form Data Pribadi</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/responsive.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
     <!-- Include jQuery from CDN -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -16,6 +19,7 @@
 
 <body>
     <input type="hidden" id="talentId" th:value="${talentId}">
+    <div th:replace="~{components/navbar :: navbar-talent}"></div>
     <div class="top">
         <section class="section">
             <div class="section-body">
@@ -26,7 +30,7 @@
                             <form id="form" class="needs-validation" novalidate="">
 
                                 <!-- Data Pribadi -->
-                                 
+
                                 <div class="card-body border">
                                     <h2 class="section-title">Data Pribadi <b class="text-danger">*</b></h2>
                                     <p class="mb-2">
@@ -103,29 +107,35 @@
                                                         <input type="date" class="form-control" id="tanggalLahir">
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <label for="kewarganegaraan" class="form-label">Kewarganegaraan
+                                                        <label for="nationality" class="form-label">Kewarganegaraan
                                                             <span class="text-danger">*</span></label>
-                                                        <input type="text" class="form-control" id="kewarganegaraan"
-                                                            placeholder="Masukkan kewarganegaraan">
+                                                        <select class="form-select" th:field="*{nationality}">
+                                                            <option value="">--Pilih--</option>
+                                                            <option th:each="nation : ${nationality}"
+                                                                th:value="${nation}" th:text="${nation}"></option>
+                                                        </select>
                                                     </div>
+
+
                                                 </div>
                                                 <div class="row mb-3">
                                                     <div class="col-md-6">
                                                         <label for="jenisKelamin" class="form-label">Jenis Kelamin <span
                                                                 class="text-danger">*</span></label>
-                                                        <select class="form-select" id="jenisKelamin">
+                                                        <select class="form-select" th:field="*{genders}">
                                                             <option value="">--Pilih--</option>
-                                                            <option value="L">Laki-Laki</option>
-                                                            <option value="P">Perempuan</option>
+                                                            <option th:each="gender : ${genders}" th:value="${gender}"
+                                                                th:text="${gender}"></option>
                                                         </select>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label for="status" class="form-label">Status <span
                                                                 class="text-danger">*</span></label>
-                                                        <select class="form-select" id="status">
+                                                        <select class="form-select" th:field="*{maritalStatus}">
                                                             <option value="">--Pilih--</option>
-                                                            <option value="single">Belum Menikah</option>
-                                                            <option value="married">Menikah</option>
+                                                            <option th:each="maritalStatus : ${maritalStatus}"
+                                                                th:value="${maritalStatus}" th:text="${maritalStatus}">
+                                                            </option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -133,13 +143,10 @@
                                                     <div class="col-md-6">
                                                         <label for="agama" class="form-label">Agama <span
                                                                 class="text-danger">*</span></label>
-                                                        <select class="form-select" id="agama">
+                                                        <select class="form-select" th:field="*{religion}">
                                                             <option value="">--Pilih--</option>
-                                                            <option value="islam">Islam</option>
-                                                            <option value="kristen">Kristen</option>
-                                                            <option value="hindu">Hindu</option>
-                                                            <option value="buddha">Buddha</option>
-                                                            <option value="lainnya">Lainnya</option>
+                                                            <option th:each="religion : ${religion}"
+                                                                th:value="${religion}" th:text="${religion}"></option>
                                                         </select>
                                                     </div>
                                                     <div class="col-md-6">
@@ -149,27 +156,40 @@
                                                             placeholder="Masukkan email">
                                                     </div>
                                                 </div>
+
                                                 <div class="row mb-3">
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-12">
                                                         <label for="noTelepon" class="form-label">No Telepon <span
                                                                 class="text-danger">*</span></label>
                                                         <input type="text" class="form-control" id="noTelepon"
                                                             placeholder="Masukkan nomor telepon">
                                                     </div>
-                                                    <div class="col-md-6">
-                                                        <label for="alamat" class="form-label">Alamat <span
-                                                                class="text-danger">*</span></label>
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <input type="text" class="form-control" id="provinsi"
-                                                                    placeholder="Provinsi">
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <input type="text" class="form-control" id="kota"
-                                                                    placeholder="Kota">
-                                                            </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <label for="provinsi" class="form-label">Provinsi<span
+                                                                    class="text-danger">*</span>
+                                                            </label>
+                                                            <select class="form-select" th:field="*{province}">
+                                                                <option value="">--Pilih--</option>
+                                                                <option th:each="province : ${province}"
+                                                                    th:value="${province}" th:text="${province}">
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label for="kota" class="form-label">Kota<span
+                                                                    class="text-danger">*</span>
+                                                            </label>
+                                                            <select class="form-select" th:field="*{city}">
+                                                                <option value="">--Pilih--</option>
+                                                                <option th:each="city : ${city}" th:value="${city}"
+                                                                    th:text="${city}"></option>
+                                                            </select>
                                                         </div>
                                                     </div>
+
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="alamatLengkap" class="form-label">Alamat Lengkap</label>
@@ -212,11 +232,10 @@
                                         <div class="card border mb-3">
                                             <div class="card-body">
                                                 <label for="language" class="form-label fw-bold">Bahasa</label>
-                                                <select class="form-select">
-                                                    <option value="">-- Pilih --</option>
-                                                    <option value="indonesia">Indonesia</option>
-                                                    <option value="english">English</option>
-                                                    <option value="japanese">Japanese</option>
+                                                <select class="form-select" th:field="*{language}">
+                                                    <option value="">--Pilih--</option>
+                                                    <option th:each="language : ${language}" th:value="${language}"
+                                                        th:text="${language}"></option>
                                                 </select>
 
                                                 <!-- Writing -->
@@ -230,11 +249,10 @@
                                                     <div class="col-md-6">
                                                         <label for="writing-level"
                                                             class="form-label fw-bold">Tingkat</label>
-                                                        <select class="form-select">
-                                                            <option value="">-- Pilih --</option>
-                                                            <option value="beginner">Beginner</option>
-                                                            <option value="intermediate">Intermediate</option>
-                                                            <option value="advanced">Advanced</option>
+                                                        <select class="form-select" th:field="*{skillLevels}">
+                                                            <option value="">--Pilih--</option>
+                                                            <option th:each="skillLevels : ${skillLevels}" th:value="${skillLevels}"
+                                                                th:text="${skillLevels}"></option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -250,12 +268,11 @@
                                                     <div class="col-md-6">
                                                         <label for="reading-level"
                                                             class="form-label fw-bold">Tingkat</label>
-                                                        <select class="form-select">
-                                                            <option value="">-- Pilih --</option>
-                                                            <option value="beginner">Beginner</option>
-                                                            <option value="intermediate">Intermediate</option>
-                                                            <option value="advanced">Advanced</option>
-                                                        </select>
+                                                            <select class="form-select" th:field="*{skillLevels}">
+                                                                <option value="">--Pilih--</option>
+                                                                <option th:each="skillLevels : ${skillLevels}" th:value="${skillLevels}"
+                                                                    th:text="${skillLevels}"></option>
+                                                            </select>
                                                     </div>
                                                 </div>
 
@@ -270,12 +287,11 @@
                                                     <div class="col-md-6">
                                                         <label for="speaking-level"
                                                             class="form-label fw-bold">Tingkat</label>
-                                                        <select class="form-select">
-                                                            <option value="">-- Pilih --</option>
-                                                            <option value="beginner">Beginner</option>
-                                                            <option value="intermediate">Intermediate</option>
-                                                            <option value="advanced">Advanced</option>
-                                                        </select>
+                                                            <select class="form-select" th:field="*{skillLevels}">
+                                                                <option value="">--Pilih--</option>
+                                                                <option th:each="skillLevels : ${skillLevels}" th:value="${skillLevels}"
+                                                                    th:text="${skillLevels}"></option>
+                                                            </select>
                                                     </div>
                                                 </div>
 
@@ -315,25 +331,21 @@
                                     <template id="EducationFormTemplate">
                                         <div class="card border mb-3">
                                             <div class="card-body">
-                                                <label for="education" class="form-label fw-bold">Universitas /
-                                                    Sekolah</label>
                                                 <div class="row mb-3">
                                                     <div class="col-md-6">
+                                                        <label for="education" class="form-label fw-bold">Universitas /
+                                                            Sekolah</label>
                                                         <input type="text" id="school" name="school"
                                                             class="form-control"
                                                             placeholder="Masukkan nama universitas/sekolah">
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label for="level" class="form-label fw-bold">Jenjang</label>
-                                                        <select id="level" name="level" class="form-select">
-                                                            <option value="">-- Pilih --</option>
-                                                            <option value="sd">SD</option>
-                                                            <option value="smp">SMP</option>
-                                                            <option value="sma">SMA</option>
-                                                            <option value="diploma">Diploma</option>
-                                                            <option value="sarjana">Sarjana</option>
-                                                            <option value="magister">Magister</option>
-                                                            <option value="doktor">Doktor</option>
+                                                        <select class="form-select" th:field="*{educationLevel}">
+                                                            <option value="">--Pilih--</option>
+                                                            <option th:each="educationLevel : ${educationLevel}"
+                                                                th:value="${educationLevel}"
+                                                                th:text="${educationLevel}"></option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -388,30 +400,29 @@
                                         <div class="card border mb-3">
                                             <div class="card-body">
                                                 <label for="skills" class="form-label fw-bold">Skills</label>
-                                                <select class="form-select">
-                                                    <option value="">-- Pilih --</option>
-                                                    <option value="indonesia">HTML</option>
-                                                    <option value="english">JAVA</option>
-                                                    <option value="japanese">JS</option>
+                                                <select class="form-select" th:field="*{skills}">
+                                                    <option value="">--Pilih--</option>
+                                                    <option th:each="skills : ${skills}" th:value="${skills}"
+                                                        th:text="${skills}"></option>
                                                 </select>
 
                                                 <div class="row mb-3">
                                                     <div class="col-md-6">
                                                         <label for="level" class="form-label fw-bold">Tingkat</label>
-                                                        <select id="level" name="level" class="form-select">
-                                                            <option value="">-- Pilih --</option>
-                                                            <option value="Beginner">Beginner</option>
-                                                            <option value="Intermediate">Intermediate</option>
-                                                            <option value="Advanced">Advanced</option>
+                                                        <select class="form-select" th:field="*{skillLevels}">
+                                                            <option value="">--Pilih--</option>
+                                                            <option th:each="skillLevels : ${skillLevels}" th:value="${skillLevels}"
+                                                                th:text="${skillLevels}"></option>
                                                         </select>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label for="category"
                                                             class="form-label fw-bold">Kategori</label>
-                                                        <select id="category" name="category" class="form-select">
-                                                            <option value="">-- Pilih --</option>
-                                                            <option value="hard_skill">Hard Skill</option>
-                                                            <option value="soft_skill">Soft Skill</option>
+                                                        <select class="form-select" th:field="*{skillCategories}">
+                                                            <option value="">--Pilih--</option>
+                                                            <option th:each="skillCategories : ${skillCategories}"
+                                                                th:value="${skillCategories}"
+                                                                th:text="${skillCategories}"></option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -425,7 +436,7 @@
                                         </div>
                                     </template>
                                 </div>
-                            </form>
+                            
 
                             <!-- Riwayat Pekerjaan -->
                             <div class="card-body border">
@@ -458,10 +469,10 @@
                                                 <div class="col-md-6">
                                                     <label for="position" class="form-label fw-bold">Posisi
                                                         Contract</label>
-                                                    <select id="position" name="position" class="form-select">
-                                                        <option value="" disabled selected>-- Pilih --</option>
-                                                        <option value="Manager">Manager</option>
-                                                        <option value="CEO">CEO</option>
+                                                    <select class="form-select" th:field="*{jobPosition}">
+                                                        <option value="">--Pilih--</option>
+                                                        <option th:each="jobPosition : ${jobPosition}"
+                                                            th:value="${jobPosition}" th:text="${jobPosition}"></option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -480,13 +491,11 @@
                                                 <div class="col-md-6">
                                                     <label for="contract_status" class="form-label fw-bold">Status
                                                         Contract</label>
-                                                    <select id="contract_status" name="contract_status"
-                                                        class="form-select">
-                                                        <option value="" disabled selected>-- Pilih --</option>
-                                                        <option value="INTERNSHIP">Internship</option>
-                                                        <option value="CONTRACT">Contract</option>
-                                                        <option value="PART_TIME">Part Time</option>
-                                                        <option value="FULL_TIME">Full Time</option>
+                                                    <select class="form-select" th:field="*{contractStatus}">
+                                                        <option value="">--Pilih--</option>
+                                                        <option th:each="contractStatus : ${contractStatus}"
+                                                            th:value="${contractStatus}" th:text="${contractStatus}">
+                                                        </option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -508,17 +517,20 @@
                                                 </div>
                                             </div>
 
-
-                                            <div class="form-group col-md-12">
-                                                <label for="inputJobDescription-1" class="form-label fw-bold">Deskripsi
-                                                    Pekerjaan</label>
-                                                <textarea class="form-control" name="description"></textarea>
+                                            <div class="row mb-3">
+                                                <div class="form-group col-md-12">
+                                                    <label for="inputJobDescription-1"
+                                                        class="form-label fw-bold">Deskripsi
+                                                        Pekerjaan</label>
+                                                    <textarea class="form-control" name="description"></textarea>
+                                                </div>
                                             </div>
-
-                                            <div class="form-group col-md-12">
-                                                <label for="inputSpesificationProject-1"
-                                                    class="form-label fw-bold">Spesifikasi Proyek</label>
-                                                <textarea class="form-control" name="description"></textarea>
+                                            <div class="row mb-3">
+                                                <div class="form-group col-md-12">
+                                                    <label for="inputSpesificationProject-1"
+                                                        class="form-label fw-bold">Spesifikasi Proyek</label>
+                                                    <textarea class="form-control" name="description"></textarea>
+                                                </div>
                                             </div>
 
                                             <!-- Tombol Hapus -->
@@ -567,10 +579,13 @@
                                                 </div>
                                             </div>
 
-                                            <div class="form-group col-md-12">
-                                                <label for="inputJobDescription-1" class="form-label fw-bold">Deskripsi
-                                                    Pekerjaan</label>
-                                                <textarea class="form-control" name="description"></textarea>
+                                            <div class="row mb-3">
+                                                <div class="col-md-12">
+                                                    <label for="inputJobDescription-1"
+                                                        class="form-label fw-bold">Deskripsi
+                                                        Pekerjaan</label>
+                                                    <textarea class="form-control" name="description"></textarea>
+                                                </div>
                                             </div>
 
                                             <div class="row mb-3">
@@ -588,13 +603,15 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-md-12">
-                                                <label for="skill" class="form-label fw-bold">Skill</label>
-                                                <select id="skill" name="skill" class="form-select">
-                                                    <option value="" disabled selected>-- Pilih --</option>
-                                                    <option value="java">JAVA</option>
-                                                    <option value="CEO">CEO</option>
-                                                </select>
+                                            <div class="row mb-3">
+                                                <div class="col-md-12">
+                                                    <label for="skills" class="form-label fw-bold">Skills</label>
+                                                    <select class="form-select" th:field="*{skills}">
+                                                        <option value="">--Pilih--</option>
+                                                        <option th:each="skills : ${skills}" th:value="${skills}"
+                                                            th:text="${skills}"></option>
+                                                    </select>
+                                                </div>
                                             </div>
 
 
@@ -645,10 +662,12 @@
                                                 </div>
                                             </div>
 
-                                            <div class="form-group col-md-12">
-                                                <label for="syllabus" class="form-label fw-bold">Syllabus
-                                                </label>
-                                                <textarea class="form-control" name="syllabus"></textarea>
+                                            <div class="row mb-3">
+                                                <div class="col-md-12">
+                                                    <label for="syllabus" class="form-label fw-bold">Syllabus
+                                                    </label>
+                                                    <textarea class="form-control" name="syllabus"></textarea>
+                                                </div>
                                             </div>
 
                                             <!-- Tombol Hapus -->
@@ -683,20 +702,21 @@
                                 <template id="sertificationFormTemplate">
                                     <div class="card border mb-3">
                                         <div class="card-body">
-
-                                            <div class="col-md-12">
-                                                <label for="sertification_name" class="form-label fw-bold">Nama
-                                                    Sertifikasi</label>
-                                                <input type="text" id="sertification_name" name="sertification_name"
-                                                    class="form-control" placeholder="Masukkan nama sertifikasi">
+                                            <div class="row mb-3">
+                                                <div class="col-md-12">
+                                                    <label for="sertification_name" class="form-label fw-bold">Nama
+                                                        Sertifikasi</label>
+                                                    <input type="text" id="sertification_name" name="sertification_name"
+                                                        class="form-control" placeholder="Masukkan nama sertifikasi">
+                                                </div>
                                             </div>
 
-
-                                            <div class="col-md-12">
-                                                <label for="lembaga_name" class="form-label fw-bold">Nama
-                                                    Sertifikasi</label>
-                                                <input type="text" id="lembaga_name" name="lembaga_name"
-                                                    class="form-control" placeholder="Masukkan nama lembaga">
+                                            <div class="row mb-3">
+                                                <div class="col-md-12">
+                                                    <label for="lembaga_name" class="form-label fw-bold">Lembaga</label>
+                                                    <input type="text" id="lembaga_name" name="lembaga_name"
+                                                        class="form-control" placeholder="Masukkan nama lembaga">
+                                                </div>
                                             </div>
 
                                             <div class="row mb-3">
@@ -759,10 +779,11 @@
                                                 <div class="col-md-6">
                                                     <label for="organization_position"
                                                         class="form-label fw-bold">Posisi</label>
-                                                    <select class="form-select">
-                                                        <option value="">-- Pilih --</option>
-                                                        <option value="oc">oc</option>
-                                                        <option value="sc">sc</option>
+                                                    <select class="form-select" th:field="*{organizationPosition}">
+                                                        <option value="">--Pilih--</option>
+                                                        <option th:each="organizationPosition : ${organizationPosition}"
+                                                            th:value="${organizationPosition}"
+                                                            th:text="${organizationPosition}"></option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -815,12 +836,13 @@
                                 <template id="experienceFormTemplate">
                                     <div class="card border mb-3">
                                         <div class="card-body">
-
-                                            <div class="col-md-12">
-                                                <label for="company_name" class="form-label fw-bold">Nama
-                                                    Pengalaman</label>
-                                                <input type="text" id="company_name" name="company_name"
-                                                    class="form-control" placeholder="Masukkan nama perusahaan">
+                                            <div class="row mb-3">
+                                                <div class="col-md-12">
+                                                    <label for="company_name" class="form-label fw-bold">Nama
+                                                        Pengalaman</label>
+                                                    <input type="text" id="company_name" name="company_name"
+                                                        class="form-control" placeholder="Masukkan nama perusahaan">
+                                                </div>
                                             </div>
 
                                             <div class="row mb-3">
@@ -838,10 +860,12 @@
 
                                             </div>
 
-                                            <div class="form-group col-md-12">
-                                                <label for="inputExperience" class="form-label fw-bold">Deskripsi
-                                                </label>
-                                                <textarea class="form-control" name="inputExperience"></textarea>
+                                            <div class="row mb-3">
+                                                <div class="form-group col-md-12">
+                                                    <label for="inputExperience" class="form-label fw-bold">Deskripsi
+                                                    </label>
+                                                    <textarea class="form-control" name="inputExperience"></textarea>
+                                                </div>
                                             </div>
 
                                             <!-- Tombol Hapus -->
@@ -875,13 +899,14 @@
                                 <template id="awardFormTemplate">
                                     <div class="card border mb-3">
                                         <div class="card-body">
-
-                                            <div class="col-md-12">
-                                                <label for="award-name" class="form-label fw-bold">Nama
-                                                    Penghargaan/Prestasi</label>
-                                                <input type="text" id="award-name" name="award-name"
-                                                    class="form-control"
-                                                    placeholder="Masukkan nama penghargaan/prestasi">
+                                            <div class="row mb-3">
+                                                <div class="col-md-12">
+                                                    <label for="award-name" class="form-label fw-bold">Nama
+                                                        Penghargaan/Prestasi</label>
+                                                    <input type="text" id="award-name" name="award-name"
+                                                        class="form-control"
+                                                        placeholder="Masukkan nama penghargaan/prestasi">
+                                                </div>
                                             </div>
 
                                             <div class="row mb-3">
@@ -908,6 +933,7 @@
                                     </div>
                                 </template>
                             </div>
+                        </form>
                         </div>
 
                         <div class="d-flex justify-content-end p-3">

@@ -1,6 +1,5 @@
 package me.pick.metrodata.controllers;
 
-
 import java.util.List;
 import java.util.ArrayList;
 
@@ -40,21 +39,48 @@ public class TalentController {
 
     private final TalentService talentService;
 
-    @GetMapping("")
-    public String showTalentDashboard() {
-        return "talent/talent-form-cv"; 
+    private boolean isDataComplete(Talent talent) {
+        // Check if the necessary fields are filled
+        return talent != null &&
+                talent.getName() != null && !talent.getName().isEmpty() &&
+                talent.getNik() != null && !talent.getNik().isEmpty() &&
+                talent.getEmail() != null && !talent.getEmail().isEmpty() &&
+                talent.getMitra() != null && talent.getMitra().getId() != null; // Add more checks based on your
+                                                                                // requirements
     }
-   
-    @GetMapping("/data-completion")
-    public String addFormTalent(HttpSession session, Model model){
+
+    @GetMapping("")
+    public String showTalentDashboard(HttpSession session) {
         String talentId = (String) session.getAttribute("talentId");
+        if (talentId == null) {
+            return "redirect:/login"; // If talentId is not found, redirect to login page
+        }
+
+        // Get the talent data
+        Talent dataTalentBefore = talentService.findByIdFromRepo(talentId);
+
+        // Check if the talent data is complete
+        if (isDataComplete(dataTalentBefore)) {
+            return "redirect:/talent/data-completion"; // If data is complete, go to the data completion page
+        }
+
+        // If data is not complete, stay on the talent form page
+        return "talent/talent-form-cv";
+    }
+
+    @GetMapping("/data-completion")
+    public String addFormTalent(HttpSession session, Model model) {
+        String talentId = (String) session.getAttribute("talentId");
+        if (talentId == null) {
+            return "redirect:/login"; // Jika talentId tidak ada, arahkan ke login
+        }
 
         var talentDTO = new TalentDataCompletionRequest();
 
         Talent dataTalentBefore = talentService.findByIdFromRepo(talentId.toString());
 
         talentDTO.setTalentId(talentId);
-        talentDTO.setTalentId(dataTalentBefore.getId());
+        talentDTO.setMitraId(dataTalentBefore.getMitra().getId());
         talentDTO.setTalentFullName(dataTalentBefore.getName());
         talentDTO.setTalentNik(dataTalentBefore.getNik());
         talentDTO.setEmail(dataTalentBefore.getEmail());
@@ -76,8 +102,8 @@ public class TalentController {
 
         // kemampuan bahasa
         var language = referenceService.getReferenceData("bahasa");
-       
-        model.addAttribute("languange", language);
+
+        model.addAttribute("language", language);
 
         // jenjang pendidikan
         var educationMajor = referenceService.getReferenceData("university_major");
@@ -86,7 +112,7 @@ public class TalentController {
         model.addAttribute("educationLevel", educationalLevels);
         model.addAttribute("educationMajor", educationMajor);
 
-        // skills for keterampilan 
+        // skills for keterampilan
         var skills = referenceService.getReferenceData("skills");
         SkillCategory[] skillCategories = SkillCategory.values();
 
@@ -113,11 +139,12 @@ public class TalentController {
         return "talent/talent-form-cv";
 
     }
-    
+
     @PostMapping("/data-completion/{talentId}")
-    public RedirectView talentDataCompletion(@ModelAttribute TalentDataCompletionRequest talentDTO, 
-        @PathVariable("talentId") String talentId, BindingResult bindingResult, RedirectAttributes redirectAttributes, HttpSession session){
-        
+    public RedirectView talentDataCompletion(@ModelAttribute TalentDataCompletionRequest talentDTO,
+            @PathVariable("talentId") String talentId, BindingResult bindingResult,
+            RedirectAttributes redirectAttributes, HttpSession session) {
+
         List<String> errorMessages = new ArrayList<>();
 
         if (bindingResult.hasErrors()) {
@@ -128,13 +155,13 @@ public class TalentController {
             }
         }
 
-        if (!talentDTO.getTalentNik().equals("-") && talentDTO.getTalentNik().length() != 16){
+        if (!talentDTO.getTalentNik().equals("-") && talentDTO.getTalentNik().length() != 16) {
             errorMessages.add("Nomor KK harus terdiri dari 16 digit");
         } else if (talentService.checkNIKExists(talentDTO.getTalentNik(), talentId)) {
             errorMessages.add("NIK sudah terdaftar.");
         }
 
-        if (!errorMessages.isEmpty()){
+        if (!errorMessages.isEmpty()) {
             redirectAttributes.addFlashAttribute("errorMessages", errorMessages);
             return new RedirectView("/data-completion");
         }
