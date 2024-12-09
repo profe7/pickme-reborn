@@ -35,8 +35,36 @@
           <a class="nav-link" th:href="@{/client/employees}">Pegawai</a>
         </li>
 
-        <!-- User Dropdown (Visible to authenticated users) -->
-        <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+        <!-- Logout Button -->
+        <li class="nav-item" sec:authorize="isAuthenticated()">
+          <a class="nav-link" data-toggle="modal" data-target="#logoutModal">Logout</a>
+        </li>
+
+        <!-- Modal Logout -->
+        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="logoutModalLabel">Konfirmasi Logout</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                Apakah Anda yakin ingin logout?
+              </div>
+              <div class="modal-footer">
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                  <a class="btn btn-secondary" th:href="@{/logout}">Logout</a>
+                </li>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    <!-- <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
           <a class="nav-item nav-link dropdown-toggle cursor-pointer" id="navbarDropdown" role="button"
             data-bs-toggle="dropdown" aria-expanded="false">
             <span sec:authentication="name"></span>
@@ -44,10 +72,10 @@
           <ul class="dropdown-menu dropdown-menu-lg" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" th:href="@{/logout}">Logout</a></li>
           </ul>
-        </li>
-      </ul>
-    </div>
-  </nav>
+        </li> -->
+    </ul>
+</div>
+</nav>
 </div>
 <!-- END NAVBAR CLIENT -->
 
@@ -81,8 +109,37 @@
           <a class="nav-link" th:href="@{/vacancies}">Lowongan</a>
         </li>
 
-        <!-- User Dropdown (Visible to authenticated users) -->
-        <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+        <!-- Logout Button -->
+        <li class="nav-item" sec:authorize="isAuthenticated()">
+          <a class="nav-link" data-toggle="modal" data-target="#logoutModal">Logout</a>
+        </li>
+
+        <!-- Modal Logout -->
+        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="logoutModalLabel">Konfirmasi Logout</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                Apakah Anda yakin ingin logout?
+              </div>
+              <div class="modal-footer">
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                  <a class="btn btn-secondary" th:href="@{/logout}">Logout</a>
+                </li>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
           <a class="nav-item nav-link dropdown-toggle cursor-pointer" id="navbarDropdown" role="button"
             data-bs-toggle="dropdown" aria-expanded="false">
             <span sec:authentication="name"></span>
@@ -95,13 +152,13 @@
             </li>
             <li><a class="dropdown-item" th:href="@{/logout}">Logout</a></li>
           </ul>
-        </li>
+        </li> -->
       </ul>
     </div>
   </nav>
 </div>
 
-  <!-- NAVBAR TALENT -->
+<!-- NAVBAR TALENT -->
 <div th:fragment="navbar-talent">
   <nav class="navbar navbar-expand-lg user_nav-container" sec:authorize="hasAuthority('CREATE_INTERVIEW')">
     <a class="navbar-brand fw-bold" th:href="@{/talent}">
@@ -114,23 +171,53 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarText">
       <ul class="navbar-nav ms-auto">
-        <!-- Home -->
-        <li class="nav-item" th:classappend="${currentPage == '/client' ? 'active fw-bold' : ''}">
-          <a class="nav-link" th:href="@{/talent}">Beranda</a>
+        <!-- Logout Button -->
+        <li class="nav-item" sec:authorize="isAuthenticated()">
+          <a class="nav-link" data-toggle="modal" data-target="#logoutModal">Logout</a>
         </li>
 
-        <!-- User Dropdown (Visible to authenticated users) -->
-        <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+        <!-- Modal Logout -->
+        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="logoutModalLabel">Konfirmasi Logout</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                Apakah Anda yakin ingin logout?
+              </div>
+              <div class="modal-footer">
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                  <a class="btn btn-secondary" th:href="@{/logout}">Logout</a>
+                </li>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
           <a class="nav-item nav-link dropdown-toggle cursor-pointer" id="navbarDropdown" role="button"
             data-bs-toggle="dropdown" aria-expanded="false">
-            <span sec:authentication="name"></span>
+            <span th:text="${name}"></span>
           </a>
           <ul class="dropdown-menu dropdown-menu-lg" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" th:href="@{/logout}">Logout</a></li>
           </ul>
-        </li>
+        </li> -->
       </ul>
     </div>
   </nav>
 </div>
+
+<script>
+  document.getElementById('logoutConfirm').addEventListener('click', function () {
+    window.location.href = '/logout';
+  });
+</script>
 <!-- END NAVBAR CLIENT -->

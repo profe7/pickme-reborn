@@ -135,7 +135,6 @@ public class MitraController {
         talentDTO.setTalentNik(dataTalentBefore.getNik());
         talentDTO.setEmail(dataTalentBefore.getEmail());
 
-        // data pribadi
         var nationality = referenceService.getReferenceData("nationality");
         Gender[] genders = Gender.values();
         MaritalStatus[] maritalStatus = MaritalStatus.values();
@@ -150,38 +149,37 @@ public class MitraController {
         model.addAttribute("province", province);
         model.addAttribute("city", city);
 
-        // kemampuan bahasa
+        
         var language = referenceService.getReferenceData("bahasa");
        
         model.addAttribute("languange", language);
 
-        // jenjang pendidikan
         var educationMajor = referenceService.getReferenceData("university_major");
         EducationalLevel[] educationalLevels = EducationalLevel.values();
 
         model.addAttribute("educationLevel", educationalLevels);
         model.addAttribute("educationMajor", educationMajor);
 
-        // skills for keterampilan 
+
         var skills = referenceService.getReferenceData("skills");
         SkillCategory[] skillCategories = SkillCategory.values();
 
         model.addAttribute("skills", skills);
         model.addAttribute("skillCategories", skillCategories);
 
-        // riwayat pekerjaan
+        
         var jobPosition = referenceService.getReferenceData("posisi_pekerjaan");
         ContractStatus[] contractStatus = ContractStatus.values();
 
         model.addAttribute("jobPosition", jobPosition);
         model.addAttribute("contractStatus", contractStatus);
 
-        // skill levels for kemampuan bahasa, keterampilan, projects field
+        
         SkillLevel[] skillLevels = SkillLevel.values();
 
         model.addAttribute("skillLevels", skillLevels);
 
-        // Organisasi
+     
         OrganizationPosition[] organizationPositions = OrganizationPosition.values();
 
         model.addAttribute("organizationPosition", organizationPositions);

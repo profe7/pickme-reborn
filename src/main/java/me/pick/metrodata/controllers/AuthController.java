@@ -39,8 +39,13 @@ public class AuthController {
     public String login(LoginRequest loginRequest, HttpSession session) {
         try {
             LoginResponse response = authService.login(loginRequest, session);
+        
             Account account = accountRepository.findById(response.getAccountId())
                     .orElseThrow(() -> new AccountDoesNotExistException(response.getUsername()));
+
+            session.setAttribute("name", account.getUser().getFirstName());
+            
+
             return null;
         } catch (AccountDoesNotExistException | AccountInvalidPasswordException e) {
             session.setAttribute("loginErrorMessage", "Username atau password salah.");

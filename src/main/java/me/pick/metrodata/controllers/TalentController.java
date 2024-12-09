@@ -26,6 +26,7 @@ import me.pick.metrodata.enums.ReligionsEnum;
 import me.pick.metrodata.enums.SkillCategory;
 import me.pick.metrodata.enums.SkillLevel;
 import me.pick.metrodata.models.dto.requests.TalentDataCompletionRequest;
+import me.pick.metrodata.models.dto.responses.ReferenceResponse;
 import me.pick.metrodata.models.entity.Talent;
 import me.pick.metrodata.services.reference.ReferenceService;
 import me.pick.metrodata.services.talent.TalentService;
@@ -40,31 +41,26 @@ public class TalentController {
     private final TalentService talentService;
 
     private boolean isDataComplete(Talent talent) {
-        // Check if the necessary fields are filled
         return talent != null &&
                 talent.getName() != null && !talent.getName().isEmpty() &&
                 talent.getNik() != null && !talent.getNik().isEmpty() &&
                 talent.getEmail() != null && !talent.getEmail().isEmpty() &&
-                talent.getMitra() != null && talent.getMitra().getId() != null; // Add more checks based on your
-                                                                                // requirements
+                talent.getMitra() != null && talent.getMitra().getId() != null; 
     }
 
     @GetMapping("")
     public String showTalentDashboard(HttpSession session) {
         String talentId = (String) session.getAttribute("talentId");
         if (talentId == null) {
-            return "redirect:/login"; // If talentId is not found, redirect to login page
+            return "redirect:/login";
         }
 
-        // Get the talent data
         Talent dataTalentBefore = talentService.findByIdFromRepo(talentId);
 
-        // Check if the talent data is complete
         if (isDataComplete(dataTalentBefore)) {
-            return "redirect:/talent/data-completion"; // If data is complete, go to the data completion page
+            return "redirect:/talent/data-completion"; 
         }
 
-        // If data is not complete, stay on the talent form page
         return "talent/talent-form-cv";
     }
 
@@ -72,7 +68,7 @@ public class TalentController {
     public String addFormTalent(HttpSession session, Model model) {
         String talentId = (String) session.getAttribute("talentId");
         if (talentId == null) {
-            return "redirect:/login"; // Jika talentId tidak ada, arahkan ke login
+            return "redirect:/login"; 
         }
 
         var talentDTO = new TalentDataCompletionRequest();
@@ -85,13 +81,12 @@ public class TalentController {
         talentDTO.setTalentNik(dataTalentBefore.getNik());
         talentDTO.setEmail(dataTalentBefore.getEmail());
 
-        // data pribadi
-        var nationality = referenceService.getReferenceData("nationality");
+        List<ReferenceResponse> nationality = referenceService.getReferenceData("nationality");
         Gender[] genders = Gender.values();
         MaritalStatus[] maritalStatus = MaritalStatus.values();
         ReligionsEnum[] religion = ReligionsEnum.values();
-        var province = referenceService.getReferenceData("provinsi");
-        var city = referenceService.getReferenceData("kota");
+        List<ReferenceResponse> province = referenceService.getReferenceData("provinsi");
+        List<ReferenceResponse> city = referenceService.getReferenceData("kota");
 
         model.addAttribute("nationality", nationality);
         model.addAttribute("genders", genders);
@@ -100,38 +95,32 @@ public class TalentController {
         model.addAttribute("province", province);
         model.addAttribute("city", city);
 
-        // kemampuan bahasa
         var language = referenceService.getReferenceData("bahasa");
 
         model.addAttribute("language", language);
 
-        // jenjang pendidikan
         var educationMajor = referenceService.getReferenceData("university_major");
         EducationalLevel[] educationalLevels = EducationalLevel.values();
 
         model.addAttribute("educationLevel", educationalLevels);
         model.addAttribute("educationMajor", educationMajor);
 
-        // skills for keterampilan
         var skills = referenceService.getReferenceData("skills");
         SkillCategory[] skillCategories = SkillCategory.values();
 
         model.addAttribute("skills", skills);
         model.addAttribute("skillCategories", skillCategories);
 
-        // riwayat pekerjaan
         var jobPosition = referenceService.getReferenceData("posisi_pekerjaan");
         ContractStatus[] contractStatus = ContractStatus.values();
 
         model.addAttribute("jobPosition", jobPosition);
         model.addAttribute("contractStatus", contractStatus);
 
-        // skill levels for kemampuan bahasa, keterampilan, projects field
         SkillLevel[] skillLevels = SkillLevel.values();
 
         model.addAttribute("skillLevels", skillLevels);
 
-        // Organisasi
         OrganizationPosition[] organizationPositions = OrganizationPosition.values();
 
         model.addAttribute("organizationPosition", organizationPositions);

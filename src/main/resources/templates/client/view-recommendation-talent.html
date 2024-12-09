@@ -70,7 +70,8 @@
       display: flex;
       justify-content: center;
       margin-top: 20px;
-      margin-bottom: 40px; /* Add margin-bottom to create space */
+      margin-bottom: 40px;
+      /* Add margin-bottom to create space */
     }
 
     .pagination a {
@@ -128,35 +129,44 @@
 </head>
 
 <body class="hold-transition sidebar-mini">
-<input type="hidden" id="clientId" th:value="${clientId}">
+  <input type="hidden" id="clientId" th:value="${clientId}">
 
-<div th:replace="~{components/navbar :: navbar-client}"></div>
-<div class="content-wrapper" layout:fragment="content">
-  <div id="container" class="container-fluid custom-container px-4">
-    <div class="d-flex">
-      <div class="form-group me-2" style="width: 50%;">
-        <input type="text" class="form-control" placeholder="Cari Berdasarkan Nama" id="searchTalentName" oninput="filterTalentsName()">
+  <div th:replace="~{components/navbar :: navbar-client}"></div>
+  <div class="content-wrapper" layout:fragment="content">
+    <div id="container" class="container-fluid custom-container px-4">
+      <div class="d-flex">
+        <div class="form-group me-2" style="width: 50%;">
+          <input type="text" class="form-control" placeholder="Cari Berdasarkan Nama" id="searchTalentName"
+            oninput="filterTalentsName()">
+        </div>
+        <div class="form-group me-2" style="width: 50%;">
+          <input type="text" class="form-control" placeholder="Cari Berdasarkan Posisi" id="searchTalentPosition"
+            oninput="filterTalentsPosition()">
+        </div>
       </div>
-      <div class="form-group me-2" style="width: 50%;">
-        <input type="text" class="form-control" placeholder="Cari Berdasarkan Posisi" id="searchTalentPosition" oninput="filterTalentsPosition()">
-      </div>
-    </div>
 
-    <div id="talent-recommendations" class="row">
-      <div th:each="recommendation : ${recommendations}">
-        <div class="col-12 shadow-sm">
-          <h3 th:text="${recommendation.position}" class="text-center mt-1" style="margin-bottom: 2rem;"></h3>
-          <div class="talent-container">
-            <div th:each="talent, iStat : ${recommendation.talents}" class="talent-card">
-              <div class="card">
-                <div class="card-body">
-                  <img th:src="${talent.photo != null ? 'data:image/jpeg;base64,' + talent.photo : 'https://cdn-icons-png.flaticon.com/512/3106/3106773.png'}" alt="Profile Image" class="img-box img-fluid"/>
-                </div>
-                <div class="card-footer text-center">
-                  <h6 th:text="${talent.name}" style="width: 100%; text-wrap: wrap; margin-top: 1rem;"></h6>
-                  <div class="btn-group">
-                    <button class="btn btn-primary">Undang</button>
-                    <button class="btn btn-secondary">CV</button>
+      <div id="talent-recommendations" class="row">
+        <div th:each="recommendation : ${recommendations}">
+          <div class="col-12 shadow-sm">
+            <h3 th:text="${recommendation.position}" class="text-center mt-1" style="margin-bottom: 2rem;"></h3>
+            <div class="talent-container">
+              <div th:each="talent, iStat : ${recommendation.talents}" class="talent-card">
+                <div class="card">
+                  <div class="card-body">
+                    <img
+                      th:src="${talent.photo != null ? 'data:image/jpeg;base64,' + talent.photo : 'https://cdn-icons-png.flaticon.com/512/3106/3106773.png'}"
+                      alt="Profile Image" class="img-box img-fluid" />
+                  </div>
+                  <div class="card-footer text-center">
+                    <h6 th:text="${talent.name}" style="width: 100%; text-wrap: wrap; margin-top: 1rem;"></h6>
+                    <div class="btn-group">
+                      <!-- Tombol Undang -->
+                      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#scheduleInterviewModal">
+                        Undang
+                      </button>
+                      <button class="btn btn-secondary">CV</button>
+
+                    </div>
                   </div>
                 </div>
               </div>
@@ -164,21 +174,112 @@
           </div>
         </div>
       </div>
-    </div>
-    <div id="pagination-controls" th:if="${recommendations.totalPages > 1}" class="pagination">
-      <a th:each="pageNumber : ${#numbers.sequence(1, recommendations.totalPages)}" th:href="@{/client/recommendations(page=${pageNumber - 1})}" th:text="${pageNumber}" th:class="${pageNumber == recommendations.number + 1} ? 'active'"></a>
-    </div>
-    <div th:if="${#lists.isEmpty(recommendations) or recommendations.?[talents.size() > 0].isEmpty()}">
-      Tidak terdapat rekomendasi talent.
-    </div>
+
+      <!-- Modal -->
+      <div class="modal fade" id="scheduleInterviewModal" tabindex="-1" aria-labelledby="scheduleInterviewLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="scheduleInterviewLabel">Jadwalkan Wawancara</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">&#10005;</button>
+            </div>
+
+            <div class="modal-body">
+              <form id="interviewForm" class="px-4 needs-validation" novalidate action="/client/invite-interview"
+                method="POST">
+                <!-- Form 1: Tanggal -->
+                <div class="mb-3">
+                  <label for="tanggal" class="form-label">Tanggal</label>
+                  <input type="date" class="form-control" id="tanggal" name="tanggal" required>
+                  <div class="invalid-feedback">Tanggal harus diisi!</div>
+                </div>
+
+                <!-- Form 2: Tipe Wawancara (Dropdown) -->
+                <div class="mb-3">
+                  <label for="tipeWawancara" class="form-label">Tipe Wawancara</label>
+                  <select class="form-select" id="tipeWawancara" name="tipeWawancara" required>
+                    <option value="" disabled selected>Pilih Tipe Wawancara</option>
+                    <option value="0">Online</option>
+                    <option value="1">Offline</option>
+                  </select>
+                  <div class="invalid-feedback">Tipe wawancara harus dipilih!</div>
+                </div>
+
+                <!-- Form 3: Alamat (input text) -->
+                <div class="mb-3">
+                  <label for="alamat" class="form-label">Alamat</label>
+                  <input type="text" class="form-control" id="alamat" name="alamat" placeholder="Masukkan Alamat"
+                    required>
+                  <div class="invalid-feedback">Alamat harus diisi!</div>
+                </div>
+
+                <!-- Form 4: Link Interview (input text) -->
+                <div class="mb-3">
+                  <label for="linkInterview" class="form-label">Link Wawancara</label>
+                  <input type="text" class="form-control" id="linkInterview" name="linkInterview"
+                    placeholder="Masukkan Link Wawancara" required>
+                  <div class="invalid-feedback">Link interview harus diisi!</div>
+                </div>
+
+                <!-- Form 5 & 6: Waktu Mulai & Waktu Selesai -->
+                
+
+<div class="row">
+  <div class="col">
+    <label for="waktuMulai" class="form-label">Waktu Mulai</label>
+    <input type="time" class="form-control" id="waktuMulai" name="waktuMulai" required>
+    <div class="invalid-feedback">Waktu mulai harus diisi!</div>
   </div>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <div layout:fragment="script">
-    <script th:src="@{/js/recommendation/index.js}"></script>
+  <div class="col">
+    <label for="waktuSelesai" class="form-label">Waktu Selesai</label>
+    <input type="time" class="form-control" id="waktuSelesai" name="waktuSelesai" required>
+    <div class="invalid-feedback">Waktu selesai harus diisi!</div>
   </div>
 </div>
-<div th:replace="~{components/plugin :: js}"></div>
-<div th:insert="~{components/footer :: footer}"></div>
+
+                <br>
+                <div class="flex-column">
+                  <button type="submit" class="btn btn-primary w-100" style="background-color: #00708F; color: white;">
+                    <i class="fas fa-envelope" style="margin-right: 8px;"></i> Undang Wawancara
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="pagination-controls" th:if="${recommendations.totalPages > 1}" class="pagination">
+        <a th:each="pageNumber : ${#numbers.sequence(1, recommendations.totalPages)}"
+          th:href="@{/client/recommendations(page=${pageNumber - 1})}" th:text="${pageNumber}"
+          th:class="${pageNumber == recommendations.number + 1} ? 'active'"></a>
+      </div>
+      <div th:if="${#lists.isEmpty(recommendations) or recommendations.?[talents.size() > 0].isEmpty()}">
+        Tidak terdapat rekomendasi talent.
+      </div>
+    </div>
+    <script>
+      // Example to log the value (if needed)
+      document.getElementById("waktuMulai").addEventListener("change", (e) => {
+        const timeValue = e.target.value; // Value is in 24-hour format: HH:mm
+        console.log("Waktu Mulai:", timeValue); // e.g., "23:15"
+      });
+    
+      document.getElementById("waktuSelesai").addEventListener("change", (e) => {
+        const timeValue = e.target.value; // Value is in 24-hour format: HH:mm
+        console.log("Waktu Selesai:", timeValue); // e.g., "07:30"
+      });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Pastikan Anda menyertakan Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <div layout:fragment="script">
+      <script th:src="@{/js/recommendation/index.js}"></script>
+    </div>
+  </div>
+  <div th:replace="~{components/plugin :: js}"></div>
+  <div th:insert="~{components/footer :: footer}"></div>
 </body>
 
 </html>

@@ -22,6 +22,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import me.pick.metrodata.enums.InterviewStatus;
 import me.pick.metrodata.enums.InterviewType;
+import me.pick.metrodata.models.dto.requests.InterviewScheduleRequest;
 import me.pick.metrodata.models.dto.requests.InterviewUpdateRequest;
 import me.pick.metrodata.models.dto.responses.ClientDashboardTelemetryResponse;
 import me.pick.metrodata.models.dto.responses.ClientEmployeeResponse;
@@ -47,10 +48,13 @@ public class ClientController {
     @GetMapping
     public String clientHomePage(HttpSession session, Model model){
         Long clientId = (Long) session.getAttribute("clientId");
+        String name = (String) session.getAttribute("name");
 
         ClientDashboardTelemetryResponse employeeSummary = clientService.getClientDashboardTelemetry(clientId);
         List<ClientEmployeeResponse> clientEmployees = clientService.getClientEmployees(clientId);
 
+        model.addAttribute("name",session.getAttribute("name"));
+        
         model.addAttribute("employee", employeeSummary);
         model.addAttribute("employeeSummary", employeeSummary);
         model.addAttribute("employees", clientEmployees);
@@ -157,6 +161,20 @@ public class ClientController {
 
         return new RedirectView("/client/interview-schedules");
     }
+
+    @PostMapping("/invite-interview")
+    public RedirectView inviteInterview(
+            @ModelAttribute InterviewScheduleRequest interviewScheduleRequest,
+            RedirectAttributes redirectAttributes) {
+    
+        interviewScheduleService.inviteToInterview(interviewScheduleRequest);
+    
+        redirectAttributes.addFlashAttribute("successMessage", "Undangan wawancara berhasil dikirim.");
+        return new RedirectView("/client/interview-schedules"); 
+    }
+
+
+
 
 
 }

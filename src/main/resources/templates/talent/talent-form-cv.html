@@ -112,7 +112,7 @@
                                                         <select class="form-select" th:field="*{nationality}">
                                                             <option value="">--Pilih--</option>
                                                             <option th:each="nation : ${nationality}"
-                                                                th:value="${nation}" th:text="${nation}"></option>
+                                                                th:value="${nation}" th:text="${nation.reference_name}"></option>
                                                         </select>
                                                     </div>
 
@@ -174,7 +174,7 @@
                                                             <select class="form-select" th:field="*{province}">
                                                                 <option value="">--Pilih--</option>
                                                                 <option th:each="province : ${province}"
-                                                                    th:value="${province}" th:text="${province}">
+                                                                    th:value="${province}" th:text="${province.reference_name}">
                                                                 </option>
                                                             </select>
                                                         </div>
@@ -185,7 +185,7 @@
                                                             <select class="form-select" th:field="*{city}">
                                                                 <option value="">--Pilih--</option>
                                                                 <option th:each="city : ${city}" th:value="${city}"
-                                                                    th:text="${city}"></option>
+                                                                    th:text="${city.reference_name}"></option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -235,7 +235,7 @@
                                                 <select class="form-select" th:field="*{language}">
                                                     <option value="">--Pilih--</option>
                                                     <option th:each="language : ${language}" th:value="${language}"
-                                                        th:text="${language}"></option>
+                                                        th:text="${language.reference_name}"></option>
                                                 </select>
 
                                                 <!-- Writing -->
@@ -403,7 +403,7 @@
                                                 <select class="form-select" th:field="*{skills}">
                                                     <option value="">--Pilih--</option>
                                                     <option th:each="skills : ${skills}" th:value="${skills}"
-                                                        th:text="${skills}"></option>
+                                                        th:text="${skills.reference_name}"></option>
                                                 </select>
 
                                                 <div class="row mb-3">
@@ -472,7 +472,7 @@
                                                     <select class="form-select" th:field="*{jobPosition}">
                                                         <option value="">--Pilih--</option>
                                                         <option th:each="jobPosition : ${jobPosition}"
-                                                            th:value="${jobPosition}" th:text="${jobPosition}"></option>
+                                                            th:value="${jobPosition}" th:text="${jobPosition.reference_name}"></option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -609,7 +609,7 @@
                                                     <select class="form-select" th:field="*{skills}">
                                                         <option value="">--Pilih--</option>
                                                         <option th:each="skills : ${skills}" th:value="${skills}"
-                                                            th:text="${skills}"></option>
+                                                            th:text="${skills.reference_name}"></option>
                                                     </select>
                                                 </div>
                                             </div>
