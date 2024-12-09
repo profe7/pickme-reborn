@@ -37,4 +37,6 @@ public interface TalentRepository extends JpaRepository<Talent, String>, JpaSpec
         @Query("SELECT COUNT(t) > 0 FROM Talent t WHERE t.nik = :nik AND t.id != :id")
         boolean existsByNikAndNotId(@Param("nik") String nik, @Param("id") String id);
 
+        @Query("SELECT t FROM Talent t WHERE t.institute.id = :instituteId")
+        List<Talent> findTalentByInstituteId(Long instituteId);
 }

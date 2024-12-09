@@ -1,20 +1,20 @@
 package me.pick.metrodata.controllers;
 
-import lombok.AllArgsConstructor;
-import me.pick.metrodata.exceptions.account.AccountDoesNotExistException;
-import me.pick.metrodata.exceptions.account.AccountInvalidPasswordException;
-import me.pick.metrodata.models.dto.requests.LoginRequest;
-import me.pick.metrodata.models.dto.responses.LoginResponse;
-import me.pick.metrodata.repositories.AccountRepository;
-import me.pick.metrodata.services.auth.AuthService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import me.pick.metrodata.models.entity.Account;
 
 import jakarta.servlet.http.HttpSession;
+import lombok.AllArgsConstructor;
+import me.pick.metrodata.exceptions.account.AccountDoesNotExistException;
+import me.pick.metrodata.exceptions.account.AccountInvalidPasswordException;
+import me.pick.metrodata.models.dto.requests.LoginRequest;
+import me.pick.metrodata.models.dto.responses.LoginResponse;
+import me.pick.metrodata.models.entity.Account;
+import me.pick.metrodata.repositories.AccountRepository;
+import me.pick.metrodata.services.auth.AuthService;
 
 @Controller
 @RequestMapping("/login")
@@ -51,5 +51,10 @@ public class AuthController {
             session.setAttribute("loginErrorMessage", "Username atau password salah.");
             return "redirect:/login?error=true";
         }
+    }
+
+    @GetMapping("/forget-password")
+    public String forgetPasswordForm(Model model) {
+        return "forget-password/forgetPassword";
     }
 }

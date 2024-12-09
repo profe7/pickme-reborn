@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>[[${showFullName}]] - PICK-ME</title>
+    <meta
+      name="description"
+      content="Berhentilah mengkhawatirkan format dan desain CV Anda - CV-ME siap membantu Anda."
+    />
+
+    <!-- Google / Search Engine Tags -->
+    <meta itemprop="name" th:content="${showFullName} + ' Beranda / CV-ME'" />
+    <meta
+      itemprop="description"
+      content="Berhentilah mengkhawatirkan format dan desain CV Anda - CV-ME siap membantu Anda."
+    />
+    <meta itemprop="image" th:content="@{/img/cv.png}" />
+
+    <!-- Facebook Meta Tags -->
+    <!-- <meta property="og:url" th:content="${baseUrl}" /> -->
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      th:content="${showFullName} + ' Beranda / CV-ME'"
+    />
+    <meta
+      property="og:description"
+      content="Berhentilah mengkhawatirkan format dan desain CV Anda - CV-ME siap membantu Anda."
+    />
+    <meta property="og:image" th:content="@{/img/cv.png}" />
+
+    <!-- Twitter Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      th:content="${showFullName} + ' Beranda / CV-ME'"
+    />
+    <meta
+      name="twitter:description"
+      content="Berhentilah mengkhawatirkan format dan desain CV Anda - CV-ME siap membantu Anda."
+    />
+    <meta name="twitter:image" th:content="@{/img/cv.png}" />
+    <!-- Favicons -->
+    <link th:href="@{/img/favicon.png}" rel="icon" />
+
+    <!-- General CSS Files -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.css"
+      integrity="sha512-DIW4FkYTOxjCqRt7oS9BFO+nVOwDL4bzukDyDtMO7crjUZhwpyrWBFroq+IqRe6VnJkTpRAS6nhDvf0w+wHmxg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <!-- Template CSS -->
+    <link rel="stylesheet" th:href="@{/css/style-share.css}" />
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        text-align: justify;
+        text-justify: inter-word;
+      }
+
+      * {
+        color: black;
+      }
+
+      b {
+        color: #1a1a1a;
+      }
+
+      p {
+        margin: 0;
+        padding: 0;
+      }
+
+      #main {
+        width: 400px;
+        height: 150px;
+        border: 1px solid #c3c3c3;
+        display: -webkit-flex; /* Safari */
+        display: flex;
+      }
+
+      #main div {
+        width: 70px;
+        height: 70px;
+      }
+
+      /* Safari 6.1+ */
+      #educationList {
+        -webkit-order: 1;
+      }
+
+      #languageList {
+        -webkit-order: 2;
+      }
+
+      /* Standard syntax */
+      div#educationList {
+        order: 1;
+      }
+
+      div#languageList {
+        order: 2;
+      }
+
+      .company-logo,
+      .image-profile {
+        width: 125px;
+      }
+
+      .section,
+      .card,
+      .card-body {
+        margin: 0 50px 0 50px;
+      }
+
+      .bullet:after {
+        content: "\2022";
+      }
+
+      .slash:after {
+        content: "/";
+      }
+
+      .float-btn i {
+        font-size: 32px;
+        color: #fff;
+      }
+
+      .float-btn {
+        z-index: 99;
+        display: flex;
+        position: fixed;
+        width: 60px;
+        height: 60px;
+        bottom: 40px;
+        right: 40px;
+        background-color: #1c54bb !important;
+        color: #fff;
+        border-radius: 50px;
+        text-align: center;
+        box-shadow: 2px 2px 3px #999;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .my-float {
+        margin-top: 22px;
+      }
+
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background-color: #fff;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #7e7e7e6e;
+        box-shadow: inset 0 0 6px rgb(255 255 255/30%);
+        border-radius: 10px;
+      }
+
+      @media only screen and (max-width: 800px) {
+        .container {
+          width: 100%;
+          max-width: 100%;
+        }
+
+        .card,
+        .card-body {
+          margin: 0 10px 0 10px !important;
+        }
+
+        .section {
+          margin: 0 0 0 0;
+        }
+
+        ::-webkit-scrollbar {
+          width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+          background-color: #fff;
+        }
+
+        ::-webkit-scrollbar-thumb {
+          background: #7e7e7e6e;
+          box-shadow: inset 0 0 6px rgb(255 255 255/30%);
+          border-radius: 10px;
+        }
+
+        .company-logo,
+        .image-profile {
+          max-width: 100px !important;
+          width: 100px !important;
+        }
+
+        .float-btn {
+          display: none;
+        }
+      }
+
+      @media only screen and (max-width: 600px) {
+        .main-app {
+          zoom: 40%;
+        }
+      }
+    </style>
+    <link
+      rel="stylesheet"
+      href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"
+    />
+  </head>
+  <body class="main-app">
+    <div class="container">
+      <a
+        th:href="@{/admin/download-cv}"
+        onclick="downloadCv()"
+        class="float-btn"
+        data-toggle="tooltip"
+        data-placement="top"
+        title="Download CV"
+      >
+        <i class="uil uil-import"></i>
+      </a>
+      <section class="section">
+        <div class="section-body">
+          <h2 class="text-center mt-3">
+            <a>
+              <img
+                th:src="@{/img/logo_landscape.png}"
+                alt="Logo"
+                width="150px"
+              />
+            </a>
+          </h2>
+          <div class="row mt-3">
+            <div class="col-12">
+              <div class="row justify-content-center">
+                <div class="container">
+                  <section class="section">
+                    <div class="card my-2 shadow" style="min-height: 170vh">
+                      <div class="card-body">
+                        <div
+                          th:insert="~{share-admin/template-cv :: template}"
+                        ></div>
+                      </div>
+                    </div>
+                  </section>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <hr />
+      <footer class="my-4">
+        <div class="text-center">
+          Copyright &copy; 2024
+          <div class="bullet"></div>
+          Powered By
+          <a class="text-primary font-weight-bold">PICK-ME</a>
+        </div>
+      </footer>
+    </div>
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"
+      integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+
+    <script th:inline="javascript">
+      /*<![CDATA[*/
+      let baseUrl = /*[[@{baseUrl}]]*/ "baseUrl";
+      /*]]>*/
+    </script>
+
+    <script th:src="@{/js/share-admin/custom.js}"></script>
+  </body>
+</html>

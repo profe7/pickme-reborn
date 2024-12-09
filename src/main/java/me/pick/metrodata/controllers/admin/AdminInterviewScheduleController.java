@@ -4,27 +4,38 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import me.pick.metrodata.enums.InterviewStatus;
 import me.pick.metrodata.enums.InterviewType;
+import me.pick.metrodata.models.dto.requests.InterviewScheduleRequest;
 import me.pick.metrodata.models.dto.responses.InterviewScheduleResponse;
 import me.pick.metrodata.models.entity.InterviewSchedule;
 import me.pick.metrodata.models.entity.User;
+import me.pick.metrodata.services.applicant.ApplicantService;
 import me.pick.metrodata.services.client.ClientService;
 import me.pick.metrodata.services.interview.InterviewScheduleService;
 import me.pick.metrodata.services.interviewhistory.InterviewScheduleHistoryService;
 import me.pick.metrodata.services.talent.TalentService;
+import me.pick.metrodata.services.vacancy.VacancyService;
 import me.pick.metrodata.services.user.UserService;
 
 @Controller
@@ -37,9 +48,11 @@ public class AdminInterviewScheduleController {
     private final UserService userService;
     private final TalentService talentService;
     private final ClientService clientService;
+    private final VacancyService vacancyService;
+    private final ApplicantService applicantService;
 
     @GetMapping
-    // @PreAuthorize("hasAnyAuthority('READ_INTERVIEW')")
+    @PreAuthorize("hasAnyAuthority('READ_INTERVIEW')")
     public String index(Model model, HttpServletRequest request) {
 
         User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
@@ -48,10 +61,12 @@ public class AdminInterviewScheduleController {
         model.addAttribute("isActive", "schedule");
         model.addAttribute("statuses", InterviewStatus.values());
         model.addAttribute("types", InterviewType.values());
+
         return "interview-schedule-admin/index";
     }
 
     @GetMapping("/api")
+    @PreAuthorize("hasAnyAuthority('READ_INTERVIEW')")
     public ResponseEntity<Map<String, Object>> getInterviewSchedules(
             @RequestParam(value = "searchRecruiter", required = false) String searchRecruiter,
             @RequestParam(value = "searchTalent", required = false) String searchTalent,
@@ -74,7 +89,7 @@ public class AdminInterviewScheduleController {
     }
 
     @GetMapping("/history/{id}")
-    // @PreAuthorize("hasAnyAuthority('READ_INTERVIEW')")
+    @PreAuthorize("hasAnyAuthority('READ_INTERVIEW')")
     public String history(@PathVariable Long id, Model model, HttpServletRequest request) {
 
         User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
@@ -93,15 +108,70 @@ public class AdminInterviewScheduleController {
     }
 
     @GetMapping("/create")
+    @PreAuthorize("hasAnyAuthority('CREATE_INTERVIEW')")
     public String createForm(Model model, HttpServletRequest request) {
 
         User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
 
         model.addAttribute("logged", loggedUser);
         model.addAttribute("talents", talentService.getTalents());
+        model.addAttribute("vacancies", vacancyService.getAllPositions());
         model.addAttribute("isActive", "schedule");
         model.addAttribute("clients", clientService.getClients());
 
         return "interview-schedule-admin/create";
+    }
+
+    @GetMapping("/create/talent")
+    @PreAuthorize("hasAnyAuthority('CREATE_INTERVIEW')")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getRecommendApplicant(
+            @RequestParam(value = "position") String position) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            response.put("applicants", applicantService.getRecommendedApplicantList(position));
+            response.put("status", "success");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception e) {
+            response.put("status", "error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @PostMapping("/create")
+    @PreAuthorize("hasAnyAuthority('CREATE_INTERVIEW')")
+    public ResponseEntity<Map<String, Object>> create(@RequestBody InterviewScheduleRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            interviewScheduleService.inviteToInterview(request);
+            response.put("message", "Jadwal wawancara baru berhasil ditambahkan");
+            response.put("status", "success");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception e) {
+            response.put("message", "Terjadi kesalahan saat menambahkan jadwal wawancara baru");
+            response.put("status", "error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @GetMapping("/export")
+    @PreAuthorize("hasAnyAuthority('READ_INTERVIEW')")
+    public ResponseEntity<ByteArrayResource> exportInterviewData(
+            @RequestParam(value = "searchRecruiter", required = false) String searchRecruiter,
+            @RequestParam(value = "searchTalent", required = false) String searchTalent,
+            @RequestParam(value = "type", required = false) InterviewType type,
+            @RequestParam(value = "date", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
+            @RequestParam(value = "status", required = false) InterviewStatus status) {
+
+        ByteArrayResource resource = interviewScheduleService.export(searchRecruiter, searchTalent, type,
+                date, status);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=interview_schedules.xlsx");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource);
     }
 }

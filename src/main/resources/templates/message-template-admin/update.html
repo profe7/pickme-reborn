@@ -50,9 +50,9 @@
                       <select class="form-select" id="type">
                         <option
                           th:each="type : ${types}"
-                          th:value="${type}"
-                          th:text="${type}"
-                          th:selected="${message.type}"
+                          th:value="${type.name()}"
+                          th:text="${type.name()}"
+                          th:selected="${message.type.name()}"
                         ></option>
                       </select>
                       <div class="invalid-feedback">Kolom ini harus diisi</div>
@@ -84,14 +84,14 @@
                     <div class="container d-flex justify-content-end">
                       <a
                         th:href="@{/admin/message-template}"
-                        class="btn btn-outline-primary btn-block me-2"
+                        class="btn btn-outline-primary btn-block mt-2"
                         onclick="return confirmBack()"
                       >
                         Batal
                       </a>
                       <button
                         type="button"
-                        class="btn btn-primary btn-block"
+                        class="btn btn-primary btn-block ml-2"
                         onclick="submit()"
                       >
                         Perbarui

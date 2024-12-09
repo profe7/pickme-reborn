@@ -12,14 +12,11 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface InstituteRepository extends JpaRepository<Institute, Long>, JpaSpecificationExecutor<Institute> {
 
         List<Institute> findInstitutesByInstituteType(InstituteType instituteType);
-
-        Optional<Institute> findInstituteById(Long id);
 
         @Query("SELECT i FROM Institute i WHERE "
                         + "(:searchName IS NULL OR i.instituteName LIKE %:searchName%) AND "
@@ -28,4 +25,10 @@ public interface InstituteRepository extends JpaRepository<Institute, Long>, Jpa
                         @Param("searchName") String searchName,
                         @Param("searchtype") InstituteType searchtype,
                         Pageable pageable);
+
+        @Query("SELECT DISTINCT i FROM Applicant a " +
+                        "JOIN a.talent t " +
+                        "JOIN t.institute i " +
+                        "WHERE a.vacancy.id = :vacancyId")
+        List<Institute> findInstitutesByVacancyId(@Param("vacancyId") Long vacancyId);
 }

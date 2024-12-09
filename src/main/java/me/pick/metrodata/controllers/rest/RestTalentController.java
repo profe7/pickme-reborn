@@ -73,11 +73,12 @@ public class RestTalentController {
             @RequestParam(value = "active", required = false) Boolean active,
             @RequestParam(value = "job", required = false) String job,
             @RequestParam(value = "skill", required = false) String skill,
-            @RequestParam(value = "idle", required = false) Boolean idle
+            @RequestParam(value = "idle", required = false) Boolean idle,
+            @RequestParam(value="companyName", required = false) String companyName
     ) {
         return ResponseHandler.generateResponse(new Response(
                 "Talents fetched", HttpStatus.OK, SUCCESS,
-                talentService.getAll(page, size, search, institute, baseSalary, limitSalary, active, job, skill, idle)));
+                talentService.getAll(page, size, search, institute, baseSalary, limitSalary, active, job, skill, idle, companyName)));
     }
 
 }

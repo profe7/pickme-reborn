@@ -203,8 +203,6 @@ public class ClientController {
     }
 
 
-
-
     @GetMapping("/edit-profile")
     public String formUpdateProfileClient(HttpSession session, Model model){
         Long clientId = (Long) session.getAttribute("accountId");
@@ -213,10 +211,10 @@ public class ClientController {
 
         AccountResponse dataClientBefore = accountService.getAccountById(clientId);
 
-        clientProfileDTO.setAccountEmail(dataClientBefore.getEmail());
-        clientProfileDTO.setAccountFirstName(dataClientBefore.getFirstName());
-        clientProfileDTO.setAccountLastName(dataClientBefore.getLastName());
-        clientProfileDTO.setAccountUsername(dataClientBefore.getUsername());
+        clientProfileDTO.setEmail(dataClientBefore.getEmail());
+        clientProfileDTO.setFirstName(dataClientBefore.getFirstName());
+        clientProfileDTO.setLastName(dataClientBefore.getLastName());
+        clientProfileDTO.setUsername(dataClientBefore.getUsername());
 
         model.addAttribute("clientDTO", clientProfileDTO);
         model.addAttribute("accountId", clientId);
@@ -239,11 +237,11 @@ public class ClientController {
             bindingResult.getFieldErrors().forEach(error -> errorMessages.add(error.getDefaultMessage()));
         }
 
-        if (!accountService.isUsernameUnique(clientDTO.getAccountUsername(), accountId)) {
+        if (!accountService.isUsernameUnique(clientDTO.getUsername(), accountId)) {
             errorMessages.add("Username sudah digunakan atau sama dengan username saat ini.");
         }
 
-        if (!accountService.isEmailUnique(clientDTO.getAccountEmail(), accountId)) {
+        if (!accountService.isEmailUnique(clientDTO.getEmail(), accountId)) {
             errorMessages.add("Email sudah digunakan atau sama dengan email saat ini.");
         }
 
@@ -252,7 +250,7 @@ public class ClientController {
             return new RedirectView("/client/edit-profile");
         }
         
-        accountService.editAccount(accountId, clientDTO);
+        accountService.updateProfile(accountId, clientDTO);
         redirectAttributes.addFlashAttribute("successMessage", "Profil berhasil diperbarui.");
         return new RedirectView("/client/edit-profile");
     }

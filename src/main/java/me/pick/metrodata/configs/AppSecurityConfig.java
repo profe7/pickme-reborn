@@ -46,7 +46,7 @@ public class AppSecurityConfig {
                                         .requestMatchers(new AntPathRequestMatcher("/mitra/**")).authenticated()
                                         .requestMatchers(new AntPathRequestMatcher("/vacancies/**")).authenticated()
                                         .requestMatchers(new AntPathRequestMatcher("/admin/**")).authenticated()
-                                        .requestMatchers(new AntPathRequestMatcher("/login")).permitAll()
+                                        .requestMatchers(new AntPathRequestMatcher("/login/**")).permitAll()
                                         .requestMatchers(new AntPathRequestMatcher("/landing-page")).permitAll()
                                         .requestMatchers(new AntPathRequestMatcher("/css/**")).permitAll()
                                         .requestMatchers(new AntPathRequestMatcher("/js/**")).permitAll()
@@ -67,7 +67,8 @@ public class AppSecurityConfig {
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login?logout=true")
-                        .permitAll());
+                        .permitAll())
+                .headers().frameOptions().disable();
         return http.build();
     }
 

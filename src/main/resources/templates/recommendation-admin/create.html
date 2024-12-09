@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="upgrade-insecure-requests"
+    />
+    <div th:insert="~{components-admin/plugin :: css}"></div>
+    <title>Rekomendasi</title>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <div th:insert="~{components-admin/navbar :: navbar}"></div>
+      <div th:insert="~{components-admin/sidebar :: sidebar}"></div>
+
+      <div class="content-wrapper">
+        <div class="content-header">
+          <div class="container-fluid">
+            <div class="m-2">
+              <ol class="breadcrumb">
+                <li
+                  class="breadcrumb-item d-flex align-items-center text-muted"
+                >
+                  <i class="nav-icon fa fa-cog me-2"></i>Pengaturan
+                </li>
+                <li
+                  class="breadcrumb-item active d-flex align-items-center"
+                  style="color: #0066cc"
+                >
+                  <i class="nav-icon fa fa-user-check me-2"></i>Rekomendasi
+                  Talent
+                </li>
+              </ol>
+              <h1 class="mt-2"><strong>Tambah Rekomendasi</strong></h1>
+            </div>
+          </div>
+        </div>
+
+        <section class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="fw-bold mb-3">Formulir Rekomendasi</h4>
+                    <div class="mb-3 col-12">
+                      <label for="position" class="required">Posisi</label>
+                      <select id="position" class="form-control">
+                        <option value="" disable selected>Pilih Posisi</option>
+                        <option
+                          th:each="vacancy: ${vacancies}"
+                          th:value="${vacancy.id}"
+                          th:text="${vacancy.position}"
+                          th:data-rtor="${vacancy.title}"
+                          th:data-institute="${vacancy.client.user.institute.instituteName}"
+                        ></option>
+                      </select>
+                      <div class="invalid-feedback">Kolom ini harus diisi</div>
+                    </div>
+                    <div class="container row">
+                      <div class="mb-3 col-6">
+                        <label for="selectRtor"
+                          >RtR (Request to Recruitment)</label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="selectRtor"
+                          name="selectRtor"
+                          disabled
+                        />
+                        <div class="invalid-feedback" id="rtor-error">
+                          Kolom ini harus diisi
+                        </div>
+                      </div>
+                      <div class="mb-3 col-6">
+                        <div>
+                          <label for="selectInstitute" class="required"
+                            >Institute</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="selectInstitute"
+                            name="selectInstitute"
+                            disabled
+                          />
+                          <div class="invalid-feedback">
+                            Kolom ini harus diisi
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="mb-3 col-12">
+                      <label for="description" class="required"
+                        >Keterangan</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="description"
+                        name="description"
+                      />
+                      <div class="invalid-feedback">Kolom ini harus diisi</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="fw-bold mb-3">Talent Rekomendasi</h4>
+                    <table class="table table-hover mt-2 col-12">
+                      <thead class="table-primary">
+                        <tr style="text-align: center">
+                          <th class="col-1">No</th>
+                          <th>Nama</th>
+                          <th>Email</th>
+                          <th class="col-2">Aksi</th>
+                        </tr>
+                      </thead>
+                      <tbody id="recommendationTbl"></tbody>
+                    </table>
+                    <button
+                      class="btn btn-primary mt-3"
+                      id="addTalentButton"
+                      type="button"
+                    >
+                      + Tambah talent
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Modal Pilih Talent -->
+                <div
+                  class="modal fade"
+                  id="addTalentModal"
+                  tabindex="-1"
+                  aria-labelledby="addTalentModalLabel"
+                  aria-hidden="true"
+                >
+                  <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="addTalentModalLabel">
+                          Pilih talent yang akan direkomendasikan
+                        </h5>
+                        <button
+                          type="button"
+                          class="btn-close"
+                          data-bs-dismiss="modal"
+                          aria-label="Close"
+                        ></button>
+                      </div>
+                      <div class="modal-body">
+                        <table class="table table-hover" id="talentTable">
+                          <thead>
+                            <tr style="text-align: center">
+                              <th class="col-1">Nama</th>
+                              <th class="col-4">Aksi</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <!-- Talent Rows Dynamically Populated -->
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="modal-footer">
+                        <button
+                          type="button"
+                          class="btn btn-secondary"
+                          data-bs-dismiss="modal"
+                          id="cancelSelectedTalents"
+                        >
+                          Batal
+                        </button>
+                        <button
+                          type="button"
+                          class="btn btn-primary"
+                          id="addSelectedTalents"
+                        >
+                          Tambahkan
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="container d-flex justify-content-end mb-3">
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary btn-block mt-2"
+                    onclick="return confirmBack()"
+                  >
+                    Batal
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-primary btn-block ml-2"
+                    onclick="submit()"
+                  >
+                    Simpan
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div th:insert="~{components-admin/plugin :: js}"></div>
+    </div>
+
+    <!-- JS Local -->
+    <div>
+      <script th:src="@{/js/recommendation-admin/create.js}"></script>
+    </div>
+  </body>
+</html>

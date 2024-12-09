@@ -10,9 +10,13 @@ import org.springframework.data.domain.Page;
 
 public interface AccountService {
 
-        Account createAccount(AccountRequest accountRequest);
+        void create(AccountRequest accountRequest);
 
-        Account editAccount(Long id, AccountRequest accountRequest);
+        void update(Long id, AccountRequest accountRequest);
+
+        void updateProfile(Long id, AccountRequest accountRequest);
+
+        void updateAccess(Long id);
 
         AccountResponse getAccountById(Long id);
 

@@ -1,0 +1,32 @@
+<div th:fragment="template">
+  <table style="width: 100%">
+    <tr>
+      <td class="align-bottom text-left">
+        <b
+          th:if="!${showFullName}"
+          id="txtFullName"
+          style="
+            font-weight: bold;
+            font-size: 26px;
+            color: black;
+            text-transform: uppercase;
+          "
+        >
+          NAMA LENGKAP</b
+        >
+        <b
+          th:text="${showFullName}"
+          style="font-weight: bold; font-size: 26px; color: black"
+        ></b>
+      </td>
+      <td class="text-right">
+        <img class="company-logo" th:src="@{/img/logo_mii.png}" width="120px" />
+      </td>
+    </tr>
+  </table>
+  <div class="border border-secondary mt-2"></div>
+
+  <div th:insert="~{share-admin/body-cv :: body-cv}"></div>
+
+  <div class="my-5"></div>
+</div>

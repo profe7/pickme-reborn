@@ -160,7 +160,9 @@
                           >Instansi</label
                         >
                         <select class="form-select" id="instituteId">
-                          <option value="">Pilih Instansi</option>
+                          <option value="" disable selected>
+                            Pilih Instansi
+                          </option>
                           <option
                             th:each="institute : ${institutes}"
                             th:value="${institute.id}"
@@ -175,14 +177,14 @@
                     <div class="container d-flex justify-content-end">
                       <a
                         th:href="@{/admin/account}"
-                        class="btn btn-outline-primary btn-block me-2"
+                        class="btn btn-outline-primary btn-block mt-2"
                         onclick="return confirmBack()"
                       >
                         Batal
                       </a>
                       <button
                         type="button"
-                        class="btn btn-primary btn-block"
+                        class="btn btn-primary btn-block ml-2"
                         onclick="submit()"
                       >
                         Simpan

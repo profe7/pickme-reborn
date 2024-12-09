@@ -1,5 +1,7 @@
 package me.pick.metrodata.services.interview;
 
+import java.io.ByteArrayOutputStream;
+
 import lombok.RequiredArgsConstructor;
 import me.pick.metrodata.enums.ApplicantStatus;
 import me.pick.metrodata.enums.InterviewStatus;
@@ -19,8 +21,10 @@ import me.pick.metrodata.models.entity.*;
 import me.pick.metrodata.repositories.*;
 import me.pick.metrodata.repositories.specifications.InterviewScheduleSpecification;
 import me.pick.metrodata.services.email.EmailService;
+import me.pick.metrodata.utils.DateTimeUtil;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -28,12 +32,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 @Service
 @RequiredArgsConstructor
@@ -81,9 +88,9 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
                 throw new InterviewScheduleUpdateBadRequestException("Date, start time, and end time must be provided");
             }
             InterviewScheduleRequest check = new InterviewScheduleRequest();
-            check.setDate(request.getDate());
-            check.setStartTime(request.getStartTime());
-            check.setEndTime(request.getEndTime());
+            check.setDate(request.getDate().toString());
+            check.setStartTime(request.getStartTime().toString());
+            check.setEndTime(request.getEndTime().toString());
             check.setClientId(interviewSchedule.getClient().getId());
             RecommendationApplicant recommendedApplicant = recommendationApplicantRepository
                     .findByApplicantIdAndPosition(interviewSchedule.getApplicant().getId(),
@@ -192,14 +199,14 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
 
         InterviewSchedule interviewSchedule = new InterviewSchedule();
         interviewSchedule.setPosition(request.getPosition());
-        interviewSchedule.setDate(request.getDate());
-        interviewSchedule.setStartTime(request.getStartTime());
-        interviewSchedule.setEndTime(request.getEndTime());
+        interviewSchedule.setDate(DateTimeUtil.stringToLocalDate(request.getDate()));
+        interviewSchedule.setStartTime(LocalTime.parse(request.getStartTime()));
+        interviewSchedule.setEndTime(LocalTime.parse(request.getEndTime()));
         interviewSchedule.setLocationAddress(request.getLocationAddress());
         interviewSchedule.setInterviewLink(request.getInterviewLink());
-        interviewSchedule.setInterviewType(request.getInterviewType());
+        interviewSchedule.setInterviewType(InterviewType.valueOf(request.getInterviewType()));
         interviewSchedule.setMessage(request.getMessage());
-        interviewSchedule.setStatus(request.getStatus());
+        interviewSchedule.setStatus(InterviewStatus.valueOf(request.getStatus()));
         interviewSchedule.setClient(client);
         interviewSchedule.setApplicant(applicant);
         return interviewSchedule;
@@ -212,17 +219,17 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
         Applicant applicant = recommendedApplicant.getApplicant();
 
         InterviewSchedule found = interviewScheduleRepository.findInterviewScheduleByClientAndApplicantAndDate(client,
-                applicant, request.getDate());
+                applicant, DateTimeUtil.stringToLocalDate(request.getDate()));
         List<InterviewSchedule> todaysInterviews = interviewScheduleRepository
-                .findInterviewScheduleByClientAndDate(client, request.getDate());
+                .findInterviewScheduleByClientAndDate(client, DateTimeUtil.stringToLocalDate(request.getDate()));
 
         List<LocalTime> reservedTimes = new ArrayList<>();
 
         for (InterviewSchedule interview : todaysInterviews) {
             reservedTimes.add(interview.getStartTime());
             reservedTimes.add(interview.getEndTime());
-            LocalTime start = request.getStartTime();
-            LocalTime end = request.getEndTime();
+            LocalTime start = LocalTime.parse(request.getStartTime());
+            LocalTime end = LocalTime.parse(request.getEndTime());
             while (start.isBefore(end)) {
                 reservedTimes.add(start);
                 start = start.plusMinutes(15);
@@ -230,12 +237,13 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
         }
 
         for (LocalTime time : reservedTimes) {
-            if (request.getStartTime().isBefore(time) && request.getEndTime().isAfter(time)) {
+            if (LocalTime.parse(request.getStartTime()).isBefore(time)
+                    && LocalTime.parse(request.getEndTime()).isAfter(time)) {
                 return true;
-            } else if (request.getStartTime().isAfter(request.getEndTime())
-                    || request.getEndTime().equals(request.getStartTime())
-                    || request.getStartTime().equals(request.getEndTime())
-                    || request.getEndTime().isBefore(request.getStartTime())) {
+            } else if (LocalTime.parse(request.getStartTime()).isAfter(LocalTime.parse(request.getEndTime()))
+                    || LocalTime.parse(request.getEndTime()).equals(LocalTime.parse(request.getStartTime()))
+                    || LocalTime.parse(request.getStartTime()).equals(LocalTime.parse(request.getEndTime()))
+                    || LocalTime.parse(request.getEndTime()).isBefore(LocalTime.parse(request.getStartTime()))) {
                 return true;
             }
         }
@@ -246,7 +254,7 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
     @Override
     public Page<InterviewSchedule> getAll(String search, Long clientId, InterviewType type, String startDate,
             String endDate, InterviewStatus status, Long mitraId, int page, int size) {
-        return interviewRetrievalHelper(search, null, type, startDate, endDate, status, mitraId, page, size);
+        return interviewRetrievalHelper(search, clientId, type, startDate, endDate, status, mitraId, page, size);
     }
 
     @Override
@@ -288,8 +296,7 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
                 .map(history -> new InterviewHistoryResponse(
                         interviewSchedule.getApplicant().getTalent().getName(),
                         history.getStatus().toString(),
-                        history.getCreated_at()
-                ))
+                        history.getCreated_at()))
                 .collect(Collectors.toList());
     }
 
@@ -321,5 +328,81 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
             return interviewScheduleResponse;
         })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public ByteArrayResource export(String searchRecruiter, String searchTalent, InterviewType type, LocalDate date,
+            InterviewStatus status) {
+        List<InterviewSchedule> interviews = interviewScheduleRepository.findAllWithFilters(searchRecruiter,
+                searchTalent, type, date, status);
+
+        try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            Sheet sheet = workbook.createSheet("Interview Schedules");
+
+            // Define cell styles
+            CellStyle headerStyle = workbook.createCellStyle();
+            headerStyle.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex()); // Soft blue color
+            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            headerStyle.setAlignment(HorizontalAlignment.CENTER); // Text alignment to center
+            Font headerFont = workbook.createFont();
+            headerFont.setFontName("Times New Roman");
+            headerFont.setFontHeightInPoints((short) 12);
+            headerFont.setBold(true);
+            headerStyle.setFont(headerFont);
+            headerStyle.setBorderTop(BorderStyle.THIN);
+            headerStyle.setBorderBottom(BorderStyle.THIN);
+            headerStyle.setBorderLeft(BorderStyle.THIN);
+            headerStyle.setBorderRight(BorderStyle.THIN);
+
+            CellStyle dataStyle = workbook.createCellStyle();
+            dataStyle.setAlignment(HorizontalAlignment.CENTER);
+            dataStyle.setBorderTop(BorderStyle.THIN);
+            dataStyle.setBorderBottom(BorderStyle.THIN);
+            dataStyle.setBorderLeft(BorderStyle.THIN);
+            dataStyle.setBorderRight(BorderStyle.THIN);
+            Font dataFont = workbook.createFont();
+            dataFont.setFontName("Times New Roman");
+            dataFont.setFontHeightInPoints((short) 12);
+            dataStyle.setFont(dataFont);
+
+            Row headerRow = sheet.createRow(0);
+            String[] headers = { "Perekrut", "Talent", "Posisi", "Wawancara", "Tanggal", "Waktu",
+                    "Status" };
+            for (int i = 0; i < headers.length; i++) {
+                Cell cell = headerRow.createCell(i);
+                cell.setCellValue(headers[i]);
+                cell.setCellStyle(headerStyle);
+            }
+
+            int rowNum = 1;
+            for (InterviewSchedule interview : interviews) {
+                Row row = sheet.createRow(rowNum++);
+                row.createCell(0).setCellValue(interview.getClient().getUser().getInstitute().getInstituteName());
+                row.createCell(1).setCellValue(interview.getApplicant().getTalent().getName());
+                row.createCell(2).setCellValue(interview.getPosition());
+                row.createCell(3).setCellValue(interview.getInterviewType().toString());
+                row.createCell(4).setCellValue(interview.getDate().toString());
+                row.createCell(5).setCellValue(interview.getStartTime().toString() + " - " + interview.getEndTime()
+                        .toString());
+                row.createCell(6).setCellValue(interview.getStatus().toString());
+                for (int i = 0; i < headers.length; i++) {
+                    Cell cell = row.getCell(i);
+                    if (cell == null) {
+                        cell = row.createCell(i);
+                    }
+                    cell.setCellStyle(dataStyle);
+                }
+            }
+            for (int i = 0; i < headers.length; i++) {
+                sheet.autoSizeColumn(i);
+            }
+
+            workbook.write(outputStream);
+
+            return new ByteArrayResource(outputStream.toByteArray());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,6 +35,7 @@ public class AdminParameterController {
     private final UserService userService;
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('READ_PARAMETER')")
     public String index(Model model, HttpServletRequest request) {
 
         User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
@@ -44,7 +46,7 @@ public class AdminParameterController {
     }
 
     @GetMapping("/api")
-    // @PreAuthorize("hasAnyAuthority('READ_TALENT')")
+    @PreAuthorize("hasAnyAuthority('READ_PARAMETER')")
     public ResponseEntity<Map<String, Object>> getParameters(
             @RequestParam(value = "searchParameterName", required = false) String searchParameterName,
             @RequestParam(value = "searchParameterValue", required = false) String searchParameterValue,
@@ -62,20 +64,19 @@ public class AdminParameterController {
     }
 
     @GetMapping("/create")
-    // @PreAuthorize("hasAnyAuthority('CREATE_PARAMETER')")
+    @PreAuthorize("hasAnyAuthority('CREATE_PARAMETER')")
     public String createForm(Model model, HttpServletRequest request) {
 
         User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
 
         model.addAttribute("logged", loggedUser);
         model.addAttribute("isActive", "parameter");
-        model.addAttribute("isActive", "parameter");
 
         return "parameter-admin/create";
     }
 
     @GetMapping("/update/{id}")
-    // @PreAuthorize("hasAnyAuthority('UPDATE_PARAMETER')")
+    @PreAuthorize("hasAnyAuthority('UPDATE_PARAMETER')")
     public String updateForm(@PathVariable Long id, Model model, HttpServletRequest request) {
 
         User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
@@ -88,31 +89,40 @@ public class AdminParameterController {
     }
 
     @PostMapping("/create")
-    // @PreAuthorize("hasAnyAuthority('CREATE_PARAMETER')")
-    public ResponseEntity<Void> create(@RequestBody ReferenceRequest referenceRequest, HttpServletRequest request) {
-
+    @PreAuthorize("hasAnyAuthority('CREATE_PARAMETER')")
+    public ResponseEntity<Map<String, Object>> create(@RequestBody ReferenceRequest referenceRequest) {
+        Map<String, Object> response = new HashMap<>();
         try {
             referenceService.create(referenceRequest);
-            return ResponseEntity.status(HttpStatus.OK).build();
+            response.put("message", "Parameter baru berhasil ditambahkan");
+            response.put("status", "success");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            response.put("message", "Terjadi kesalahan saat menambahkan parameter baru");
+            response.put("status", "error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
     @PutMapping("/update/{id}")
-    // @PreAuthorize("hasAnyAuthority('UPDATE_PARAMETER')")
-    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody ReferenceRequest referenceRequest) {
-
+    @PreAuthorize("hasAnyAuthority('UPDATE_PARAMETER')")
+    public ResponseEntity<Map<String, Object>> update(@PathVariable Long id,
+            @RequestBody ReferenceRequest referenceRequest) {
+        Map<String, Object> response = new HashMap<>();
         try {
             referenceService.update(id, referenceRequest);
-            return ResponseEntity.status(HttpStatus.OK).build();
+            response.put("message", "Parameter berhasil diperbarui");
+            response.put("status", "success");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            response.put("message", "Terjadi kesalahan saat memperbarui parameter");
+            response.put("status", "error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
     @DeleteMapping("/delete/{id}")
-    // @PreAuthorize("hasAnyAuthority('DELETE_PARAMETER')")
+    @PreAuthorize("hasAnyAuthority('DELETE_PARAMETER')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
 
         try {

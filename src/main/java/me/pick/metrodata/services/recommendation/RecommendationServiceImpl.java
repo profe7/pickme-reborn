@@ -5,12 +5,12 @@ import me.pick.metrodata.exceptions.recommendation.RecommendationDoesNotExistExc
 import me.pick.metrodata.models.dto.responses.RecommendationGroupedResponse;
 import me.pick.metrodata.models.dto.responses.RecommendationResponse;
 import me.pick.metrodata.models.dto.responses.TalentResponse;
-import me.pick.metrodata.models.entity.Recommendation;
-import me.pick.metrodata.models.entity.RecommendationApplicant;
-import me.pick.metrodata.models.entity.Talent;
-import me.pick.metrodata.models.entity.Vacancy;
+import me.pick.metrodata.models.dto.responses.VacancyApplicantsResponse;
+import me.pick.metrodata.models.entity.*;
 import me.pick.metrodata.repositories.RecommendationApplicantRepository;
+import me.pick.metrodata.repositories.ApplicantRepository;
 import me.pick.metrodata.repositories.RecommendationRepository;
+import me.pick.metrodata.repositories.SkillRepository;
 import me.pick.metrodata.repositories.specifications.RecommendationSpecification;
 import me.pick.metrodata.services.talent.TalentService;
 
@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.Base64;
 
 @RequiredArgsConstructor
@@ -33,6 +34,8 @@ public class RecommendationServiceImpl implements RecommendationService {
 	private final TalentService talentService;
 	private final RecommendationApplicantRepository recommendationApplicantRepository;
 	private final ModelMapper modelMapper;
+	private final SkillRepository skillRepository;
+	private final ApplicantRepository applicantRepository;
 
 	@Override
 	public Page<RecommendationResponse> getFilteredRecommendation(Integer page, Integer size) {
@@ -64,11 +67,11 @@ public class RecommendationServiceImpl implements RecommendationService {
 	@Override
 	public void deleteRecommendation(Long id) {
 		try {
+			recommendationApplicantRepository.deleteByRecommendation_Id(id);
 			recommendationRepository.deleteById(id);
 		} catch (Exception e) {
 			throw new RecommendationDoesNotExistException(id);
 		}
-		recommendationApplicantRepository.deleteByRecommendation_Id(id);
 	}
 
 	private Page<RecommendationGroupedResponse> recommendationPaginationHelper(Integer page, Integer size,
@@ -90,7 +93,6 @@ public class RecommendationServiceImpl implements RecommendationService {
 		for (Recommendation recommendation : recommendations) {
 			Long recommendationId = recommendation.getId();
 			Vacancy vacancy = recommendation.getVacancy();
-
 			String vacancyPosition = vacancy.getPosition();
 			Long vacancyId = vacancy.getId();
 
@@ -103,10 +105,18 @@ public class RecommendationServiceImpl implements RecommendationService {
 
 			if (applicants != null) {
 				for (RecommendationApplicant applicant : applicants) {
-					Talent talent = applicant.getApplicant().getTalent();
-					if (talent == null)
+					Boolean invited = false;
+					for (InterviewSchedule schedule : applicant.getApplicant().getInterviewSchedules()) {
+						if (schedule.getPosition().equals(vacancyPosition)
+								&& schedule.getClient().getId().equals(clientId)) {
+							invited = true;
+							break;
+						}
+					}
+					if (invited) {
 						continue;
-
+					}
+					Talent talent = applicant.getApplicant().getTalent();
 					TalentResponse talentResponse = talentService.getById(talent.getId());
 					if (talent.getPhoto() != null) {
 						talentResponse.setPhoto(Base64.getEncoder().encodeToString(talent.getPhoto()));
@@ -118,6 +128,46 @@ public class RecommendationServiceImpl implements RecommendationService {
 			groupedResponses.put(vacancyPosition, groupedResponse);
 		}
 		return new ArrayList<>(groupedResponses.values());
+	}
+
+	@Override
+	public List<String> getPositions(Long recommendationId) {
+		return recommendationApplicantRepository.findByRecommendationId(recommendationId).stream()
+				.map(RecommendationApplicant::getPosition)
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<String> getSkills() {
+		return skillRepository.findAllDistinctSkill();
+	}
+
+	@Override
+	public Page<VacancyApplicantsResponse> getRecommendationTalents(Long recommendationId, String searchName,
+			String searchPosition, String searchSkill, Integer page, Integer size) {
+		Pageable pageable = PageRequest.of(page, size);
+		return applicantRepository
+				.findAllWithFilters(recommendationId, searchName, searchPosition, searchSkill, pageable)
+				.map(applicant -> {
+					VacancyApplicantsResponse response = new VacancyApplicantsResponse();
+					response.setApplicantName(applicant.getTalent().getName());
+					response.setApplicantMitra(applicant.getTalent().getInstitute().getInstituteName());
+					response.setApplicantPhoto(applicant.getTalent().getPhoto());
+					response.setApplicantSkill(applicant.getTalent().getSkills());
+					response.setApplicantId(applicant.getId());
+					return response;
+				});
+	}
+
+	@Override
+	public RecommendationResponse getRecommendationById(Long id) {
+		return recommendationRepository.findById(id).map(recommend -> {
+			RecommendationResponse response = modelMapper.map(recommend, RecommendationResponse.class);
+			response.setAssignInstitute(
+					recommend.getVacancy().getClient().getUser().getInstitute().getInstituteName());
+			response.setPosition(recommend.getVacancy().getPosition());
+			return response;
+		}).orElseThrow();
 	}
 
 }

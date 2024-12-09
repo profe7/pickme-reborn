@@ -8,6 +8,8 @@ import me.pick.metrodata.models.dto.responses.InterviewScheduleResponse;
 import me.pick.metrodata.models.dto.responses.InterviewHistoryResponse;
 import me.pick.metrodata.models.dto.responses.InterviewScheduleCalendarResponse;
 import me.pick.metrodata.models.entity.InterviewSchedule;
+
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -42,4 +44,7 @@ public interface InterviewScheduleService {
         List<InterviewScheduleCalendarResponse> getInterviewCalendarMitra(Long mitraId);
 
         List<InterviewScheduleResponse> getByTalentId(String talentId);
+
+        ByteArrayResource export(String searchRecruiter, String searchTalent, InterviewType type, LocalDate date,
+                        InterviewStatus status);
 }

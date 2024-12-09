@@ -45,6 +45,20 @@
                 <div class="card">
                   <div class="card-body">
                     <h4 class="fw-bold mb-3">Formulir Hari Libur</h4>
+                    <p class="fw-bold">Upload File JSON</p>
+                    <div class="mb-3 col-6">
+                      <label class="custom-file-label" for="customFile"
+                        >Pilih File JSON</label
+                      >
+                      <input
+                        type="file"
+                        class="custom-file-input"
+                        name="json"
+                        accept=".json"
+                        id="customFile"
+                      />
+                    </div>
+                    <p class="text-muted">Atau</p>
                     <div class="mb-3 col-12">
                       <label for="name" class="form-label required">Nama</label>
                       <input
@@ -77,14 +91,14 @@
                     <div class="container d-flex justify-content-end">
                       <a
                         th:href="@{/admin/holiday}"
-                        class="btn btn-outline-primary btn-block me-2"
+                        class="btn btn-outline-primary btn-block mt-2"
                         onclick="return confirmBack()"
                       >
                         Batal
                       </a>
                       <button
                         type="button"
-                        class="btn btn-primary btn-block"
+                        class="btn btn-primary btn-block ml-2"
                         onclick="submit()"
                       >
                         Simpan

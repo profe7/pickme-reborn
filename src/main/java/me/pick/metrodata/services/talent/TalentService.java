@@ -34,7 +34,7 @@ public interface TalentService {
 
         Page<Talent> getAll(Integer page, Integer size, String search, Long institute, Long baseSalary,
                         Long limitSalary,
-                        Boolean active, String job, String skill, Boolean idle);
+                        Boolean active, String job, String skill, Boolean idle, String companyName);
 
         List<TalentInterviewScheduleHistory> getTalentInterviewScheduleHistories(String talentId);
 
@@ -43,4 +43,7 @@ public interface TalentService {
         boolean checkNIKExists(String nik, String talentId);
 
         List<TalentResponse> getTalents();
+
+        List<TalentResponse> getTalentsByInstituteId(Long instituteId);
+
 }

@@ -1,0 +1,283 @@
+<div th:fragment="body-cv">
+  <div class="mt-4 basic-profile" id="txtPersonalSection">
+    <!-- <span style="font-size:20.8px; color:#355f90" th:text="${title}"></span> -->
+    <span style="font-size: 20.8px; color: #355f90">Personal Data</span>
+    <div class="row mt-3 mx-2">
+      <table style="width: 100%">
+        <tr>
+          <td class="align-top" style="width: 35%">
+            <span> Data of Birth:</span>
+          </td>
+          <td class="align-top" style="width: 35%">
+            <b th:if="!${showDateOfBirth}" id="txtDateOfBirth"> ______</b>
+            <b th:text="${showDateOfBirth}"></b>
+          </td>
+          <td
+            class="profileImageContainer image-profile-negative-margin-top text-center"
+            rowspan="9"
+            style="width: 30%; vertical-align: top; margin-top: -40px"
+          >
+            <img
+              class="image-profile image-profile-negative-margin-top"
+              th:if="!${showProfilePicture}"
+              id="imgProfileImagePreview"
+              th:src="@{/img/no_image.jpg}"
+              width="120px"
+              style="margin-top: -40px"
+            />
+            <img
+              class="image-profile image-profile-negative-margin-top"
+              th:src="${showProfilePicture}"
+              width="120px"
+              style="margin-top: -40px"
+            />
+          </td>
+        </tr>
+        <tr>
+          <td class="align-top">
+            <span> Place of Birth:</span>
+          </td>
+          <td class="align-top">
+            <b th:if="!${showBirthPlace}" id="txtBirthPlace"> ______</b>
+            <b th:text="${showBirthPlace}"></b>
+          </td>
+        </tr>
+        <tr>
+          <td class="align-top">
+            <span> Nationality:</span>
+          </td>
+          <td class="align-top">
+            <b th:if="!${showNationality}" id="txtNationality"> ______</b>
+            <b th:text="${showNationality}"></b>
+          </td>
+        </tr>
+        <tr>
+          <td class="align-top">
+            <span> Marital Status:</span>
+          </td>
+          <td class="align-top">
+            <b th:if="!${showMaritialStatus}" id="txtMaritialStatus"> ______</b>
+            <b th:text="${showMaritialStatus}"></b>
+          </td>
+        </tr>
+        <tr>
+          <td class="align-top">
+            <span> Gender:</span>
+          </td>
+          <td class="align-top">
+            <b th:if="!${showGender}" id="txtGender"> ______</b>
+            <b th:text="${showGender}"></b>
+          </td>
+        </tr>
+        <tr>
+          <td class="align-top">
+            <span> Religion:</span>
+          </td>
+          <td class="align-top">
+            <b th:if="!${showReligion}" id="txtReligion"> ______</b>
+            <b th:text="${showReligion}"></b>
+          </td>
+        </tr>
+        <tr>
+          <td class="align-top">
+            <span> Phone Number:</span>
+          </td>
+          <td class="align-top">
+            <b th:if="!${showPhone}" id="txtPhone"> ______</b>
+            <b th:text="${showPhone}"></b>
+          </td>
+        </tr>
+        <tr>
+          <td class="align-top">
+            <span> E-mail:</span>
+          </td>
+          <td class="align-top">
+            <b th:if="!${showEmail}" id="txtEmail"> ______</b>
+            <b th:text="${showEmail}"></b>
+          </td>
+        </tr>
+        <tr>
+          <td class="align-top">
+            <span> Address:</span>
+          </td>
+          <td class="align-top">
+            <b th:if="!${showAddress}" id="txtAddress"> ______</b>
+            <b th:text="${showAddress}"></b>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div th:if="${languageData != null}" class="mt-4 language">
+    <span style="font-size: 20.8px; color: #355f90">Language</span>
+    <div class="row">
+      <div>
+        <ul th:each="languageSkill : ${languageData}">
+          <li>
+            <span th:text="${languageSkill.language.name}"></span>
+            <ul>
+              <li>
+                <span>• reading (</span>
+                <span th:text="${languageSkill.readingAbilityLevel}"></span>
+                <span>)</span>
+              </li>
+              <li>
+                <span>• writing (</span>
+                <span th:text="${languageSkill.writingAbilityLevel}"></span>
+                <span>)</span>
+              </li>
+              <li>
+                <span>• speaking (</span>
+                <span th:text="${languageSkill.speakingAbilityLevel}"></span>
+                <span>)</span>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div th:if="${educationData != null}" class="mt-4 education">
+    <span style="font-size: 20.8px; color: #355f90">Education</span>
+    <div class="row">
+      <div>
+        <ul>
+          <li th:each="edu : ${educationData}">
+            <span th:text="${edu.educationalLevel}"></span>
+            <span> at </span>
+            <span th:text="${edu.institution}"></span>
+            <span>, Majoring in </span>
+            <span
+              th:text="${edu.major != null ? edu.major.reference_name : 'N/A'}"
+            ></span>
+            <span> GPA </span>
+            <span th:text="${edu.academicGrade}"></span>
+            <span> (</span>
+            <span
+              th:text="${edu.startDate != null ? #dates.format(edu.startDate, 'yyyy') : 'N/A'}"
+            ></span>
+            <span> – </span>
+            <span
+              th:text="${edu.endDate != null ? #dates.format(edu.endDate, 'yyyy') : 'N/A'}"
+            ></span>
+            <span>)</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div th:if="${skillData != null}" class="mt-4 skill">
+    <span style="font-size: 20.8px; color: #355f90">Skill</span>
+    <ul th:each="skill : ${skillData}">
+      <li>
+        <strong><span th:text="${skill.name}"></span></strong> –
+        <span th:text="${skill.category}"></span>
+        (<span th:text="${skill.level}"></span>)
+      </li>
+    </ul>
+  </div>
+
+  <div th:if="${workData != null}" class="mt-4 work-experience">
+    <span style="font-size: 20.8px; color: #355f90">Work Experience</span>
+    <ul th:each="work : ${workData}">
+      <li>
+        <strong
+          ><span th:text="${work.startDate} + ' - ' + ${work.endDate}"></span>,
+          <span th:text="${work.position.reference_name}"></span>
+          (<span th:text="${work.contractStatus}"></span>) at
+          <span th:text="${work.companyName}"></span
+        ></strong>
+        <p>Job Description:</p>
+        <p th:text="${work.description}"></p>
+        <p>Project Specification:</p>
+        <p th:text="${work.projectSpecification}"></p>
+      </li>
+    </ul>
+  </div>
+
+  <div th:if="${projectData != null}" class="mt-4 project">
+    <span style="font-size: 20.8px; color: #355f90">Project</span>
+    <div>
+      <ul th:each="project : ${projectData}">
+        <li>
+          <span th:text="${project.startDate} + ' - ' + project.endDate"></span
+          >, <span th:text="${project.projectName}"></span> at
+          <span th:text="${project.institution}"></span>.
+          <span th:text="${project.description}"></span>
+          <p>Skill: <span th:text="${project.skill.referenceName}"></span></p>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div th:if="${trainingData != null}" class="mt-4 certificate">
+    <span style="font-size: 20.8px; color: #355f90">Training</span>
+    <div>
+      <ul th:each="training : ${trainingData}">
+        <li>
+          <span th:text="${training.trainingName}"></span>
+          (<span th:text="${training.trainingDate}"></span>)
+          <br />
+          <span th:text="${training.syllabus}"></span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div th:if="${certificationData != null}" class="mt-4 certification">
+    <span style="font-size: 20.8px; color: #355f90">Certification</span>
+    <ul th:each="certification : ${certificationData}">
+      <li>
+        <span th:text="${certification.certificateName}"></span> –
+        <span th:text="${certification.institutionName}"></span>
+        (<span th:text="${certification.certificateIssueDate}"></span>
+        -
+        <span th:text="${certification.validUntil}"></span>)
+      </li>
+    </ul>
+  </div>
+
+  <div th:if="${organizationData != null}" class="mt-4 organization-experience">
+    <span style="font-size: 20.8px; color: #355f90"
+      >Organization Experience</span
+    >
+    <ul th:each="organization : ${organizationData}">
+      <li>
+        <span th:text="${organization.organizationPosition}"></span>,
+        <span th:text="${organization.organizationName}"></span>
+        (<span th:text="${organization.startDate}"></span>
+        -
+        <span th:text="${organization.endDate}"></span>)
+      </li>
+    </ul>
+  </div>
+
+  <div th:if="${experienceData != null}" class="mt-4 other">
+    <span style="font-size: 20.8px; color: #355f90">Other Experience</span>
+    <ul th:each="experience : ${experienceData}">
+      <li>
+        <span th:text="${experience.experienceName}"></span> -
+        <span th:text="${experience.experienceDate}"></span>, as
+        <span th:text="${experience.positionName}"></span> at
+        <span th:text="${experience.instituteName}"></span>
+        <br />
+        <span>Job Description:</span><br />
+        <span th:text="${experience.description}"></span>
+      </li>
+    </ul>
+  </div>
+
+  <div th:if="${awardData != null}" class="mt-4 award">
+    <span style="font-size: 20.8px; color: #355f90">Award</span>
+    <ul th:each="achievement : ${awardData}">
+      <li>
+        <span th:text="${achievement.achievementName}"></span> –
+        <span th:text="${achievement.institution}"></span>
+        (<span th:text="${achievement.achievementDate}"></span>)
+      </li>
+    </ul>
+  </div>
+</div>

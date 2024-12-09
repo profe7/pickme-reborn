@@ -62,7 +62,9 @@ public class EmailServiceImpl implements EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, UTF);
 
             helper.setTo(schedule.getApplicant().getTalent().getEmail());
-            helper.setCc(schedule.getApplicant().getTalent().getMitra().getUser().getEmail());
+            String mitraEmail = schedule.getApplicant().getTalent().getMitra().getUser().getEmail();
+            String rmEmail = schedule.getApplicant().getTalent().getMitra().getUser().getInstitute().getRmUser().getEmail();
+            helper.setCc(new String[] {mitraEmail, rmEmail});
             helper.setSubject("Undangan Interview Untuk Posisi " + schedule.getPosition() + " di " + schedule.getClient().getUser().getInstitute().getInstituteName());
 
             Map<String, Object> templateModel = templateHelperOne(schedule);
@@ -91,7 +93,10 @@ public class EmailServiceImpl implements EmailService {
             Context context = new Context();
             context.setVariables(template);
             String html = templateEngine.process("email/reschedule", context);
+            String mitraEmail = interviewSchedule.getApplicant().getTalent().getMitra().getUser().getEmail();
+            String rmEmail = interviewSchedule.getApplicant().getTalent().getMitra().getUser().getInstitute().getRmUser().getEmail();
             helper.setTo(interviewSchedule.getApplicant().getTalent().getEmail());
+            helper.setCc(new String[] {mitraEmail, rmEmail});
             helper.setText(html, true);
             helper.setSubject("Reschedule Interview Anda Untuk Posisi " + interviewSchedule.getPosition() + " di " + interviewSchedule.getClient().getUser().getInstitute().getInstituteName());
 
@@ -114,7 +119,10 @@ public class EmailServiceImpl implements EmailService {
             context.setVariables(template);
             String html = templateEngine.process("email/cancelled", context);
 
+            String mitraEmail = interviewSchedule.getApplicant().getTalent().getMitra().getUser().getEmail();
+            String rmEmail = interviewSchedule.getApplicant().getTalent().getMitra().getUser().getInstitute().getRmUser().getEmail();
             helper.setTo(interviewSchedule.getApplicant().getTalent().getEmail());
+            helper.setCc(new String[] {mitraEmail, rmEmail});
             helper.setText(html, true);
             helper.setSubject(INTERVIEW + interviewSchedule.getPosition() + " di " + interviewSchedule.getClient().getUser().getInstitute().getInstituteName() + " Dibatalkan");
 
@@ -137,7 +145,10 @@ public class EmailServiceImpl implements EmailService {
             context.setVariables(template);
             String html = templateEngine.process("email/accepted", context);
 
+            String mitraEmail = interviewSchedule.getApplicant().getTalent().getMitra().getUser().getEmail();
+            String rmEmail = interviewSchedule.getApplicant().getTalent().getMitra().getUser().getInstitute().getRmUser().getEmail();
             helper.setTo(interviewSchedule.getApplicant().getTalent().getEmail());
+            helper.setCc(new String[] {mitraEmail, rmEmail});
             helper.setText(html, true);
             helper.setSubject(INTERVIEW + interviewSchedule.getPosition() + " di " + interviewSchedule.getClient().getUser().getInstitute().getInstituteName() + " Diterima");
 
@@ -160,7 +171,10 @@ public class EmailServiceImpl implements EmailService {
             context.setVariables(template);
             String html = templateEngine.process("email/rejected", context);
 
+            String mitraEmail = interviewSchedule.getApplicant().getTalent().getMitra().getUser().getEmail();
+            String rmEmail = interviewSchedule.getApplicant().getTalent().getMitra().getUser().getInstitute().getRmUser().getEmail();
             helper.setTo(interviewSchedule.getApplicant().getTalent().getEmail());
+            helper.setCc(new String[] {mitraEmail, rmEmail});
             helper.setText(html, true);
             helper.setSubject("Interview Anda Untuk Posisi " + interviewSchedule.getPosition() + " di " + interviewSchedule.getClient().getUser().getInstitute().getInstituteName() + " Ditolak");
 

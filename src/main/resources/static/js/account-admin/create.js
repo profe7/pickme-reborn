@@ -1,13 +1,11 @@
 $(document).ready(function () {});
 
 function submit() {
-  // Menghapus pesan invalid sebelum validasi
   $(".is-invalid").removeClass("is-invalid");
 
   var username = $("#username").val();
   var password = $("#password").val();
   var roleId = $("#roleId").val();
-
   var firstName = $("#firstName").val();
   var lastName = $("#lastName").val();
   var email = $("#email").val();
@@ -16,7 +14,6 @@ function submit() {
   var limitBudget = $("#limitBudget").val();
   var instituteId = $("#instituteId").val();
 
-  // Validasi sederhana untuk kolom yang wajib diisi
   if (
     !username ||
     !password ||
@@ -31,7 +28,6 @@ function submit() {
       text: "Semua kolom dengan label required harus diisi",
     });
 
-    // Menandai kolom yang tidak diisi dengan kelas is-invalid
     if (!username) $("#username").addClass("is-invalid");
     if (!password) $("#password").addClass("is-invalid");
     if (!firstName) $("#firstName").addClass("is-invalid");
@@ -56,12 +52,11 @@ function submit() {
   });
 
   Swal.fire({
-    title: "Apakah anda ingin membuat akun ini?",
+    title: "Apakah Anda yakin ingin membuat 'Akun' ini?",
     showCancelButton: true,
     confirmButtonText: "Ya",
     cancelButtonText: `Tidak`,
   }).then((result) => {
-    /* Read more about isConfirmed, isDenied below */
     if (result.isConfirmed) {
       $.LoadingOverlay("show");
       create(data);
@@ -71,34 +66,29 @@ function submit() {
 
 function create(data) {
   $.ajax({
-    url: `/api/account`,
+    url: `/admin/account/create`,
     method: "POST",
     dataType: "JSON",
-    beforeSend: addCsrfToken(),
     contentType: "application/json",
     data: data,
     success: (result) => {
-      // Menyembunyikan overlay loading
       $.LoadingOverlay("hide");
-
       Swal.fire({
         position: "center",
         icon: "success",
-        title: "Akun berhasil dibuat",
+        title: "Akun baru berhasil ditambahkan",
         showConfirmButton: true,
       }).then(() => {
-        // Memuat ulang halaman
-        window.location.href = "/account/";
+        window.location.href = "/admin/account";
       });
     },
     error: (e) => {
-      // Menyembunyikan overlay loading
       $.LoadingOverlay("hide");
-
+      console.error("Error response:", e.responseText);
       Swal.fire({
         position: "center",
         icon: "error",
-        title: "Akun gagal dibuat",
+        title: "Akun baru gagal ditambahkan",
         showConfirmButton: true,
       });
     },
@@ -107,14 +97,14 @@ function create(data) {
 
 function confirmBack() {
   Swal.fire({
-    title: "Apakah anda yakin ingin kembali?",
+    title: "Apakah Anda yakin ingin kembali?",
     icon: "question",
     showCancelButton: true,
     confirmButtonText: "Ya",
     cancelButtonText: "Tidak",
   }).then((result) => {
     if (result.isConfirmed) {
-      window.location.href = "/admin/parameter";
+      window.location.href = "/admin/account";
     }
   });
   return false;

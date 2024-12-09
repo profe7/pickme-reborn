@@ -29,8 +29,10 @@ document.addEventListener("DOMContentLoaded", function () {
       <td>${message.message || ""}</td>
       <td>${message.type || ""}</td>
       <td>
-        <a class="btn btn-success">
-          <i class="bi bi-person-check-fill text-white"></i>
+        <a href="/admin/message-template/update/${
+          message.id
+        }" class="btn btn-success">
+          <i class="bi bi-pencil-square text-white"></i>
         </a>
       </td>
     `;
@@ -48,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
     prevButton.classList.toggle("disabled", currentPage <= 0);
     const prevLink = document.createElement("a");
     prevLink.classList.add("page-link");
-    prevLink.textContent = "Prev";
+    prevLink.innerHTML = "&lt;";
     prevLink.href = "#";
     prevLink.addEventListener("click", (e) => {
       e.preventDefault();
@@ -78,7 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
     nextButton.classList.toggle("disabled", currentPage >= totalPages - 1);
     const nextLink = document.createElement("a");
     nextLink.classList.add("page-link");
-    nextLink.textContent = "Next";
+    nextLink.innerHTML = "&gt;";
     nextLink.href = "#";
     nextLink.addEventListener("click", (e) => {
       e.preventDefault();

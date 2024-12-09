@@ -48,26 +48,15 @@
                   <div class="card-body">
                     <h4 class="fw-bold mb-3">Formulir Wawancara</h4>
                     <div class="mb-3 col-12">
-                      <label for="ccSelect">CC:</label>
-                      <!-- <select
-                        class="form-select select2"
-                        id="ccSelect"
-                        multiple="multiple"
-                      ></select> -->
-                      <input
-                        type="text"
-                        class="form-control select2"
-                        id="ccSelect"
-                      />
-                    </div>
-                    <div class="mb-3 col-12">
                       <label for="position" class="required">Posisi</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="position"
-                        placeholder="Pilih posisi"
-                      />
+                      <select class="form-select select2" id="position">
+                        <option value="" disabled selected>Pilih Posisi</option>
+                        <option
+                          th:each="vacancy : ${vacancies}"
+                          th:value="${vacancy}"
+                          th:text="${vacancy}"
+                        ></option>
+                      </select>
                       <div class="invalid-feedback">Kolom ini harus diisi</div>
                     </div>
                     <div class="container row">
@@ -79,11 +68,6 @@
                           <option value="" disabled selected>
                             Pilih Perekrut/Klien
                           </option>
-                          <option
-                            th:each="client : ${clients}"
-                            th:value="${client.id}"
-                            th:text="${client.clientName}"
-                          ></option>
                         </select>
                         <div class="invalid-feedback">
                           Kolom ini harus diisi
@@ -101,11 +85,6 @@
                           <option value="" disabled selected>
                             Pilih Talent
                           </option>
-                          <option
-                            th:each="talent : ${talents}"
-                            th:value="${talent.id}"
-                            th:text="${talent.name} "
-                          ></option>
                         </select>
                         <div class="invalid-feedback">
                           Kolom ini harus diisi
@@ -125,8 +104,8 @@
                           <option value="" disabled selected>
                             Online/Offline
                           </option>
-                          <option value="true">Offline</option>
-                          <option value="false">Online</option>
+                          <option value="OFFLINE">Offline</option>
+                          <option value="ONLINE">Online</option>
                         </select>
                         <div class="invalid-feedback">
                           Kolom ini harus diisi
@@ -219,14 +198,14 @@
                     <div class="container d-flex justify-content-end">
                       <a
                         th:href="@{/admin/interview-schedule}"
-                        class="btn btn-outline-primary btn-block me-2"
+                        class="btn btn-outline-primary btn-block mt-2"
                         onclick="return confirmBack()"
                       >
                         Batal
                       </a>
                       <button
                         type="button"
-                        class="btn btn-primary btn-block"
+                        class="btn btn-primary btn-block ml-2"
                         onclick="submit()"
                       >
                         <i class="nav-icon fa fa-envelope me-2"></i>Undang

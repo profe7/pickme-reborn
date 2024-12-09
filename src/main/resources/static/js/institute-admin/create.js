@@ -1,43 +1,39 @@
 $(document).ready(function () {});
 
 function submit() {
-  // Menghapus pesan invalid sebelum validasi
   $(".is-invalid").removeClass("is-invalid");
 
   var name = $("#name").val();
   var rmId = $("#rmId").val();
 
-  var instituteTypeId = $("#instituteTypeId").val();
+  var instituteType = $("#instituteType").val();
 
-  // Validasi sederhana untuk kolom yang wajib diisi
-  if (!name || !rmId || !instituteTypeId) {
+  if (!name || !rmId || !instituteType) {
     Swal.fire({
       icon: "error",
       title: "Error",
       text: "Semua kolom dengan label required harus diisi",
     });
 
-    // Menandai kolom yang tidak diisi dengan kelas is-invalid
     if (!name) $("#name").addClass("is-invalid");
     if (!rmId) $("#rmId").addClass("is-invalid");
-    if (!instituteTypeId) $("#instituteTypeId").addClass("is-invalid");
+    if (!instituteType) $("#instituteType").addClass("is-invalid");
 
     return;
   }
 
   var data = JSON.stringify({
-    name: name,
+    instituteName: name,
     rmId: rmId,
-    instituteTypeId: instituteTypeId,
+    instituteType: instituteType,
   });
 
   Swal.fire({
-    title: "Apakah anda ingin membuat instansi ini?",
+    title: "Apakah Anda yakin ingin membuat 'Instansi' ini?",
     showCancelButton: true,
     confirmButtonText: "Ya",
-    cancelButtonText: `Tidak`,
+    cancelButtonText: "Tidak",
   }).then((result) => {
-    /* Read more about isConfirmed, isDenied below */
     if (result.isConfirmed) {
       $.LoadingOverlay("show");
       create(data);
@@ -50,33 +46,42 @@ function create(data) {
     url: `/admin/institute/create`,
     method: "POST",
     dataType: "JSON",
-    beforeSend: addCsrfToken(),
     contentType: "application/json",
     data: data,
     success: (result) => {
-      // Menyembunyikan overlay loading
       $.LoadingOverlay("hide");
-
       Swal.fire({
         position: "center",
         icon: "success",
-        title: "Instansi berhasil dibuat",
+        title: "Instansi baru berhasil ditambahkan",
         showConfirmButton: true,
       }).then(() => {
-        // Memuat ulang halaman
-        window.location.href = "/institute/";
+        window.location.href = "/admin/institute";
       });
     },
     error: (e) => {
-      // Menyembunyikan overlay loading
       $.LoadingOverlay("hide");
-
       Swal.fire({
         position: "center",
         icon: "error",
-        title: "Instansi gagal dibuat",
+        title: "Instansi baru gagal ditambahkan",
         showConfirmButton: true,
       });
     },
   });
+}
+
+function confirmBack() {
+  Swal.fire({
+    title: "Apakah Anda yakin ingin kembali?",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonText: "Ya",
+    cancelButtonText: "Tidak",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = "/admin/institute";
+    }
+  });
+  return false;
 }

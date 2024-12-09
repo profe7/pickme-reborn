@@ -4,9 +4,6 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
-import me.pick.metrodata.utils.Response;
-import me.pick.metrodata.utils.ResponseHandler;
-
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -15,10 +12,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,11 +23,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import me.pick.metrodata.enums.VacancyStatus;
+import me.pick.metrodata.models.dto.requests.RecommendApplicantRequest;
+import me.pick.metrodata.models.dto.requests.RecommendationRequest;
 import me.pick.metrodata.models.dto.requests.VacancyRequest;
+import me.pick.metrodata.models.dto.responses.VacancyApplicantsResponse;
 import me.pick.metrodata.models.entity.User;
 import me.pick.metrodata.models.entity.Vacancy;
+import me.pick.metrodata.services.institute.InstituteService;
 import me.pick.metrodata.services.user.UserService;
 import me.pick.metrodata.services.vacancy.VacancyService;
+import me.pick.metrodata.services.applicant.ApplicantService;
 
 @Controller
 @RequestMapping("/admin/vacancy")
@@ -39,10 +41,11 @@ public class AdminVacancyController {
 
     private final VacancyService vacancyService;
     private final UserService userService;
-
-    private static final String SUCCESS = "SUCCESS";
+    private final InstituteService instituteService;
+    private final ApplicantService applicantService;
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('READ_JOB')")
     public String index(Model model, HttpServletRequest request) {
 
         User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
@@ -54,7 +57,7 @@ public class AdminVacancyController {
     }
 
     @GetMapping("/api")
-    // @PreAuthorize("hasAnyAuthority('READ_JOB')")
+    @PreAuthorize("hasAnyAuthority('READ_JOB')")
     public ResponseEntity<Map<String, Object>> getVacancies(
             @RequestParam(value = "searchTitle", required = false, defaultValue = "") String searchTitle,
             @RequestParam(value = "searchPosition", required = false) String searchPosition,
@@ -75,24 +78,8 @@ public class AdminVacancyController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/all-rm-vacancies")
-    @PreAuthorize("hasAnyAuthority('EXTERNAL_READ_ACCOUNT')")
-    public ResponseEntity<Object> getAllRm(
-            @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "10") Integer size,
-            @RequestParam(defaultValue = "") String title,
-            @RequestParam(defaultValue = "") String position,
-            @RequestParam(defaultValue = "") String expiredDate,
-            @RequestParam(defaultValue = "") String updatedAt,
-            @RequestParam(defaultValue = "") String timeInterval,
-            @RequestParam(defaultValue = "") Long clientId) {
-        return ResponseHandler.generateResponse(new Response(
-                "All vacancies", HttpStatus.OK, SUCCESS,
-                vacancyService.getAllRm(title, position, expiredDate, updatedAt, timeInterval, page, size, clientId)));
-    }
-
     @GetMapping("/create")
-    // @PreAuthorize("hasAnyAuthority('CREATE_JOB')")
+    @PreAuthorize("hasAnyAuthority('CREATE_JOB')")
     public String createForm(Model model, HttpServletRequest request) {
 
         User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
@@ -105,7 +92,7 @@ public class AdminVacancyController {
     }
 
     @GetMapping("/update/{id}")
-    // @PreAuthorize("hasAnyAuthority('UPDATE_JOB')")
+    @PreAuthorize("hasAnyAuthority('UPDATE_JOB')")
     public String updateForm(@PathVariable Long id, Model model, HttpServletRequest request) {
 
         User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
@@ -122,32 +109,42 @@ public class AdminVacancyController {
     }
 
     @PostMapping("/create")
-    // @PreAuthorize("hasAnyAuthority('CREATE_JOB')")
-    public ResponseEntity<Void> create(@RequestBody VacancyRequest vacancyRequest, HttpServletRequest request) {
-
+    @PreAuthorize("hasAnyAuthority('CREATE_JOB')")
+    public ResponseEntity<Map<String, Object>> create(@RequestBody VacancyRequest vacancyRequest,
+            HttpServletRequest request) {
+        Map<String, Object> response = new HashMap<>();
         try {
             User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
             vacancyService.create(loggedUser.getId(), vacancyRequest);
-            return ResponseEntity.status(HttpStatus.OK).build();
+            response.put("message", "Lowongan baru berhasil ditambahkan");
+            response.put("status", "success");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            response.put("message", "Terjadi kesalahan saat menambahkan lowongan baru");
+            response.put("status", "error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
     @PutMapping("/update/{id}")
-    // @PreAuthorize("hasAnyAuthority('CREATE_JOB')")
-    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody VacancyRequest vacancyRequest) {
-
+    @PreAuthorize("hasAnyAuthority('UPDATE_JOB')")
+    public ResponseEntity<Map<String, Object>> update(@PathVariable Long id,
+            @RequestBody VacancyRequest vacancyRequest) {
+        Map<String, Object> response = new HashMap<>();
         try {
             vacancyService.update(id, vacancyRequest);
-            return ResponseEntity.status(HttpStatus.OK).build();
+            response.put("message", "Lowongan berhasil diperbarui");
+            response.put("status", "success");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            response.put("message", "Terjadi kesalahan saat memperbarui lowongan");
+            response.put("status", "error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
     @DeleteMapping("/delete/{id}")
-    // @PreAuthorize("hasAnyAuthority('CREATE_JOB')")
+    @PreAuthorize("hasAnyAuthority('DELETE_JOB')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
 
         try {
@@ -155,6 +152,59 @@ public class AdminVacancyController {
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/applied/{id}")
+    public String appliedForm(@PathVariable Long id, Model model, HttpServletRequest request) {
+
+        User loggedUser = userService.getById((Long) request.getSession().getAttribute("userId"));
+
+        model.addAttribute("logged", loggedUser);
+        model.addAttribute("isActive", "vacancy");
+        model.addAttribute("vacancy", vacancyService.getVacancyById(id));
+        model.addAttribute("institutes", instituteService.getAllInstituteByVacancyId(id));
+
+        return "vacancy-admin/applied";
+    }
+
+    @GetMapping("/applied/applicant/{id}")
+    public ResponseEntity<Map<String, Object>> getApplicant(
+            @PathVariable Long id,
+            @RequestParam(value = "searchInstitute", required = false, defaultValue = "") String searchInstitute,
+            @RequestParam(value = "page", required = false) Integer page,
+            @RequestParam(defaultValue = "3", required = false) Integer size) {
+
+        Page<VacancyApplicantsResponse> vacancyPage = vacancyService.getAppliedTalents(id, page, size, searchInstitute);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("applicants", vacancyPage.getContent());
+        response.put("currentPage", page);
+        response.put("totalPages", vacancyPage.getTotalPages());
+        response.put("totalItems", vacancyPage.getTotalElements());
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/applied")
+    public ResponseEntity<Map<String, Object>> applied(@RequestBody RecommendationRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            for (Long applicantId : request.getApplicantIds()) {
+                Long rmId = applicantService.getApplicantById(applicantId).getTalent().getInstitute().getRmUser()
+                        .getId();
+                RecommendApplicantRequest recommendApplicantRequest = new RecommendApplicantRequest(
+                        applicantId,
+                        request.getVacancyId(), rmId, request.getDescription());
+                applicantService.recommendApplicant(recommendApplicantRequest);
+            }
+            response.put("message", "Talent berhasil direkomendasikan");
+            response.put("status", "success");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception e) {
+            response.put("message", "Terjadi kesalahan saat merekomendasikan talent");
+            response.put("status", "error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 }
