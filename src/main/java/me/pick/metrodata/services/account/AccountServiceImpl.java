@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -157,5 +158,17 @@ public class AccountServiceImpl implements AccountService {
         @Override
         public List<Account> getAll() {
                 return accountRepository.findAll();
+        }
+
+        @Override
+        public boolean isUsernameUnique(String username, Long currentAccountId) {
+                Optional<Account> existingAccount = accountRepository.findByUsername(username);
+                return existingAccount == null || existingAccount.get().getId().equals(currentAccountId);
+        }
+
+        @Override
+        public boolean isEmailUnique(String email, Long currentAccountId) {
+                Optional<User> existingUser = userRepository.findByEmail(email);
+                return existingUser == null || existingUser.get().getAccount().getId().equals(currentAccountId);
         }
 }

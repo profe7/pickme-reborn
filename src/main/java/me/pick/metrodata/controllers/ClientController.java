@@ -1,6 +1,7 @@
 package me.pick.metrodata.controllers;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -22,14 +23,20 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import me.pick.metrodata.enums.InterviewStatus;
 import me.pick.metrodata.enums.InterviewType;
+import me.pick.metrodata.models.dto.requests.AccountRequest;
 import me.pick.metrodata.models.dto.requests.InterviewUpdateRequest;
+import me.pick.metrodata.models.dto.responses.AccountResponse;
 import me.pick.metrodata.models.dto.responses.ClientDashboardTelemetryResponse;
 import me.pick.metrodata.models.dto.responses.ClientEmployeeResponse;
 import me.pick.metrodata.models.dto.responses.InterviewHistoryResponse;
 import me.pick.metrodata.models.dto.responses.RecommendationGroupedResponse;
+import me.pick.metrodata.models.entity.Account;
 import me.pick.metrodata.models.entity.InterviewSchedule;
+import me.pick.metrodata.models.entity.InterviewScheduleHistory;
+import me.pick.metrodata.services.account.AccountService;
 import me.pick.metrodata.services.client.ClientService;
 import me.pick.metrodata.services.interview.InterviewScheduleService;
+import me.pick.metrodata.services.interviewhistory.InterviewScheduleHistoryService;
 import me.pick.metrodata.services.recommendation.RecommendationService;
 
 @Controller
@@ -41,8 +48,12 @@ public class ClientController {
     private final RecommendationService recommendationService;
 
     private final InterviewScheduleService interviewScheduleService;
+    
+    private final InterviewScheduleHistoryService interviewScheduleHistoryService;
 
     private final ClientService clientService;
+
+    private final AccountService accountService;
 
     @GetMapping
     public String clientHomePage(HttpSession session, Model model){
@@ -51,9 +62,8 @@ public class ClientController {
         ClientDashboardTelemetryResponse employeeSummary = clientService.getClientDashboardTelemetry(clientId);
         List<ClientEmployeeResponse> clientEmployees = clientService.getClientEmployees(clientId);
 
-        model.addAttribute("employee", employeeSummary);
         model.addAttribute("employeeSummary", employeeSummary);
-        model.addAttribute("employees", clientEmployees);
+        model.addAttribute("clientName", clientEmployees.get(0).getClientName());
 
         return "client/dashboard-client";
     }
@@ -69,6 +79,29 @@ public class ClientController {
         model.addAttribute("employeeSummary", employeeSummary);
 
         return "client/view-employees";
+    }
+
+    @PostMapping("/employees/delete/{talentId}")
+    public RedirectView deleteEmployee(@PathVariable("talentId") String talentId, HttpSession session, RedirectAttributes redirectAttributes){
+
+        Long clientId = (Long) session.getAttribute("clientId");
+
+        clientService.deleteClientEmployee(clientId, talentId);
+        redirectAttributes.addFlashAttribute("success", "Pegawai berhasil dihapus");
+
+        return new RedirectView("/client/employees");
+
+    }
+
+    @GetMapping("/employees/detail/{talentId}")
+    public String detailEmployee(@PathVariable("talentId") String talentId, HttpSession session, Model model){
+        Long clientId = (Long) session.getAttribute("clientId");
+        List<InterviewHistoryResponse> detailEmployee = interviewScheduleHistoryService.getByTalentIdandClientId(talentId, clientId);
+        System.out.println(detailEmployee);
+
+        model.addAttribute("employee", detailEmployee);
+
+        return "employee/view-detail-employee";
     }
     
     @GetMapping("/recommendations")
@@ -157,6 +190,59 @@ public class ClientController {
 
         return new RedirectView("/client/interview-schedules");
     }
+
+    @GetMapping("/edit-profile")
+    public String formUpdateProfileClient(HttpSession session, Model model){
+        Long clientId = (Long) session.getAttribute("accountId");
+
+        var clientProfileDTO = new AccountRequest();
+
+        AccountResponse dataClientBefore = accountService.getAccountById(clientId);
+
+        clientProfileDTO.setAccountEmail(dataClientBefore.getEmail());
+        clientProfileDTO.setAccountFirstName(dataClientBefore.getFirstName());
+        clientProfileDTO.setAccountLastName(dataClientBefore.getLastName());
+        clientProfileDTO.setAccountUsername(dataClientBefore.getUsername());
+
+        model.addAttribute("clientDTO", clientProfileDTO);
+        model.addAttribute("accountId", clientId);
+
+        return "client/form-update-profile";
+
+    }
+
+    @PostMapping("/edit-profile")
+    public RedirectView updateProfileClient(
+            @ModelAttribute AccountRequest clientDTO,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes,
+            HttpSession session) {
+
+        List<String> errorMessages = new ArrayList<>();
+        Long accountId = (Long) session.getAttribute("accountId");
+
+        if (bindingResult.hasErrors()) {
+            bindingResult.getFieldErrors().forEach(error -> errorMessages.add(error.getDefaultMessage()));
+        }
+
+        if (!accountService.isUsernameUnique(clientDTO.getAccountUsername(), accountId)) {
+            errorMessages.add("Username sudah digunakan atau sama dengan username saat ini.");
+        }
+
+        if (!accountService.isEmailUnique(clientDTO.getAccountEmail(), accountId)) {
+            errorMessages.add("Email sudah digunakan atau sama dengan email saat ini.");
+        }
+
+        if (!errorMessages.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessages", errorMessages);
+            return new RedirectView("/client/edit-profile");
+        }
+        
+        accountService.editAccount(accountId, clientDTO);
+        redirectAttributes.addFlashAttribute("successMessage", "Profil berhasil diperbarui.");
+        return new RedirectView("/client/edit-profile");
+    }
+
 
 
 }

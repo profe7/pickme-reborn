@@ -52,10 +52,14 @@ public class ClientServiceImpl implements ClientService {
         return interviewScheduleRepository.findInterviewScheduleByClientIdAndStatus(clientId, InterviewStatus.ACCEPTED)
             .stream()
             .map(interviewSchedule -> {
-                Talent talent = interviewSchedule.getApplicant().getTalent();
+                String talent = interviewSchedule.getApplicant().getTalent().getName();
                 String position = interviewSchedule.getPosition();
                 LocalDate onboardDate = interviewSchedule.getOnBoardDate();
-                return new ClientEmployeeResponse(talent.getName(), position, onboardDate);
+                String idTalent = interviewSchedule.getApplicant().getTalent().getId();
+                String clientName = interviewSchedule.getClient().getUser().getInstitute().getInstituteName();
+
+
+                return new ClientEmployeeResponse(idTalent, talent, position, onboardDate, clientName);
             })
             .toList();
     }

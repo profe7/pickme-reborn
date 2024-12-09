@@ -11,9 +11,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ClientEmployeeResponse {
 
+    private String talentId;
+
     private String employeeName;
 
     private String position;
 
     private LocalDate onboardDate;
+
+    private String clientName;
 }

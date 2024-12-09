@@ -34,6 +34,6 @@ public interface TalentRepository extends JpaRepository<Talent, String>, JpaSpec
                         @Param("status") StatusCV status,
                         Pageable pageable);
 
-        @Query("SELECT COUNT(t) > 0 FROM Talent t WHERE t.talentNik = :nik AND t.id != :id")
+        @Query("SELECT COUNT(t) > 0 FROM Talent t WHERE t.nik = :nik AND t.id != :id")
         boolean existsByNikAndNotId(@Param("nik") String nik, @Param("id") String id);
 }
