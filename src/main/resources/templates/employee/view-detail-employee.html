@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Interview History</title>
+    <div th:replace="~{components/plugin :: css}"></div>
+    <style>
+        /* Status Badge Styles */
+        .status-badge {
+            display: inline-block;
+            padding: 0.25em 0.5em;
+            border-radius: 0.5rem;
+            font-size: 0.85em;
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+        }
+        .status-invited { background-color: #A4A8AA; }
+        .status-on_process { background-color: #00B4E5; }
+        .status-accepted { background-color: #198754; }
+        .status-rescheduled { background-color: #0067AC; } 
+        .status-rejected { background-color: #DC3545; }   
+        .status-cancelled { background-color: #FFC107; } 
+
+        .table td, .table th {
+            text-align: center; /* Center align text */
+            vertical-align: middle; /* Vertically center text */
+        }
+    </style>
+</head>
+<body>
+    <div class="container my-5">
+        <!-- Talent Name -->
+        <h3 th:text="'Nama Talent: ' + ${employee[0]?.namaTalent}" class="mb-3"></h3>
+
+        <!-- Table for Interview History -->
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead style="background-color: #B3D4FC" class="table-light">
+                    <tr>
+                        <th>Status</th>
+                        <th>Tanggal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="history : ${employee}">
+                        <td>
+                            <!-- Dynamic Badge for Status -->
+                            <span th:text="${history.status.replace('_', ' ')}" 
+                                  th:classappend="'status-badge status-' + ${history.status.replace('_', '_').toLowerCase()}"></span>
+                        </td>
+                        <td th:text="${#temporals.format(history.dateChanges, 'dd-MM-yyyy')}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <div th:replace="~{components/plugin :: js}"></div>
+    <div th:insert="~{components/footer :: footer}"></div>
+</body>
+</html>

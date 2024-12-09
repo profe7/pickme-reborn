@@ -21,6 +21,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         String redirectUrl = "/";
         if ("CLIENT".equals(accountDetail.getAccount().getRole().getName())) {
             request.getSession().setAttribute("clientId", accountDetail.getAccount().getUser().getClient().getId());
+            request.getSession().setAttribute("accountId", accountDetail.getAccount().getId());
             redirectUrl = "/client";
         } else if ("MITRA".equals(accountDetail.getAccount().getRole().getName())) {
             request.getSession().setAttribute("mitraId", accountDetail.getAccount().getUser().getMitra().getId());
@@ -33,8 +34,6 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             request.getSession().setAttribute("userId", accountDetail.getAccount().getUser().getId());
             redirectUrl = "/admin";
         }
-        
-
         response.sendRedirect(redirectUrl);
     }
 }

@@ -36,4 +36,5 @@ public interface AccountRepository extends JpaRepository<Account, Long>, JpaSpec
                         @Param("role") Long role,
                         @Param("isEnabled") boolean isEnabled,
                         Pageable pageable);
+
 }

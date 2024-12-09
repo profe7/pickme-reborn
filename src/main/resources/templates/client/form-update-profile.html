@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/main}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/responsive.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 font-weight="bold">Perbarui Profil</h2>
+        <br>
+        
+        <div th:if="${errorMessages != null}" class="alert alert-danger">
+            <ul>
+                <li th:each="error : ${errorMessages}" th:text="${error}"></li>
+            </ul>
+        </div>
+
+        <div th:if="${successMessage != null}" class="alert alert-success">
+            <p th:text="${successMessage}"></p>
+        </div>
+
+        <form th:action="@{/client/edit-profile}" th:object="${clientDTO}" method="post">
+            <!-- <input type="hidden" th:field="*{accountId}" /> -->
+            <div class="form-group">
+                <label for="accountUsername">Username</label>
+                <input type="text" class="form-control" id="accountUsername" th:field="*{accountUsername}" placeholder="Enter new username" required>
+                <div th:if="${#fields.hasErrors('accountUsername')}" class="invalid-feedback">
+                    <div th:each="err : ${#fields.errors('accountUsername')}" th:text="${err}"></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="accountEmail">Email</label>
+                <input type="email" class="form-control" id="accountEmail" th:field="*{accountEmail}" required>
+                <div th:if="${#fields.hasErrors('accountEmail')}" class="invalid-feedback">
+                    <div th:each="err : ${#fields.errors('accountEmail')}" th:text="${err}"></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="accountFirstName">Nama Depan</label>
+                <input type="text" class="form-control" id="accountFirstName" th:field="*{accountFirstName}" required>
+                <div th:if="${#fields.hasErrors('accountFirstName')}" class="invalid-feedback">
+                    <div th:each="err : ${#fields.errors('accountFirstName')}" th:text="${err}"></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="accountLastName">Nama Belakang</label>
+                <input type="text" class="form-control" id="accountLastName" th:field="*{accountLastName}" required>
+                <div th:if="${#fields.hasErrors('accountLastName')}" class="invalid-feedback">
+                    <div th:each="err : ${#fields.errors('accountLastName')}" th:text="${err}"></div>
+                </div>
+            </div>
+
+            <button type="" class="btn btn-primary">Perbarui</button>
+            <a href="/client" class="btn btn-secondary mt-3">Kembali ke Beranda</a>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <div th:insert="~{components/footer :: footer}"></div>
+</body>
+</html>

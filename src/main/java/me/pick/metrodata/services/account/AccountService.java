@@ -28,4 +28,10 @@ public interface AccountService {
                         Integer size);
 
         List<Account> getAll();
+
+        boolean isEmailUnique(String email, Long accountId);
+
+        boolean isUsernameUnique(String username, Long accountId);
+
+
 }
