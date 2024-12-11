@@ -35,5 +35,4 @@ public class InterviewScheduleHistory {
     @ManyToOne
     @JoinColumn(name = "interview_id")
     private InterviewSchedule interviewSchedule;
-
 }

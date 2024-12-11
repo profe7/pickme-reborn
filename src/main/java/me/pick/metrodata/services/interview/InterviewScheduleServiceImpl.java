@@ -80,11 +80,13 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
         Client client = clientRepository.findClientById(request.getClientId())
                 .orElseThrow(() -> new ClientDoesNotExistException(request.getClientId()));
         InterviewSchedule interviewSchedule = getInterviewSchedule(request, recommendedApplicant, client);
+        interviewSchedule.setStatus(InterviewStatus.ON_PROCESS);
         interviewScheduleRepository.save(interviewSchedule);
 
         InterviewScheduleHistory history = new InterviewScheduleHistory();
         history.setFeedback("Interview invitation sent");
         history.setInterviewSchedule(interviewSchedule);
+        history.setStatus(InterviewStatus.ON_PROCESS);
         interviewScheduleHistoryRepository.save(history);
 
         emailService.sendInterviewInvitation(interviewSchedule);
@@ -305,7 +307,7 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
                         interviewSchedule.getApplicant().getTalent().getName(),
                         history.getStatus().toString(),
                         history.getCreated_at()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private Page<InterviewSchedule> interviewRetrievalHelper(String search, Long clientId, InterviewType type,
