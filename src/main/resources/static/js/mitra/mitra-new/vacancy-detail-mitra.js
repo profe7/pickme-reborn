@@ -75,16 +75,25 @@ function openTalentModal(button) {
             method: "POST",
             contentType: "application/json",
             data: JSON.stringify(requestData),
-            success: function(response) {
-                Swal.fire({
-                    title: 'Success',
-                    text: 'Applicants created successfully',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                }).then(() => {
-                    selectedTalentIds = [];
-                    window.location.reload();
-                });
+            success: function(response, textStatus, xhr) {
+                if (xhr.status === 201) {
+                    Swal.fire({
+                        title: 'Success',
+                        text: 'Applicants created successfully',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        selectedTalentIds = [];
+                        window.location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Unexpected response status: ' + xhr.status,
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
             },
             error: function(xhr) {
                 Swal.fire({

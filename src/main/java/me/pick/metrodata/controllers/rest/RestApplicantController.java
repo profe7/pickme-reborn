@@ -28,7 +28,7 @@ public class RestApplicantController {
     public ResponseEntity<Object> applyMultipleTalents(@RequestBody MultiTalentApplicantRequest request) {
         List<Applicant> applicants = applicantService.multiCreateApplicant(request);
         return ResponseHandler.generateResponse(new Response(
-                "Applicants created", HttpStatus.CREATED, SUCCESS, applicants
+                "Applicants created", HttpStatus.CREATED, SUCCESS, null
         ));
     }
 
