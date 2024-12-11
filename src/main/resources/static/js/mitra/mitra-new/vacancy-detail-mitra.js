@@ -6,14 +6,18 @@ function openTalentModal(button) {
 
     // Function to filter table rows based on search criteria
     function filterTalents() {
+        const name = $('input[name="talentName"]').val().trim().toLowerCase();
         const position = $('input[name="talentPosition"]').val().trim().toLowerCase();
         const skill = $('input[name="talentSkill"]').val().trim().toLowerCase();
 
         $('#talentList tr').each(function() {
+            const rowName = $(this).find('td:nth-child(1)').text().toLowerCase();
             const rowPosition = $(this).find('td:nth-child(2)').text().toLowerCase();
             const rowSkill = $(this).find('td:nth-child(3)').text().toLowerCase();
 
-            if ((position === '' || rowPosition.includes(position)) && (skill === '' || rowSkill.includes(skill))) {
+            if ((name === '' || rowName.includes(name)) &&
+                (position === '' || rowPosition.includes(position)) &&
+                (skill === '' || rowSkill.includes(skill))) {
                 $(this).show();
             } else {
                 $(this).hide();
@@ -72,7 +76,7 @@ function openTalentModal(button) {
         }
     });
 
-    $('input[name="talentPosition"], input[name="talentSkill"]').on('input', filterTalents);
+    $('input[name="talentName"], input[name="talentPosition"], input[name="talentSkill"]').on('input', filterTalents);
 
     document.querySelector('.btn.w-100[style*="background-color: #006683"]').addEventListener('click', function() {
         if (selectedTalentIds.length === 0) {
