@@ -49,6 +49,17 @@ document.getElementById('interviewForm').addEventListener('submit', function(eve
     let endTime = document.getElementById('waktuSelesai').value;
     let talentId = document.getElementById('talentId').value;
 
+    if (!position || !date || !startTime || !endTime || !talentId ||
+        (interviewType === 'ONLINE' && !interviewLink) ||
+        (interviewType === 'OFFLINE' && !locationAddress)) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Please fill in all required fields.'
+        });
+        return;
+    }
+
     let message = "";
     let status = "ON_PROCESS";
     let feedback = "";
