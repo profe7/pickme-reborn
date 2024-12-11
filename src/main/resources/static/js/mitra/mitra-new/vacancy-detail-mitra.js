@@ -4,6 +4,24 @@ function openTalentModal(button) {
     const mitraId = $(button).data("mitra-id");
     const vacancyId = $(button).data("vacancy-id");
 
+    // Function to filter table rows based on search criteria
+    function filterTalents() {
+        const position = $('input[name="talentPosition"]').val().trim().toLowerCase();
+        const skill = $('input[name="talentSkill"]').val().trim().toLowerCase();
+
+        $('#talentList tr').each(function() {
+            const rowPosition = $(this).find('td:nth-child(2)').text().toLowerCase();
+            const rowSkill = $(this).find('td:nth-child(3)').text().toLowerCase();
+
+            if ((position === '' || rowPosition.includes(position)) && (skill === '' || rowSkill.includes(skill))) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    }
+
+    // Initial fetch without filters
     $.ajax({
         url: `/vacancies/${mitraId}/${vacancyId}/talent`,
         method: "GET",
@@ -53,6 +71,8 @@ function openTalentModal(button) {
             $("#talentList").html("<tr><td colspan='4'>Failed to load talent data.</td></tr>");
         }
     });
+
+    $('input[name="talentPosition"], input[name="talentSkill"]').on('input', filterTalents);
 
     document.querySelector('.btn.w-100[style*="background-color: #006683"]').addEventListener('click', function() {
         if (selectedTalentIds.length === 0) {
