@@ -35,4 +35,5 @@ public class InterviewScheduleRequest {
 
     private String endTime;
 
+    private String talentId;
 }

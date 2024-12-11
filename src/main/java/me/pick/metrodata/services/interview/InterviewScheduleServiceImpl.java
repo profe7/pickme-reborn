@@ -12,6 +12,7 @@ import me.pick.metrodata.exceptions.interviewschedule.InterviewScheduleConflictE
 import me.pick.metrodata.exceptions.interviewschedule.InterviewScheduleDoesNotExistException;
 import me.pick.metrodata.exceptions.interviewschedule.InterviewScheduleUpdateBadRequestException;
 import me.pick.metrodata.exceptions.mitra.MitraDoesNotExistException;
+import me.pick.metrodata.exceptions.talent.TalentDoesNotExistException;
 import me.pick.metrodata.models.dto.requests.InterviewScheduleRequest;
 import me.pick.metrodata.models.dto.requests.InterviewUpdateRequest;
 import me.pick.metrodata.models.dto.responses.InterviewScheduleResponse;
@@ -53,12 +54,24 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
     private final MitraRepository mitraRepository;
     private final EmailService emailService;
     private final ModelMapper modelMapper;
+    private final TalentRepository talentRepository;
 
     @Override
     public void inviteToInterview(InterviewScheduleRequest request) {
+        Long applicantId = request.getApplicantId();
+        if (request.getApplicantId() == null) {
+            Talent talent = talentRepository.findById(request.getTalentId()).orElseThrow(() -> new TalentDoesNotExistException(request.getTalentId()));
+            for (Applicant applicant : talent.getApplicants()) {
+                if (applicant.getVacancy().getPosition().equals(request.getPosition())) {
+                    applicantId = applicant.getId();
+                    break;
+                }
+            }
+        }
+        Long finalApplicantId = applicantId;
         RecommendationApplicant recommendedApplicant = recommendationApplicantRepository
-                .findByApplicantIdAndPosition(request.getApplicantId(), request.getPosition()).orElseThrow(
-                        () -> new ApplicantNotRecommendedException(request.getApplicantId(), request.getPosition()));
+                .findByApplicantIdAndPosition(finalApplicantId, request.getPosition()).orElseThrow(
+                        () -> new ApplicantNotRecommendedException(finalApplicantId, request.getPosition()));
         if (interviewConflictHelper(recommendedApplicant, request)) {
             throw new InterviewScheduleConflictException(request.getStartTime().toString(),
                     request.getEndTime().toString(), request.getDate().toString());
@@ -211,45 +224,40 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
         interviewSchedule.setApplicant(applicant);
         return interviewSchedule;
     }
-
     private boolean interviewConflictHelper(RecommendationApplicant recommendedApplicant,
-            InterviewScheduleRequest request) {
+                                            InterviewScheduleRequest request) {
         Client client = clientRepository.findClientById(request.getClientId())
                 .orElseThrow(() -> new ClientDoesNotExistException(request.getClientId()));
         Applicant applicant = recommendedApplicant.getApplicant();
 
         InterviewSchedule found = interviewScheduleRepository.findInterviewScheduleByClientAndApplicantAndDate(client,
                 applicant, DateTimeUtil.stringToLocalDate(request.getDate()));
+        if (found != null) {
+            return true;
+        }
+
         List<InterviewSchedule> todaysInterviews = interviewScheduleRepository
                 .findInterviewScheduleByClientAndDate(client, DateTimeUtil.stringToLocalDate(request.getDate()));
 
-        List<LocalTime> reservedTimes = new ArrayList<>();
+        LocalTime requestedStart = LocalTime.parse(request.getStartTime());
+        LocalTime requestedEnd = LocalTime.parse(request.getEndTime());
+
+        if (requestedStart.isAfter(requestedEnd) || requestedStart.equals(requestedEnd)) {
+            return true;
+        }
 
         for (InterviewSchedule interview : todaysInterviews) {
-            reservedTimes.add(interview.getStartTime());
-            reservedTimes.add(interview.getEndTime());
-            LocalTime start = LocalTime.parse(request.getStartTime());
-            LocalTime end = LocalTime.parse(request.getEndTime());
-            while (start.isBefore(end)) {
-                reservedTimes.add(start);
-                start = start.plusMinutes(15);
-            }
-        }
+            LocalTime existingStart = interview.getStartTime();
+            LocalTime existingEnd = interview.getEndTime();
 
-        for (LocalTime time : reservedTimes) {
-            if (LocalTime.parse(request.getStartTime()).isBefore(time)
-                    && LocalTime.parse(request.getEndTime()).isAfter(time)) {
-                return true;
-            } else if (LocalTime.parse(request.getStartTime()).isAfter(LocalTime.parse(request.getEndTime()))
-                    || LocalTime.parse(request.getEndTime()).equals(LocalTime.parse(request.getStartTime()))
-                    || LocalTime.parse(request.getStartTime()).equals(LocalTime.parse(request.getEndTime()))
-                    || LocalTime.parse(request.getEndTime()).isBefore(LocalTime.parse(request.getStartTime()))) {
+            if (!(requestedEnd.isBefore(existingStart) || requestedStart.isAfter(existingEnd))) {
                 return true;
             }
         }
 
-        return found != null;
+        return false;
     }
+
 
     @Override
     public Page<InterviewSchedule> getAll(String search, Long clientId, InterviewType type, String startDate,

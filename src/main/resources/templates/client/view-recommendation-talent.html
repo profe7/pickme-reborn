@@ -9,6 +9,7 @@
   <meta name="keywords" content="" />
   <meta name="description" content="" />
   <meta name="author" content="" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <link rel="icon" th:href="@{/img/favicon.ico}" type="image/x-icon" />
   <link rel="shortcut icon" th:href="@{/img/favicon.ico}" type="image/x-icon" />
   <div th:replace="~{components/plugin :: css}"></div>
@@ -150,22 +151,24 @@
           <div class="col-12 shadow-sm">
             <h3 th:text="${recommendation.position}" class="text-center mt-1" style="margin-bottom: 2rem;"></h3>
             <div class="talent-container">
-              <div th:each="talent, iStat : ${recommendation.talents}" class="talent-card">
+              <div th:if="${#lists.isEmpty(recommendation.talents)}" class="text-center w-100">
+                Belum ada talent yang direkomendasikan untuk posisi ini
+              </div>
+              <div th:each="talent, iStat : ${recommendation.talents}" th:unless="${#lists.isEmpty(recommendation.talents)}" class="talent-card">
                 <div class="card">
                   <div class="card-body">
-                    <img
-                      th:src="${talent.photo != null ? 'data:image/jpeg;base64,' + talent.photo : 'https://cdn-icons-png.flaticon.com/512/3106/3106773.png'}"
-                      alt="Profile Image" class="img-box img-fluid" />
+                    <img th:src="${talent.photo != null ? 'data:image/jpeg;base64,' + talent.photo : 'https://cdn-icons-png.flaticon.com/512/3106/3106773.png'}"
+                         alt="Profile Image" class="img-box img-fluid" />
                   </div>
                   <div class="card-footer text-center">
                     <h6 th:text="${talent.name}" style="width: 100%; text-wrap: wrap; margin-top: 1rem;"></h6>
+                    <input type="hidden" id="talentId" th:value="${talent.getId()}">
                     <div class="btn-group">
-                      <!-- Tombol Undang -->
-                      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#scheduleInterviewModal">
+                      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#scheduleInterviewModal"
+                              th:data-position="${recommendation.position}">
                         Undang
                       </button>
                       <button class="btn btn-secondary">CV</button>
-
                     </div>
                   </div>
                 </div>
@@ -223,20 +226,18 @@
                 </div>
 
                 <!-- Form 5 & 6: Waktu Mulai & Waktu Selesai -->
-                
-
-<div class="row">
-  <div class="col">
-    <label for="waktuMulai" class="form-label">Waktu Mulai</label>
-    <input type="time" class="form-control" id="waktuMulai" name="waktuMulai" required>
-    <div class="invalid-feedback">Waktu mulai harus diisi!</div>
-  </div>
-  <div class="col">
-    <label for="waktuSelesai" class="form-label">Waktu Selesai</label>
-    <input type="time" class="form-control" id="waktuSelesai" name="waktuSelesai" required>
-    <div class="invalid-feedback">Waktu selesai harus diisi!</div>
-  </div>
-</div>
+                <div class="row">
+                  <div class="col">
+                    <label for="waktuMulai" class="form-label">Waktu Mulai</label>
+                    <input type="time" class="form-control" id="waktuMulai" name="waktuMulai" required>
+                    <div class="invalid-feedback">Waktu mulai harus diisi!</div>
+                  </div>
+                  <div class="col">
+                    <label for="waktuSelesai" class="form-label">Waktu Selesai</label>
+                    <input type="time" class="form-control" id="waktuSelesai" name="waktuSelesai" required>
+                    <div class="invalid-feedback">Waktu selesai harus diisi!</div>
+                  </div>
+                </div>
 
                 <br>
                 <div class="flex-column">
@@ -262,17 +263,15 @@
     <script>
       // Example to log the value (if needed)
       document.getElementById("waktuMulai").addEventListener("change", (e) => {
-        const timeValue = e.target.value; // Value is in 24-hour format: HH:mm
-        console.log("Waktu Mulai:", timeValue); // e.g., "23:15"
+        const timeValue = e.target.value;
       });
     
       document.getElementById("waktuSelesai").addEventListener("change", (e) => {
-        const timeValue = e.target.value; // Value is in 24-hour format: HH:mm
-        console.log("Waktu Selesai:", timeValue); // e.g., "07:30"
+        const timeValue = e.target.value;
       });
     </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Pastikan Anda menyertakan Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <div layout:fragment="script">
       <script th:src="@{/js/recommendation/index.js}"></script>

@@ -35,3 +35,75 @@ function fetchRecommendations(clientId, talentName, position) {
         }
     });
 }
+
+document.getElementById('interviewForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    let position = document.querySelector('[data-bs-target="#scheduleInterviewModal"]').getAttribute('data-position');
+    let locationAddress = document.getElementById('alamat').value;
+    let interviewLink = document.getElementById('linkInterview').value;
+    let interviewTypeValue = document.getElementById('tipeWawancara').value;
+    let interviewType = interviewTypeValue === '0' ? 'ONLINE' : 'OFFLINE';
+    let date = document.getElementById('tanggal').value;
+    let startTime = document.getElementById('waktuMulai').value;
+    let endTime = document.getElementById('waktuSelesai').value;
+    let talentId = document.getElementById('talentId').value;
+
+    let message = "";
+    let status = "ON_PROCESS";
+    let feedback = "";
+    let clientId = document.getElementById('clientId').value;
+    let applicantId = "";
+    let onBoardDate = "";
+
+    let data = {
+        position: position,
+        locationAddress: locationAddress,
+        interviewLink: interviewLink,
+        interviewType: interviewType,
+        message: message,
+        status: status,
+        feedback: feedback,
+        clientId: clientId,
+        applicantId: applicantId,
+        date: date,
+        onBoardDate: onBoardDate,
+        startTime: startTime,
+        endTime: endTime,
+        talentId: talentId
+    };
+
+    fetch('/api/v1/interview/invite', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'SUCCESS') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: data.message
+                }).then(() => {
+                    location.reload();
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.message
+                });
+            }
+        })
+        .catch((error) => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'An error occurred while inviting the applicant.'
+            });
+            console.error('Error:', error);
+        });
+});
