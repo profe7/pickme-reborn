@@ -107,3 +107,29 @@ document.getElementById('interviewForm').addEventListener('submit', function(eve
             console.error('Error:', error);
         });
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    var tipeWawancara = document.getElementById('tipeWawancara');
+    var alamatContainer = document.getElementById('alamatContainer');
+    var linkInterviewContainer = document.getElementById('linkInterviewContainer');
+
+    // Set initial state based on the selected value
+    function updateVisibility() {
+        if (tipeWawancara.value === '0') { // Online
+            alamatContainer.style.display = 'none';
+            linkInterviewContainer.style.display = 'block';
+        } else if (tipeWawancara.value === '1') { // Offline
+            alamatContainer.style.display = 'block';
+            linkInterviewContainer.style.display = 'none';
+        } else {
+            alamatContainer.style.display = 'none';
+            linkInterviewContainer.style.display = 'none';
+        }
+    }
+
+    // Update visibility on change
+    tipeWawancara.addEventListener('change', updateVisibility);
+
+    // Initial call to set the correct state
+    updateVisibility();
+});
